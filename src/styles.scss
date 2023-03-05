@@ -1,0 +1,118 @@
+@import "constants";
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+@font-face {
+  font-family: Inter;
+  src: url("assets/fonts/Inter/Inter-Regular.ttf");
+  font-weight: 400;
+}
+@font-face {
+  font-family: Inter;
+  src: url("assets/fonts/Inter/Inter-Medium.ttf");
+  font-weight: 500;
+}
+@font-face {
+  font-family: Inter;
+  src: url("assets/fonts/Inter/Inter-SemiBold.ttf");
+  font-weight: 600;
+}
+
+/*
+* Tags
+*/
+
+body {
+  margin: 0;
+  font-family: Inter, sans-serif;
+  font-style: normal;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 16px;
+  letter-spacing: 0;
+}
+
+button {
+  padding: 14px;
+  border-radius: 4px;
+  opacity: 0.8;
+  border: 0;
+  font-weight: 500;
+  cursor: pointer;
+  background-color: $secondaryColor;
+  color: $darkColor;
+
+  &:hover {
+    opacity: 1;
+  }
+
+  .primary {
+    background-color: $primaryColor;
+    color: $lightColor;
+  }
+
+  .success {
+    background-color: $successColor;
+    color: $lightColor;
+  }
+
+  .danger {
+    background-color: $dangerColor;
+    color: $lightColor;
+  }
+
+  .warning {
+    background-color: $warningColor;
+    color: $lightColor;
+  }
+
+  .transparent {
+    background-color: transparent;
+  }
+}
+
+nav {
+  a {
+    font-weight: 600;
+    font-size: 16.5px;
+    line-height: 20px;
+    letter-spacing: 0.105em;
+    color: $darkColor;
+  }
+}
+
+/*
+* Classes
+*/
+
+.shadow {
+  box-shadow: 4px 0px 24px rgba(0, 0, 0, 0.04);
+}
+
+/*
+* Media queries
+*/
+
+// Extra small
+@media only screen and (max-width: 576px) {
+}
+
+// Small
+@media only screen and (min-width: 576px) {
+}
+
+// Medium
+@media only screen and (min-width: 768px) {
+}
+
+// Large
+@media only screen and (min-width: 992px) {
+}
+
+// Extra large
+@media only screen and (min-width: 1200px) {
+}

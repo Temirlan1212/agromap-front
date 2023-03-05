@@ -1,0 +1,35 @@
+<ng-template #navItem let-path="path" let-title="title" let-icon="icon">
+  <a [routerLink]="path" routerLinkActive="active">
+    <img class="icon" src="assets/icons/user.svg" />
+    <span class="title" [textContent]="title"></span>
+  </a>
+</ng-template>
+
+<div class="menu" [class.open]="opened">
+  <nav class="top">
+    <a routerLink="">
+      <img class="logo" src="assets/images/logo.png" />
+      <span class="title" [textContent]="logoTitle"></span>
+    </a>
+
+    <ng-container
+      *ngFor="let route of topRoutes"
+      [ngTemplateOutlet]="navItem"
+      [ngTemplateOutletContext]="route"
+    ></ng-container>
+  </nav>
+
+  <nav class="bottom">
+    <ng-container
+      *ngFor="let route of bottomRoutes"
+      [ngTemplateOutlet]="navItem"
+      [ngTemplateOutletContext]="route"
+    ></ng-container>
+  </nav>
+
+  <button type="button" class="toggler" (click)="opened = !opened">></button>
+</div>
+
+<div class="content" [class.full]="isContentFull">
+  <ng-content></ng-content>
+</div>
