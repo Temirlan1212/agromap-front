@@ -3,19 +3,14 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { ApiErrorService } from '../api/api-error.service';
 import { SidenavComponent } from '../ui/components/sidenav/sidenav.component';
+import { TooltipModule } from '../ui/components/tooltip/tooltip.module';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-  ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    SidenavComponent,
-  ],
+  declarations: [AppComponent],
+  imports: [BrowserModule, AppRoutingModule, SidenavComponent, TooltipModule],
   providers: [
     {
       provide: HTTP_INTERCEPTORS,
@@ -23,6 +18,6 @@ import { AppComponent } from './app.component';
       multi: true,
     },
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

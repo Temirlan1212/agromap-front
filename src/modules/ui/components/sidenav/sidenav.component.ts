@@ -2,12 +2,13 @@ import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IRoutes } from '../../models/routes.model';
 import { RouterLink, RouterLinkActive } from '@angular/router';
+import { TooltipModule } from '../tooltip/tooltip.module';
 
 @Component({
   selector: 'app-sidenav',
   standalone: true,
   host: { class: 'sidenav' },
-  imports: [CommonModule, RouterLink, RouterLinkActive],
+  imports: [CommonModule, RouterLink, RouterLinkActive, TooltipModule],
   templateUrl: './sidenav.component.html',
   styleUrls: ['./sidenav.component.scss'],
 })

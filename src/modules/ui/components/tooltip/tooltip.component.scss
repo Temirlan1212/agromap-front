@@ -1,0 +1,98 @@
+@import "constants";
+
+.tooltip {
+  transition: all 1s ease;
+  position: fixed;
+  background-color: $darkColor;
+  border-radius: 4px;
+  color: $lightColor;
+  padding: 7px 10px;
+  font-size: 13px;
+  margin-top: 5px;
+  transform: translateY(-50%);
+  z-index: 10000;
+  opacity: 0;
+  pointer-events: none;
+
+  &--visible {
+    opacity: 1;
+    transition: all 200ms;
+  }
+
+  &--above {
+    &::before {
+      border-left-color: transparent;
+      border-right-color: transparent;
+      border-bottom: none;
+      left: calc(50% - 5px);
+      bottom: -5px;
+    }
+
+    &::before {
+      content: "";
+      width: 0;
+      height: 0;
+      border-left: 5px solid transparent;
+      border-right: 5px solid transparent;
+      border-bottom: 5px solid $darkColor;
+      position: absolute;
+      left: calc(50% - 5px);
+      bottom: -5px;
+      transform: rotateX(180deg);
+    }
+  }
+
+  &--below {
+    &::before {
+      border-left-color: transparent;
+      border-right-color: transparent;
+      border-bottom: none;
+      left: calc(50% - 5px);
+      bottom: -5px;
+    }
+
+    &::before {
+      content: "";
+      width: 0;
+      height: 0;
+      border-left: 5px solid transparent;
+      border-right: 5px solid transparent;
+      border-bottom: 5px solid $darkColor;
+      position: absolute;
+      left: calc(50% - 5px);
+      top: -5px;
+    }
+  }
+
+  //   &--right {
+  //     &::before {
+  //       content: "";
+  //       width: 0;
+  //       height: 0;
+  //       border-left: 5px solid transparent;
+  //       border-right: 5px solid transparent;
+  //       border-bottom: 5px solid $darkColor;
+  //       position: absolute;
+  //       top: 0;
+  //       bottom: 0;
+  //       margin: auto;
+  //       left: -5px;
+  //     }
+  //   }
+
+  //   &--left {
+  //     &::before {
+  //       content: "";
+  //       width: 0;
+  //       height: 0;
+  //       border-left: 5px solid transparent;
+  //       border-right: 5px solid $darkColor;
+  //       border-bottom: 5px solid transparent;
+  //       position: absolute;
+  //       top: 0;
+  //       bottom: 0;
+  //       margin: auto;
+  //       right: -5px;
+  //     }
+  //   }
+}
