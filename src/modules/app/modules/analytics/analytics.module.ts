@@ -5,6 +5,7 @@ import { AnalyticsRoutingModule } from './analytics-routing.module';
 import { MapComponent } from 'src/modules/ui/components/map/map.component';
 import { FilterComponent } from './components/filter/filter.component';
 import { AnalyticsComponent } from './analytics.component';
+import { SidePanelComponent } from '../../../ui/components/side-panel/side-panel.component';
 
 
 @NgModule({
@@ -16,6 +17,7 @@ import { AnalyticsComponent } from './analytics.component';
     CommonModule,
     AnalyticsRoutingModule,
     MapComponent,
+    SidePanelComponent,
   ]
 })
 export class AnalyticsModule { }
