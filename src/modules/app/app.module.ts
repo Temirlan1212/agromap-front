@@ -6,16 +6,18 @@ import { SidenavComponent } from '../ui/components/sidenav/sidenav.component';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { DialogComponent } from '../ui/components/dialog/dialog.component';
 
 @NgModule({
   declarations: [
     AppComponent,
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    SidenavComponent,
-  ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        SidenavComponent,
+        DialogComponent,
+    ],
   providers: [
     {
       provide: HTTP_INTERCEPTORS,

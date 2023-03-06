@@ -1,0 +1,17 @@
+<dialog #dialog (close)="handleClose($event)" (click)="handleDialogClick($event)" [@openModal]="open ? 'open' : 'close'">
+  <div class="header">
+    <div class="title">
+      <h3 [textContent]="header"></h3>
+      <span [textContent]="subtitle"></span>
+    </div>
+    <button type="button" (click)="handleCloseClick()">
+      <img class="icon" src="assets/icons/clear.svg" />
+    </button>
+  </div>
+  <div class="body">
+    <ng-content></ng-content>
+  </div>
+  <div class="footer">
+    <ng-content select="tsoo-dialog-footer"></ng-content>
+  </div>
+</dialog>
