@@ -1,0 +1,14 @@
+<!--
+    Внутри SVG файла должна быть задана id="icon" для тега <svg>.
+    Цвета элементов, которых нужно менять стилями родителя, нужно вставить currentColor.
+    Пример:
+    <svg id="icon" width="100px" height="100px" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <g color="green">
+            <rect width="45px" height="45px" x="1px" y="1px" fill="currentColor" />
+            <rect width="45px" height="45px" x="51px" y="1px" fill="none" stroke="currentColor" />
+        </g>
+    </svg>
+-->
+<svg class="icon" [attr.width]="size" [attr.height]="size" [style]="{'width': size, 'height': size}">
+  <use [attr.href]="'/assets/icons/' + name + '.svg#icon'" [attr.width]="size" [attr.height]="size"></use>
+</svg>
