@@ -1,0 +1,3 @@
+<app-svg-icon class="left" [name]="leftIcon" size="16" *ngIf="leftIcon != null"></app-svg-icon>
+<input [type]="type" [placeholder]="placeholder" [ngStyle]="{'padding-left':leftIcon == null ? '16px' : '35px' }">
+<app-svg-icon class="right" [name]="rightIcon" size="16" *ngIf="rightIcon != null" (click)="handleRightIconClick($event)"></app-svg-icon>

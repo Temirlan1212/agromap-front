@@ -1,0 +1,22 @@
+:host{
+  position: relative;
+
+  input{
+    padding-right:35px;
+  }
+
+  .right{
+    position: absolute;
+    z-index: 1;
+    top: 1%;
+    right: 10px;
+    cursor: pointer;
+  }
+  .left{
+    position: absolute;
+    z-index: 1;
+    top: .5%;
+    left: 10px;
+    cursor: pointer;
+  }
+}
