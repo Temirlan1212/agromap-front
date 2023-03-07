@@ -11,11 +11,13 @@
   src: url("assets/fonts/Inter/Inter-Regular.ttf");
   font-weight: 400;
 }
+
 @font-face {
   font-family: Inter;
   src: url("assets/fonts/Inter/Inter-Medium.ttf");
   font-weight: 500;
 }
+
 @font-face {
   font-family: Inter;
   src: url("assets/fonts/Inter/Inter-SemiBold.ttf");
@@ -25,6 +27,11 @@
 /*
 * Tags
 */
+
+html,
+body {
+  height: 100%;
+}
 
 body {
   margin: 0;
@@ -36,13 +43,95 @@ body {
   letter-spacing: 0;
 }
 
-button {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 20px 0;
+  font-style: normal;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+
+h1 {
+  font-size: 24px;
+  line-height: 26px;
+}
+
+h2 {
+  font-size: 22px;
+  line-height: 24px;
+}
+
+h3 {
+  font-size: 20px;
+  line-height: 22px;
+}
+
+h4 {
+  font-size: 18px;
+  line-height: 20px;
+}
+
+h5 {
+  font-size: 16px;
+  line-height: 18px;
+}
+
+h6 {
+  font-size: 14px;
+  line-height: 16px;
+}
+
+ul,
+ol {
+  font-style: normal;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 20px;
+  letter-spacing: 0;
+
+  li {
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 18px;
+  }
+}
+
+button,
+input,
+textarea,
+select {
   padding: 14px;
+  font-style: normal;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 18px;
+  letter-spacing: 0;
   border-radius: 4px;
+  cursor: pointer;
+  border-radius: $inputBorderRadius;
+  border: 1px solid $secondaryColor;
+
+  &:focus {
+    outline: none;
+  }
+}
+
+button:disabled,
+textarea:disabled,
+select:disabled {
+  background-color: $secondaryColor;
+  border-color: $secondaryColor;
+  color: $darkColor;
+}
+
+button {
   opacity: 0.8;
   border: 0;
   font-weight: 500;
-  cursor: pointer;
   background-color: $secondaryColor;
   color: $darkColor;
 
@@ -50,27 +139,27 @@ button {
     opacity: 1;
   }
 
-  .primary {
+  &.primary {
     background-color: $primaryColor;
     color: $lightColor;
   }
 
-  .success {
+  &.success {
     background-color: $successColor;
     color: $lightColor;
   }
 
-  .danger {
+  &.danger {
     background-color: $dangerColor;
     color: $lightColor;
   }
 
-  .warning {
+  &.warning {
     background-color: $warningColor;
     color: $lightColor;
   }
 
-  .transparent {
+  &.transparent {
     background-color: transparent;
   }
 }
@@ -78,9 +167,9 @@ button {
 nav {
   a {
     font-weight: 600;
-    font-size: 16.5px;
+    font-size: 16px;
     line-height: 20px;
-    letter-spacing: 0.105em;
+    letter-spacing: 0.05em;
     color: $darkColor;
   }
 }
@@ -89,8 +178,28 @@ nav {
 * Classes
 */
 
+.logo {
+  width: $logoWidth;
+  height: $logoHeight;
+}
+
 .shadow {
   box-shadow: 4px 0px 24px rgba(0, 0, 0, 0.04);
+}
+
+.field-group {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.field-error {
+  color: $dangerColor;
+}
+
+.ng-touched.ng-invalid {
+  border-color: $dangerColor;
 }
 
 /*
@@ -98,21 +207,16 @@ nav {
 */
 
 // Extra small
-@media only screen and (max-width: 576px) {
-}
+@media only screen and (max-width: 576px) {}
 
 // Small
-@media only screen and (min-width: 576px) {
-}
+@media only screen and (min-width: 576px) {}
 
 // Medium
-@media only screen and (min-width: 768px) {
-}
+@media only screen and (min-width: 768px) {}
 
 // Large
-@media only screen and (min-width: 992px) {
-}
+@media only screen and (min-width: 992px) {}
 
 // Extra large
-@media only screen and (min-width: 1200px) {
-}
+@media only screen and (min-width: 1200px) {}

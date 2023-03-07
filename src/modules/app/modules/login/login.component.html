@@ -1,0 +1,22 @@
+<div class="card">
+  <h2>
+    <img class="logo" src="assets/images/logo.png" />
+    <span>Войти</span>
+  </h2>
+
+  <form [formGroup]="form" (ngSubmit)="handleFormSubmit()">
+    <div class="field-group">
+      <input type="text" formControlName="username" placeholder="Имя" />
+      <input type="password" formControlName="password" placeholder="Пароль" />
+
+      <div class="field-error" *ngIf="form.errors != null">
+        <span
+          *ngIf="form.getError('user-data') != null"
+          [textContent]="form.getError('user-data')"
+        ></span>
+      </div>
+
+      <button type="submit" class="success">Войти</button>
+    </div>
+  </form>
+</div>

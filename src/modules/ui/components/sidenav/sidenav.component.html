@@ -1,17 +1,22 @@
-<ng-template #navItem let-path="path" let-title="title" let-icon="icon">
+<ng-template #navItem let-path="path" let-title="title" let-data="data">
   <a [routerLink]="path" routerLinkActive="active">
-    <img class="icon" src="assets/icons/user.svg" />
+    <app-svg-icon
+      class="icon"
+      size="24px"
+      [name]="data.icon"
+      *ngIf="data.icon != null"
+    ></app-svg-icon>
+    <img
+      class="image"
+      [src]="'assets/images/' + data.image"
+      *ngIf="data.image != null"
+    />
     <span class="title" [textContent]="title"></span>
   </a>
 </ng-template>
 
 <div class="menu" [class.open]="opened">
   <nav class="top">
-    <a routerLink="">
-      <img class="logo" src="assets/images/logo.png" />
-      <span class="title" [textContent]="logoTitle"></span>
-    </a>
-
     <ng-container
       *ngFor="let route of topRoutes"
       [ngTemplateOutlet]="navItem"
@@ -25,11 +30,11 @@
       [ngTemplateOutlet]="navItem"
       [ngTemplateOutletContext]="route"
     ></ng-container>
-  </nav>
 
-  <button type="button" class="toggler" (click)="opened = !opened">></button>
+    <button type="button" class="toggler" (click)="opened = !opened">></button>
+  </nav>
 </div>
 
-<div class="content" [class.full]="isContentFull">
+<div class="content">
   <ng-content></ng-content>
 </div>
