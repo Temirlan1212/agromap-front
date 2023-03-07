@@ -8,6 +8,7 @@ import { SidenavComponent } from '../ui/components/sidenav/sidenav.component';
 
 @NgModule({
   declarations: [AppComponent],
+
   imports: [
     BrowserModule,
     AppRoutingModule,

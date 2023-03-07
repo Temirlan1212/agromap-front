@@ -1,0 +1,7 @@
+@import "constants";
+
+.panel {
+  width: $sidePanelContentWidth;
+  background: $primaryBackgroundColor;
+  padding: 24px 16px;
+}

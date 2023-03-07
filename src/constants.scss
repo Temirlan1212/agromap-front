@@ -10,6 +10,7 @@ $secondaryColor: #e1e1e1;
 $successColor: #27ae60;
 $dangerColor: #e34645;
 $warningColor: #e7f082;
+$primaryBackgroundColor: #fff;
 
 // Sidenav
 $sideNavMenuBgColor: #eeeff2;
@@ -34,7 +35,9 @@ $sideNavMenuOpenWidth: 250px;
 $sideNavMenuItemGap: 10px;
 $sideNavMenuItemPadding: 14px;
 $sideNavMenuItemIconMargin: 14px;
-$sideNavContentWidth: 436px;
+
+// Side Panel
+$sidePanelContentWidth: 436px;
 
 // Input
 $inputBorderRadius: 4px;
@@ -47,3 +50,8 @@ $inputBorderRadius: 4px;
 
 // Sidenav
 $sideNavTransitionDelay: 0.25s;
+
+// Side dialog
+$sideDialogTitleVerticalMarginSize: 24px;
+$sideDialogVerticalPaddingSize: 24px;
+$sideDialogHorizontalPaddingSize: 20px;
