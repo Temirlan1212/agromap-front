@@ -8,14 +8,8 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-  ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    SidenavComponent,
-  ],
+  declarations: [AppComponent],
+  imports: [BrowserModule, AppRoutingModule, SidenavComponent],
   providers: [
     {
       provide: HTTP_INTERCEPTORS,
