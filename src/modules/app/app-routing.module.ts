@@ -36,6 +36,14 @@ const routes: Routes = [
       ),
   },
   {
+    title: 'Reports',
+    path: 'reports',
+    data: { position: 'top', icon: 'reports' },
+    canActivate: [AuthGuard],
+    loadChildren: () =>
+      import('./modules/reports/reports.module').then((m) => m.ReportsModule),
+  },
+  {
     title: 'Profile',
     path: 'profile',
     data: { position: 'bottom', icon: 'user' },
