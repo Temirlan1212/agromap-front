@@ -6,8 +6,8 @@ const routes: Routes = [
   {
     title: 'GiproZem',
     path: '',
-    data: { position: 'top', image: 'logo.png' },
-    redirectTo: 'analytics',
+    data: { position: 'top', image: 'logo.png', class: 'homepage' },
+    redirectTo: 'home',
     pathMatch: 'full',
   },
   {
@@ -17,6 +17,13 @@ const routes: Routes = [
       import('src/modules/app/modules/login/login.module').then(
         (m) => m.LoginModule
       ),
+  },
+  {
+    title: 'Home',
+    path: 'home',
+    canActivate: [AuthGuard],
+    loadChildren: () =>
+      import('./modules/home/home.module').then((m) => m.HomeModule),
   },
   {
     title: 'Analytics',
