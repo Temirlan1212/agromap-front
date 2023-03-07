@@ -6,8 +6,8 @@ const routes: Routes = [
   {
     title: 'GiproZem',
     path: '',
-    data: { position: 'top', image: 'logo.png' },
-    redirectTo: 'analytics',
+    data: { position: 'top', image: 'logo.png', class: 'homepage' },
+    redirectTo: 'home',
     pathMatch: 'full',
   },
   {
@@ -19,6 +19,13 @@ const routes: Routes = [
       ),
   },
   {
+    title: 'Home',
+    path: 'home',
+    canActivate: [AuthGuard],
+    loadChildren: () =>
+      import('./modules/home/home.module').then((m) => m.HomeModule),
+  },
+  {
     title: 'Analytics',
     path: 'analytics',
     data: { position: 'top', icon: 'analytics' },
@@ -27,6 +34,14 @@ const routes: Routes = [
       import('./modules/analytics/analytics.module').then(
         (m) => m.AnalyticsModule
       ),
+  },
+  {
+    title: 'Reports',
+    path: 'reports',
+    data: { position: 'top', icon: 'reports' },
+    canActivate: [AuthGuard],
+    loadChildren: () =>
+      import('./modules/reports/reports.module').then((m) => m.ReportsModule),
   },
   {
     title: 'Profile',

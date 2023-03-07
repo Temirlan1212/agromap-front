@@ -1,5 +1,10 @@
 <ng-template #navItem let-path="path" let-title="title" let-data="data">
-  <a [routerLink]="path" routerLinkActive="active">
+  <a
+    routerLinkActive="active"
+    [routerLink]="path"
+    [routerLinkActiveOptions]="{ exact: true }"
+    [ngClass]="data.class"
+  >
     <app-svg-icon
       class="icon"
       size="24px"
