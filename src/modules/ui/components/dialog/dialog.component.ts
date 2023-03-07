@@ -1,29 +1,10 @@
 import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { animate, state, style, transition, trigger } from '@angular/animations';
 
 @Component({
   selector: 'app-dialog',
   templateUrl: './dialog.component.html',
   styleUrls: ['./dialog.component.scss'],
-  standalone: true,
-  imports: [BrowserAnimationsModule],
-  animations: [
-    trigger('openModal', [
-      state('open', style({
-        transform: 'translateY(0%)'
-      })),
-      state('close', style({
-        transform: 'translateY(-150%)'
-      })),
-      transition('open => close', [
-        animate('0.2s ease-in-out')
-      ]),
-      transition('close => open', [
-        animate('0.2s ease')
-      ])
-    ])
-  ]
+  standalone: true
 })
 export class DialogComponent {
 
