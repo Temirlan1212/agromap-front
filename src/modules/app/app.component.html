@@ -1,3 +1,11 @@
-<app-sidenav [topRoutes]="topRoutes" logoTitle="GiproZem">
+<app-sidenav
+  [routes]="routes"
+  logoTitle="GiproZem"
+  *ngIf="currentUser != null; else noUser"
+>
   <router-outlet></router-outlet>
 </app-sidenav>
+
+<ng-template #noUser>
+  <router-outlet></router-outlet>
+</ng-template>

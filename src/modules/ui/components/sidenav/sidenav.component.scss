@@ -17,7 +17,7 @@
   &.open {
     width: $sideNavMenuOpenWidth;
 
-    & + .content {
+    &+.content {
       left: $sideNavMenuOpenWidth;
     }
 
@@ -31,6 +31,7 @@
   }
 
   .toggler {
+    width: 100%;
     border-radius: 0;
   }
 
@@ -47,9 +48,9 @@
         background-color: $sideNavMenuItemHoverBgColor;
       }
 
-      .logo {
-        width: $sideNavMenuItemLogoWidth;
-        height: $sideNavMenuItemLogoWidth;
+      .image {
+        width: 100%;
+        max-width: $sideNavMenuWidth - $sideNavMenuItemPadding - $sideNavMenuItemIconMargin;
       }
 
       .icon {
