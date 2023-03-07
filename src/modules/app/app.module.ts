@@ -17,6 +17,6 @@ import { AppComponent } from './app.component';
       multi: true,
     },
   ],
-  bootstrap: [AppComponent],
+  bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule { }
