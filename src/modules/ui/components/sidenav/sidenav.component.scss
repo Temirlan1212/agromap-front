@@ -68,10 +68,6 @@
   top: 0;
   bottom: 0;
   left: $sideNavMenuWidth;
-  width: $sideNavContentWidth;
   transition: left $sideNavTransitionDelay;
-
-  &.full {
-    width: 100%;
-  }
+  width: 100%;
 }

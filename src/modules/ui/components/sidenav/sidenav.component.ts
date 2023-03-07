@@ -12,7 +12,6 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
   styleUrls: ['./sidenav.component.scss'],
 })
 export class SidenavComponent {
-  @Input() isContentFull: boolean = true;
   @Input() logoTitle: string = '';
   @Input() topRoutes: IRoutes[] = [];
   @Input() bottomRoutes: IRoutes[] = [];
