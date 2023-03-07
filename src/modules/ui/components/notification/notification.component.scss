@@ -1,0 +1,57 @@
+@import "constants";
+
+:host {
+  position: fixed;
+  right: 25px;
+  top: 25px;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  width: 340px;
+  min-height: 40px;
+  padding: 12px;
+  gap: 10px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  letter-spacing: 0.02em;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 19px;
+  text-align: center;
+
+  .message {
+    flex: 1 1 1px;
+    color: $lightColor;
+  }
+
+  .notification-icon,
+  .notification-close {
+    color: inherit;
+  }
+
+  &.warning {
+    background-color: #FFA500;
+    color: $lightColor;
+  }
+
+  &.error {
+    background-color: $dangerColor;
+    color: $lightColor;
+  }
+
+  &.success {
+    background-color: $successColor;
+    color: $lightColor;
+  }
+
+  &.info {
+    background-color: $primaryColor;
+    color: $lightColor;
+  }
+
+  .notification-close{
+    background-color: transparent;
+    color: $lightColor;
+    padding: 0;
+  }
+}

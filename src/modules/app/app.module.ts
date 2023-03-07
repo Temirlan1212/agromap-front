@@ -6,16 +6,18 @@ import { SidenavComponent } from '../ui/components/sidenav/sidenav.component';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { NotificationHostDirective } from '../ui/components/notification/notification-host.directive';
 
 @NgModule({
   declarations: [
     AppComponent,
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    SidenavComponent,
-  ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        SidenavComponent,
+        NotificationHostDirective,
+    ],
   providers: [
     {
       provide: HTTP_INTERCEPTORS,
