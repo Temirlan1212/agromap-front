@@ -1,0 +1,23 @@
+@import "constants";
+
+:host {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  height: 100%;
+  background-color: $secondaryColor;
+}
+
+.card {
+  min-width: 320px;
+  padding: 20px;
+  border-radius: 4px;
+  background-color: $lightColor;
+}
+
+h2 {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
