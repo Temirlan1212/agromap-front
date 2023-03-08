@@ -1,22 +1,30 @@
+@import "constants";
+
 :host{
   position: relative;
+  display: block;
 
   input{
     padding-right:35px;
+    width: 100%;
+    &:focus{
+      border-color: rgba(27, 85, 235, 0.48);
+    }
   }
 
   .right{
     position: absolute;
     z-index: 1;
-    top: 1%;
+    top: 35%;
     right: 10px;
     cursor: pointer;
   }
   .left{
     position: absolute;
     z-index: 1;
-    top: .5%;
+    top: 35%;
     left: 10px;
     cursor: pointer;
   }
+
 }
