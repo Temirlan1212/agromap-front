@@ -1,7 +1,15 @@
 <app-side-panel>
-  <h4>Фильтрация показателей</h4>
+  <app-contour-filter></app-contour-filter>
+  <router-outlet></router-outlet>
 </app-side-panel>
 
 <div class="map-container">
-  <app-map (mapInstance)="handleMapInstance($event)"></app-map>
+  <app-map
+    (mapData)="handleMapData($event)"
+    (mapMove)="handleMapMove($event)"
+    (featureClick)="handleFeatureClick($event)"
+    (featureClose)="handleFeatureClose()"
+  >
+    <app-spline-area-chart></app-spline-area-chart>
+  </app-map>
 </div>

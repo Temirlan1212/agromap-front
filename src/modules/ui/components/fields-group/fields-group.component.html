@@ -1,0 +1,14 @@
+<button type="button" class="transparent" (click)="handleButtonClick()">
+  <h5 [textContent]="title"></h5>
+  <app-svg-icon
+    name="arrow-down"
+    size="14"
+    [class.closed]="closed"
+  ></app-svg-icon>
+</button>
+
+<div class="body" [class.closed]="closed">
+  <div class="content">
+    <ng-content></ng-content>
+  </div>
+</div>

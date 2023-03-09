@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
-import { Map, TileLayer, tileLayer, GeoJSON, geoJSON } from 'leaflet';
+import { Component, ElementRef, ViewChild } from '@angular/core';
+import { TileLayer, tileLayer } from 'leaflet';
+import { Feature } from 'geojson';
 import { ApiService } from 'src/modules/api/api.service';
+import { MapData, MapLayerFeature, MapMove } from 'src/modules/ui/models/map.model';
 
 @Component({
   selector: 'app-home',
@@ -8,34 +10,41 @@ import { ApiService } from 'src/modules/api/api.service';
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent {
+  @ViewChild('featurePopup') featurePopup!: ElementRef<HTMLElement>;
+
   wms: TileLayer = tileLayer.wms('https://geoserver.24mycrm.com/agromap/wms', {
     layers: 'agromap:agromap_store',
     format: 'image/png',
     transparent: true,
   });
-  geoJson: GeoJSON = geoJSON();
-  mapInstance: Map | null = null;
+
+  mapData: MapData | null = null;
+  layerFeature: MapLayerFeature | null = null;
 
   constructor(private api: ApiService) {}
 
-  handleMapInstance(mapInstance: Map): void {
-    mapInstance.addLayer(this.wms);
-    mapInstance.addLayer(this.geoJson);
-    this.mapInstance = mapInstance;
-    this.mapInstance.on('moveend', this.handleMapMove.bind(this));
+  handleMapData(mapData: MapData): void {
+    mapData.map.addLayer(this.wms);
+    this.mapData = mapData;
   }
 
-  async handleMapMove(): Promise<void> {
-    if (this.mapInstance != null) {
-      const bounds = this.mapInstance.getBounds();
-      const zoom = this.mapInstance.getZoom();
+  handleFeatureClick(layerFeature: MapLayerFeature): void {
+    this.layerFeature = layerFeature;
+  }
 
-      this.geoJson.clearLayers();
+  handleFeatureClose(): void {
+    this.layerFeature = null;
+  }
 
-      if (zoom >= 12) {
+  async handleMapMove(mapMove: MapMove): Promise<void> {
+    if (this.mapData?.map != null) {
+      this.mapData.geoJson.clearLayers();
+
+      if (mapMove.zoom >= 12) {
         try {
-          const polygons = await this.api.map.getPolygonsInScreen(bounds);
-          this.geoJson.addData(polygons);
+          const polygons = await this.api.map.getPolygonsInScreen(mapMove.bounds);
+          console.log(polygons);
+          this.mapData.geoJson.addData(polygons);
         } catch (e: any) {
           console.log(e);
         }

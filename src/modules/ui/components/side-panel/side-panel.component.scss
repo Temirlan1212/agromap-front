@@ -1,6 +1,11 @@
 @import "constants";
 
+:host {
+  z-index: 500;
+}
+
 .panel {
+  height: 100%;
   width: $sidePanelContentWidth;
   background: $primaryBackgroundColor;
   padding: 24px 16px;

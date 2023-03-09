@@ -1,0 +1,39 @@
+@import "constants";
+
+:host {
+  h5 {
+    margin: 0;
+  }
+
+  app-svg-icon {
+    transform: rotate(180deg);
+    transition: transform $fieldsGroupTransitionDelay;
+
+    &.closed {
+      transform: rotate(0deg);
+    }
+  }
+
+  button {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: $fieldsGroupButtonGap;
+    width: 100%;
+    border-bottom: 1px solid $secondaryColor;
+  }
+
+  .body {
+    max-height: 100vh;
+    overflow: hidden;
+    transition: max-height $fieldsGroupTransitionDelay;
+
+    .content {
+      padding: $fieldsGroupContentPadding;
+    }
+
+    &.closed {
+      max-height: 0;
+    }
+  }
+}

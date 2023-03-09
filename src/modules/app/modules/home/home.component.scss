@@ -1,15 +1,11 @@
+@import "constants";
+
 :host {
   display: flex;
   height: 100%;
 }
 
-app-side-panel {
-  h4 {
-    margin-top: 0;
-    text-align: center;
-  }
-}
-
 .map-container {
+  position: relative;
   flex: 1;
 }

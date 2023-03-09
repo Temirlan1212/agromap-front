@@ -31,7 +31,9 @@
       [ngTemplateOutletContext]="route"
     ></ng-container>
 
-    <button type="button" class="toggler" (click)="opened = !opened">></button>
+    <button type="button" class="toggler" (click)="opened = !opened">
+      <app-svg-icon name="arrow-down" size="14"></app-svg-icon>
+    </button>
   </nav>
 </div>
 

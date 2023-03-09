@@ -5,9 +5,9 @@ import { IUser } from '../models/user.model';
 export class UserApi {
   constructor(private http: HttpClient) {}
 
-  async logIn(data: Partial<IUser>): Promise<any> {
+  async logIn(data: Partial<IUser>): Promise<IUser> {
     const response = await firstValueFrom(
-      this.http.post<HttpResponse<IUser>>('login_agromap', data)
+      this.http.post<IUser>('login_agromap', data)
     );
 
     if (document != null && response != null) {
