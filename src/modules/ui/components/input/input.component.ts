@@ -30,6 +30,7 @@ export class InputComponent implements ControlValueAccessor{
   @Input() leftIcon: string | null = null;
   @Input() rightIcon: string | null = 'user';
   @Input() value: string | null = null;
+  isActive: boolean = false;
 
   handleRightIconClick(e:Event) {
     e.preventDefault();
@@ -42,7 +43,13 @@ export class InputComponent implements ControlValueAccessor{
 
   handleInputChange(e: KeyboardEvent){
     const inputValue = this.inputElement.nativeElement.value;
-    this.value = (inputValue !== '') ? inputValue : null;
+    if (inputValue !== ''){
+      this.value = inputValue;
+      this.isActive = true;
+    }else{
+      this.value = null;
+      this.isActive = false;
+    }
     this.onChange(this.value);
   }
 
