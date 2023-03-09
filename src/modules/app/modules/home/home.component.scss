@@ -3,6 +3,13 @@
   height: 100%;
 }
 
+app-side-panel {
+  h4 {
+    margin-top: 0;
+    text-align: center;
+  }
+}
+
 .map-container {
   flex: 1;
 }

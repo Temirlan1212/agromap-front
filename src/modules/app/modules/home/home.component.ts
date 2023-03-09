@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import * as L from 'leaflet';
+import { Map, TileLayer, tileLayer, GeoJSON, geoJSON } from 'leaflet';
+import { ApiService } from 'src/modules/api/api.service';
 
 @Component({
   selector: 'app-home',
@@ -7,20 +8,38 @@ import * as L from 'leaflet';
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent {
-  wms: L.TileLayer = L.tileLayer.wms(
-    'https://geoserver.24mycrm.com/agromap/wms',
-    {
-      layers: 'agromap:agromap_store',
-      format: 'image/png',
-      transparent: true,
-    }
-  );
-  mapInstance: L.Map | null = null;
+  wms: TileLayer = tileLayer.wms('https://geoserver.24mycrm.com/agromap/wms', {
+    layers: 'agromap:agromap_store',
+    format: 'image/png',
+    transparent: true,
+  });
+  geoJson: GeoJSON = geoJSON();
+  mapInstance: Map | null = null;
 
-  constructor() {}
+  constructor(private api: ApiService) {}
 
-  handleMapInstance(mapInstance: L.Map): void {
+  handleMapInstance(mapInstance: Map): void {
     mapInstance.addLayer(this.wms);
+    mapInstance.addLayer(this.geoJson);
     this.mapInstance = mapInstance;
+    this.mapInstance.on('moveend', this.handleMapMove.bind(this));
+  }
+
+  async handleMapMove(): Promise<void> {
+    if (this.mapInstance != null) {
+      const bounds = this.mapInstance.getBounds();
+      const zoom = this.mapInstance.getZoom();
+
+      this.geoJson.clearLayers();
+
+      if (zoom >= 12) {
+        try {
+          const polygons = await this.api.map.getPolygonsInScreen(bounds);
+          this.geoJson.addData(polygons);
+        } catch (e: any) {
+          console.log(e);
+        }
+      }
+    }
   }
 }
