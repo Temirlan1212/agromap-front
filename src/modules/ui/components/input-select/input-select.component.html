@@ -1,38 +1,74 @@
 <div (click)="opened = !opened" [class.active]="opened">
-  <span class="placeholder" [class.floating]="selectedItems && selectedItems.length > 0"
-        [textContent]="placeholder"></span>
+  <span
+    class="placeholder"
+    [class.floating]="selectedItems && selectedItems.length > 0"
+    [textContent]="placeholder"
+  ></span>
 
   <span
-    *ngIf="selectedItems && selectedItems.length > 0 && multi; else singleItem">Выбрано элементов: {{selectedItems.length}}</span>
+    *ngIf="selectedItems && selectedItems.length > 0 && multi; else singleItem"
+    >Выбрано элементов: {{ selectedItems.length }}</span
+  >
   <ng-template #singleItem>
     <div class="item" *ngIf="selectedItems && selectedItems.length > 0">
       <span [textContent]="selectedItems && selectedItems[0][nameField]"></span>
-      <app-svg-icon name="clear" size="10" (click)="handleRemoveItem($event, selectedItems[0])"></app-svg-icon>
+      <app-svg-icon
+        name="clear"
+        size="10"
+        (click)="handleRemoveItem($event, selectedItems[0])"
+      ></app-svg-icon>
     </div>
   </ng-template>
 
   <div class="actions-icons">
-    <app-svg-icon name="clear" size="12" *ngIf="selectedItems && selectedItems.length > 0 && multi"
-                  (click)="handleClearAll()"></app-svg-icon>
-    <app-svg-icon name="arrow-down" size="14" [class.opened]="opened"></app-svg-icon>
+    <app-svg-icon
+      name="clear"
+      size="12"
+      *ngIf="selectedItems && selectedItems.length > 0 && multi"
+      (click)="handleClearAll()"
+    ></app-svg-icon>
+    <app-svg-icon
+      name="arrow-down"
+      size="14"
+      [class.opened]="opened"
+    ></app-svg-icon>
   </div>
-
 </div>
 
 <div class="options" [class.collapsed]="opened" *ngIf="items.length > 0">
-
-  <div class="selected-items" *ngIf="selectedItems && selectedItems.length !== 0 && multi">
+  <div
+    class="selected-items"
+    *ngIf="selectedItems && selectedItems.length !== 0 && multi"
+  >
     <div class="item" *ngFor="let item of selectedItems">
       <span [textContent]="item[nameField]"></span>
-      <app-svg-icon name="clear" size="10" (click)="handleRemoveItem($event, item)"></app-svg-icon>
+      <app-svg-icon
+        name="clear"
+        size="10"
+        (click)="handleRemoveItem($event, item)"
+      ></app-svg-icon>
     </div>
   </div>
 
-  <div><input #input type="text" placeholder="Поиск" (keyup)="handleSearch(input.value)"></div>
-
-  <div class="option" *ngFor="let item of localItems" (click)="handleItemClick($event, item)">
-    <span [textContent]="item[nameField]"></span>
-    <app-svg-icon name="tick" size="12" *ngIf="!!selectedItemsObj[item[idField]]"></app-svg-icon>
+  <div>
+    <input
+      #input
+      type="text"
+      placeholder="Поиск"
+      (keyup)="handleSearch(input.value)"
+    />
   </div>
 
+  <div
+    class="option"
+    *ngFor="let item of localItems"
+    (click)="handleItemClick($event, item)"
+  >
+    <span [textContent]="item[nameField]"></span>
+    <app-svg-icon
+      name="tick"
+      size="12"
+      *ngIf="!!selectedItemsObj[item[idField]]"
+    ></app-svg-icon>
+  </div>
 </div>

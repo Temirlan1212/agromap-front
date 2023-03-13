@@ -4,9 +4,8 @@ import { AuthGuard } from './auth.guard';
 
 const routes: Routes = [
   {
-    title: 'GiproZem',
+    title: 'App',
     path: '',
-    data: { position: 'top', image: 'logo.png', class: 'homepage' },
     redirectTo: 'home',
     pathMatch: 'full',
   },
@@ -19,26 +18,16 @@ const routes: Routes = [
       ),
   },
   {
-    title: 'Home',
+    title: 'GiproZem',
     path: 'home',
-    canActivate: [AuthGuard],
+    data: { position: 'top', image: 'logo.png', class: 'homepage' },
     loadChildren: () =>
       import('./modules/home/home.module').then((m) => m.HomeModule),
   },
   {
-    title: 'Analytics',
-    path: 'analytics',
-    data: { position: 'top', icon: 'analytics' },
-    canActivate: [AuthGuard],
-    loadChildren: () =>
-      import('./modules/analytics/analytics.module').then(
-        (m) => m.AnalyticsModule
-      ),
-  },
-  {
     title: 'Reports',
     path: 'reports',
-    data: { position: 'top', icon: 'reports' },
+    data: { position: 'top', icon: 'reports', authenticated: true },
     canActivate: [AuthGuard],
     loadChildren: () =>
       import('./modules/reports/reports.module').then((m) => m.ReportsModule),

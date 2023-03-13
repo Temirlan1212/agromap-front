@@ -1,9 +1,12 @@
 import {
   AfterContentInit,
   Component,
-  ElementRef, forwardRef,
+  ElementRef,
+  forwardRef,
   HostListener,
-  Input
+  Input,
+  OnChanges,
+  SimpleChanges,
 } from '@angular/core';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
 import { NgForOf, NgIf } from '@angular/common';
@@ -14,18 +17,18 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
   templateUrl: './input-select.component.html',
   styleUrls: ['./input-select.component.scss'],
   standalone: true,
-  imports: [
-    SvgIconComponent,
-    NgForOf,
-    NgIf
+  imports: [SvgIconComponent, NgForOf, NgIf],
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => InputSelectComponent),
+      multi: true,
+    },
   ],
-  providers: [{
-    provide: NG_VALUE_ACCESSOR,
-    useExisting: forwardRef(() => InputSelectComponent),
-    multi: true
-  }]
 })
-export class InputSelectComponent implements AfterContentInit, ControlValueAccessor{
+export class InputSelectComponent
+  implements AfterContentInit, ControlValueAccessor, OnChanges
+{
   onChange: Function = () => null;
   onTouched: Function = () => null;
 
@@ -37,15 +40,24 @@ export class InputSelectComponent implements AfterContentInit, ControlValueAcces
 
   @Input() idField: string = 'id';
   @Input() nameField: string = 'name';
+
   opened: boolean = false;
   selectedItemsObj: Record<string, any> = {};
-  localItems:Record<string, any>[] = [];
+  localItems: Record<string, any>[] = [];
 
-  constructor(private elementRef: ElementRef) {
-  }
+  constructor(private elementRef: ElementRef) {}
 
   ngAfterContentInit() {
     this.localItems = [...this.items];
+    if (this.selectedItems == null) {
+      this.selectedItems = [];
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['items'] != null) {
+      this.localItems = [...this.items];
+    }
   }
 
   @HostListener('document:click', ['$event.target'])
@@ -56,17 +68,21 @@ export class InputSelectComponent implements AfterContentInit, ControlValueAcces
     }
   }
 
-  handleItemClick(e:Event, item: Record<string, any>) {
-    if (this.multi){
-      this.handleMultiSelect(e,item);
-    }else{
-      this.handleSingleSelect(e,item);
+  handleItemClick(e: Event, item: Record<string, any>) {
+    if (this.multi) {
+      this.handleMultiSelect(e, item);
+    } else {
+      this.handleSingleSelect(e, item);
     }
-    this.onChange(this.selectedItems && this.selectedItems.length > 0 ? this.selectedItems : null);
+    this.onChange(
+      this.selectedItems && this.selectedItems.length > 0
+        ? this.selectedItems
+        : null
+    );
   }
 
-  handleMultiSelect(e: Event, item: Record<string, any>){
-    if (!this.selectedItemsObj[item[this.idField]]){
+  handleMultiSelect(e: Event, item: Record<string, any>) {
+    if (!this.selectedItemsObj[item[this.idField]]) {
       this.selectedItems?.push(item);
       this.selectedItemsObj[item[this.idField]] = item[this.nameField];
     } else {
@@ -74,8 +90,9 @@ export class InputSelectComponent implements AfterContentInit, ControlValueAcces
       this.selectedItemsObj[item[this.idField]] = null;
     }
   }
-  handleSingleSelect(e: Event, item: Record<string, any>){
-    if (!this.selectedItemsObj[item[this.idField]]){
+
+  handleSingleSelect(e: Event, item: Record<string, any>) {
+    if (!this.selectedItemsObj[item[this.idField]]) {
       this.selectedItems = [];
       this.selectedItemsObj = {};
       this.selectedItems.push(item);
@@ -89,16 +106,24 @@ export class InputSelectComponent implements AfterContentInit, ControlValueAcces
   handleRemoveItem(e: Event, item: Record<string, any>) {
     e.preventDefault();
     e.stopPropagation();
-    this.selectedItems = (this.selectedItems && this.selectedItems.filter(i => i[this.idField] !== item[this.idField]));
+    this.selectedItems =
+      this.selectedItems &&
+      this.selectedItems.filter((i) => i[this.idField] !== item[this.idField]);
     this.selectedItemsObj[item[this.idField]] = null;
-    this.onChange(this.selectedItems && this.selectedItems.length > 0 ? this.selectedItems : null);
+    this.onChange(
+      this.selectedItems && this.selectedItems.length > 0
+        ? this.selectedItems
+        : null
+    );
   }
 
   handleSearch(search: string) {
-    this.localItems  = this.items.filter(i => i[this.nameField].toLowerCase().includes(search.toLowerCase()));
+    this.localItems = this.items.filter((i) =>
+      i[this.nameField].toLowerCase().includes(search.toLowerCase())
+    );
   }
 
-  handleClearAll(){
+  handleClearAll() {
     this.selectedItems = [];
     this.selectedItemsObj = {};
     this.onChange(null);

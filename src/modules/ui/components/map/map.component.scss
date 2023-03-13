@@ -1,5 +1,37 @@
 @import "constants";
 
-#map {
+:host {
+  display: flex;
+  flex-direction: column;
   height: 100%;
+
+  &.open {
+    .feature-content {
+      display: block;
+    }
+  }
+}
+
+#map {
+  flex: 1;
+}
+
+.feature-content {
+  flex: 1;
+  z-index: 450;
+  display: none;
+  padding: 16px;
+  background-color: $lightColor;
+
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    overflow: hidden auto;
+
+    h4 {
+      margin: 0;
+    }
+  }
 }

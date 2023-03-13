@@ -1,0 +1,26 @@
+@import "constants";
+
+$indent: 0 20px;
+
+:host {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: $sidePanelContentWidth;
+  background-color: $lightColor;
+}
+
+.back {
+  display: flex;
+  align-items: center;
+  gap: $indent;
+
+  app-svg-icon {
+    transform: rotate(90deg);
+  }
+}
+
+.content {
+  padding: $indent;
+}

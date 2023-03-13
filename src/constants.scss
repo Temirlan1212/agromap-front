@@ -46,6 +46,15 @@ $sidePanelContentWidth: 436px;
 // Input
 $inputBorderRadius: 4px;
 
+// Side dialog
+$sideDialogTitleVerticalMarginSize: 24px;
+$sideDialogVerticalPaddingSize: 24px;
+$sideDialogHorizontalPaddingSize: 20px;
+
+// Fields group
+$fieldsGroupButtonGap: 16px;
+$fieldsGroupContentPadding: 16px;
+
 // Other
 
 /*
@@ -55,10 +64,5 @@ $inputBorderRadius: 4px;
 // Sidenav
 $sideNavTransitionDelay: 0.25s;
 
-// Side dialog
-$sideDialogTitleVerticalMarginSize: 24px;
-$sideDialogVerticalPaddingSize: 24px;
-$sideDialogHorizontalPaddingSize: 20px;
-
-// Input
-$inputBorderRadius: 4px;
+// Fields group
+$fieldsGroupTransitionDelay: 0.25s;

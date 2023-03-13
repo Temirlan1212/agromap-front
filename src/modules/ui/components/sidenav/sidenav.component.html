@@ -1,10 +1,5 @@
 <ng-template #navItem let-path="path" let-title="title" let-data="data">
-  <a
-    routerLinkActive="active"
-    [routerLink]="path"
-    [routerLinkActiveOptions]="{ exact: true }"
-    [ngClass]="data.class"
-  >
+  <a routerLinkActive="active" [routerLink]="path" [ngClass]="data.class">
     <app-svg-icon
       class="icon"
       size="24px"
@@ -36,7 +31,9 @@
       [ngTemplateOutletContext]="route"
     ></ng-container>
 
-    <button type="button" class="toggler" (click)="opened = !opened">></button>
+    <button type="button" class="toggler" (click)="opened = !opened">
+      <app-svg-icon name="arrow-down" size="14"></app-svg-icon>
+    </button>
   </nav>
 </div>
 

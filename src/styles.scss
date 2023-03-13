@@ -136,7 +136,7 @@ button {
   background-color: $secondaryColor;
   color: $darkColor;
 
-  &:hover {
+  &:not(:disabled):hover {
     opacity: 1;
   }
 
@@ -175,6 +175,12 @@ nav {
   }
 }
 
+hr {
+  margin: 16px 0;
+  border-top: none;
+  border-bottom: 1px solid $secondaryColor;
+}
+
 /*
 * Classes
 */
@@ -201,6 +207,10 @@ nav {
 
 .ng-touched.ng-invalid {
   border-color: $dangerColor;
+}
+
+.leaflet-interactive:hover {
+  fill: $primaryColor;
 }
 
 /*
