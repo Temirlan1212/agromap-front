@@ -44,7 +44,7 @@
         name="lang"
       ></app-svg-icon>
       <span class="title">{{ 'Language' | translate }}</span>
-      <div class="languages" [class.languages-opened]="langsOpened" #languagesDialog>
+      <div class="languages" [class.languages-opened]="langsOpened">
         <span (click)="handleLangChange($event, 'ru')">{{ 'Russian' | translate }}
           <app-svg-icon
             *ngIf="currentLang === 'ru'"

@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, HostListener, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive, Routes } from '@angular/router';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
@@ -16,7 +16,6 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
   styleUrls: ['./sidenav.component.scss'],
 })
 export class SidenavComponent implements OnInit {
-  @ViewChild('languagesDialog') languagesDialog!: ElementRef<HTMLElement>;
   @Input() routes: Routes = [];
 
   topRoutes: Routes = [];
@@ -50,7 +49,6 @@ export class SidenavComponent implements OnInit {
   }
 
   private chunkRoutes(routes: Routes): void {
-    console.log(this.routes);
     this.topRoutes = routes.filter(
       (f) => f.data != null && f.data['position'] === 'top'
     );
