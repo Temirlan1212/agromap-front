@@ -1,4 +1,5 @@
 @import "constants";
+@import '../node_modules/@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.css';
 
 *,
 *::before,
@@ -207,16 +208,21 @@ nav {
 */
 
 // Extra small
-@media only screen and (max-width: 576px) {}
+@media only screen and (max-width: 576px) {
+}
 
 // Small
-@media only screen and (min-width: 576px) {}
+@media only screen and (min-width: 576px) {
+}
 
 // Medium
-@media only screen and (min-width: 768px) {}
+@media only screen and (min-width: 768px) {
+}
 
 // Large
-@media only screen and (min-width: 992px) {}
+@media only screen and (min-width: 992px) {
+}
 
 // Extra large
-@media only screen and (min-width: 1200px) {}
+@media only screen and (min-width: 1200px) {
+}

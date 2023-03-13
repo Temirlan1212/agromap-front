@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import * as L from 'leaflet';
+import '@geoman-io/leaflet-geoman-free';
 
 @Component({
   selector: 'app-map',
@@ -21,7 +22,8 @@ export class MapComponent implements AfterViewInit {
 
   map: L.Map | null = null;
 
-  constructor() {}
+  constructor() {
+  }
 
   ngAfterViewInit(): void {
     this.initMap();
@@ -40,7 +42,12 @@ export class MapComponent implements AfterViewInit {
         }),
       ],
     });
-
+    this.map.pm.addControls({
+      position: 'topright',
+      drawCircle: false,
+    });
     this.mapInstance.emit(this.map);
   }
+
+
 }
