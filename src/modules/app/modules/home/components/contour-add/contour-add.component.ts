@@ -8,6 +8,7 @@ import { GeoJSON } from 'geojson';
 import { ContourFormComponent } from '../contour-form/contour-form.component';
 import { IContour } from '../../../../../api/models/contour.model';
 import { ApiService } from '../../../../../api/api.service';
+import { MessagesService } from '../../../../../ui/components/services/messages.service';
 
 @Component({
   selector: 'app-contour-add',
@@ -22,7 +23,8 @@ export class ContourAddComponent implements OnInit, OnDestroy {
   constructor(
     private mapService: MapService,
     private router: Router,
-    private api: ApiService
+    private api: ApiService,
+    private messages: MessagesService
   ) {
   }
 
@@ -88,24 +90,23 @@ export class ContourAddComponent implements OnInit, OnDestroy {
       ...rest,
       polygon: this.polygon
     };
-
-    if (!formState.valid) {
-      console.log('Форма заполнена неверно');
+    if (!formState.touched) {
+      this.messages.error('Нет изменений в форме');
       return;
     }
-    if (!formState.touched) {
-      console.log('Нет изменений в форме');
+    if (!formState.valid) {
+      this.messages.error('Форма заполнена неверно');
       return;
     }
     if (!this.polygon) {
-      console.log('Определите полигон на карте');
+      this.messages.error('Определите полигон на карте');
       return;
     }
     try {
       await this.api.contour.create(contour);
       this.router.navigate(['..']);
-    } catch (e) {
-      console.log(e);
+    } catch (e: any) {
+      this.messages.error(e.message);
     }
   }
 
