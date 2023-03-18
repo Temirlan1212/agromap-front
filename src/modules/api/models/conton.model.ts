@@ -1,3 +1,5 @@
+import { GeoJSON } from 'geojson';
+
 export interface IConton {
   id: number;
   created_at: string;
@@ -7,9 +9,11 @@ export interface IConton {
   name_ky: string;
   name_en: string;
   district: number;
+  region: number;
+  polygon: GeoJSON.MultiPolygon;
 }
 
 export interface IContonListQuery {
-  polygon: boolean;
-  district_id: number;
+  polygon?: boolean;
+  district_id?: number;
 }

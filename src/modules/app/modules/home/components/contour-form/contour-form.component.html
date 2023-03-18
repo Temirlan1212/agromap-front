@@ -1,0 +1,65 @@
+<form class="content" [formGroup]="form">
+  <div class="field-group">
+    <app-input-select
+      [items]="regionList"
+      placeholder="Регион"
+      nameField="name_ru"
+      formControlName="region">
+    </app-input-select>
+
+    <app-input-select
+      [items]="districtList"
+      placeholder="Район"
+      formControlName="district"
+      nameField="name_ru">
+    </app-input-select>
+
+    <app-input-select
+      (onSelectItem)="onChange.emit($event)"
+      placeholder="Айыльный округ"
+      [items]="contonList"
+      nameField="name_ru"
+      formControlName="conton">
+    </app-input-select>
+
+    <app-input-select
+      [items]="landTypeList"
+      formControlName="type"
+      nameField="name_ru"
+      placeholder="Вид угодий">
+    </app-input-select>
+
+    <app-input-select
+      [items]="cultureList"
+      formControlName="culture"
+      nameField="name_ru"
+      placeholder="Вид культуры">
+    </app-input-select>
+
+    <app-input
+      type="number"
+      placeholder="Урожайность"
+      formControlName="productivity">
+    </app-input>
+
+    <app-input
+      type="number"
+      [min]="2010"
+      [max]="2023"
+      placeholder="Год"
+      formControlName="year">
+    </app-input>
+
+    <app-input
+      type="text"
+      placeholder="Код СОАТО"
+      formControlName="code_soato">
+    </app-input>
+
+    <app-input
+      type="text"
+      placeholder="ИНК"
+      formControlName="ink">
+    </app-input>
+  </div>
+</form>

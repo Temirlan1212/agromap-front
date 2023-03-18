@@ -13,6 +13,9 @@ import { ContourAddComponent } from './components/contour-add/contour-add.compon
 import { FieldsGroupComponent } from 'src/modules/ui/components/fields-group/fields-group.component';
 import { SplineAreaChartComponent } from './components/spline-area-chart/spline-area-chart.component';
 import { NgApexchartsModule } from 'ng-apexcharts';
+import { ContourFormComponent } from './components/contour-form/contour-form.component';
+import { InputComponent } from '../../../ui/components/input/input.component';
+import { MapService } from './map.service';
 
 @NgModule({
   declarations: [
@@ -20,6 +23,7 @@ import { NgApexchartsModule } from 'ng-apexcharts';
     ContourFilterComponent,
     ContourAddComponent,
     SplineAreaChartComponent,
+    ContourFormComponent,
   ],
   imports: [
     CommonModule,
@@ -32,6 +36,9 @@ import { NgApexchartsModule } from 'ng-apexcharts';
     SvgIconComponent,
     FieldsGroupComponent,
     NgApexchartsModule,
+    InputComponent,
   ],
+  providers: [MapService]
 })
-export class HomeModule {}
+export class HomeModule {
+}

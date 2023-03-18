@@ -1,11 +1,10 @@
 import {
-  AfterViewInit,
   Component,
   EventEmitter,
   HostBinding,
   Inject,
   Input,
-  LOCALE_ID,
+  LOCALE_ID, OnDestroy,
   OnInit,
   Output,
 } from '@angular/core';
@@ -26,6 +25,7 @@ import {
 } from 'leaflet';
 import { MapData, MapLayerFeature, MapMove } from '../../models/map.model';
 import '@geoman-io/leaflet-geoman-free';
+import { debounceTime, fromEvent, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-map',
@@ -35,13 +35,13 @@ import '@geoman-io/leaflet-geoman-free';
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.scss'],
 })
-export class MapComponent implements OnInit {
+export class MapComponent implements OnInit, OnDestroy {
   @Input() center: LatLng = latLng(41.84, 75.06);
   @Input() maxBounds: LatLngBounds = latLngBounds(
     latLng(44.0, 68.0),
     latLng(39.0, 81.0)
   );
-
+  subscriptions: Subscription[] = [];
   @Output() mapData = new EventEmitter<MapData>();
   @Output() mapMove = new EventEmitter<MapMove>();
   @Output() featureClick = new EventEmitter<MapLayerFeature>();
@@ -59,7 +59,8 @@ export class MapComponent implements OnInit {
     },
   });
 
-  constructor(@Inject(LOCALE_ID) public locale: string) {}
+  constructor(@Inject(LOCALE_ID) public locale: string) {
+  }
 
   ngOnInit(): void {
     this.initMap();
@@ -70,7 +71,7 @@ export class MapComponent implements OnInit {
       attributionControl: false,
       center: this.center,
       maxBounds: this.maxBounds,
-      maxZoom: 16,
+      maxZoom: 18,
       minZoom: 6,
       zoom: 6,
       layers: [
@@ -81,7 +82,10 @@ export class MapComponent implements OnInit {
     });
 
     this.map.addLayer(this.geoJson);
-    this.map.on('moveend', this.handleMapMove.bind(this));
+    const s = fromEvent(this.map, 'moveend')
+      .pipe(debounceTime(1000))
+      .subscribe(() => this.handleMapMove());
+    this.subscriptions.push(s);
     this.mapData.emit({ map: this.map, geoJson: this.geoJson });
   }
 
@@ -89,7 +93,6 @@ export class MapComponent implements OnInit {
     if (this.map != null) {
       const zoom = this.map.getZoom();
       const bounds = this.map.getBounds();
-
       this.mapMove.emit({ zoom, bounds });
     }
   }
@@ -102,5 +105,9 @@ export class MapComponent implements OnInit {
   handleFeatureClose(): void {
     this.featureOpen = false;
     this.featureClose.emit();
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.forEach(s => s.unsubscribe());
   }
 }

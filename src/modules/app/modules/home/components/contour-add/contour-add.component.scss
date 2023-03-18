@@ -3,6 +3,10 @@
 $indent: 0 20px;
 
 :host {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 16px;
   position: absolute;
   top: 0;
   left: 0;
@@ -23,4 +27,13 @@ $indent: 0 20px;
 
 .content {
   padding: $indent;
+}
+
+.actions {
+  display: flex;
+  gap: 32px;
+
+  button {
+    width: 100%;
+  }
 }

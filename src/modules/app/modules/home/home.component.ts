@@ -1,8 +1,8 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { TileLayer, tileLayer } from 'leaflet';
-import { Feature } from 'geojson';
 import { ApiService } from 'src/modules/api/api.service';
 import { MapData, MapLayerFeature, MapMove } from 'src/modules/ui/models/map.model';
+import { MapService } from './map.service';
 
 @Component({
   selector: 'app-home',
@@ -21,11 +21,13 @@ export class HomeComponent {
   mapData: MapData | null = null;
   layerFeature: MapLayerFeature | null = null;
 
-  constructor(private api: ApiService) {}
+  constructor(private api: ApiService, private mapService: MapService) {
+  }
 
   handleMapData(mapData: MapData): void {
     mapData.map.addLayer(this.wms);
     this.mapData = mapData;
+    this.mapService.map.next(mapData);
   }
 
   handleFeatureClick(layerFeature: MapLayerFeature): void {
@@ -43,7 +45,8 @@ export class HomeComponent {
       if (mapMove.zoom >= 12) {
         try {
           const polygons = await this.api.map.getPolygonsInScreen(mapMove.bounds);
-          console.log(polygons);
+          this.mapData.geoJson.options.snapIgnore = true;
+          this.mapData.geoJson.options.pmIgnore = true;
           this.mapData.geoJson.addData(polygons);
         } catch (e: any) {
           console.log(e);

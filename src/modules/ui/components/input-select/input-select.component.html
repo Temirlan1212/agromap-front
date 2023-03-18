@@ -1,4 +1,4 @@
-<div (click)="opened = !opened" [class.active]="opened">
+<div (click)="handleSelectToggle($event)" [class.active]="opened">
   <span
     class="placeholder"
     [class.floating]="selectedItems && selectedItems.length > 0"
@@ -7,7 +7,7 @@
 
   <span
     *ngIf="selectedItems && selectedItems.length > 0 && multi; else singleItem"
-    >Выбрано элементов: {{ selectedItems.length }}</span
+  >Выбрано элементов: {{ selectedItems.length }}</span
   >
   <ng-template #singleItem>
     <div class="item" *ngIf="selectedItems && selectedItems.length > 0">
@@ -38,8 +38,7 @@
 <div class="options" [class.collapsed]="opened" *ngIf="items.length > 0">
   <div
     class="selected-items"
-    *ngIf="selectedItems && selectedItems.length !== 0 && multi"
-  >
+    *ngIf="selectedItems && selectedItems.length !== 0 && multi">
     <div class="item" *ngFor="let item of selectedItems">
       <span [textContent]="item[nameField]"></span>
       <app-svg-icon
@@ -55,15 +54,13 @@
       #input
       type="text"
       placeholder="Поиск"
-      (keyup)="handleSearch(input.value)"
-    />
+      (keyup)="handleSearch(input.value)"/>
   </div>
 
   <div
     class="option"
     *ngFor="let item of localItems"
-    (click)="handleItemClick($event, item)"
-  >
+    (click)="handleItemClick($event, item)">
     <span [textContent]="item[nameField]"></span>
     <app-svg-icon
       name="tick"
