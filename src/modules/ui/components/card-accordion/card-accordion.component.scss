@@ -5,7 +5,7 @@
   background-color: #F6F8F9;
   padding: 14px;
   display: block;
-  border-radius: $borderRadius;
+  border-radius: $cardAccordeonBorderRadius;
   min-width: 400px;
 
   .header {
@@ -49,7 +49,7 @@
     }
   }
 
-  dialog{
+  dialog {
     border: none;
     padding: 0;
     width: 0;
@@ -60,12 +60,12 @@
     z-index: 999999;
     transition: all .2s ease;
 
-    &.active{
+    &.active {
       right: -100%;
       opacity: 1;
     }
 
-    .dialog-content{
+    .dialog-content {
       display: flex;
       flex-direction: column;
       min-width: 200px;
@@ -75,10 +75,11 @@
       box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
       border-radius: 4px;
 
-      span{
+      span {
         cursor: pointer;
         padding: 12px;
-        &:hover{
+
+        &:hover {
           background-color: $secondaryColor;
         }
       }
@@ -87,7 +88,7 @@
 }
 
 :host ::ng-deep {
-  p,span{
+  p, span {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
