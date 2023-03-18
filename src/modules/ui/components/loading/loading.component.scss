@@ -1,0 +1,30 @@
+@import 'constants';
+
+:host {
+  .loading-block {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+  }
+
+  .spinner {
+    width: $iconSpinnerWidth;
+    height: $iconSpinnerHeight;
+    color: $primaryColor;
+  }
+
+  &.mini {
+    .spinner {
+      width: $iconMiniSpinnerWidth;
+      height: $iconMiniSpinnerHeight;
+    }
+  }
+
+  &.dynamic-color {
+    .spinner {
+      color: inherit;
+    }
+  }
+}
