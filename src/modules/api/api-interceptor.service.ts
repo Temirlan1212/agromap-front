@@ -27,11 +27,8 @@ export class ApiInterceptorService implements HttpInterceptor {
     const apiRequest = request.clone({
       url: `${ environment.apiUrl }/${ request.url }/`,
     });
-    if (request.context.get(BYPASS_LOG)) {
-      return next.handle(request);
-    }
 
-    return next.handle(apiRequest).pipe(
+    return next.handle(request.context.get(BYPASS_LOG) ? request : apiRequest).pipe(
       retry({
         count: 1,
         delay: async (error: HttpErrorResponse) => {
