@@ -14,6 +14,7 @@ import { Subscription } from 'rxjs';
 import { IRegion } from '../../../../../api/models/region.model';
 import { ILandType } from '../../../../../api/models/land-type.model';
 import { ICulture } from '../../../../../api/models/culture.model';
+import { MessagesService } from '../../../../../ui/components/services/messages.service';
 
 @Component({
   selector: 'app-contour-form',
@@ -44,8 +45,8 @@ export class ContourFormComponent implements OnInit, OnDestroy {
   }
 
   form: FormGroup = new FormGroup({
-    region: new FormControl<string | number | null>(null),
-    district: new FormControl<string | number | null>(null),
+    region: new FormControl<string | number | null>({ value: null, disabled: true }),
+    district: new FormControl<string | number | null>({ value: null, disabled: true }),
     conton: new FormControl<string | number | null>(null, Validators.required),
     type: new FormControl<string | number | null>(null),
     culture: new FormControl<string | number | null>(null),
@@ -74,7 +75,9 @@ export class ContourFormComponent implements OnInit, OnDestroy {
     }) as Subscription
   ];
 
-  constructor(private api: ApiService) {
+  constructor(
+    private api: ApiService,
+    private messages: MessagesService) {
   }
 
   ngOnInit() {
@@ -106,9 +109,8 @@ export class ContourFormComponent implements OnInit, OnDestroy {
         const selectedConton = this.contonList.find(c => c.id === this.form.get('conton')?.value);
         this.form.patchValue({ district: selectedConton?.district, region: selectedConton?.region });
       }
-    } catch (e) {
-      //TODO: использовать сервис уведомлений
-      console.log(e);
+    } catch (e: any) {
+      this.messages.error(e.message);
     }
   }
 
@@ -116,9 +118,8 @@ export class ContourFormComponent implements OnInit, OnDestroy {
     try {
       const res = await this.api.dictionary.getDistricts();
       this.districtList = res;
-    } catch (e) {
-      //TODO: использовать сервис уведомлений
-      console.log(e);
+    } catch (e: any) {
+      this.messages.error(e.message);
     }
   }
 
@@ -126,9 +127,8 @@ export class ContourFormComponent implements OnInit, OnDestroy {
     try {
       const res = await this.api.dictionary.getRegions() as IRegion[];
       this.regionList = res;
-    } catch (e) {
-      //TODO: использовать сервис уведомлений
-      console.log(e);
+    } catch (e: any) {
+      this.messages.error(e.message);
     }
   }
 
@@ -136,9 +136,8 @@ export class ContourFormComponent implements OnInit, OnDestroy {
     try {
       const res = await this.api.dictionary.getLandType();
       this.landTypeList = res;
-    } catch (e) {
-      //TODO: использовать сервис уведомлений
-      console.log(e);
+    } catch (e: any) {
+      this.messages.error(e.message);
     }
   }
 
@@ -146,9 +145,8 @@ export class ContourFormComponent implements OnInit, OnDestroy {
     try {
       const res = await this.api.culture.getList();
       this.cultureList = res;
-    } catch (e) {
-      //TODO: использовать сервис уведомлений
-      console.log(e);
+    } catch (e: any) {
+      this.messages.error(e.message);
     }
   }
 
