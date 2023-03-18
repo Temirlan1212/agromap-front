@@ -16,7 +16,7 @@
       [src]="'assets/images/' + data.image"
       *ngIf="data.image != null"
     />
-    <span class="title" [textContent]="title"></span>
+    <span class="title" [textContent]="title | translate"></span>
   </a>
 </ng-template>
 
@@ -35,6 +35,39 @@
       [ngTemplateOutlet]="navItem"
       [ngTemplateOutletContext]="route"
     ></ng-container>
+    <a class="language-switcher"
+       (click)="handleLangClick($event)"
+    >
+      <app-svg-icon
+        class="icon"
+        size="24px"
+        name="lang"
+      ></app-svg-icon>
+      <span class="title">{{ 'Language' | translate }}</span>
+      <div class="languages" [class.languages-opened]="langsOpened">
+        <span (click)="handleLangChange($event, 'ru')">{{ 'Russian' | translate }}
+          <app-svg-icon
+            *ngIf="currentLang === 'ru'"
+            size="14px"
+            name="check">
+          </app-svg-icon>
+        </span>
+        <span (click)="handleLangChange($event, 'ky')">{{ 'Kyrgyz' | translate }}
+          <app-svg-icon
+            *ngIf="currentLang === 'ky'"
+            size="14px"
+            name="check">
+          </app-svg-icon>
+        </span>
+        <span (click)="handleLangChange($event, 'en')">{{ 'English' | translate }}
+          <app-svg-icon
+            *ngIf="currentLang === 'en'"
+            size="14px"
+            name="check">
+          </app-svg-icon>
+        </span>
+      </div>
+    </a>
 
     <button type="button" class="toggler" (click)="opened = !opened">></button>
   </nav>

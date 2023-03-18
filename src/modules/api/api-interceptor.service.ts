@@ -1,4 +1,5 @@
 import {
+  HttpContextToken,
   HttpErrorResponse,
   HttpEvent,
   HttpHandler,
@@ -9,22 +10,25 @@ import { Injectable } from '@angular/core';
 import { Observable, retry, timer } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
+export const BYPASS_LOG = new HttpContextToken(() => false);
+
 @Injectable({ providedIn: 'root' })
 export class ApiInterceptorService implements HttpInterceptor {
   private apiErrorCallback: (error: HttpErrorResponse) => Promise<boolean> =
     async (error: HttpErrorResponse) => false;
 
-  constructor() {}
+  constructor() {
+  }
 
   intercept(
     request: HttpRequest<unknown>,
     next: HttpHandler
   ): Observable<HttpEvent<unknown>> {
     const apiRequest = request.clone({
-      url: `${environment.apiUrl}/${request.url}/`,
+      url: `${ environment.apiUrl }/${ request.url }/`,
     });
 
-    return next.handle(apiRequest).pipe(
+    return next.handle(request.context.get(BYPASS_LOG) ? request : apiRequest).pipe(
       retry({
         count: 1,
         delay: async (error: HttpErrorResponse) => {
