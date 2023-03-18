@@ -5,7 +5,6 @@ import { ApiInterceptorService } from '../api/api-interceptor.service';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { SidenavComponent } from '../ui/components/sidenav/sidenav.component';
-import { DialogComponent } from '../ui/components/dialog/dialog.component';
 
 @NgModule({
   declarations: [AppComponent],
@@ -15,7 +14,6 @@ import { DialogComponent } from '../ui/components/dialog/dialog.component';
     AppRoutingModule,
     SidenavComponent,
     HttpClientModule,
-    DialogComponent
   ],
   providers: [
     {
@@ -26,4 +24,5 @@ import { DialogComponent } from '../ui/components/dialog/dialog.component';
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule {
+}
