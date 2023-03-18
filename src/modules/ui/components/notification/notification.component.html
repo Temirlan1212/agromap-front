@@ -1,0 +1,32 @@
+<app-svg-icon
+  class="notification-icon"
+  name="rounded-error"
+  size="24px"
+  *ngIf="isError"
+></app-svg-icon>
+<app-svg-icon
+  class="notification-icon"
+  name="rounded-success"
+  size="24px"
+  *ngIf="isSuccess"
+></app-svg-icon>
+<app-svg-icon
+  class="notification-icon"
+  name="rounded-warning"
+  size="24px"
+  *ngIf="isWarning"
+></app-svg-icon>
+<app-svg-icon
+  class="notification-icon"
+  name="rounded-info"
+  size="24px"
+  *ngIf="isInfo"
+></app-svg-icon>
+
+<span class="message" [textContent]="message"></span>
+<button type="button" class="icon notification-close" (click)="closeCallback()">
+  <app-svg-icon
+    name="clear"
+    size="16px"
+  ></app-svg-icon>
+</button>
