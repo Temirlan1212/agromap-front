@@ -1,13 +1,17 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive, Routes } from '@angular/router';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-sidenav',
   standalone: true,
   host: { class: 'sidenav' },
-  imports: [CommonModule, RouterLink, RouterLinkActive, SvgIconComponent],
+  imports: [
+    CommonModule, RouterLink, RouterLinkActive, SvgIconComponent,
+    TranslateModule
+  ],
   templateUrl: './sidenav.component.html',
   styleUrls: ['./sidenav.component.scss'],
 })
@@ -17,8 +21,32 @@ export class SidenavComponent implements OnChanges {
   topRoutes: Routes = [];
   bottomRoutes: Routes = [];
   opened: boolean = false;
+  langsOpened: boolean = false;
+  currentLang!: string;
 
-  constructor() {}
+  constructor(public translate: TranslateService) {
+    this.currentLang = translate.getDefaultLang();
+  }
+
+
+  @HostListener('document:click', ['$event.target'])
+  public onClick(target: any) {
+    this.langsOpened = false;
+  }
+
+  handleLangClick(e: MouseEvent) {
+    e.preventDefault();
+    e.stopPropagation();
+    this.langsOpened = !this.langsOpened;
+  }
+
+  handleLangChange(e: MouseEvent, lang: string) {
+    e.preventDefault();
+    e.stopPropagation();
+    this.translate.use(lang);
+    this.currentLang = lang;
+    this.langsOpened = !this.langsOpened;
+  }
 
   private chunkRoutes(routes: Routes): void {
     this.topRoutes = routes.filter(
