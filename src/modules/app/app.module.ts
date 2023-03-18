@@ -24,4 +24,5 @@ import { SidenavComponent } from '../ui/components/sidenav/sidenav.component';
   ],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule {
+}
