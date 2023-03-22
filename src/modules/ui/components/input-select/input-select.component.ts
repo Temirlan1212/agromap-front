@@ -86,6 +86,7 @@ export class InputSelectComponent implements ControlValueAccessor, OnChanges {
         ? values
         : null
     );
+    this.onTouched();
   }
 
   handleMultiSelect(e: Event, item: Record<string, any>) {

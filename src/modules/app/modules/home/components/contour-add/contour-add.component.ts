@@ -3,7 +3,7 @@ import { MapService } from '../../map.service';
 import { Subscription } from 'rxjs';
 import { MapData } from '../../../../../ui/models/map.model';
 import { Router } from '@angular/router';
-import { Map, LeafletEvent, geoJson, latLngBounds, latLng } from 'leaflet';
+import { Map, LeafletEvent, geoJson, latLngBounds, latLng, Layer } from 'leaflet';
 import { GeoJSON } from 'geojson';
 import { ContourFormComponent } from '../contour-form/contour-form.component';
 import { IContour } from '../../../../../api/models/contour.model';
@@ -18,6 +18,7 @@ import { MessagesService } from '../../../../../ui/components/services/messages.
 export class ContourAddComponent implements OnInit, OnDestroy {
   mapSubscription!: Subscription;
   mapInstance!: Map;
+  layer: Layer | null = null;
   polygon: GeoJSON.Polygon | null = null;
 
   constructor(
@@ -31,6 +32,9 @@ export class ContourAddComponent implements OnInit, OnDestroy {
   async ngOnInit() {
     this.mapSubscription = this.mapService.map.subscribe((res: MapData | null) => {
       this.mapInstance = res?.map as Map;
+      this.mapInstance.pm.setGlobalOptions({
+        allowSelfIntersection: false,
+      });
       this.mapInstance.pm.setLang('ru');
       res?.map.pm.addControls({
         position: 'topleft',
@@ -56,6 +60,7 @@ export class ContourAddComponent implements OnInit, OnDestroy {
   handleDrawShape() {
     this.mapInstance.on('pm:create', (e: LeafletEvent) => {
       if (!this.polygon) {
+        this.layer = e['layer'];
         this.mapInstance.pm.Toolbar.setButtonDisabled('drawPolygon', true);
         const geoJson: any = this.mapInstance.pm.getGeomanDrawLayers(true).toGeoJSON();
         this.polygon = geoJson['features'][0]['geometry'];
@@ -91,7 +96,7 @@ export class ContourAddComponent implements OnInit, OnDestroy {
       polygon: this.polygon
     };
     if (!formState.touched) {
-      this.messages.error('Нет изменений в форме');
+      this.messages.warning('Нет изменений в форме');
       return;
     }
     if (!formState.valid) {
@@ -110,9 +115,16 @@ export class ContourAddComponent implements OnInit, OnDestroy {
     }
   }
 
+  handleDeletePolygon() {
+    this.mapInstance.removeLayer(this.layer as Layer);
+    this.layer = null;
+    this.polygon = null;
+  }
+
   ngOnDestroy() {
     this.mapSubscription.unsubscribe();
     this.mapInstance.pm.toggleControls();
+    this.handleDeletePolygon();
     this.mapInstance.off('pm:create');
     this.mapInstance.off('pm:remove');
   }

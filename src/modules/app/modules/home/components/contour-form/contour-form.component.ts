@@ -69,6 +69,7 @@ export class ContourFormComponent implements OnInit, OnDestroy {
     this.form.get('type')?.valueChanges.subscribe(res => {
       if (res && res === 1) {
         this.form.get('culture')?.disable();
+        this.form.get('culture')?.patchValue(null);
       } else {
         this.form.get('culture')?.enable();
       }

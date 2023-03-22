@@ -51,6 +51,7 @@ export class InputComponent implements ControlValueAccessor {
       this.value = null;
     }
     this.onChange(this.value);
+    this.onTouched();
   }
 
   writeValue(obj: string): void {
