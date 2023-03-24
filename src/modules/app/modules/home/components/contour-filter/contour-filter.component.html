@@ -12,17 +12,37 @@
           placeholder="Выберите регион"
           formControlName="region"
           [items]="regions"
-          [multi]="true"
           nameField="name_ru"
         ></app-input-select>
 
-        <div class="field-error" *ngIf="form.errors != null">
-          <span
-            *ngIf="form.getError('user-data') != null"
-            [textContent]="form.getError('user-data')"
-          ></span>
-        </div>
+        <app-input-select
+          placeholder="Выберите район"
+          formControlName="district"
+          [items]="districts"
+          nameField="name_ru"
+        ></app-input-select>
 
+        <app-input-select
+          placeholder="Выберите айыл-аймак"
+          formControlName="conton"
+          [items]="contons"
+          nameField="name_ru"
+        ></app-input-select>
+
+        <app-input-select
+          placeholder="Выберите тип угодий"
+          formControlName="land_type"
+          [items]="landTypes"
+          [multi]="true"
+          nameField="name_ru"
+        ></app-input-select>
+        <app-input
+          type="number"
+          [min]="2010"
+          [max]="2023"
+          placeholder="Выберите год"
+          formControlName="year">
+        </app-input>
         <button type="submit" class="success">Применить</button>
         <button type="reset">Очистить</button>
       </div>
@@ -38,4 +58,19 @@
       </button>
     </div>
   </app-fields-group>
+  <div class="contours-list" *ngIf="filteredContours.length > 0">
+    <app-card-accordion
+      *ngFor="let contour of filteredContours"
+      [title]="contour.contour_year.features[0].properties['contour_cs']"
+      (mouseClick)="handleContourClick(contour)">
+      <div class="card">
+        <span>Регион: {{contour.contour_year.features[0].properties['region_ru']}}</span>
+        <span>Район: {{contour.contour_year.features[0].properties['district_ru']}}</span>
+        <span>Айыл-аймак: {{contour.contour_year.features[0].properties['conton_ru']}}</span>
+        <span>Вид угодий: {{contour.contour_year.features[0].properties['land_type_ru']}}</span>
+        <span>Урожай: {{contour.contour_year.features[0].properties['productivity']}} ц. на га.</span>
+        <span>Площадь: {{contour.contour_year.features[0].properties['area_ha']}} га.</span>
+      </div>
+    </app-card-accordion>
+  </div>
 </div>

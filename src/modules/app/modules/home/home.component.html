@@ -1,10 +1,13 @@
 <app-side-panel>
-  <app-contour-filter></app-contour-filter>
+  <app-contour-filter
+    (onCardClick)="map.handleFeatureClick($event.layer, $event.feature)">
+  </app-contour-filter>
   <router-outlet></router-outlet>
 </app-side-panel>
 
 <div class="map-container">
   <app-map
+    #map
     (mapData)="handleMapData($event)"
     (mapMove)="handleMapMove($event)"
     (featureClick)="handleFeatureClick($event)"

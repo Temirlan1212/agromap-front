@@ -16,6 +16,7 @@ import { NgApexchartsModule } from 'ng-apexcharts';
 import { ContourFormComponent } from './components/contour-form/contour-form.component';
 import { InputComponent } from '../../../ui/components/input/input.component';
 import { MapService } from './map.service';
+import { CardAccordionComponent } from '../../../ui/components/card-accordion/card-accordion.component';
 
 @NgModule({
   declarations: [
@@ -37,6 +38,7 @@ import { MapService } from './map.service';
     FieldsGroupComponent,
     NgApexchartsModule,
     InputComponent,
+    CardAccordionComponent,
   ],
   providers: [MapService]
 })

@@ -9,6 +9,7 @@ $spaceFromTop: 35%;
   input {
     padding-right: 35px;
     width: 100%;
+    border-color: $inputBorderColor;
 
     &:focus {
       border-color: rgba(27, 85, 235, 0.48);
@@ -17,7 +18,6 @@ $spaceFromTop: 35%;
 
   .right {
     position: absolute;
-    z-index: 1;
     top: $spaceFromTop;
     right: 16px;
     cursor: pointer;

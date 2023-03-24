@@ -15,4 +15,5 @@ export interface IDistrict {
 export interface IDistrictListQuery {
   polygon?: boolean;
   region_id?: number | boolean;
+  ids?: string;
 }

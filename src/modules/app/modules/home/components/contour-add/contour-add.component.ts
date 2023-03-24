@@ -124,7 +124,9 @@ export class ContourAddComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.mapSubscription.unsubscribe();
     this.mapInstance.pm.toggleControls();
-    this.handleDeletePolygon();
+    if (this.layer) {
+      this.handleDeletePolygon();
+    }
     this.mapInstance.off('pm:create');
     this.mapInstance.off('pm:remove');
   }
