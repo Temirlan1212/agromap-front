@@ -26,10 +26,10 @@ export class ApiInterceptorService implements HttpInterceptor {
     next: HttpHandler
   ): Observable<HttpEvent<unknown>> {
     const token = this.api.user.getLoggedInUser()?.token;
-    const headers = new HttpHeaders();
+    let headers = new HttpHeaders();
 
     if (token != null) {
-      headers.append('Authorization', `token ${token}`);
+      headers = headers.append('Authorization', `token ${token}`);
     }
 
     const apiRequest = request.clone({
