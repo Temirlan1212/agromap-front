@@ -6,15 +6,13 @@ import { BYPASS_LOG } from './api-interceptor.service';
 
 @Injectable()
 export class LanguageService implements TranslateLoader {
-  baseUrl = 'http://localhost:4200/assets/i18n/';
-
-  constructor(private http: HttpClient) {
-  }
+  constructor(private http: HttpClient) {}
 
   getTranslation(lang: string): Observable<any> {
-    //TODO: change translations baseUrl on after deployment
-    return this.http.get(`${ this.baseUrl }${ lang }.json`, { context: new HttpContext().set(BYPASS_LOG, true) })
+    return this.http
+      .get(`/assets/i18n/${lang}.json`, {
+        context: new HttpContext().set(BYPASS_LOG, true),
+      })
       .pipe(map((res) => res));
   }
-
 }
