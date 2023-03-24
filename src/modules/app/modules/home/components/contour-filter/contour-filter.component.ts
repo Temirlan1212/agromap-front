@@ -131,7 +131,6 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
     if (value != null) {
       const district = await this.api.dictionary.getDistricts({ ids: value, polygon: true });
       this.mapInstance.fitBounds(geoJson(district[0]?.polygon).getBounds());
-      this.mapInstance.setMaxBounds(geoJson(district[0]?.polygon).getBounds());
       await this.getContons();
       contonVal?.enable({ emitEvent: false });
     } else if (value != null && contonVal?.enabled) {

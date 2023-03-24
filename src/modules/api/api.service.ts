@@ -6,6 +6,7 @@ import { DictionaryApi } from './classes/dictionary.api';
 import { MapApi } from './classes/map.api';
 import { CultureApi } from './classes/culture.api';
 import { ContourApi } from './classes/contour.api';
+import { VegApi } from './classes/veg.api';
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {
@@ -15,6 +16,8 @@ export class ApiService {
   public readonly map: MapApi;
   public readonly culture: CultureApi;
   public readonly contour: ContourApi;
+  public readonly veg: VegApi;
+
 
   constructor(private http: HttpClient) {
     this.form = new FormApi();
@@ -23,5 +26,6 @@ export class ApiService {
     this.map = new MapApi(this.http);
     this.culture = new CultureApi(this.http);
     this.contour = new ContourApi(this.http);
+    this.veg = new VegApi(this.http);
   }
 }

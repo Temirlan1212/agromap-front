@@ -13,6 +13,13 @@
     (featureClick)="handleFeatureClick($event)"
     (featureClose)="handleFeatureClose()"
   >
-    <app-spline-area-chart></app-spline-area-chart>
+    <app-spline-area-chart
+      [chartData]="contourData"
+      *ngIf="layerFeature && contourData.length > 0;
+      else noContourData">
+    </app-spline-area-chart>
+    <ng-template #noContourData>
+      <h3 class="no-data-text">Нет данных</h3>
+    </ng-template>
   </app-map>
 </div>
