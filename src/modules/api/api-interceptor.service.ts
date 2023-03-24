@@ -2,7 +2,8 @@ import {
   HttpContextToken,
   HttpErrorResponse,
   HttpEvent,
-  HttpHandler, HttpHeaders,
+  HttpHandler,
+  HttpHeaders,
   HttpInterceptor,
   HttpRequest,
 } from '@angular/common/http';
@@ -18,35 +19,40 @@ export class ApiInterceptorService implements HttpInterceptor {
   private apiErrorCallback: (error: HttpErrorResponse) => Promise<boolean> =
     async (error: HttpErrorResponse) => false;
 
-  constructor(private api: ApiService) {
-  }
+  constructor(private api: ApiService) {}
 
   intercept(
     request: HttpRequest<unknown>,
     next: HttpHandler
   ): Observable<HttpEvent<unknown>> {
-    const headers = new HttpHeaders({
-      "Authorization": `token ${ this.api.user.getLoggedInUser()?.token }`
-    });
+    const token = this.api.user.getLoggedInUser()?.token;
+    const headers = new HttpHeaders();
+
+    if (token != null) {
+      headers.append('Authorization', `token ${token}`);
+    }
+
     const apiRequest = request.clone({
-      url: `${ environment.apiUrl }/${ request.url }/`,
-      headers
+      url: `${environment.apiUrl}/${request.url}/`,
+      headers,
     });
 
-    return next.handle(request.context.get(BYPASS_LOG) ? request : apiRequest).pipe(
-      retry({
-        count: 1,
-        delay: async (error: HttpErrorResponse) => {
-          const apiErrorCallbackResult = await this.apiErrorCallback(error);
+    return next
+      .handle(request.context.get(BYPASS_LOG) ? request : apiRequest)
+      .pipe(
+        retry({
+          count: 1,
+          delay: async (error: HttpErrorResponse) => {
+            const apiErrorCallbackResult = await this.apiErrorCallback(error);
 
-          if (apiErrorCallbackResult) {
-            return timer(1);
-          }
+            if (apiErrorCallbackResult) {
+              return timer(1);
+            }
 
-          throw error;
-        },
-      })
-    );
+            throw error;
+          },
+        })
+      );
   }
 
   setApiErrorCallback(
