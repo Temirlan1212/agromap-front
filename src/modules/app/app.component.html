@@ -1,10 +1,7 @@
-<app-sidenav
-  [routes]="routes"
-  logoTitle="GiproZem"
-  *ngIf="currentUser != null; else noUser"
->
+<app-sidenav [routes]="routes">
   <router-outlet></router-outlet>
 </app-sidenav>
+
 <div appNotificationHost></div>
 
 <ng-template #noUser>
