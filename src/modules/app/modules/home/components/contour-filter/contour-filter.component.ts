@@ -8,7 +8,7 @@ import { IDistrict } from '../../../../../api/models/district.model';
 import { Subscription } from 'rxjs';
 import { ILandType } from '../../../../../api/models/land-type.model';
 import { ContourFiltersQuery } from '../../../../../api/models/contour.model';
-import { geoJSON, geoJson, Map } from 'leaflet';
+import { geoJSON, geoJson, latLng, latLngBounds, Map } from 'leaflet';
 import { MapService } from '../../map.service';
 import { MapData, MapLayerFeature } from '../../../../../ui/models/map.model';
 import { Feature } from 'geojson';
@@ -95,6 +95,7 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
 
   handleFormReset(): void {
     this.form.reset();
+    this.resetMapBounds();
   }
 
   async handleFormSubmit(): Promise<void> {
@@ -138,6 +139,7 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
     } else {
       contonVal?.patchValue(null, { emitEvent: false });
       contonVal?.disable({ emitEvent: false });
+      this.resetMapBounds();
     }
   }
 
@@ -145,6 +147,8 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
     if (value != null) {
       const conton = await this.api.dictionary.getConstons({ ids: value, polygon: true });
       this.mapInstance.fitBounds(geoJson(conton[0]?.polygon).getBounds(), { maxZoom: 13, duration: 1 });
+    } else {
+      this.resetMapBounds();
     }
   }
 
@@ -161,6 +165,15 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
 
   public setError(error: Record<string, any>): void {
     this.api.form.setError(error, this.form);
+  }
+
+  resetMapBounds() {
+    const initBounds = latLngBounds(
+      latLng(44.0, 68.0),
+      latLng(39.0, 81.0)
+    );
+    this.mapInstance.fitBounds(initBounds);
+    this.mapInstance.setMaxBounds(initBounds);
   }
 
   ngOnDestroy() {
