@@ -1,9 +1,11 @@
 import {
-  AfterContentInit,
   Component,
-  ElementRef, forwardRef,
+  ElementRef, EventEmitter,
+  forwardRef, HostBinding,
   HostListener,
-  Input
+  Input,
+  OnChanges, Output,
+  SimpleChanges,
 } from '@angular/core';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
 import { NgForOf, NgIf } from '@angular/common';
@@ -14,101 +16,147 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
   templateUrl: './input-select.component.html',
   styleUrls: ['./input-select.component.scss'],
   standalone: true,
-  imports: [
-    SvgIconComponent,
-    NgForOf,
-    NgIf
+  imports: [SvgIconComponent, NgForOf, NgIf],
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => InputSelectComponent),
+      multi: true,
+    },
   ],
-  providers: [{
-    provide: NG_VALUE_ACCESSOR,
-    useExisting: forwardRef(() => InputSelectComponent),
-    multi: true
-  }]
 })
-export class InputSelectComponent implements AfterContentInit, ControlValueAccessor{
+export class InputSelectComponent implements ControlValueAccessor, OnChanges {
   onChange: Function = () => null;
   onTouched: Function = () => null;
 
   @Input() multi: boolean = false;
   @Input() placeholder: string = 'placeholder';
+  @HostBinding('class.disabled')
+  isDisabled!: boolean;
 
   @Input() items: Record<string, any>[] = [];
-  @Input() selectedItems: Record<string, any>[] | null = [];
+  @Input() value: string | number | null = null;
 
   @Input() idField: string = 'id';
   @Input() nameField: string = 'name';
+  @Output() onSelectItem = new EventEmitter<Record<string, any> | null>();
+
   opened: boolean = false;
   selectedItemsObj: Record<string, any> = {};
-  localItems:Record<string, any>[] = [];
+  selectedItems: Record<string, any>[] | null = [];
+  localItems: Record<string, any>[] = [];
 
   constructor(private elementRef: ElementRef) {
   }
 
-  ngAfterContentInit() {
-    this.localItems = [...this.items];
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['items'] != null && Array.isArray(this.items)) {
+      this.localItems = [...this.items];
+      this.selectedItems = this.items.filter(i => i[this.idField] === this.value);
+      this.selectedItems.forEach(i => this.selectedItemsObj[i[this.idField]] = i[this.nameField]);
+    }
   }
 
-  @HostListener('document:click', ['$event.target'])
-  public onClick(target: any) {
-    const clickedInside = this.elementRef.nativeElement.contains(target);
+  @HostListener('document:click', ['$event'])
+  public onClick(e: any) {
+    if (this.isDisabled) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    const clickedInside = this.elementRef.nativeElement.contains(e.target);
     if (!clickedInside) {
       this.opened = false;
     }
   }
 
-  handleItemClick(e:Event, item: Record<string, any>) {
-    if (this.multi){
-      this.handleMultiSelect(e,item);
-    }else{
-      this.handleSingleSelect(e,item);
+  handleItemClick(e: Event, item: Record<string, any>) {
+    if (this.isDisabled) {
+      e.preventDefault();
+      e.stopPropagation();
     }
-    this.onChange(this.selectedItems && this.selectedItems.length > 0 ? this.selectedItems : null);
+    if (this.multi) {
+      this.handleMultiSelect(e, item);
+    } else {
+      this.handleSingleSelect(e, item);
+    }
+    let values: string | number = this.selectedItems?.map(i => i[this.idField]).join(',') as string;
+    values = !this.multi ? Number(values) : values;
+    this.onChange(
+      this.selectedItems && this.selectedItems.length > 0
+        ? values
+        : null
+    );
+    this.onTouched();
   }
 
-  handleMultiSelect(e: Event, item: Record<string, any>){
-    if (!this.selectedItemsObj[item[this.idField]]){
+  handleMultiSelect(e: Event, item: Record<string, any>) {
+    if (!this.selectedItemsObj[item[this.idField]]) {
       this.selectedItems?.push(item);
-      this.selectedItemsObj[item[this.idField]] = item[this.nameField];
+      this.selectedItemsObj[item[this.idField]] = item[this.idField];
     } else {
       this.handleRemoveItem(e, item);
       this.selectedItemsObj[item[this.idField]] = null;
     }
   }
-  handleSingleSelect(e: Event, item: Record<string, any>){
-    if (!this.selectedItemsObj[item[this.idField]]){
+
+  handleSingleSelect(e: Event, item: Record<string, any>) {
+    if (!this.selectedItemsObj[item[this.idField]]) {
       this.selectedItems = [];
       this.selectedItemsObj = {};
       this.selectedItems.push(item);
-      this.selectedItemsObj[item[this.idField]] = item[this.nameField];
+      this.selectedItemsObj[item[this.idField]] = item[this.idField];
+      this.onSelectItem.emit(item);
     } else {
       this.handleRemoveItem(e, item);
       this.selectedItemsObj[item[this.idField]] = null;
+      this.onSelectItem.emit(null);
     }
   }
 
   handleRemoveItem(e: Event, item: Record<string, any>) {
-    e.preventDefault();
-    e.stopPropagation();
-    this.selectedItems = (this.selectedItems && this.selectedItems.filter(i => i[this.idField] !== item[this.idField]));
-    this.selectedItemsObj[item[this.idField]] = null;
-    this.onChange(this.selectedItems && this.selectedItems.length > 0 ? this.selectedItems : null);
+    if (!this.isDisabled) {
+      e.preventDefault();
+      e.stopPropagation();
+      this.selectedItems =
+        this.selectedItems &&
+        this.selectedItems.filter((i) => i[this.idField] !== item[this.idField]);
+      this.selectedItemsObj[item[this.idField]] = null;
+      this.onChange(
+        this.selectedItems && this.selectedItems.length > 0
+          ? this.selectedItems
+          : null
+      );
+      this.onSelectItem.emit(null);
+    }
+    return;
   }
+
+  handleSelectToggle(e: MouseEvent) {
+    if (this.isDisabled) {
+      e.preventDefault();
+      e.stopPropagation();
+    } else {
+      this.opened = !this.opened;
+    }
+  }
+
 
   handleSearch(search: string) {
-    this.localItems  = this.items.filter(i => i[this.nameField].toLowerCase().includes(search.toLowerCase()));
+    this.localItems = this.items.filter((i) =>
+      i[this.nameField].toLowerCase().includes(search.toLowerCase())
+    );
   }
 
-  handleClearAll(){
+  handleClearAll() {
     this.selectedItems = [];
     this.selectedItemsObj = {};
     this.onChange(null);
   }
 
-  writeValue(obj: Record<string, any>[]): void {
-    this.selectedItems = obj;
-    for (const key in obj) {
-      this.selectedItemsObj[obj[key][this.idField]] = obj[key][this.nameField];
-    }
+  writeValue(obj: string | number): void {
+    this.value = obj;
+    this.selectedItems = this.items.filter(i => i[this.idField] === this.value);
+    this.selectedItems.forEach(i => this.selectedItemsObj[i[this.idField]] = i[this.nameField]);
   }
 
   registerOnChange(fn: Function): void {
@@ -117,5 +165,9 @@ export class InputSelectComponent implements AfterContentInit, ControlValueAcces
 
   registerOnTouched(fn: Function): void {
     this.onTouched = fn;
+  }
+
+  setDisabledState(isDisabled: boolean) {
+    this.isDisabled = isDisabled;
   }
 }

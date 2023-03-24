@@ -4,10 +4,10 @@
   position: fixed;
   right: 25px;
   top: 25px;
-  z-index: 1;
+  z-index: 99999;
   display: flex;
   align-items: center;
-  width: 340px;
+  max-width: 340px;
   min-height: 40px;
   padding: 12px;
   gap: 10px;
@@ -21,6 +21,8 @@
 
   .message {
     flex: 1 1 1px;
+    width: 75%;
+    word-wrap: break-word;
     color: $lightColor;
   }
 
@@ -49,7 +51,7 @@
     color: $lightColor;
   }
 
-  .notification-close{
+  .notification-close {
     background-color: transparent;
     color: $lightColor;
     padding: 0;

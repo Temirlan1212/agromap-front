@@ -1,4 +1,5 @@
 @import "constants";
+@import '../node_modules/@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.css';
 
 *,
 *::before,
@@ -135,7 +136,7 @@ button {
   background-color: $secondaryColor;
   color: $darkColor;
 
-  &:hover {
+  &:not(:disabled):hover {
     opacity: 1;
   }
 
@@ -174,6 +175,12 @@ nav {
   }
 }
 
+hr {
+  margin: 16px 0;
+  border-top: none;
+  border-bottom: 1px solid $secondaryColor;
+}
+
 /*
 * Classes
 */
@@ -202,21 +209,30 @@ nav {
   border-color: $dangerColor;
 }
 
+.leaflet-interactive:hover {
+  fill: $primaryColor;
+}
+
 /*
 * Media queries
 */
 
 // Extra small
-@media only screen and (max-width: 576px) {}
+@media only screen and (max-width: 576px) {
+}
 
 // Small
-@media only screen and (min-width: 576px) {}
+@media only screen and (min-width: 576px) {
+}
 
 // Medium
-@media only screen and (min-width: 768px) {}
+@media only screen and (min-width: 768px) {
+}
 
 // Large
-@media only screen and (min-width: 992px) {}
+@media only screen and (min-width: 992px) {
+}
 
 // Extra large
-@media only screen and (min-width: 1200px) {}
+@media only screen and (min-width: 1200px) {
+}

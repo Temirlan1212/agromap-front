@@ -1,26 +1,29 @@
 @import "constants";
+
 $spaceFromTop: 35%;
 
-:host{
+:host {
   position: relative;
   display: block;
 
-  input{
-    padding-right:35px;
+  input {
+    padding-right: 35px;
     width: 100%;
-    &:focus{
+
+    &:focus {
       border-color: rgba(27, 85, 235, 0.48);
     }
   }
 
-  .right{
+  .right {
     position: absolute;
     z-index: 1;
     top: $spaceFromTop;
-    right: 10px;
+    right: 16px;
     cursor: pointer;
   }
-  .left{
+
+  .left {
     position: absolute;
     z-index: 1;
     top: $spaceFromTop;
@@ -28,22 +31,21 @@ $spaceFromTop: 35%;
     cursor: pointer;
   }
 
-  .placeholder{
+  .placeholder {
     position: absolute;
-    left: 16px;
     top: $spaceFromTop;
     color: #65656a;
     background-color: $primaryBackgroundColor;
     padding: 0 5px;
     transition: all .2s ease;
 
-    &.active{
-      transform: scale(.9) translate(-8px, -25px);
+    &.active {
+      transform: scale(.9) translateY(-25px);
     }
   }
 
-  input:focus + .placeholder{
-    transform: scale(.9) translate(-8px, -25px);
+  input:focus + .placeholder {
+    transform: scale(.9) translateY(-25px);
   }
 
 }

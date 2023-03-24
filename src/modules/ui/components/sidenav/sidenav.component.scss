@@ -18,10 +18,11 @@
 
     & + .content {
       left: $sideNavMenuOpenWidth;
+      width: calc(100% - $sideNavMenuOpenWidth);
     }
 
-    .toggler {
-      transform: rotate(180deg);
+    .toggler app-svg-icon {
+      transform: rotate(90deg);
     }
 
     nav a .title {
@@ -32,6 +33,11 @@
   .toggler {
     width: 100%;
     border-radius: 0;
+
+    app-svg-icon {
+      display: inline-block;
+      transform: rotate(-90deg);
+    }
   }
 
   nav {
@@ -68,8 +74,8 @@
   top: 0;
   bottom: 0;
   left: $sideNavMenuWidth;
-  transition: left $sideNavTransitionDelay;
-  width: 100%;
+  width: calc(100% - $sideNavMenuWidth);
+  transition: all $sideNavTransitionDelay;
 }
 
 .language-switcher {

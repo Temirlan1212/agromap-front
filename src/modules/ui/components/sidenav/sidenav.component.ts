@@ -1,4 +1,4 @@
-import { Component, HostListener, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive, Routes } from '@angular/router';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
@@ -15,7 +15,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
   templateUrl: './sidenav.component.html',
   styleUrls: ['./sidenav.component.scss'],
 })
-export class SidenavComponent implements OnInit {
+export class SidenavComponent implements OnChanges {
   @Input() routes: Routes = [];
 
   topRoutes: Routes = [];
@@ -57,7 +57,9 @@ export class SidenavComponent implements OnInit {
     );
   }
 
-  ngOnInit(): void {
-    this.chunkRoutes(this.routes);
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['routes'] != null) {
+      this.chunkRoutes(this.routes);
+    }
   }
 }

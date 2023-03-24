@@ -1,0 +1,41 @@
+<h4>Фильтрация показателей</h4>
+
+<div class="filters">
+  <form
+    [formGroup]="form"
+    (reset)="handleFormReset()"
+    (ngSubmit)="handleFormSubmit()"
+  >
+    <app-fields-group title="Фильтрация">
+      <div class="field-group">
+        <app-input-select
+          placeholder="Выберите регион"
+          formControlName="region"
+          [items]="regions"
+          [multi]="true"
+          nameField="name_ru"
+        ></app-input-select>
+
+        <div class="field-error" *ngIf="form.errors != null">
+          <span
+            *ngIf="form.getError('user-data') != null"
+            [textContent]="form.getError('user-data')"
+          ></span>
+        </div>
+
+        <button type="submit" class="success">Применить</button>
+        <button type="reset">Очистить</button>
+      </div>
+    </app-fields-group>
+  </form>
+</div>
+
+<div class="contours">
+  <app-fields-group title="Контуры">
+    <div class="field-group">
+      <button type="button" routerLink="/home/contour-add">
+        Добавить новый контур
+      </button>
+    </div>
+  </app-fields-group>
+</div>

@@ -2,13 +2,14 @@ import {
   HttpContextToken,
   HttpErrorResponse,
   HttpEvent,
-  HttpHandler,
+  HttpHandler, HttpHeaders,
   HttpInterceptor,
   HttpRequest,
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, retry, timer } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { ApiService } from './api.service';
 
 export const BYPASS_LOG = new HttpContextToken(() => false);
 
@@ -17,15 +18,19 @@ export class ApiInterceptorService implements HttpInterceptor {
   private apiErrorCallback: (error: HttpErrorResponse) => Promise<boolean> =
     async (error: HttpErrorResponse) => false;
 
-  constructor() {
+  constructor(private api: ApiService) {
   }
 
   intercept(
     request: HttpRequest<unknown>,
     next: HttpHandler
   ): Observable<HttpEvent<unknown>> {
+    const headers = new HttpHeaders({
+      "Authorization": `token ${ this.api.user.getLoggedInUser()?.token }`
+    });
     const apiRequest = request.clone({
       url: `${ environment.apiUrl }/${ request.url }/`,
+      headers
     });
 
     return next.handle(request.context.get(BYPASS_LOG) ? request : apiRequest).pipe(
