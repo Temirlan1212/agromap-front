@@ -6,10 +6,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NotificationHostDirective } from '../ui/components/notification/notification-host.directive';
 import { SidenavComponent } from '../ui/components/sidenav/sidenav.component';
-import {
-  TranslateLoader,
-  TranslateModule,
-} from '@ngx-translate/core';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { LanguageService } from '../api/language.service';
 import { NgxTranslateRoutesModule } from 'ngx-translate-routes';
 import localeRu from '@angular/common/locales/ru';
@@ -17,6 +14,7 @@ import localeKg from '@angular/common/locales/ky';
 import { registerLocaleData } from '@angular/common';
 
 registerLocaleData(localeKg);
+import { StoreService } from '../api/store.service';
 
 @NgModule({
   declarations: [AppComponent],
@@ -33,18 +31,18 @@ registerLocaleData(localeKg);
         useClass: LanguageService,
         deps: [HttpClient],
       },
-      defaultLanguage: 'ru'
     }),
   ],
+
   providers: [
     {
       provide: HTTP_INTERCEPTORS,
       useExisting: ApiInterceptorService,
       multi: true,
     },
-    { provide: LOCALE_ID, useValue: 'ky' }
+    StoreService,
   ],
+
   bootstrap: [AppComponent],
 })
-export class AppModule {
-}
+export class AppModule {}
