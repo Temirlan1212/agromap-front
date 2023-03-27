@@ -96,6 +96,7 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
   handleFormReset(): void {
     this.form.reset();
     this.resetMapBounds();
+    this.filteredContours = [];
   }
 
   async handleFormSubmit(): Promise<void> {
