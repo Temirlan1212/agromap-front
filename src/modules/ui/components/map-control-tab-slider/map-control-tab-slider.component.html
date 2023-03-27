@@ -14,7 +14,8 @@
       [class.selected]="selectedDate === date"
       #timelineItem
     >
-      <a>{{ date | date: 'fullDate' }}</a>
+      <a>{{ date | formatDate: 'fullDate':currLang }}</a>
+
     </li> 
   </ng-container>
 </ul>

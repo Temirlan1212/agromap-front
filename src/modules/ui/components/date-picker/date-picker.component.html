@@ -2,7 +2,7 @@
   <header>
     <div class="current-month" [class.collapsed]="isCurrMCollapsed">
       <p class="month" (click)="handleCollapseClick('month')">
-        {{ months[month] }}
+        {{ "Month-" + month | translate }}
       </p>
       <ul class="dialog">
         <li
@@ -11,7 +11,7 @@
           (click)="handleSelectMonthClick(indexOfelement)"
           [class.disabled]="currYear === year && currMonth < (indexOfelement)"
         >
-          {{ month }}
+          {{ "Month-" + month | translate }}
         </li>
       </ul>
     </div>
@@ -50,7 +50,7 @@
   </header>
   <div class="calendar">
     <ul class="weeks">
-      <li *ngFor="let week of weeks">{{ week }}</li>
+      <li *ngFor="let week of weeks">{{ "Week-" + week | translate }}</li>
     </ul>
     <ul class="days">
       <li

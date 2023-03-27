@@ -4,21 +4,25 @@ import {
   ElementRef,
   EventEmitter,
   Input,
+  OnDestroy,
   Output,
   ViewChild,
 } from '@angular/core';
-import { CommonModule, DatePipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
+import { FormatDatePipe } from '../../pipes/formatDate.pipe';
+import { TranslateService } from '@ngx-translate/core';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-map-control-tab-slider',
   templateUrl: './map-control-tab-slider.component.html',
   styleUrls: ['./map-control-tab-slider.component.scss'],
   standalone: true,
-  imports: [CommonModule, SvgIconComponent],
-  providers: [DatePipe]   
+  imports: [CommonModule, SvgIconComponent, FormatDatePipe],
+  providers: [FormatDatePipe]   
 })
-export class MapControlTabSlider implements AfterViewInit {
+export class MapControlTabSlider implements AfterViewInit, OnDestroy {
   @ViewChild('timelineList') timelineListEl!: ElementRef<HTMLInputElement>;
   @ViewChild('timelineItem') timelineItemEl!: ElementRef<HTMLInputElement>;
   @ViewChild('timeline') timelineEl!: ElementRef<HTMLInputElement>;
@@ -28,6 +32,8 @@ export class MapControlTabSlider implements AfterViewInit {
   @Input() vegIndexesData: string[] = [];
 
   selectedDate: string | null = null;
+  currLang = this.translate.currentLang;
+  translateSubscription!: Subscription;
 
   @Input('selectedDate') set selectedDateInput(date: string | null) {
     this.selectedDate = date;
@@ -36,7 +42,7 @@ export class MapControlTabSlider implements AfterViewInit {
       for (const a in this.timelineListEl.nativeElement.children) {
         if (
           this.timelineListEl.nativeElement.children[a].textContent?.includes(
-            `${this.datePipe.transform(date, "fullDate")}`
+            `${this.formatDate.transform(date, "fullDate", this.currLang)}`
           )
         ) {
           this.timelineListEl.nativeElement.children[a].scrollIntoView({
@@ -56,7 +62,9 @@ export class MapControlTabSlider implements AfterViewInit {
   isActiveNextBtn = false;
   isActivePrevBtn = false;
 
-  constructor(private datePipe: DatePipe) {}
+  constructor(private translate: TranslateService, private formatDate: FormatDatePipe) {
+   this.translateSubscription = translate.onLangChange.subscribe(() => this.currLang = translate.currentLang)
+  }
 
   handleTimelineNextClick() {
     this.timelineListEl.nativeElement.scrollLeft += 350;
@@ -126,5 +134,9 @@ export class MapControlTabSlider implements AfterViewInit {
         }
       }
     );
+  }
+
+  ngOnDestroy(): void {
+    this.translateSubscription.unsubscribe()
   }
 }

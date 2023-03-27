@@ -8,12 +8,7 @@ import { NotificationHostDirective } from '../ui/components/notification/notific
 import { SidenavComponent } from '../ui/components/sidenav/sidenav.component';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { LanguageService } from '../api/language.service';
-import { NgxTranslateRoutesModule } from 'ngx-translate-routes';
-import localeRu from '@angular/common/locales/ru';
-import localeKg from '@angular/common/locales/ky';
-import { registerLocaleData } from '@angular/common';
 
-registerLocaleData(localeKg);
 import { StoreService } from '../api/store.service';
 
 @NgModule({

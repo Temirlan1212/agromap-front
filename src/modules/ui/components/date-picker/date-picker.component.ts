@@ -9,32 +9,22 @@ import {
 import { CommonModule } from '@angular/common';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
 import { IDateLocal } from '../../models/date-picker';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { FormatDatePipe } from '../../pipes/formatDate.pipe';
 
 @Component({
   selector: 'app-date-picker',
   templateUrl: './date-picker.component.html',
   styleUrls: ['./date-picker.component.scss'],
   standalone: true,
-  imports: [CommonModule, SvgIconComponent],
+  imports: [CommonModule, SvgIconComponent, TranslateModule, FormatDatePipe],
 })
 export class DatePickerComponent implements OnInit {
   years: number[] = [];
-  months: string[] = [
-    'Январь',
-    'Февраль',
-    'Март',
-    'Апрель',
-    'Май',
-    'Июнь',
-    'Июль',
-    'Август',
-    'Сентябрь',
-    'Октябрь',
-    'Ноябрь',
-    'Декабрь',
+  months: number[] = [
+   0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
   ];
-  
-  weeks: string[] = ["ВС", "ПН", "ВТ", "СР", "ЧВ", "ПТ", "СБ"];
+  weeks: number[] = [0, 1, 2, 3, 4, 5, 6 ];
 
   @Output() filteredDaysOutput = new EventEmitter<IDateLocal[]>();
   @Output() selectedDateOutput = new EventEmitter<string | null>();
@@ -63,7 +53,7 @@ export class DatePickerComponent implements OnInit {
   isNextBtnDisabled = false;
   isPrevBtnDisabled = false;
 
-  constructor() {}
+  constructor(public translate: TranslateService) {}
 
   @HostListener('document:click', ['$event.target'])
   public onClick(target: any) {
