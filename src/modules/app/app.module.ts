@@ -13,7 +13,6 @@ import { SidenavComponent } from '../ui/components/sidenav/sidenav.component';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { LanguageService } from '../api/language.service';
 import { NgxTranslateRoutesModule } from 'ngx-translate-routes';
-import { StoreService } from '../api/store.service';
 
 @NgModule({
   declarations: [AppComponent],
@@ -39,7 +38,6 @@ import { StoreService } from '../api/store.service';
       useExisting: ApiInterceptorService,
       multi: true,
     },
-    StoreService,
   ],
 
   bootstrap: [AppComponent],
