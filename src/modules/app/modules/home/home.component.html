@@ -34,6 +34,9 @@
         *ngIf="layerFeature && mapData"
         [layer]="layerFeature"
         [mapData]="mapData"
+        [vegIndexesData]="vegIndexesData"
+        [vegIndexOptionsList]="vegIndexOptionsList"
+        (vegIndexOptionClick)="handleVegIndexOptionClick($event)"
       ></app-map-control-veg-indexes>
     </div>
   </app-map-controls>

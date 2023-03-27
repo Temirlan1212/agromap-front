@@ -25,12 +25,6 @@ $dCurrDayBgColor: $warningColor;
 // dialog
 $diPadding: 10px 15px;
 
-@mixin text-style($fs: 16px, $fw: 400, $fc: $darkColor) {
-  font-size: $fs;
-  font-weight: $fw;
-  color: $fc;
-}
-
 .wrapper {
   width: $baseWidth;
   background: $baseBgColor;
@@ -57,8 +51,10 @@ header {
       display: flex;
       align-items: center;
       justify-content: center;
-      @include text-style(20px, 500);
-
+      font-size: 20px;
+      font-weight: 500;
+      color: $darkColor;
+      
       &.disabled {
         pointer-events: none;
         color: $baseHover;
@@ -78,7 +74,9 @@ header {
   }
   .year,
   .month {
-    @include text-style(20px, 500);
+    font-size: 20px;
+    font-weight: 500;
+    color: $darkColor;
   }
 }
 
@@ -120,21 +118,28 @@ header {
   .weeks {
     li {
       cursor: default;
-      @include text-style(12px, 500);
+      font-size: 13px;
+      font-weight: 500;
+      color: $dDisabledColor;
     }
   }
 }
 
 .days {
   li.selected {
-    @include text-style(13px, 500, $dSelectedColor);
+    font-size: 13px;
+    font-weight: 500;
+    color: $dSelectedColor;
+
     &::before {
       background: $dSelectedBgColor;
     }
   }
   li.disabled {
     pointer-events: none;
-    @include text-style(13px, 500, $dDisabledColor);
+    font-size: 13px;
+    font-weight: 500;
+    color: $dDisabledColor;
     &::before {
       background: transparent;
     }
@@ -146,7 +151,10 @@ header {
     }
   }
   li {
-    @include text-style(13px, 500, $dActiveColor);
+    font-size: 13px;
+    font-weight: 500;
+    color: $dActiveColor;
+
     &::before {
       position: absolute;
       content: "";

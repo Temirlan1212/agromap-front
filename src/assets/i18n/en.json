@@ -8,5 +8,8 @@
   "Russian": "Russian",
   "Kyrgyz": "Kyrgyz",
   "English": "English",
-  "Language": "Language"
+  "Language": "Language",
+  "MapSettings": "Map settings",
+  "MapType": "Map type",
+  "SoilLayer": "Soil layer"
 }

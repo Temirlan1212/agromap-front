@@ -34,7 +34,7 @@ export class MapControlZoomComponent implements OnInit {
     this.map.setZoom(this.zoomLevel - 1);
   }
 
-  checkIsDisabledZoomControls() {
+  private checkIsDisabledZoomControls() {
     this.isZoomInControlDisabled = this.zoomLevel >= this.maxZoom;
     this.isZoomOutControlDisabled = this.zoomLevel <= this.minZoom;
   }

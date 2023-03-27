@@ -8,6 +8,8 @@ import {
 } from '@angular/core';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
 import * as L from 'leaflet';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { IBaseLyaerObject, IWmsLayersObject } from '../../models/map-controls';
 
 const baseLayersArr = [
   {
@@ -16,7 +18,6 @@ const baseLayersArr = [
       maxZoom: 20,
       subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
     }),
-    isBaseLayer: true,
   },
   {
     name: 'Google Satellite',
@@ -24,7 +25,6 @@ const baseLayersArr = [
       maxZoom: 20,
       subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
     }),
-    isBaseLayer: true,
   },
   {
     name: 'Google Streets',
@@ -32,7 +32,6 @@ const baseLayersArr = [
       maxZoom: 20,
       subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
     }),
-    isBaseLayer: true,
   },
   {
     name: 'Google Terrain',
@@ -40,16 +39,13 @@ const baseLayersArr = [
       maxZoom: 20,
       subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
     }),
-    isBaseLayer: true,
   },
   {
     name: 'Open Street Map',
     layer: L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution:
-        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-      minZoom: 2,
+      maxZoom: 20,
+      subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
     }),
-    isBaseLayer: true,
   },
   {
     name: 'Stadia.OSMBright',
@@ -57,54 +53,43 @@ const baseLayersArr = [
       'https://tiles.stadiamaps.com/tiles/osm_bright/{z}/{x}/{y}{r}.png',
       {
         maxZoom: 20,
-        attribution:
-          '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors',
+        subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
       }
     ),
-    isBaseLayer: true,
   },
 ];
 
-const wmsLayersArr = [
-  {
-    name: 'Слой почвы',
-    layers: 'agromap:soil_agromap',
-    active: false,
-  },
-];
-
-interface IBaseLyaerObject {
-  name: string;
-  layer: L.TileLayer;
-}
-
-interface IWmsLayersObject {
-  name: string;
-  layers: string;
-  active: boolean;
-}
 
 @Component({
   selector: 'app-map-control-layers-switch',
   standalone: true,
   templateUrl: './map-control-layers-switch.component.html',
   styleUrls: ['./map-control-layers-switch.component.scss'],
-  imports: [CommonModule, SvgIconComponent],
+  imports: [CommonModule, SvgIconComponent, TranslateModule],
 })
 export class MapControlLayersSwitchComponent implements OnInit {
   @Input() map!: L.Map;
 
   activeBaseLayer: L.TileLayer = baseLayersArr[0].layer;
   activeWmsLayer: L.TileLayer | null = null;
+  currentLang = ''
 
   baseLayersArr: IBaseLyaerObject[] = baseLayersArr;
-  wmsLayersArr: IWmsLayersObject[] = wmsLayersArr;
+  wmsLayersArr: IWmsLayersObject[] = [
+    {
+      name: 'Слой почвы',
+      layers: 'agromap:soil_agromap',
+      active: false,
+    },
+  ];
 
   isCollapsed = false;
 
-  constructor(private elementRef: ElementRef) {}
+  constructor(private elementRef: ElementRef, public translate: TranslateService) {
+  }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+  }
 
   @HostListener('document:click', ['$event.target'])
   public onClick(target: any) {

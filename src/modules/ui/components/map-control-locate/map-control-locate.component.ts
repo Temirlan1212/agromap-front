@@ -23,7 +23,7 @@ export class MapControlLocate implements OnInit {
   constructor(@Inject(DOCUMENT) private document: Document) {
   }
 
-  handleLocateClick(): void | boolean {
+  handleLocateClick() {
     let element = this.document.querySelector('.leaflet-control-locate a') as HTMLDivElement;
     
     if(this.isLocateControlActive) {
@@ -35,7 +35,7 @@ export class MapControlLocate implements OnInit {
     this.isLocateControlActive = !this.isLocateControlActive;
   }
 
-  simulateClick = function (elem: HTMLDivElement) {
+  private simulateClick = function (elem: HTMLDivElement) {
     var evt = new MouseEvent('click', {
         bubbles: true,
         cancelable: true,

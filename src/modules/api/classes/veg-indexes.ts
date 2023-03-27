@@ -1,7 +1,7 @@
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import {
-  IVegIndexList,
+  IVegIndexOption,
   IVegSatelliteDate,
   IVegSatelliteDatesQuery,
 } from '../models/veg-indexes.model';
@@ -21,9 +21,9 @@ export class VegIndexesApi {
     return response;
   }
 
-  async getVegIndexList(): Promise<IVegIndexList[]> {
+  async getVegIndexList(): Promise<IVegIndexOption[]> {
     const response = await firstValueFrom(
-      this.http.get<IVegIndexList[]>(`info/index-list`)
+      this.http.get<IVegIndexOption[]>(`info/index-list`)
     );
 
     return response;

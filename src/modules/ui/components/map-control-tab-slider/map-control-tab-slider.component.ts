@@ -7,10 +7,8 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
-import { IDate } from 'src/modules/api/models/veg-indexes.model';
-import { MapLayerFeature } from '../../models/map.model';
 
 @Component({
   selector: 'app-map-control-tab-slider',
@@ -18,26 +16,27 @@ import { MapLayerFeature } from '../../models/map.model';
   styleUrls: ['./map-control-tab-slider.component.scss'],
   standalone: true,
   imports: [CommonModule, SvgIconComponent],
+  providers: [DatePipe]   
 })
 export class MapControlTabSlider implements AfterViewInit {
   @ViewChild('timelineList') timelineListEl!: ElementRef<HTMLInputElement>;
   @ViewChild('timelineItem') timelineItemEl!: ElementRef<HTMLInputElement>;
   @ViewChild('timeline') timelineEl!: ElementRef<HTMLInputElement>;
 
-  @Output() selectedDateOutput = new EventEmitter<IDate | null>();
+  @Output() selectedDateOutput = new EventEmitter<string | null>();
 
-  @Input() vegIndexesData: IDate[] = [];
+  @Input() vegIndexesData: string[] = [];
 
-  selectedDate: IDate | null = null;
+  selectedDate: string | null = null;
 
-  @Input('selectedDate') set selectedDateInput(value: IDate | null) {
-    if (value) {
-      this.selectedDate = value;
-
+  @Input('selectedDate') set selectedDateInput(date: string | null) {
+    this.selectedDate = date;
+    
+    if (date) {
       for (const a in this.timelineListEl.nativeElement.children) {
         if (
           this.timelineListEl.nativeElement.children[a].textContent?.includes(
-            value.formattedDate
+            `${this.datePipe.transform(date, "fullDate")}`
           )
         ) {
           this.timelineListEl.nativeElement.children[a].scrollIntoView({
@@ -57,7 +56,7 @@ export class MapControlTabSlider implements AfterViewInit {
   isActiveNextBtn = false;
   isActivePrevBtn = false;
 
-  constructor() {}
+  constructor(private datePipe: DatePipe) {}
 
   handleTimelineNextClick() {
     this.timelineListEl.nativeElement.scrollLeft += 350;
@@ -69,12 +68,12 @@ export class MapControlTabSlider implements AfterViewInit {
     this.toggleNextPrevBtns();
   }
 
-  handleSelectDate(date: IDate) {
+  handleSelectDate(date: string) {
     this.selectedDateOutput.emit(date);
     this.selectedDate = date;
   }
 
-  toggleNextPrevBtns(): void {
+  private toggleNextPrevBtns(): void {
     const timelineList = this.timelineListEl.nativeElement;
     if (timelineList.scrollLeft >= 40) {
       this.isActivePrevBtn = true;
@@ -92,7 +91,7 @@ export class MapControlTabSlider implements AfterViewInit {
     }
   }
 
-  checkIsTimelineListFull() {
+  private checkIsTimelineListFull() {
     const clientWidthTList = this.timelineListEl?.nativeElement.clientWidth;
     const scrollWidthTList =
       this.timelineItemEl?.nativeElement.clientWidth *

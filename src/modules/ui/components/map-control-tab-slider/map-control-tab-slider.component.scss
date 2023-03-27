@@ -1,21 +1,6 @@
 @import "constants";
 $tGradientColor: #292424;
 
-@mixin hover(
-  $prop: all,
-  $delay: 0.3s,
-  $bg: $baseBgColorHover,
-  $clr: currentColor
-) {
-  transition: $prop $delay;
-  cursor: pointer;
-
-  &:hover {
-    color: $clr;
-    background-color: $bg;
-  }
-}
-
 // timeline
 $tBgColor: $darkColor;
 $tBorderRadius: 20px;
@@ -86,7 +71,12 @@ a {
   user-select: none;
   white-space: nowrap;
   cursor: pointer;
-  @include hover(all, 0.3s, $tGradientColor, $lightColor);
+  transition: all, 0.3s;
+
+  &:hover {
+    color: $lightColor;
+    background-color: $tGradientColor;
+  }
   height: 100%;
   display: flex;
   align-items: center;
@@ -127,10 +117,10 @@ a.active {
 
 .next {
   right: 0;
-  background: linear-gradient(to left, $tGradientColor 50%, transparent);
+  background: linear-gradient(to left, $tGradientColor 30%, transparent);
   justify-content: flex-end;
 }
 
 .prev {
-  background: linear-gradient(to right, $tGradientColor 50%, transparent);
+  background: linear-gradient(to right, $tGradientColor 30%, transparent);
 }

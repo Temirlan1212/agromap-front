@@ -5,15 +5,15 @@
       [class.collapsed]="isCollapsedIndexDialog"
       (click)="handleCollapseClick('index')"
     >
-      <span>{{ selectedIndex.name_ru }}</span>
+      <span>{{ selectedVegOption.name_ru }}</span>
       <app-svg-icon name="arrow-down" class="icon" size="12"></app-svg-icon>
     </div>
 
     <ul class="dialog" [class.collapsed]="isCollapsedIndexDialog">
       <li
-        [class.active]="index.id == selectedIndex.id"
+        [class.active]="index.id == selectedVegOption.id"
         *ngFor="let index of vegIndexOptionsList"
-        (click)="handleSelectIndexClick(index)"
+        (click)="handleSelectVegIndexOptionClick(index)"
       >
         {{ index.name_ru }}
       </li>
@@ -40,10 +40,9 @@
     </div>
     <div class="dialog" [class.collapsed]="isCollapsedDateDialog">
       <app-date-picker
-        [months]="months"
         [filterDate]="activeDates"
         [selectedDate]="selectedDate"
-        (selectedDateOutput)="handleColendarDateClick($event)"
+        (selectedDateOutput)="handleCalendarDateClick($event)"
       ></app-date-picker>
     </div>
   </div>

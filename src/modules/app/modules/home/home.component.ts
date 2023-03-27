@@ -1,6 +1,7 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { TileLayer, tileLayer } from 'leaflet';
 import { ApiService } from 'src/modules/api/api.service';
+import { IVegIndexOption, IVegSatelliteDate } from 'src/modules/api/models/veg-indexes.model';
 import { MapData, MapLayerFeature, MapMove } from 'src/modules/ui/models/map.model';
 import { MapService } from './map.service';
 
@@ -20,6 +21,10 @@ export class HomeComponent {
 
   mapData: MapData | null = null;
   layerFeature: MapLayerFeature | null = null;
+  layerContourId: string = '';
+
+  vegIndexesData: IVegSatelliteDate[] = [];
+  vegIndexOptionsList: IVegIndexOption[] = [];
 
   constructor(private api: ApiService, private mapService: MapService) {
   }
@@ -32,6 +37,10 @@ export class HomeComponent {
 
   handleFeatureClick(layerFeature: MapLayerFeature): void {
     this.layerFeature = layerFeature;
+    this.layerContourId = this.layerFeature.feature.properties?.['id'].toString();
+
+    this.getVegIndexList();
+    this.getVegSatelliteDates(this.layerContourId)
   }
 
   handleFeatureClose(): void {
@@ -53,5 +62,29 @@ export class HomeComponent {
         }
       }
     }
+  }
+
+  async getVegSatelliteDates(contoruId: string, vegIndexId: string = '1'): Promise<void> {
+    try {
+      this.vegIndexesData = await this.api.vegIndexes.getVegSatelliteDates({
+        contourId: contoruId,
+        vegIndexId: vegIndexId,
+      }) as IVegSatelliteDate[];
+    } catch (e: any) {
+      console.log(e);
+    }
+  }
+
+  async getVegIndexList() {
+    try {
+      this.vegIndexOptionsList =
+        await this.api.vegIndexes.getVegIndexList() as IVegIndexOption[];
+    } catch (e: any) {
+      console.log(e);
+    }
+  }
+
+  handleVegIndexOptionClick(vegIndexOption: IVegIndexOption) {
+    this.getVegSatelliteDates(this.layerContourId, vegIndexOption.id.toString())
   }
 }

@@ -32,27 +32,14 @@ $dbtnBorderR: 50px;
 $dbtnBgColor: $darkColor;
 $dbtnColor: $lightColor;
 
+$transitionDelay: 0.3s;
+
 ul,
 li,
 p {
   padding: 0;
   margin: 0;
   list-style-type: none;
-}
-
-@mixin hover(
-  $prop: all,
-  $delay: 0.3s,
-  $bg: $baseBgColorHover,
-  $clr: currentColor
-) {
-  transition: $prop $delay;
-  cursor: pointer;
-
-  &:hover {
-    color: $clr;
-    background-color: $bg;
-  }
 }
 
 .indexesPanel {
@@ -73,7 +60,13 @@ p {
     padding: $basePadding;
     background-color: $dBgColor;
     font-weight: 600;
-    @include hover;
+    transition: all, $transitionDelay;
+
+    &:hover {
+      color: currentColor;
+      background-color: $baseBgColorHover;
+    }
+
     .icon {
       transform: rotate(0deg);
       transition: all 0.2s;
@@ -102,7 +95,12 @@ p {
     li {
       font-size: 13px;
       padding: $ddPadding;
-      @include hover;
+      transition: all, $transitionDelay;
+
+      &:hover {
+        color: currentColor;
+        background-color: $baseBgColorHover;
+      }
 
       &.active {
         background-color: $ddActiveBgColor;
@@ -125,7 +123,12 @@ p {
     padding: $basePadding;
     background-color: $dbtnBgColor;
     color: $dbtnColor;
-    @include hover(all, 0.3s, $lightColor, $darkColor);
+    transition: all, $transitionDelay;
+    cursor: pointer;
+
+    &:hover {
+      background-color: $baseBgColorHover;
+    }
     &.collapsed {
       background-color: $lightColor;
       color: $darkColor;

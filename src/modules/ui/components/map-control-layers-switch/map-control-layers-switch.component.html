@@ -11,7 +11,7 @@
 
 <ng-template #dialog>
   <div class="dialog" [class.collpased]="isCollapsed">
-    <h4>Параметры карты</h4>
+    <h4>{{ 'MapSettings' | translate }}</h4>
     <div class="over-layers-group">
       <div
         *ngFor="let layer of wmsLayersArr"
@@ -26,7 +26,7 @@
 
     <div class="divider"></div>
 
-    <h4>Тип карты</h4>
+    <h4>{{ 'MapType' | translate }}</h4>
     <div class="base-layers-group">
       <div
         *ngFor="let layer of baseLayersArr"

@@ -11,11 +11,11 @@
     <li
       *ngFor="let date of vegIndexesData"
       (click)="handleSelectDate(date)"
-      [class.selected]="selectedDate?.date === date.date"
+      [class.selected]="selectedDate === date"
       #timelineItem
     >
-      <a>{{ date.formattedDate }}</a>
-    </li>
+      <a>{{ date | date: 'fullDate' }}</a>
+    </li> 
   </ng-container>
 </ul>
 

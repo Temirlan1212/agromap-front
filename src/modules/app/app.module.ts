@@ -1,5 +1,5 @@
 import { HttpClientModule, HTTP_INTERCEPTORS, HttpClient } from '@angular/common/http';
-import { NgModule } from '@angular/core';
+import { NgModule, LOCALE_ID } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { ApiInterceptorService } from '../api/api-interceptor.service';
 import { AppRoutingModule } from './app-routing.module';
@@ -12,6 +12,11 @@ import {
 } from '@ngx-translate/core';
 import { LanguageService } from '../api/language.service';
 import { NgxTranslateRoutesModule } from 'ngx-translate-routes';
+import localeRu from '@angular/common/locales/ru';
+import localeKg from '@angular/common/locales/ky';
+import { registerLocaleData } from '@angular/common';
+
+registerLocaleData(localeKg);
 
 @NgModule({
   declarations: [AppComponent],
@@ -37,6 +42,7 @@ import { NgxTranslateRoutesModule } from 'ngx-translate-routes';
       useExisting: ApiInterceptorService,
       multi: true,
     },
+    { provide: LOCALE_ID, useValue: 'ky' }
   ],
   bootstrap: [AppComponent],
 })

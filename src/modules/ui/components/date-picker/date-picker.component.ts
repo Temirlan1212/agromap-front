@@ -8,14 +8,7 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
-import { IDate } from 'src/modules/api/models/veg-indexes.model';
-
-interface IDateLocal {
-  day: number | string;
-  disabled: boolean;
-  isCurrentMonth: boolean;
-  fullDate: string;
-}
+import { IDateLocal } from '../../models/date-picker';
 
 @Component({
   selector: 'app-date-picker',
@@ -26,20 +19,34 @@ interface IDateLocal {
 })
 export class DatePickerComponent implements OnInit {
   years: number[] = [];
+  months: string[] = [
+    'Январь',
+    'Февраль',
+    'Март',
+    'Апрель',
+    'Май',
+    'Июнь',
+    'Июль',
+    'Август',
+    'Сентябрь',
+    'Октябрь',
+    'Ноябрь',
+    'Декабрь',
+  ];
+  
   weeks: string[] = ["ВС", "ПН", "ВТ", "СР", "ЧВ", "ПТ", "СБ"];
 
   @Output() filteredDaysOutput = new EventEmitter<IDateLocal[]>();
-  @Output() selectedDateOutput = new EventEmitter<IDate | null>();
+  @Output() selectedDateOutput = new EventEmitter<string | null>();
 
-  @Input() months: string[] = [];
-  filterDate: IDate[] = [];
+  filterDate: string[] = [];
 
-  @Input('filterDate') set filterDateInput(filtereDate: IDate[]) {
+  @Input('filterDate') set filterDateInput(filtereDate: string[]) {
     this.filterDate = filtereDate;
     this.renderCalendar();
   }
 
-  @Input() selectedDate: IDate | null = null;
+  @Input() selectedDate: string | null = null;
 
   days: IDateLocal[] = [];
   date = new Date();
@@ -71,64 +78,6 @@ export class DatePickerComponent implements OnInit {
     }
   }
 
-  renderCalendar(): void {
-    this.days = [];
-    let firstDayofMonth = new Date(this.year, this.month, 1).getDay(), // getting first day of month
-      lastDateofMonth = new Date(this.year, this.month + 1, 0).getDate(), // getting last date of month
-      lastDayofMonth = new Date(
-        this.year,
-        this.month,
-        lastDateofMonth
-      ).getDay(),
-      lastDateofLastMonth = new Date(this.year, this.month, 0).getDate(); // getting last date of previous month
-
-    for (let i = firstDayofMonth; i > 0; i--) {
-      this.days.push({
-        day: lastDateofLastMonth - i,
-        disabled: true,
-        isCurrentMonth: false,
-        fullDate: new Date(this.year, this.month, lastDateofLastMonth - i + 1)
-          .toISOString()
-          .slice(0, 10),
-      });
-    }
-
-    for (let i = 1; i <= lastDateofMonth; i++) {
-      const localDate = new Date(this.year, this.month, i + 1)
-        .toISOString()
-        .slice(0, 10);
-
-      let includedDate: Record<string, string> = {};
-
-      const isIncludes = this.filterDate
-        .map((date) => {
-          if (date.date.split('|')[0] === localDate) {
-            includedDate[i] = date.date;
-          }
-          return date.date.split('|')[0];
-        })
-        .includes(localDate);
-
-      this.days.push({
-        day: i,
-        disabled: !isIncludes,
-        isCurrentMonth: true,
-        fullDate: includedDate[i],
-      });
-    }
-
-    for (let i = lastDayofMonth; i < 6; i++) {
-      this.days.push({
-        day: i - lastDayofMonth + 1,
-        disabled: true,
-        isCurrentMonth: false,
-        fullDate: new Date(this.year, this.month, i - lastDayofMonth + 1)
-          .toISOString()
-          .slice(0, 10),
-      });
-    }
-  }
-
   ngOnInit(): void {
     this.renderCalendar();
     this.years = this.getYears(2015);
@@ -151,19 +100,9 @@ export class DatePickerComponent implements OnInit {
   }
 
   handleSelectDateClick(date: IDateLocal) {
-    let formattedDate = `${date.fullDate.split('-')[0]} ${
-      this.months[+date.fullDate.split('-')[1] - 1]
-    } ${date.fullDate.split('-')[2]}`;
+    this.selectedDateOutput.emit(date.fullDate);
 
-    this.selectedDateOutput.emit({
-      date: date.fullDate,
-      formattedDate: formattedDate.split('|')[0],
-    });
-
-    this.selectedDate = {
-      date: date.fullDate,
-      formattedDate: formattedDate.split('|')[0],
-    };
+    this.selectedDate = date.fullDate;
   }
 
   handleSelectYearClick(year: number) {
@@ -195,7 +134,65 @@ export class DatePickerComponent implements OnInit {
     if (type === 'month') this.isCurrMCollapsed = !this.isCurrMCollapsed;
   }
 
-  getYears(startYear: number) {
+  private renderCalendar(): void {
+    this.days = [];
+    let firstDayofMonth = new Date(this.year, this.month, 1).getDay(), // getting first day of month
+      lastDateofMonth = new Date(this.year, this.month + 1, 0).getDate(), // getting last date of month
+      lastDayofMonth = new Date(
+        this.year,
+        this.month,
+        lastDateofMonth
+      ).getDay(),
+      lastDateofLastMonth = new Date(this.year, this.month, 0).getDate(); // getting last date of previous month
+
+    for (let i = firstDayofMonth; i > 0; i--) {
+      this.days.push({
+        day: lastDateofLastMonth - i,
+        disabled: true,
+        isCurrentMonth: false,
+        fullDate: new Date(this.year, this.month, lastDateofLastMonth - i + 1)
+          .toISOString()
+          .slice(0, 10),
+      });
+    }
+
+    for (let i = 1; i <= lastDateofMonth; i++) {
+      const localDate = new Date(this.year, this.month, i + 1)
+        .toISOString()
+        .slice(0, 10);
+
+      let includedDate: Record<string, string> = {};
+
+      const isIncludes = this.filterDate
+        .map((date) => {
+          if (date === localDate) {
+            includedDate[i] = date;
+          }
+          return date;
+        })
+        .includes(localDate);
+
+      this.days.push({
+        day: i,
+        disabled: !isIncludes,
+        isCurrentMonth: true,
+        fullDate: includedDate[i],
+      });
+    }
+
+    for (let i = lastDayofMonth; i < 6; i++) {
+      this.days.push({
+        day: i - lastDayofMonth + 1,
+        disabled: true,
+        isCurrentMonth: false,
+        fullDate: new Date(this.year, this.month, i - lastDayofMonth + 1)
+          .toISOString()
+          .slice(0, 10),
+      });
+    }
+  }
+
+  private getYears(startYear: number) {
     var currentYear = new Date().getFullYear(),
       years = [];
     startYear = startYear || 1980;
@@ -205,7 +202,7 @@ export class DatePickerComponent implements OnInit {
     return years;
   }
 
-  toggleDisableArrowBtns() {
+  private toggleDisableArrowBtns() {
     const isDisabledPrevBtn =
       `${this.year}-${this.month}` === `${this.years[0]}-0`;
 

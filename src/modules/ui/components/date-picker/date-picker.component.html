@@ -54,7 +54,7 @@
     </ul>
     <ul class="days">
       <li
-        [class.selected]="selectedDate?.date === item.fullDate"
+        [class.selected]="selectedDate === item.fullDate"
         [class.disabled]="item.disabled"
         [class.currDay]="currDate === item.fullDate && item.isCurrentMonth"
         *ngFor="let item of days"
