@@ -38,6 +38,7 @@ import { NgxTranslateRoutesModule } from 'ngx-translate-routes';
       useExisting: ApiInterceptorService,
       multi: true,
     },
+    LanguageService
   ],
 
   bootstrap: [AppComponent],

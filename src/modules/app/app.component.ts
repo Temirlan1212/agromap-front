@@ -7,6 +7,7 @@ import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 import { Title } from '@angular/platform-browser';
 import { StoreService } from '../api/store.service';
 import { ELanguageCode, ILanguageStore } from '../api/models/language.model';
+import { LanguageService } from '../api/language.service';
 
 @Component({
   selector: 'app-root',
@@ -37,7 +38,8 @@ export class AppComponent implements OnInit, OnDestroy {
     private router: Router,
     private translate: TranslateService,
     private titleService: Title,
-    private store: StoreService
+    private store: StoreService,
+    private language: LanguageService
   ) {}
 
   private initLang(): void {
@@ -48,19 +50,11 @@ export class AppComponent implements OnInit, OnDestroy {
       this.translate.setDefaultLang(languageStore.default);
       this.translate.use(languageStore.current);
     } else {
-      const languageConf: ILanguageStore = {
-        default: ELanguageCode.ru,
-        current: ELanguageCode.ru,
-        all: [
-          { code: ELanguageCode.en, name: 'English' },
-          { code: ELanguageCode.ru, name: 'Russian' },
-          { code: ELanguageCode.ky, name: 'Kyrgyz' },
-        ],
-      };
-      this.store.setItem<ILanguageStore>('language', languageConf);
-      this.translate.addLangs(languageConf.all.map((f) => f.code));
-      this.translate.setDefaultLang(languageConf.default);
-      this.translate.use(languageConf.current);
+      const initialLanguageStore = this.language.getInitialLanguageStore();
+      this.store.setItem<ILanguageStore>('language', initialLanguageStore);
+      this.translate.addLangs(initialLanguageStore.all.map((f) => f.code));
+      this.translate.setDefaultLang(initialLanguageStore.default);
+      this.translate.use(initialLanguageStore.current);
     }
   }
 

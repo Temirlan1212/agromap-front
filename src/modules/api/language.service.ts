@@ -3,6 +3,7 @@ import { Observable, map } from 'rxjs';
 import { TranslateLoader } from '@ngx-translate/core';
 import { HttpClient, HttpContext } from '@angular/common/http';
 import { BYPASS_LOG } from './api-interceptor.service';
+import { ELanguageCode, ILanguageStore } from './models/language.model';
 
 @Injectable()
 export class LanguageService implements TranslateLoader {
@@ -14,5 +15,19 @@ export class LanguageService implements TranslateLoader {
         context: new HttpContext().set(BYPASS_LOG, true),
       })
       .pipe(map((res) => res));
+  }
+
+  getInitialLanguageStore(): ILanguageStore {
+    const initialLanguageStore: ILanguageStore = {
+      default: ELanguageCode.ru,
+      current: ELanguageCode.ru,
+      all: [
+        { code: ELanguageCode.en, name: 'English' },
+        { code: ELanguageCode.ru, name: 'Russian' },
+        { code: ELanguageCode.ky, name: 'Kyrgyz' },
+      ],
+    };
+
+    return initialLanguageStore;
   }
 }
