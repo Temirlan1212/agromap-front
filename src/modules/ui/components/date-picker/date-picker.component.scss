@@ -1,0 +1,246 @@
+@import "constants";
+
+* {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+
+// base
+$baseBgColor: $lightColor;
+$baseBorderR: 10px;
+$baseWidth: 300px;
+$baseHover: #f2f2f2;
+
+// header
+$hPadding: 15px;
+
+// days
+$dActiveColor: $darkColor;
+$dSelectedColor: $lightColor;
+$dSelectedBgColor: $successColor;
+$dDisabledColor: $secondaryColor;
+$dCurrDayBgColor: $warningColor;
+
+// dialog
+$diPadding: 10px 15px;
+
+@mixin text-style($fs: 16px, $fw: 400, $fc: $darkColor) {
+  font-size: $fs;
+  font-weight: $fw;
+  color: $fc;
+}
+
+.wrapper {
+  width: $baseWidth;
+  background: $baseBgColor;
+  border-radius: $baseBorderR;
+  height: 315px;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  padding: $hPadding;
+  justify-content: space-between;
+
+  .icons {
+    display: flex;
+    span {
+      height: 38px;
+      width: 38px;
+      cursor: pointer;
+      text-align: center;
+      line-height: 38px;
+      user-select: none;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      @include text-style(20px, 500);
+
+      &.disabled {
+        pointer-events: none;
+        color: $baseHover;
+      }
+
+      &:hover {
+        color: $successColor;
+      }
+      &#next {
+        transform: rotate(-90deg);
+      }
+
+      &#prev {
+        transform: rotate(90deg);
+      }
+    }
+  }
+  .year,
+  .month {
+    @include text-style(20px, 500);
+  }
+}
+
+.icons {
+  span {
+    &:last-child {
+      margin-right: -10px;
+    }
+  }
+}
+
+.calendar {
+  padding: 0 15px;
+  height: 235px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  ul {
+    display: flex;
+    flex-wrap: wrap;
+    list-style: none;
+    text-align: center;
+  }
+  .days {
+    margin-bottom: 20px;
+    li {
+      z-index: 1;
+      cursor: pointer;
+      position: relative;
+      margin-top: 10px;
+    }
+  }
+  li {
+    color: #333;
+    width: calc(100% / 7);
+    font-size: 1.07rem;
+  }
+  .weeks {
+    li {
+      cursor: default;
+      @include text-style(12px, 500);
+    }
+  }
+}
+
+.days {
+  li.selected {
+    @include text-style(13px, 500, $dSelectedColor);
+    &::before {
+      background: $dSelectedBgColor;
+    }
+  }
+  li.disabled {
+    pointer-events: none;
+    @include text-style(13px, 500, $dDisabledColor);
+    &::before {
+      background: transparent;
+    }
+  }
+  li.currDay {
+    color: $lightColor;
+    &::before {
+      background-color: $dCurrDayBgColor;
+    }
+  }
+  li {
+    @include text-style(13px, 500, $dActiveColor);
+    &::before {
+      position: absolute;
+      content: "";
+      left: 50%;
+      top: 50%;
+      height: 25px;
+      width: 25px;
+      z-index: -1;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+    }
+    &:not(.selected) {
+      &:hover {
+        &::before {
+          background: $baseHover;
+        }
+      }
+    }
+  }
+}
+
+.reset-to-current-date {
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 4px;
+
+  &:hover {
+    background-color: $baseHover;
+  }
+}
+
+.current-month,
+.current-year {
+  position: relative;
+
+  p {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    &:hover {
+      color: $successColor;
+    }
+    &:after {
+      border-left: 4px solid transparent;
+      border-right: 4px solid transparent;
+      border-top: 4px solid;
+      content: "";
+      display: inline-block;
+      margin: 2px 0 0 4px;
+      vertical-align: top;
+      transition: all 0.2s;
+    }
+  }
+
+  &.collapsed {
+    p {
+      &:after {
+        transform: rotate(180deg);
+        transition: all 0.2s;
+      }
+    }
+    .dialog {
+      top: 25px;
+      opacity: 1;
+      pointer-events: inherit;
+      transition: all 0.2s;
+    }
+  }
+}
+
+.dialog {
+  background-color: $lightColor;
+  position: absolute;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  max-height: 200px;
+  overflow-y: scroll;
+  z-index: 10;
+  min-width: 100px;
+  top: 10px;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.2s;
+
+  li {
+    padding: $diPadding;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &.disabled {
+      pointer-events: none;
+      color: $dDisabledColor;
+    }
+    &:hover {
+      background-color: $baseHover;
+    }
+  }
+}

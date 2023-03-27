@@ -1,0 +1,73 @@
+<div class="wrapper">
+  <header>
+    <div class="current-month" [class.collapsed]="isCurrMCollapsed">
+      <p class="month" (click)="handleCollapseClick('month')">
+        {{ months[month] }}
+      </p>
+      <ul class="dialog">
+        <li
+          class="dialog-item"
+          *ngFor="let month of months; let indexOfelement = index"
+          (click)="handleSelectMonthClick(indexOfelement)"
+          [class.disabled]="currYear === year && currMonth < (indexOfelement)"
+        >
+          {{ month }}
+        </li>
+      </ul>
+    </div>
+
+    <div class="current-year" [class.collapsed]="isCurrYCollapsed">
+      <p class="year" (click)="handleCollapseClick('year')">
+        {{ year }}
+      </p>
+      <ul class="dialog">
+        <li
+          class="dialog-item"
+          (click)="handleSelectYearClick(year)"
+          *ngFor="let year of years"
+        >
+          {{ year }}
+        </li>
+      </ul>
+    </div>
+
+    <div class="icons">
+      <span
+        id="prev"
+        class="material-symbols-rounded"
+        (click)="handleNextPrevClick('prev')"
+        [class.disabled]="isPrevBtnDisabled"
+        ><app-svg-icon name="arrow-down" size="16"></app-svg-icon
+      ></span>
+      <span
+        id="next"
+        class="material-symbols-rounded"
+        (click)="handleNextPrevClick('next')"
+        [class.disabled]="isNextBtnDisabled"
+        ><app-svg-icon name="arrow-down" size="16"></app-svg-icon
+      ></span>
+    </div>
+  </header>
+  <div class="calendar">
+    <ul class="weeks">
+      <li *ngFor="let week of weeks">{{ week }}</li>
+    </ul>
+    <ul class="days">
+      <li
+        [class.selected]="selectedDate?.date === item.fullDate"
+        [class.disabled]="item.disabled"
+        [class.currDay]="currDate === item.fullDate && item.isCurrentMonth"
+        *ngFor="let item of days"
+        (click)="handleSelectDateClick(item)"
+      >
+        {{ item.day }}
+      </li>
+    </ul>
+    <div
+      class="reset-to-current-date"
+      (click)="handleResetToCurrentDateClick()"
+    >
+      Текущая дата
+    </div>
+  </div>
+</div>

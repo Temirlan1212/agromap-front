@@ -1,0 +1,168 @@
+@import "constants";
+
+// base
+$baseColor: $lightColor;
+$baseBgColor: transparent;
+$basePadding: 13px;
+$baseZIndex: 1000;
+$baseBorderR: 20px;
+$baseGap: 0 10px;
+$baseBgColorHover: black;
+$baseTDelay: 0.2s;
+
+// dropdown
+$dBgColor: $darkColor;
+$dColor: $lightColor;
+$dUnderLineBgColor: $successColor;
+$dBorderRadius: $baseBorderR;
+$dMaxWidth: 40%;
+$dPadding: 10px 0;
+
+// dropdown-btn
+$dbGap: 0 5px;
+
+// dropdow-dialog
+$ddBorderRadius: 4px;
+$ddPadding: 8px 10px;
+$ddActiveBgColor: black;
+$ddMinWidth: 200px;
+
+// date-btn
+$dbtnBorderR: 50px;
+$dbtnBgColor: $darkColor;
+$dbtnColor: $lightColor;
+
+ul,
+li,
+p {
+  padding: 0;
+  margin: 0;
+  list-style-type: none;
+}
+
+@mixin hover(
+  $prop: all,
+  $delay: 0.3s,
+  $bg: $baseBgColorHover,
+  $clr: currentColor
+) {
+  transition: $prop $delay;
+  cursor: pointer;
+
+  &:hover {
+    color: $clr;
+    background-color: $bg;
+  }
+}
+
+.indexesPanel {
+  background-color: $baseBgColor;
+  display: flex;
+  gap: $baseGap;
+}
+
+.dropdown-box {
+  color: $dColor;
+  max-width: $dMaxWidth;
+  position: relative;
+
+  .btn {
+    border-radius: $dBorderRadius;
+    display: flex;
+    gap: $dbGap;
+    padding: $basePadding;
+    background-color: $dBgColor;
+    font-weight: 600;
+    @include hover;
+    .icon {
+      transform: rotate(0deg);
+      transition: all 0.2s;
+    }
+
+    &.collapsed {
+      .icon {
+        transform: rotate(180deg);
+        transition: all 0.2s;
+      }
+    }
+  }
+
+  .dialog {
+    background-color: $dBgColor;
+    padding: $dPadding;
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    pointer-events: none;
+    border-radius: $ddBorderRadius;
+    transition: all $baseTDelay;
+    min-width: $ddMinWidth;
+
+    li {
+      font-size: 13px;
+      padding: $ddPadding;
+      @include hover;
+
+      &.active {
+        background-color: $ddActiveBgColor;
+      }
+    }
+
+    &.collapsed {
+      top: calc($basePadding + 40px);
+      left: 0;
+      opacity: 1;
+      pointer-events: initial;
+      transition: all $baseTDelay;
+    }
+  }
+}
+
+.date {
+  .btn {
+    border-radius: $dbtnBorderR;
+    padding: $basePadding;
+    background-color: $dbtnBgColor;
+    color: $dbtnColor;
+    @include hover(all, 0.3s, $lightColor, $darkColor);
+    &.collapsed {
+      background-color: $lightColor;
+      color: $darkColor;
+    }
+  }
+  .dialog {
+    position: absolute;
+    top: 0;
+    right: 10px;
+    opacity: 0;
+    pointer-events: none;
+    transition: all $baseTDelay;
+    &.collapsed {
+      top: calc($basePadding + 40px);
+      right: 10px;
+      opacity: 1;
+      pointer-events: initial;
+      transition: all $baseTDelay;
+    }
+  }
+}
+
+// timeline
+$tGradientColor: #292424;
+$tHeight: 42px;
+.timeline {
+  background: $darkColor;
+  width: 100%;
+  border-radius: $baseBorderR;
+  overflow: hidden;
+  position: relative;
+  cursor: pointer;
+  height: $tHeight;
+
+  ::ng-deep {
+    ul {
+      height: $tHeight;
+    }
+  }
+}

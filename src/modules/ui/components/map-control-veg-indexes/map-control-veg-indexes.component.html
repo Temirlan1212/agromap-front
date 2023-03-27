@@ -1,0 +1,50 @@
+<div class="indexesPanel">
+  <div class="dropdown-box" #vegIndexesDialog>
+    <div
+      class="btn"
+      [class.collapsed]="isCollapsedIndexDialog"
+      (click)="handleCollapseClick('index')"
+    >
+      <span>{{ selectedIndex.name_ru }}</span>
+      <app-svg-icon name="arrow-down" class="icon" size="12"></app-svg-icon>
+    </div>
+
+    <ul class="dialog" [class.collapsed]="isCollapsedIndexDialog">
+      <li
+        [class.active]="index.id == selectedIndex.id"
+        *ngFor="let index of vegIndexOptionsList"
+        (click)="handleSelectIndexClick(index)"
+      >
+        {{ index.name_ru }}
+      </li>
+    </ul>
+  </div>
+
+  <div class="timeline" #timeline>
+    <app-map-control-tab-slider
+      *ngIf="activeDates.length !== 0"
+      [isLayerChanged]="isLayerChanged"
+      [vegIndexesData]="activeDates"
+      [selectedDate]="selectedDate"
+      (selectedDateOutput)="handleSelectDate($event)"
+    ></app-map-control-tab-slider>
+  </div>
+
+  <div class="date" #dateDialog>
+    <div
+      class="btn"
+      [class.collapsed]="isCollapsedDateDialog"
+      (click)="handleCollapseClick('date')"
+    >
+      <app-svg-icon name="date" size="16"></app-svg-icon>
+    </div>
+    <div class="dialog" [class.collapsed]="isCollapsedDateDialog">
+      <app-date-picker
+        [months]="months"
+        [filterDate]="activeDates"
+        [selectedDate]="selectedDate"
+        (selectedDateOutput)="handleColendarDateClick($event)"
+      ></app-date-picker>
+    </div>
+  </div>
+</div>
