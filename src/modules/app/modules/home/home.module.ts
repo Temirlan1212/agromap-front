@@ -18,6 +18,12 @@ import { InputComponent } from '../../../ui/components/input/input.component';
 import { MapService } from './map.service';
 import { CardAccordionComponent } from '../../../ui/components/card-accordion/card-accordion.component';
 import { TranslateModule, TranslatePipe } from '@ngx-translate/core';
+import { DatePickerComponent } from 'src/modules/ui/components/date-picker/date-picker.component';
+import { MapControlsComponent } from 'src/modules/ui/components/map-controls/map-controls.component.';
+import { MapControlLocate } from 'src/modules/ui/components/map-control-locate/map-control-locate.component';
+import { MapControlZoomComponent } from 'src/modules/ui/components/map-control-zoom/map-control-zoom.component';
+import { MapControlLayersSwitchComponent } from 'src/modules/ui/components/map-control-layers-switch/map-control-layers-switch.component';
+import { MapControlVegIndexes } from 'src/modules/ui/components/map-control-veg-indexes/map-control-veg-indexes.component';
 
 @NgModule({
   declarations: [
@@ -41,6 +47,12 @@ import { TranslateModule, TranslatePipe } from '@ngx-translate/core';
     InputComponent,
     CardAccordionComponent,
     TranslateModule,
+    MapControlVegIndexes,
+    DatePickerComponent,
+    MapControlsComponent,
+    MapControlLocate,
+    MapControlZoomComponent,
+    MapControlLayersSwitchComponent,
   ],
   providers: [MapService, TranslatePipe]
 })

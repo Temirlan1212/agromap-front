@@ -4,7 +4,8 @@ import {
   HostBinding,
   Inject,
   Input,
-  LOCALE_ID, OnDestroy,
+  LOCALE_ID,
+  OnDestroy,
   OnInit,
   Output,
 } from '@angular/core';
@@ -80,6 +81,7 @@ export class MapComponent implements OnInit, OnDestroy {
           subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
         }),
       ],
+      zoomControl: false,
     });
 
     this.map?.pm.setLang(this.translate.currentLang as any);
@@ -118,6 +120,6 @@ export class MapComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.subscriptions.forEach(s => s.unsubscribe());
+    this.subscriptions.forEach((s) => s.unsubscribe());
   }
 }

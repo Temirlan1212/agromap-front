@@ -13,6 +13,35 @@
     (featureClick)="handleFeatureClick($event)"
     (featureClose)="handleFeatureClose()"
   >
+    <app-map-controls controls>
+      <div rightPanel>
+        <app-map-control-locate
+          *ngIf="mapData"
+          [map]="mapData.map"
+        ></app-map-control-locate>
+        <app-map-control-zoom
+          *ngIf="mapData"
+          [map]="mapData.map"
+        ></app-map-control-zoom>
+        <app-map-control-layers-switch
+          *ngIf="mapData"
+          [map]="mapData.map"
+        ></app-map-control-layers-switch>
+      </div>
+
+      <div topPanel>
+        <app-map-control-veg-indexes
+          *ngIf="layerFeature && mapData"
+          [layer]="layerFeature"
+          [mapData]="mapData"
+          [vegIndexesData]="vegIndexesData"
+          [vegIndexOptionsList]="vegIndexOptionsList"
+          (vegIndexOptionClick)="handleVegIndexOptionClick($event)"
+          [loadingSatelliteDates]="loadingSatelliteDates"
+        ></app-map-control-veg-indexes>
+      </div>
+    </app-map-controls>
+
     <app-spline-area-chart
       [chartData]="contourData"
       *ngIf="layerFeature && contourData.length > 0;

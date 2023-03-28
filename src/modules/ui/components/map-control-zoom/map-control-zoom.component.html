@@ -1,0 +1,14 @@
+<div
+  class="tab"
+  [class.disabled]="isZoomInControlDisabled"
+  (click)="handleZoomInClick()"
+>
+  <app-svg-icon name="plus" class="icon" size="16px"></app-svg-icon>
+</div>
+<div
+  class="tab"
+  [class.disabled]="isZoomOutControlDisabled"
+  (click)="handleZoomOutClick()"
+>
+  <app-svg-icon name="minus" class="icon" size="16px"></app-svg-icon>
+</div>

@@ -1,7 +1,15 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
 import { geoJSON, Map, TileLayer, tileLayer } from 'leaflet';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ApiService } from 'src/modules/api/api.service';
-import { MapData, MapLayerFeature, MapMove } from 'src/modules/ui/models/map.model';
+import {
+  IVegIndexOption,
+  IVegSatelliteDate,
+} from 'src/modules/api/models/veg-indexes.model';
+import {
+  MapData,
+  MapLayerFeature,
+  MapMove,
+} from 'src/modules/ui/models/map.model';
 import { MapService } from './map.service';
 import { ActualVegQuery } from '../../../api/classes/veg.api';
 import { MessagesService } from '../../../ui/components/services/messages.service';
@@ -12,22 +20,28 @@ import { IChartData } from './components/spline-area-chart/spline-area-chart.com
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit {
   @ViewChild('featurePopup') featurePopup!: ElementRef<HTMLElement>;
 
   wms: TileLayer = tileLayer.wms('https://geoserver.24mycrm.com/agromap/wms', {
     layers: 'agromap:agromap_store',
     format: 'image/png',
     transparent: true,
+    zIndex: 500,
   });
 
   mapData: MapData | null = null;
   layerFeature: MapLayerFeature | null = null;
   selectedLayer: any;
   contourData: IChartData[] = [];
+  layerContourId: string = '';
 
   constructor(private api: ApiService, private mapService: MapService, private messages: MessagesService) {
   }
+  vegIndexesData: IVegSatelliteDate[] = [];
+  vegIndexOptionsList: IVegIndexOption[] = [];
+  loadingSatelliteDates: boolean = false;
+
 
   handleMapData(mapData: MapData): void {
     mapData.map.addLayer(this.wms);
@@ -47,6 +61,10 @@ export class HomeComponent {
         fillOpacity: 1,
         fillColor: '#f6ab39',
       });
+    this.layerContourId =
+      this.layerFeature.feature.properties?.['id'].toString();
+
+    this.getVegSatelliteDates(this.layerContourId);
   }
 
   handleFeatureClose(): void {
@@ -57,7 +75,7 @@ export class HomeComponent {
   async getContourData(id: number) {
     const query: ActualVegQuery = { contour_id: id };
     try {
-      const res = await this.api.veg.getActualVegIndexes(query);
+      const res = await this.api.vegIndexes.getActualVegIndexes(query);
       const data = res.reduce((acc: any, i) => {
         if (!acc[i.index.id]) {
           acc[i.index.id] = {};
@@ -85,7 +103,9 @@ export class HomeComponent {
 
       if (mapMove.zoom >= 12) {
         try {
-          const polygons = await this.api.map.getPolygonsInScreen(mapMove.bounds);
+          const polygons = await this.api.map.getPolygonsInScreen(
+            mapMove.bounds
+          );
           this.mapData.geoJson.options.snapIgnore = true;
           this.mapData.geoJson.options.pmIgnore = true;
           this.mapData.geoJson.addData(polygons);
@@ -94,5 +114,41 @@ export class HomeComponent {
         }
       }
     }
+  }
+
+  async getVegSatelliteDates(
+    contoruId: string,
+    vegIndexId: string = '1'
+  ): Promise<void> {
+    this.loadingSatelliteDates = true;
+    try {
+      this.vegIndexesData = (await this.api.vegIndexes.getVegSatelliteDates({
+        contourId: contoruId,
+        vegIndexId: vegIndexId,
+      })) as IVegSatelliteDate[];
+    } catch (e: any) {
+      console.log(e);
+    }
+    this.loadingSatelliteDates = false;
+  }
+
+  async getVegIndexList() {
+    try {
+      this.vegIndexOptionsList =
+        (await this.api.vegIndexes.getVegIndexList()) as IVegIndexOption[];
+    } catch (e: any) {
+      console.log(e);
+    }
+  }
+
+  handleVegIndexOptionClick(vegIndexOption: IVegIndexOption) {
+    this.getVegSatelliteDates(
+      this.layerContourId,
+      vegIndexOption.id.toString()
+    );
+  }
+
+  ngOnInit(): void {
+    this.getVegIndexList();
   }
 }

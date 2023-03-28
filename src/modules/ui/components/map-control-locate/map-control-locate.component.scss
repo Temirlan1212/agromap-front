@@ -1,0 +1,30 @@
+::ng-deep {
+    .leaflet-control-locate-location circle {
+        animation: leaflet-control-locate-throb 4s ease infinite;
+      }
+      
+      @keyframes leaflet-control-locate-throb {
+        0% {
+          stroke-width: 1;
+        }
+      
+        50% {
+          stroke-width: 3;
+          transform: scale(0.8, 0.8);
+        }
+      
+        100% {
+          stroke-width: 1;
+        }
+      }
+      
+      @keyframes leaflet-control-locate-spin {
+        0% {
+          transform: rotate(0deg);
+        }
+      
+        100% {
+          transform: rotate(360deg);
+        }
+    }
+}
