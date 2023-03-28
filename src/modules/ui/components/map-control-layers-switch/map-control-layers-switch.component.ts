@@ -3,7 +3,7 @@ import { Component, ElementRef, HostListener, Input } from '@angular/core';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
 import * as L from 'leaflet';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { IBaseLyaerObject, IWmsLayerObject } from '../../models/map-controls';
+import { IBaseLayerObject, IWmsLayerObject } from '../../models/map-controls';
 
 @Component({
   selector: 'app-map-control-layers-switch',
@@ -15,13 +15,16 @@ import { IBaseLyaerObject, IWmsLayerObject } from '../../models/map-controls';
 export class MapControlLayersSwitchComponent {
   @Input() map!: L.Map;
 
-  baseLayersArr: IBaseLyaerObject[] = [
+  baseLayersArr: IBaseLayerObject[] = [
     {
       name: 'Google Hybrid',
-      layer: L.tileLayer('http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}', {
-        maxZoom: 20,
-        subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
-      }),
+      layer: L.tileLayer(
+        'http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}',
+        {
+          maxZoom: 20,
+          subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+        }
+      ),
     },
     {
       name: 'Google Satellite',
@@ -52,7 +55,7 @@ export class MapControlLayersSwitchComponent {
       }),
     },
   ];
-  
+
   wmsLayersArr: IWmsLayerObject[] = [
     {
       name: 'SoilLayer',
@@ -81,7 +84,7 @@ export class MapControlLayersSwitchComponent {
     this.isCollapsed = !this.isCollapsed;
   }
 
-  handleSelectBaseLayerClick(selectedLayer: IBaseLyaerObject) {
+  handleSelectBaseLayerClick(selectedLayer: IBaseLayerObject) {
     if (this.activeBaseLayer === selectedLayer.layer) return;
 
     this.baseLayersArr.map((layer) => {
