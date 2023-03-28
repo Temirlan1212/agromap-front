@@ -11,7 +11,6 @@
   "Language": "Язык",
   "MapSettings": "Параметры карты",
   "MapType": "Тип карта",
-  "SoilLayer": "Слой почвы",
 
   "Month-0": "Январь",
   "Month-1": "Февраль",
@@ -34,5 +33,12 @@
   "Week-5": "Пт",
   "Week-6": "Сб",
 
-  "CurrentDate": "Текущая дата"
+  "SoilLayer": "Слой почвы",
+
+  "CurrentDate": "Текущая дата",
+  "Google Hybrid": "Гибридная спутниковая карта",
+  "Google Satellite": "Спутниковая карта",
+  "Google Streets": "Карта улиц",
+  "Google Terrain": "Карта местности",
+  "Open Street Map": "Открытая карта улиц"
 }

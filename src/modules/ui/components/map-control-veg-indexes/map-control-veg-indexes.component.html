@@ -5,7 +5,7 @@
       [class.collapsed]="isCollapsedIndexDialog"
       (click)="handleCollapseClick('index')"
     >
-      <span>{{ selectedVegOption.name_ru }}</span>
+      <span>{{ selectedVegOption["name_" + translate.currentLang] }}</span>
       <app-svg-icon name="arrow-down" class="icon" size="12"></app-svg-icon>
     </div>
 
@@ -15,7 +15,7 @@
         *ngFor="let index of vegIndexOptionsList"
         (click)="handleSelectVegIndexOptionClick(index)"
       >
-        {{ index.name_ru }}
+        {{ index["name_" + translate.currentLang] }}
       </li>
     </ul>
   </div>

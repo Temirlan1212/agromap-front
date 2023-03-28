@@ -11,7 +11,6 @@
   "Language": "Тил",
   "MapSettings": "Картанын орнотуулары",
   "MapType": "Картанын түрү",
-  "SoilLayer": "Катмарлуу топурактар",
 
   "Month-0": "Үчтүн айы",
   "Month-1": "Бирдин айы",
@@ -34,5 +33,13 @@
   "Week-5": "Жм",
   "Week-6": "Иш",
 
-  "CurrentDate": "Учурдагы дата"
+  "CurrentDate": "Учурдагы дата",
+
+  "SoilLayer": "Катмарлуу топурактар",
+
+  "Google Hybrid": "Гибриддик спутник картасы",
+  "Google Satellite": "Спутник картасы",
+  "Google Streets": "Көчө картасы",
+  "Google Terrain": "Жердин түзүлүшүнун картасы",
+  "Open Street Map": "Ачык көчө картасы"
 }

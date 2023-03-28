@@ -17,6 +17,7 @@ export class HomeComponent {
     layers: 'agromap:agromap_store',
     format: 'image/png',
     transparent: true,
+    zIndex: 500,
   });
 
   mapData: MapData | null = null;

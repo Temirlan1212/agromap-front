@@ -1,16 +1,9 @@
 import { CommonModule } from '@angular/common';
-import {
-  Component,
-  ElementRef,
-  HostListener,
-  Input,
-  OnDestroy,
-} from '@angular/core';
+import { Component, ElementRef, HostListener, Input } from '@angular/core';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
 import * as L from 'leaflet';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { IBaseLyaerObject, IWmsLayersObject } from '../../models/map-controls';
-import { Subscription } from 'rxjs';
 
 const baseLayersArr = [
   {
@@ -48,15 +41,13 @@ const baseLayersArr = [
       subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
     }),
   },
+];
+
+const wmsLayersArr = [
   {
-    name: 'Stadia.OSMBright',
-    layer: L.tileLayer(
-      'https://tiles.stadiamaps.com/tiles/osm_bright/{z}/{x}/{y}{r}.png',
-      {
-        maxZoom: 20,
-        subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
-      }
-    ),
+    name: 'SoilLayer',
+    layers: 'agromap:soil_agromap',
+    active: false,
   },
 ];
 
@@ -67,33 +58,21 @@ const baseLayersArr = [
   styleUrls: ['./map-control-layers-switch.component.scss'],
   imports: [CommonModule, SvgIconComponent, TranslateModule],
 })
-export class MapControlLayersSwitchComponent implements OnDestroy {
+export class MapControlLayersSwitchComponent {
   @Input() map!: L.Map;
 
   activeBaseLayer: L.TileLayer = baseLayersArr[0].layer;
   activeWmsLayer: L.TileLayer | null = null;
-  currentLang = this.translate.currentLang;
-  translateSubscription!: Subscription;
 
   baseLayersArr: IBaseLyaerObject[] = baseLayersArr;
-  wmsLayersArr: IWmsLayersObject[] = [
-    {
-      name: this.translate.translations[this.currentLang]['SoilLayer'],
-      layers: 'agromap:soil_agromap',
-      active: false,
-    },
-  ];
+  wmsLayersArr: IWmsLayersObject[] = wmsLayersArr;
 
   isCollapsed = false;
 
   constructor(
     private elementRef: ElementRef,
     public translate: TranslateService
-  ) {
-    this.translateSubscription = translate.onLangChange.subscribe(() => {
-      this.currentLang = translate.currentLang;
-    });
-  }
+  ) {}
 
   @HostListener('document:click', ['$event.target'])
   public onClick(target: any) {
@@ -140,9 +119,5 @@ export class MapControlLayersSwitchComponent implements OnDestroy {
 
     this.map.addLayer(this.activeWmsLayer);
     selectedLayer.active = !selectedLayer.active;
-  }
-
-  ngOnDestroy(): void {
-    this.translateSubscription.unsubscribe();
   }
 }

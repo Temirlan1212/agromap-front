@@ -31,7 +31,7 @@ export interface IVegSatelliteDate {
   contour: number;
 }
 
-export interface IVegIndexOption {
+export interface IVegIndexOption extends Record<string, any> {
   id: number;
   name_ru: string;
   name_ky: string;
@@ -40,4 +40,3 @@ export interface IVegIndexOption {
   description_ru?: string;
   description_en?: string;
 }
-

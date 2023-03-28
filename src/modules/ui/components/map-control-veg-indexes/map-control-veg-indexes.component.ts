@@ -16,7 +16,6 @@ import {
 import { CommonModule } from '@angular/common';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
 import { DatePickerComponent } from '../date-picker/date-picker.component';
-import { ApiService } from 'src/modules/api/api.service';
 import {
   IVegIndexOption,
   IVegSatelliteDate,
@@ -26,6 +25,7 @@ import { MapData, MapLayerFeature } from '../../models/map.model';
 import * as L from 'leaflet';
 import { environment } from 'src/environments/environment';
 import { Feature } from 'geojson';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-map-control-veg-indexes',
@@ -92,7 +92,8 @@ export class MapControlVegIndexes
 
   constructor(
     private differs: KeyValueDiffers,
-    private ref: ChangeDetectorRef
+    private ref: ChangeDetectorRef,
+    public translate: TranslateService
   ) {
     this.differ = this.differs.find(this.vegIndexesData).create();
   }
@@ -124,7 +125,7 @@ export class MapControlVegIndexes
     this.selectedDate = null;
     this.removeImageOverlay();
     this.isCollapsedIndexDialog = false;
-    this.vegIndexOptionClick.emit(this.selectedVegOption)
+    this.vegIndexOptionClick.emit(this.selectedVegOption);
   }
 
   handleSelectDate(date: string | null) {
@@ -170,8 +171,7 @@ export class MapControlVegIndexes
     }
   }
 
-  async ngAfterViewInit() {
-  }
+  async ngAfterViewInit() {}
 
   async ngDoCheck(): Promise<void> {
     const changes = this.differ.diff(this.vegIndexesData as any);
