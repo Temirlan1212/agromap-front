@@ -12,21 +12,21 @@
           [placeholder]="'Select a region' | translate"
           formControlName="region"
           [items]="regions"
-          nameField="name_ru"
+          [nameField]="'name_'+currentLang"
         ></app-input-select>
 
         <app-input-select
           [placeholder]="'Select a district' | translate"
           formControlName="district"
           [items]="districts"
-          nameField="name_ru"
+          [nameField]="'name_'+currentLang"
         ></app-input-select>
 
         <app-input-select
           [placeholder]="'Select a conton' | translate"
           formControlName="conton"
           [items]="contons"
-          nameField="name_ru"
+          [nameField]="'name_'+currentLang"
         ></app-input-select>
 
         <app-input-select
@@ -34,7 +34,7 @@
           formControlName="land_type"
           [items]="landTypes"
           [multi]="true"
-          nameField="name_ru"
+          [nameField]="'name_'+currentLang"
         ></app-input-select>
         <app-input
           type="number"
