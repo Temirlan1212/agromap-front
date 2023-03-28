@@ -3,53 +3,7 @@ import { Component, ElementRef, HostListener, Input } from '@angular/core';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
 import * as L from 'leaflet';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { IBaseLyaerObject, IWmsLayersObject } from '../../models/map-controls';
-
-const baseLayersArr = [
-  {
-    name: 'Google Hybrid',
-    layer: L.tileLayer('http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}', {
-      maxZoom: 20,
-      subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
-    }),
-  },
-  {
-    name: 'Google Satellite',
-    layer: L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
-      maxZoom: 20,
-      subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
-    }),
-  },
-  {
-    name: 'Google Streets',
-    layer: L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
-      maxZoom: 20,
-      subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
-    }),
-  },
-  {
-    name: 'Google Terrain',
-    layer: L.tileLayer('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}', {
-      maxZoom: 20,
-      subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
-    }),
-  },
-  {
-    name: 'Open Street Map',
-    layer: L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 20,
-      subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
-    }),
-  },
-];
-
-const wmsLayersArr = [
-  {
-    name: 'SoilLayer',
-    layers: 'agromap:soil_agromap',
-    active: false,
-  },
-];
+import { IBaseLyaerObject, IWmsLayerObject } from '../../models/map-controls';
 
 @Component({
   selector: 'app-map-control-layers-switch',
@@ -61,11 +15,54 @@ const wmsLayersArr = [
 export class MapControlLayersSwitchComponent {
   @Input() map!: L.Map;
 
-  activeBaseLayer: L.TileLayer = baseLayersArr[0].layer;
-  activeWmsLayer: L.TileLayer | null = null;
+  baseLayersArr: IBaseLyaerObject[] = [
+    {
+      name: 'Google Hybrid',
+      layer: L.tileLayer('http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}', {
+        maxZoom: 20,
+        subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+      }),
+    },
+    {
+      name: 'Google Satellite',
+      layer: L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+        maxZoom: 20,
+        subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+      }),
+    },
+    {
+      name: 'Google Streets',
+      layer: L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+        maxZoom: 20,
+        subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+      }),
+    },
+    {
+      name: 'Google Terrain',
+      layer: L.tileLayer('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}', {
+        maxZoom: 20,
+        subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+      }),
+    },
+    {
+      name: 'Open Street Map',
+      layer: L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 20,
+        subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+      }),
+    },
+  ];
+  
+  wmsLayersArr: IWmsLayerObject[] = [
+    {
+      name: 'SoilLayer',
+      layers: 'agromap:soil_agromap',
+      active: false,
+    },
+  ];
 
-  baseLayersArr: IBaseLyaerObject[] = baseLayersArr;
-  wmsLayersArr: IWmsLayersObject[] = wmsLayersArr;
+  activeBaseLayer: L.TileLayer = this.baseLayersArr[0].layer;
+  activeWmsLayer: L.TileLayer | null = null;
 
   isCollapsed = false;
 
@@ -95,7 +92,7 @@ export class MapControlLayersSwitchComponent {
     this.activeBaseLayer = selectedLayer.layer;
   }
 
-  handleSelectWmsLayerClick(selectedLayer: IWmsLayersObject) {
+  handleSelectWmsLayerClick(selectedLayer: IWmsLayerObject) {
     if (selectedLayer.active && this.activeWmsLayer) {
       this.map.removeLayer(this.activeWmsLayer);
       selectedLayer.active = !selectedLayer.active;

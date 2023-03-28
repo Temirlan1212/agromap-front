@@ -3,7 +3,7 @@ export interface IBaseLyaerObject {
     layer: L.TileLayer;
 }
   
-export interface IWmsLayersObject {
+export interface IWmsLayerObject {
     name: string;
     layers: string;
     active: boolean;
