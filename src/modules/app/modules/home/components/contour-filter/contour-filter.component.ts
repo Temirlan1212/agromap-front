@@ -13,6 +13,7 @@ import { MapService } from '../../map.service';
 import { MapData, MapLayerFeature } from '../../../../../ui/models/map.model';
 import { Feature } from 'geojson';
 import { ActivatedRoute, Router } from '@angular/router';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-contour-filter',
@@ -28,6 +29,7 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
   mapGeo!: GeoJSON;
   filteredContours: any = [];
   currentFeature!: Feature;
+  currentLang: string = this.translateSvc.currentLang;
   @Output() onCardClick = new EventEmitter<MapLayerFeature>();
   @Output() onEditClick = new EventEmitter<void>();
 
@@ -49,6 +51,7 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
     this.form.get('region')?.valueChanges.subscribe(value => this.handleRegionChange(value)) as Subscription,
     this.form.get('district')?.valueChanges.subscribe(value => this.handleDistrictChange(value)) as Subscription,
     this.form.get('conton')?.valueChanges.subscribe(value => this.handleContonChange(value)) as Subscription,
+    this.translateSvc.onLangChange.subscribe(res => this.currentLang = res.lang)
     this.mapService.map.subscribe((res: MapData | null) => {
       this.mapInstance = res?.map as Map;
       this.mapGeo = res?.geoJson as GeoJSON;
@@ -60,7 +63,9 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
     private messages: MessagesService,
     private mapService: MapService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private translate: TranslatePipe,
+    private translateSvc: TranslateService
   ) {
   }
 
@@ -71,7 +76,7 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
 
   async getRegions(): Promise<void> {
     try {
-      this.regions = await this.api.dictionary.getRegions({ polygon: false }) as IRegion[];
+      this.regions = await this.api.dictionary.getRegions({ polygon: false });
     } catch (e: any) {
       this.messages.error(e.message);
     }
@@ -87,7 +92,7 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
 
   async getContons() {
     try {
-      this.contons = await this.api.dictionary.getConstons({ district_id: this.form.get('district')?.value });
+      this.contons = await this.api.dictionary.getContons({ district_id: this.form.get('district')?.value });
     } catch (e: any) {
       this.messages.error(e.message);
     }
@@ -116,7 +121,7 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
   async handleFormSubmit(): Promise<void> {
     const formState = this.getState();
     if (!formState.valid) {
-      this.messages.error('Форма заполнена неверно');
+      this.messages.error(this.translate.transform('Form is invalid'));
       return;
     }
     const { region, district, year, conton, land_type } = formState.value;

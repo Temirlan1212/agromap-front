@@ -10,13 +10,14 @@ import {
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
 import { NgForOf, NgIf } from '@angular/common';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-input-select',
   templateUrl: './input-select.component.html',
   styleUrls: ['./input-select.component.scss'],
   standalone: true,
-  imports: [SvgIconComponent, NgForOf, NgIf],
+  imports: [SvgIconComponent, NgForOf, NgIf, TranslateModule],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,

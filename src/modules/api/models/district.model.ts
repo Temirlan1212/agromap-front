@@ -1,4 +1,4 @@
-import { GeoJSON } from 'geojson';
+import { Polygon } from 'geojson';
 
 export interface IDistrict {
   id: number;
@@ -9,7 +9,7 @@ export interface IDistrict {
   name_ky: string;
   name_en: string;
   region: number;
-  polygon: GeoJSON.Polygon;
+  polygon: Polygon;
 }
 
 export interface IDistrictListQuery {

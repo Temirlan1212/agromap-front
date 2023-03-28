@@ -4,7 +4,8 @@ import {
   HostBinding,
   Inject,
   Input,
-  LOCALE_ID, OnDestroy,
+  LOCALE_ID,
+  OnDestroy,
   OnInit,
   Output,
 } from '@angular/core';
@@ -26,6 +27,7 @@ import {
 import { MapData, MapLayerFeature, MapMove } from '../../models/map.model';
 import '@geoman-io/leaflet-geoman-free';
 import { debounceTime, fromEvent, Subscription } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-map',
@@ -59,7 +61,7 @@ export class MapComponent implements OnInit, OnDestroy {
     },
   });
 
-  constructor(@Inject(LOCALE_ID) public locale: string) {
+  constructor(@Inject(LOCALE_ID) public locale: string, private translate: TranslateService) {
   }
 
   ngOnInit(): void {
@@ -79,6 +81,16 @@ export class MapComponent implements OnInit, OnDestroy {
           subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
         }),
       ],
+      zoomControl: false,
+    });
+
+    this.map?.pm.setLang(this.translate.currentLang as any);
+    this.translate.onLangChange.subscribe(res => {
+      if (res.lang === 'ky') {
+        this.map?.pm.setLang('ko', res.translations);
+      } else {
+        this.map?.pm.setLang(res.lang as any, res.translations);
+      }
     });
 
     this.map.addLayer(this.geoJson);
@@ -112,6 +124,6 @@ export class MapComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.subscriptions.forEach(s => s.unsubscribe());
+    this.subscriptions.forEach((s) => s.unsubscribe());
   }
 }

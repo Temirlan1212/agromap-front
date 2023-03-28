@@ -17,6 +17,13 @@ import { ContourFormComponent } from './components/contour-form/contour-form.com
 import { InputComponent } from '../../../ui/components/input/input.component';
 import { MapService } from './map.service';
 import { CardAccordionComponent } from '../../../ui/components/card-accordion/card-accordion.component';
+import { TranslateModule, TranslatePipe } from '@ngx-translate/core';
+import { DatePickerComponent } from 'src/modules/ui/components/date-picker/date-picker.component';
+import { MapControlsComponent } from 'src/modules/ui/components/map-controls/map-controls.component.';
+import { MapControlLocate } from 'src/modules/ui/components/map-control-locate/map-control-locate.component';
+import { MapControlZoomComponent } from 'src/modules/ui/components/map-control-zoom/map-control-zoom.component';
+import { MapControlLayersSwitchComponent } from 'src/modules/ui/components/map-control-layers-switch/map-control-layers-switch.component';
+import { MapControlVegIndexes } from 'src/modules/ui/components/map-control-veg-indexes/map-control-veg-indexes.component';
 import { ContourEditComponent } from './components/contour-edit/contour-edit.component';
 import { LoadingComponent } from '../../../ui/components/loading/loading.component';
 
@@ -43,8 +50,15 @@ import { LoadingComponent } from '../../../ui/components/loading/loading.compone
     InputComponent,
     CardAccordionComponent,
     LoadingComponent,
+    TranslateModule,
+    MapControlVegIndexes,
+    DatePickerComponent,
+    MapControlsComponent,
+    MapControlLocate,
+    MapControlZoomComponent,
+    MapControlLayersSwitchComponent,
   ],
-  providers: [MapService]
+  providers: [MapService, TranslatePipe]
 })
 export class HomeModule {
 }

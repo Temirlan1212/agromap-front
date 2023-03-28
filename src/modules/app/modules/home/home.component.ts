@@ -1,11 +1,20 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
 import { geoJSON, Map, TileLayer, tileLayer } from 'leaflet';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ApiService } from 'src/modules/api/api.service';
-import { MapData, MapLayerFeature, MapMove } from 'src/modules/ui/models/map.model';
+import {
+  IVegIndexOption,
+  IVegSatelliteDate,
+} from 'src/modules/api/models/veg-indexes.model';
+import {
+  MapData,
+  MapLayerFeature,
+  MapMove,
+} from 'src/modules/ui/models/map.model';
 import { MapService } from './map.service';
-import { ActualVegQuery } from '../../../api/classes/veg.api';
 import { MessagesService } from '../../../ui/components/services/messages.service';
 import { IChartData } from './components/spline-area-chart/spline-area-chart.component';
+import { ActualVegQuery } from '../../../api/classes/veg-indexes';
+import { TranslateService } from '@ngx-translate/core';
 import { MapComponent } from '../../../ui/components/map/map.component';
 
 @Component({
@@ -13,7 +22,7 @@ import { MapComponent } from '../../../ui/components/map/map.component';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit {
   @ViewChild('featurePopup') featurePopup!: ElementRef<HTMLElement>;
   @ViewChild('map') mapComponent!: MapComponent;
 
@@ -21,16 +30,29 @@ export class HomeComponent {
     layers: 'agromap:agromap_store',
     format: 'image/png',
     transparent: true,
+    zIndex: 500,
   });
 
   mapData: MapData | null = null;
   layerFeature: MapLayerFeature | null = null;
   selectedLayer: any;
   contourData: IChartData[] = [];
+  layerContourId: string = '';
+  currentLang: string = this.translateSvc.currentLang;
 
-  constructor(private api: ApiService, private mapService: MapService, private messages: MessagesService) {
+  constructor(
+    private api: ApiService,
+    private mapService: MapService,
+    private messages: MessagesService,
+    private translateSvc: TranslateService) {
+    this.translateSvc.onLangChange.subscribe(res => this.currentLang = res.lang);
     this.mapService.contourEdited.subscribe(() => this.mapComponent.handleMapEventSubscription());
   }
+
+  vegIndexesData: IVegSatelliteDate[] = [];
+  vegIndexOptionsList: IVegIndexOption[] = [];
+  loadingSatelliteDates: boolean = false;
+
 
   handleMapData(mapData: MapData): void {
     mapData.map.addLayer(this.wms);
@@ -50,6 +72,10 @@ export class HomeComponent {
         fillOpacity: 1,
         fillColor: '#f6ab39',
       });
+    this.layerContourId =
+      this.layerFeature.feature.properties?.['id'].toString();
+
+    this.getVegSatelliteDates(this.layerContourId);
   }
 
   handleFeatureClose(): void {
@@ -60,18 +86,18 @@ export class HomeComponent {
   async getContourData(id: number) {
     const query: ActualVegQuery = { contour_id: id };
     try {
-      const res = await this.api.veg.getActualVegIndexes(query);
-      const data = res?.reduce((acc: any, i) => {
-        if (!acc[i.index.name_ru]) {
-          acc[i.index.name_ru] = {};
-          acc[i.index.name_ru]['name'] = i.index.name_ru;
-          acc[i.index.name_ru]['data'] = [];
-          acc[i.index.name_ru]['dates'] = [];
-          acc[i.index.name_ru]['data'].push(i.average_value);
-          acc[i.index.name_ru]['dates'].push(i.date);
+      const res = await this.api.vegIndexes.getActualVegIndexes(query);
+      const data = res.reduce((acc: any, i: any) => {
+        if (!acc[i.index.id]) {
+          acc[i.index.id] = {};
+          acc[i.index.id]['name'] = i.index[`name_${ this.currentLang }`];
+          acc[i.index.id]['data'] = [];
+          acc[i.index.id]['dates'] = [];
+          acc[i.index.id]['data'].push(i.average_value);
+          acc[i.index.id]['dates'].push(i.date);
         } else {
-          acc[i.index.name_ru]['data'].push(i.average_value);
-          acc[i.index.name_ru]['dates'].push(i.date);
+          acc[i.index.id]['data'].push(i.average_value);
+          acc[i.index.id]['dates'].push(i.date);
         }
         return acc;
       }, {});
@@ -88,7 +114,9 @@ export class HomeComponent {
 
       if (mapMove.zoom >= 12) {
         try {
-          const polygons = await this.api.map.getPolygonsInScreen(mapMove.bounds);
+          const polygons = await this.api.map.getPolygonsInScreen(
+            mapMove.bounds
+          );
           this.mapData.geoJson.options.snapIgnore = true;
           this.mapData.geoJson.options.pmIgnore = true;
           this.mapData.geoJson.addData(polygons);
@@ -97,5 +125,41 @@ export class HomeComponent {
         }
       }
     }
+  }
+
+  async getVegSatelliteDates(
+    contoruId: string,
+    vegIndexId: string = '1'
+  ): Promise<void> {
+    this.loadingSatelliteDates = true;
+    try {
+      this.vegIndexesData = (await this.api.vegIndexes.getVegSatelliteDates({
+        contourId: contoruId,
+        vegIndexId: vegIndexId,
+      })) as IVegSatelliteDate[];
+    } catch (e: any) {
+      console.log(e);
+    }
+    this.loadingSatelliteDates = false;
+  }
+
+  async getVegIndexList() {
+    try {
+      this.vegIndexOptionsList =
+        (await this.api.vegIndexes.getVegIndexList()) as IVegIndexOption[];
+    } catch (e: any) {
+      console.log(e);
+    }
+  }
+
+  handleVegIndexOptionClick(vegIndexOption: IVegIndexOption) {
+    this.getVegSatelliteDates(
+      this.layerContourId,
+      vegIndexOption.id.toString()
+    );
+  }
+
+  ngOnInit(): void {
+    this.getVegIndexList();
   }
 }

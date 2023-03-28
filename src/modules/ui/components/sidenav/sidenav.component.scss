@@ -47,6 +47,7 @@
       gap: $sideNavMenuItemGap;
       padding: $sideNavMenuItemPadding;
       text-decoration: none;
+      cursor: pointer;
 
       &:hover,
       &.active {
