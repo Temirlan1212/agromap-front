@@ -3,7 +3,7 @@ import {
   HTTP_INTERCEPTORS,
   HttpClient,
 } from '@angular/common/http';
-import { NgModule } from '@angular/core';
+import { NgModule, LOCALE_ID } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { ApiInterceptorService } from '../api/api-interceptor.service';
 import { AppRoutingModule } from './app-routing.module';
@@ -12,7 +12,6 @@ import { NotificationHostDirective } from '../ui/components/notification/notific
 import { SidenavComponent } from '../ui/components/sidenav/sidenav.component';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { LanguageService } from '../api/language.service';
-import { NgxTranslateRoutesModule } from 'ngx-translate-routes';
 
 @NgModule({
   declarations: [AppComponent],
@@ -38,7 +37,7 @@ import { NgxTranslateRoutesModule } from 'ngx-translate-routes';
       useExisting: ApiInterceptorService,
       multi: true,
     },
-    LanguageService
+    LanguageService,
   ],
 
   bootstrap: [AppComponent],

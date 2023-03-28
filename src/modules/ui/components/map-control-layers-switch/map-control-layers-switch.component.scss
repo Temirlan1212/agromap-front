@@ -1,0 +1,114 @@
+@import "constants";
+
+h3,
+h4 {
+  margin: 0;
+  padding: 0;
+}
+
+//base
+$basePaddings: 7px 15px;
+$baseColor: $darkColor;
+$baseTransitionDelay: 0.2s;
+
+//Tab
+$tabPaddings: 10px;
+$tabHoverActiveColor: #009200;
+
+//Dialog
+$dialogBgColor: $baseColor;
+$dialogBcFilter: blur(3px);
+$dialogPaddings: 5px 0;
+
+// Card
+$cardMinWidth: 250px;
+$cardWidth: 100%;
+$cardHoverActiveColor: #1b1b1b4b;
+
+//Layers-group
+$layersGroupMaxHeight: 80%;
+
+.dialog {
+  padding: $dialogPaddings;
+  background-color: $dialogBgColor;
+  position: absolute;
+  right: 25px;
+  bottom: 0px;
+  border-radius: 4px;
+  backdrop-filter: $dialogBcFilter;
+  opacity: 0;
+  transition: all $baseTransitionDelay;
+  pointer-events: none;
+
+  h4 {
+    padding: $basePaddings;
+    color: $lightColor;
+    font-weight: 700;
+    font-size: 14px;
+    user-select: none;
+  }
+
+  .over-layers-group,
+  .base-layers-group {
+    max-height: $layersGroupMaxHeight;
+    overflow-y: auto;
+
+    &::-webkit-scrollbar {
+      width: 5px;
+    }
+    &::-webkit-scrollbar-thumb {
+      background: $baseColor;
+    }
+  }
+
+  .card {
+    transition: all $baseTransitionDelay;
+    color: $lightColor;
+    gap: 0 10px;
+    min-width: $cardMinWidth;
+    width: $cardWidth;
+
+    padding: $basePaddings;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+
+    &:hover {
+      background-color: $cardHoverActiveColor;
+    }
+    .radio {
+      background-color: $lightColor;
+      border-radius: 50px;
+      width: 13px;
+      height: 13px;
+    }
+
+    &.active {
+      background-color: $cardHoverActiveColor;
+
+      .radio {
+        border: 4px solid $successColor;
+      }
+    }
+  }
+
+  &.collpased {
+    right: 60px;
+    opacity: 1;
+    pointer-events: initial;
+    transition: all $baseTransitionDelay;
+  }
+}
+
+.relative {
+  position: relative;
+}
+
+// helpers
+.divider {
+  background-color: $inputBorderColor;
+  backdrop-filter: $dialogBcFilter;
+  height: 1px;
+  margin: 10px;
+}
