@@ -14,6 +14,7 @@ import { MapService } from './map.service';
 import { MessagesService } from '../../../ui/components/services/messages.service';
 import { IChartData } from './components/spline-area-chart/spline-area-chart.component';
 import { ActualVegQuery } from '../../../api/classes/veg-indexes';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-home',
@@ -35,8 +36,14 @@ export class HomeComponent implements OnInit {
   selectedLayer: any;
   contourData: IChartData[] = [];
   layerContourId: string = '';
+  currentLang: string = this.translateSvc.currentLang;
 
-  constructor(private api: ApiService, private mapService: MapService, private messages: MessagesService) {
+  constructor(
+    private api: ApiService,
+    private mapService: MapService,
+    private messages: MessagesService,
+    private translateSvc: TranslateService) {
+    this.translateSvc.onLangChange.subscribe(res => this.currentLang = res.lang);
   }
 
   vegIndexesData: IVegSatelliteDate[] = [];
@@ -77,10 +84,10 @@ export class HomeComponent implements OnInit {
     const query: ActualVegQuery = { contour_id: id };
     try {
       const res = await this.api.vegIndexes.getActualVegIndexes(query);
-      const data = res.reduce((acc: any, i) => {
+      const data = res.reduce((acc: any, i: any) => {
         if (!acc[i.index.id]) {
           acc[i.index.id] = {};
-          acc[i.index.id]['name'] = i.index.name_ru;
+          acc[i.index.id]['name'] = i.index[`name_${ this.currentLang }`];
           acc[i.index.id]['data'] = [];
           acc[i.index.id]['dates'] = [];
           acc[i.index.id]['data'].push(i.average_value);

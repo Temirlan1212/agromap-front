@@ -64,12 +64,14 @@
       [title]="contour.contour_year.features[0].properties['contour_cs']"
       (mouseClick)="handleContourClick(contour)">
       <div class="card">
-        <span>{{'Region'  | translate}}: {{contour.contour_year.features[0].properties['region_ru']}}</span>
-        <span>{{'District'  | translate}}: {{contour.contour_year.features[0].properties['district_ru']}}</span>
-        <span>{{'Conton'  | translate}}: {{contour.contour_year.features[0].properties['conton_ru']}}</span>
-        <span>{{'Land type' | translate}}: {{contour.contour_year.features[0].properties['land_type_ru']}}</span>
-        <span>{{'Productivity' | translate}}: {{contour.contour_year.features[0].properties['productivity']}}
-          {{'c. per ha.' | translate}}.</span>
+        <span>{{'Region'  | translate}}: {{contour.contour_year.features[0].properties['region_' + currentLang]}}</span>
+        <span>{{'District'  | translate}}
+          : {{contour.contour_year.features[0].properties['district_' + currentLang]}}</span>
+        <span>{{'Conton'  | translate}}: {{contour.contour_year.features[0].properties['conton_' + currentLang]}}</span>
+        <span>{{'Land type' | translate}}
+          : {{contour.contour_year.features[0].properties['land_type_' + currentLang]}}</span>
+        <span>{{'Productivity' | translate}}
+          : {{contour.contour_year.features[0].properties['productivity']}}{{'c. per ha.' | translate}}</span>
         <span>{{'Area' | translate}}: {{contour.contour_year.features[0].properties['area_ha']}} {{'ha' | translate}}
           .</span>
       </div>

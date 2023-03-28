@@ -12,6 +12,7 @@ import { geoJSON, geoJson, latLng, latLngBounds, Map } from 'leaflet';
 import { MapService } from '../../map.service';
 import { MapData, MapLayerFeature } from '../../../../../ui/models/map.model';
 import { Feature } from 'geojson';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-contour-filter',
@@ -26,6 +27,7 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
   mapInstance!: Map;
   filteredContours: any = [];
   currentFeature!: Feature;
+  currentLang: string = this.translateSvc.currentLang;
   @Output() onCardClick = new EventEmitter<MapLayerFeature>();
 
   form: FormGroup = new FormGroup({
@@ -46,13 +48,16 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
     this.form.get('region')?.valueChanges.subscribe(value => this.handleRegionChange(value)) as Subscription,
     this.form.get('district')?.valueChanges.subscribe(value => this.handleDistrictChange(value)) as Subscription,
     this.form.get('conton')?.valueChanges.subscribe(value => this.handleContonChange(value)) as Subscription,
-    this.mapService.map.subscribe((res: MapData | null) => this.mapInstance = res?.map as Map)
+    this.mapService.map.subscribe((res: MapData | null) => this.mapInstance = res?.map as Map),
+    this.translateSvc.onLangChange.subscribe(res => this.currentLang = res.lang)
   ];
 
   constructor(
     private api: ApiService,
     private messages: MessagesService,
-    private mapService: MapService
+    private mapService: MapService,
+    private translate: TranslatePipe,
+    private translateSvc: TranslateService
   ) {
   }
 
@@ -102,7 +107,7 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
   async handleFormSubmit(): Promise<void> {
     const formState = this.getState();
     if (!formState.valid) {
-      this.messages.error('Форма заполнена неверно');
+      this.messages.error(this.translate.transform('Form is invalid'));
       return;
     }
     const { region, district, year, conton, land_type } = formState.value;

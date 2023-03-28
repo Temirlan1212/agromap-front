@@ -15,6 +15,7 @@ import { IRegion } from '../../../../../api/models/region.model';
 import { ILandType } from '../../../../../api/models/land-type.model';
 import { ICulture } from '../../../../../api/models/culture.model';
 import { MessagesService } from '../../../../../ui/components/services/messages.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-contour-form',
@@ -27,6 +28,7 @@ export class ContourFormComponent implements OnInit, OnDestroy {
   regionList: IRegion[] = [];
   landTypeList: ILandType[] = [];
   cultureList: ICulture[] = [];
+  currentLang: string = this.translateSvc.currentLang;
 
   @Input() set value(v: any | null) {
     if (v == null) {
@@ -73,12 +75,14 @@ export class ContourFormComponent implements OnInit, OnDestroy {
       } else {
         this.form.get('culture')?.enable();
       }
-    }) as Subscription
+    }) as Subscription,
+    this.translateSvc.onLangChange.subscribe(res => this.currentLang = res.lang)
   ];
 
   constructor(
     private api: ApiService,
-    private messages: MessagesService) {
+    private messages: MessagesService,
+    private translateSvc: TranslateService) {
   }
 
   ngOnInit() {

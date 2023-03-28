@@ -3,7 +3,7 @@
     <app-input-select
       [items]="regionList"
       [placeholder]="'Region' | translate"
-      nameField="name_ru"
+      [nameField]="'name_'+currentLang"
       formControlName="region">
     </app-input-select>
 
@@ -11,28 +11,28 @@
       [items]="districtList"
       [placeholder]="'District' | translate"
       formControlName="district"
-      nameField="name_ru">
+      [nameField]="'name_'+currentLang">
     </app-input-select>
 
     <app-input-select
       (onSelectItem)="onChange.emit($event)"
       [placeholder]="'Conton' | translate"
       [items]="contonList"
-      nameField="name_ru"
+      [nameField]="'name_'+currentLang"
       formControlName="conton">
     </app-input-select>
 
     <app-input-select
       [items]="landTypeList"
       formControlName="type"
-      nameField="name_ru"
+      [nameField]="'name_'+currentLang"
       [placeholder]="'Land type' | translate">
     </app-input-select>
 
     <app-input-select
       [items]="cultureList"
       formControlName="culture"
-      nameField="name_ru"
+      [nameField]="'name_'+currentLang"
       [placeholder]="'Culture' | translate">
     </app-input-select>
 
