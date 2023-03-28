@@ -1,4 +1,8 @@
-import { HttpClientModule, HTTP_INTERCEPTORS, HttpClient } from '@angular/common/http';
+import {
+  HttpClientModule,
+  HTTP_INTERCEPTORS,
+  HttpClient,
+} from '@angular/common/http';
 import { NgModule, LOCALE_ID } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { ApiInterceptorService } from '../api/api-interceptor.service';
@@ -8,8 +12,6 @@ import { NotificationHostDirective } from '../ui/components/notification/notific
 import { SidenavComponent } from '../ui/components/sidenav/sidenav.component';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { LanguageService } from '../api/language.service';
-
-import { StoreService } from '../api/store.service';
 
 @NgModule({
   declarations: [AppComponent],
@@ -35,7 +37,7 @@ import { StoreService } from '../api/store.service';
       useExisting: ApiInterceptorService,
       multi: true,
     },
-    StoreService,
+    LanguageService,
   ],
 
   bootstrap: [AppComponent],

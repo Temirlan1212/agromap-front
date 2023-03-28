@@ -1,11 +1,16 @@
-export enum ELanguage {
+export enum ELanguageCode {
   en = 'en',
   ru = 'ru',
   ky = 'ky',
 }
 
 export interface ILanguage {
-  current: ELanguage;
-  default: ELanguage;
-  all: ELanguage[];
+  code: ELanguageCode;
+  name: string;
+}
+
+export interface ILanguageStore {
+  current: ELanguageCode;
+  default: ELanguageCode;
+  all: ILanguage[];
 }

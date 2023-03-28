@@ -6,7 +6,8 @@ import { IUser } from '../api/models/user.model';
 import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 import { Title } from '@angular/platform-browser';
 import { StoreService } from '../api/store.service';
-import { ELanguage, ILanguage } from '../api/models/language.model';
+import { ELanguageCode, ILanguageStore } from '../api/models/language.model';
+import { LanguageService } from '../api/language.service';
 
 @Component({
   selector: 'app-root',
@@ -37,33 +38,32 @@ export class AppComponent implements OnInit, OnDestroy {
     private router: Router,
     private translate: TranslateService,
     private titleService: Title,
-    private store: StoreService
+    private store: StoreService,
+    private language: LanguageService
   ) {}
 
   private initLang(): void {
-    const languageStore = this.store.getItem<ILanguage>('language');
+    const languageStore = this.store.getItem<ILanguageStore>('language');
 
     if (languageStore != null) {
-      this.translate.addLangs(languageStore.all);
+      this.translate.addLangs(languageStore.all.map((f) => f.code));
       this.translate.setDefaultLang(languageStore.default);
       this.translate.use(languageStore.current);
     } else {
-      const languageConf: ILanguage = {
-        default: ELanguage.ru,
-        current: ELanguage.ru,
-        all: [ELanguage.en, ELanguage.ru, ELanguage.ky],
-      };
-      this.store.setItem<ILanguage>('language', languageConf);
-      this.translate.addLangs(languageConf.all);
-      this.translate.setDefaultLang(languageConf.default);
-      this.translate.use(languageConf.current);
+      const initialLanguageStore = this.language.getInitialLanguageStore();
+      this.store.setItem<ILanguageStore>('language', initialLanguageStore);
+      this.translate.addLangs(initialLanguageStore.all.map((f) => f.code));
+      this.translate.setDefaultLang(initialLanguageStore.default);
+      this.translate.use(initialLanguageStore.current);
     }
   }
 
-  private updateStoreOnChangeLang(current: ELanguage): void {
-    const languageStore = this.store.getItem<ILanguage>('language');
-    languageStore.current = current;
-    this.store.setItem<ILanguage>('language', languageStore);
+  private updateStoreOnChangeLang(current: ELanguageCode): void {
+    const languageStore = this.store.getItem<ILanguageStore>('language');
+    if (languageStore != null) {
+      languageStore.current = current;
+      this.store.setItem<ILanguageStore>('language', languageStore);
+    }
   }
 
   ngOnInit(): void {
@@ -77,7 +77,7 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   handleLangChange(langObj: LangChangeEvent): void {
-    this.updateStoreOnChangeLang(langObj.lang as ELanguage);
+    this.updateStoreOnChangeLang(langObj.lang as ELanguageCode);
     const trTitle = langObj.translations[this.currentPageTitle];
     if (trTitle != null) {
       this.titleService.setTitle(trTitle);
