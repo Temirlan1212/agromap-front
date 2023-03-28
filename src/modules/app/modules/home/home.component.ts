@@ -26,6 +26,7 @@ export class HomeComponent {
 
   vegIndexesData: IVegSatelliteDate[] = [];
   vegIndexOptionsList: IVegIndexOption[] = [];
+  loading: boolean = false;
 
   constructor(private api: ApiService, private mapService: MapService) {
   }
@@ -66,6 +67,7 @@ export class HomeComponent {
   }
 
   async getVegSatelliteDates(contoruId: string, vegIndexId: string = '1'): Promise<void> {
+    this.loading = true;
     try {
       this.vegIndexesData = await this.api.vegIndexes.getVegSatelliteDates({
         contourId: contoruId,
@@ -74,6 +76,7 @@ export class HomeComponent {
     } catch (e: any) {
       console.log(e);
     }
+    this.loading = false;
   }
 
   async getVegIndexList() {

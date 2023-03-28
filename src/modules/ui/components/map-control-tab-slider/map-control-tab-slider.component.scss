@@ -97,6 +97,13 @@ a.active {
   box-shadow: inset 0 -2px 0 $ttActiveUnderLineBgColor;
   background-color: $tGradientColor;
 }
+.empty {
+  margin: auto;
+  pointer-events: none;
+  .dynamic-color {
+    width: 50px;
+  }
+}
 
 .next,
 .prev {

@@ -40,5 +40,7 @@
   "Google Satellite": "Спутниковая карта",
   "Google Streets": "Карта улиц",
   "Google Terrain": "Карта местности",
-  "Open Street Map": "Открытая карта улиц"
+  "Open Street Map": "Открытая карта улиц",
+
+  "NoData": "Данных нет"
 }

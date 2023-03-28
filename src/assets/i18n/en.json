@@ -41,5 +41,7 @@
   "Google Satellite": "Satellite map",
   "Google Streets": "Street map",
   "Google Terrain": "Terrain map",
-  "Open Street Map": "Open street map"
+  "Open Street Map": "Open street map",
+
+  "NoData": "No data"
 }

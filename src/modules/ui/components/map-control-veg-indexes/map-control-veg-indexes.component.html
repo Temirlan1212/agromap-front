@@ -22,11 +22,11 @@
 
   <div class="timeline" #timeline>
     <app-map-control-tab-slider
-      *ngIf="activeDates.length !== 0"
       [isLayerChanged]="isLayerChanged"
       [vegIndexesData]="activeDates"
       [selectedDate]="selectedDate"
       (selectedDateOutput)="handleSelectDate($event)"
+      [loading]="loading"
     ></app-map-control-tab-slider>
   </div>
 

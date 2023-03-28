@@ -11,16 +11,23 @@ import {
 import { CommonModule } from '@angular/common';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
 import { FormatDatePipe } from '../../pipes/formatDate.pipe';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
+import { LoadingComponent } from '../loading/loading.component';
 
 @Component({
   selector: 'app-map-control-tab-slider',
   templateUrl: './map-control-tab-slider.component.html',
   styleUrls: ['./map-control-tab-slider.component.scss'],
   standalone: true,
-  imports: [CommonModule, SvgIconComponent, FormatDatePipe],
-  providers: [FormatDatePipe]   
+  imports: [
+    CommonModule,
+    SvgIconComponent,
+    FormatDatePipe,
+    TranslateModule,
+    LoadingComponent,
+  ],
+  providers: [FormatDatePipe],
 })
 export class MapControlTabSlider implements AfterViewInit, OnDestroy {
   @ViewChild('timelineList') timelineListEl!: ElementRef<HTMLInputElement>;
@@ -30,6 +37,7 @@ export class MapControlTabSlider implements AfterViewInit, OnDestroy {
   @Output() selectedDateOutput = new EventEmitter<string | null>();
 
   @Input() vegIndexesData: string[] = [];
+  @Input() loading: boolean = false;
 
   selectedDate: string | null = null;
   currLang = this.translate.currentLang;
@@ -37,12 +45,12 @@ export class MapControlTabSlider implements AfterViewInit, OnDestroy {
 
   @Input('selectedDate') set selectedDateInput(date: string | null) {
     this.selectedDate = date;
-    
+
     if (date) {
       for (const a in this.timelineListEl.nativeElement.children) {
         if (
           this.timelineListEl.nativeElement.children[a].textContent?.includes(
-            `${this.formatDate.transform(date, "fullDate", this.currLang)}`
+            `${this.formatDate.transform(date, 'fullDate', this.currLang)}`
           )
         ) {
           this.timelineListEl.nativeElement.children[a].scrollIntoView({
@@ -62,8 +70,13 @@ export class MapControlTabSlider implements AfterViewInit, OnDestroy {
   isActiveNextBtn = false;
   isActivePrevBtn = false;
 
-  constructor(private translate: TranslateService, private formatDate: FormatDatePipe) {
-   this.translateSubscription = translate.onLangChange.subscribe(() => this.currLang = translate.currentLang)
+  constructor(
+    public translate: TranslateService,
+    private formatDate: FormatDatePipe
+  ) {
+    this.translateSubscription = translate.onLangChange.subscribe(
+      () => (this.currLang = translate.currentLang)
+    );
   }
 
   handleTimelineNextClick() {
@@ -137,6 +150,6 @@ export class MapControlTabSlider implements AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.translateSubscription.unsubscribe()
+    this.translateSubscription.unsubscribe();
   }
 }

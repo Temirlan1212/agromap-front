@@ -56,6 +56,7 @@ export class MapControlVegIndexes
   @Input() mapData: MapData | null = null;
   @Input() vegIndexesData: IVegSatelliteDate[] = [];
   @Input() vegIndexOptionsList: IVegIndexOption[] = [];
+  @Input() loading: boolean = false;
 
   @Output() imageOverlayIncstanceOutput = new EventEmitter<L.ImageOverlay>();
   @Output() vegIndexOptionClick = new EventEmitter<IVegIndexOption>();

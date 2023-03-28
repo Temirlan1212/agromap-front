@@ -14,10 +14,17 @@
       [class.selected]="selectedDate === date"
       #timelineItem
     >
-      <a>{{ date | formatDate: 'fullDate':currLang }}</a>
-
-    </li> 
+      <a>{{ date | formatDate : "fullDate" : currLang }}</a>
+    </li>
   </ng-container>
+  <li *ngIf="vegIndexesData.length === 0 && !loading" class="empty">
+    <a>{{ "NoData" | translate }}</a>
+  </li>
+  <li *ngIf="vegIndexesData.length === 0 && loading" class="empty">
+    <a>
+      <app-loading [loading]="loading" class="dynamic-color"></app-loading>
+    </a>
+  </li>
 </ul>
 
 <div
