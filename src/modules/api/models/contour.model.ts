@@ -1,3 +1,5 @@
+import { GeoJSON } from 'geojson';
+
 export interface IContour {
   id: number;
   year: number;
@@ -5,7 +7,7 @@ export interface IContour {
   ink: string;
   created_at: string;
   updated_at: string;
-  polygon: string;
+  polygon: GeoJSON.Polygon;
   productivity: string;
   area_ha: number;
   is_deleted: boolean;

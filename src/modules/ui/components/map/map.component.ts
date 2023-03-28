@@ -82,11 +82,15 @@ export class MapComponent implements OnInit, OnDestroy {
     });
 
     this.map.addLayer(this.geoJson);
-    const s = fromEvent(this.map, 'moveend')
+    this.handleMapEventSubscription();
+    this.mapData.emit({ map: this.map, geoJson: this.geoJson });
+  }
+
+  handleMapEventSubscription() {
+    const s = fromEvent(this.map as Map, 'moveend')
       .pipe(debounceTime(1000))
       .subscribe(() => this.handleMapMove());
     this.subscriptions.push(s);
-    this.mapData.emit({ map: this.map, geoJson: this.geoJson });
   }
 
   handleMapMove(): void {

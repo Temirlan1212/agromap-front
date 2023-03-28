@@ -17,6 +17,8 @@ import { ContourFormComponent } from './components/contour-form/contour-form.com
 import { InputComponent } from '../../../ui/components/input/input.component';
 import { MapService } from './map.service';
 import { CardAccordionComponent } from '../../../ui/components/card-accordion/card-accordion.component';
+import { ContourEditComponent } from './components/contour-edit/contour-edit.component';
+import { LoadingComponent } from '../../../ui/components/loading/loading.component';
 
 @NgModule({
   declarations: [
@@ -25,6 +27,7 @@ import { CardAccordionComponent } from '../../../ui/components/card-accordion/ca
     ContourAddComponent,
     SplineAreaChartComponent,
     ContourFormComponent,
+    ContourEditComponent,
   ],
   imports: [
     CommonModule,
@@ -39,6 +42,7 @@ import { CardAccordionComponent } from '../../../ui/components/card-accordion/ca
     NgApexchartsModule,
     InputComponent,
     CardAccordionComponent,
+    LoadingComponent,
   ],
   providers: [MapService]
 })

@@ -6,6 +6,7 @@ import { MapService } from './map.service';
 import { ActualVegQuery } from '../../../api/classes/veg.api';
 import { MessagesService } from '../../../ui/components/services/messages.service';
 import { IChartData } from './components/spline-area-chart/spline-area-chart.component';
+import { MapComponent } from '../../../ui/components/map/map.component';
 
 @Component({
   selector: 'app-home',
@@ -14,6 +15,7 @@ import { IChartData } from './components/spline-area-chart/spline-area-chart.com
 })
 export class HomeComponent {
   @ViewChild('featurePopup') featurePopup!: ElementRef<HTMLElement>;
+  @ViewChild('map') mapComponent!: MapComponent;
 
   wms: TileLayer = tileLayer.wms('https://geoserver.24mycrm.com/agromap/wms', {
     layers: 'agromap:agromap_store',
@@ -27,6 +29,7 @@ export class HomeComponent {
   contourData: IChartData[] = [];
 
   constructor(private api: ApiService, private mapService: MapService, private messages: MessagesService) {
+    this.mapService.contourEdited.subscribe(() => this.mapComponent.handleMapEventSubscription());
   }
 
   handleMapData(mapData: MapData): void {
@@ -58,7 +61,7 @@ export class HomeComponent {
     const query: ActualVegQuery = { contour_id: id };
     try {
       const res = await this.api.veg.getActualVegIndexes(query);
-      const data = res.reduce((acc: any, i) => {
+      const data = res?.reduce((acc: any, i) => {
         if (!acc[i.index.name_ru]) {
           acc[i.index.name_ru] = {};
           acc[i.index.name_ru]['name'] = i.index.name_ru;
@@ -72,7 +75,7 @@ export class HomeComponent {
         }
         return acc;
       }, {});
-      this.contourData = Object.values(data);
+      this.contourData = data ? Object.values(data) : [];
     } catch (e: any) {
       this.messages.error(e.message);
       this.contourData = [];

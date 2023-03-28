@@ -27,40 +27,42 @@ export class CardAccordionComponent {
     if (!clickedInside) {
       this.isOpened = false;
 
-      if (this.dialog.nativeElement.open && target !== this.dialog.nativeElement){
+      if (this.dialog.nativeElement.open && target !== this.dialog.nativeElement) {
         this.dialog.nativeElement.close();
       }
     }
   }
 
   @HostListener('click', ['$event'])
-  hostClick(e:any) {
-    if (this.dialog.nativeElement.open && !this.dialog.nativeElement.contains(e.target)){
+  hostClick(e: any) {
+    if (this.dialog.nativeElement.open && !this.dialog.nativeElement.contains(e.target)) {
       this.dialog.nativeElement.close();
-    }else{
+    } else {
       this.isOpened = true;
       this.mouseClick.emit();
     }
   }
 
-  handleCollapseClick(e: Event){
+  handleCollapseClick(e: Event) {
     e.stopPropagation();
     this.isOpened = !this.isOpened;
   }
 
-  handleOptionsClick(e:Event){
+  handleOptionsClick(e: Event) {
     e.stopPropagation();
     this.dialog.nativeElement.show();
   }
 
-  handleEditClick(e:Event){
+  handleEditClick(e: Event) {
     e.stopPropagation();
     this.editClick.emit();
+    this.dialog.nativeElement.close();
   }
 
-  handleRemoveClick(e:Event){
+  handleRemoveClick(e: Event) {
     e.stopPropagation();
     this.removeClick.emit();
+    this.dialog.nativeElement.close();
   }
 
 }

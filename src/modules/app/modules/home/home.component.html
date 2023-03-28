@@ -1,6 +1,7 @@
 <app-side-panel>
   <app-contour-filter
-    (onCardClick)="map.handleFeatureClick($event.layer, $event.feature)">
+    (onCardClick)="map.handleFeatureClick($event.layer, $event.feature)"
+    (onEditClick)="map.handleFeatureClose()">
   </app-contour-filter>
   <router-outlet></router-outlet>
 </app-side-panel>

@@ -62,7 +62,8 @@
     <app-card-accordion
       *ngFor="let contour of filteredContours"
       [title]="contour.contour_year.features[0].properties['contour_cs']"
-      (mouseClick)="handleContourClick(contour)">
+      (mouseClick)="handleContourClick(contour)"
+      (editClick)="handleEditClick(contour)">
       <div class="card">
         <span>Регион: {{contour.contour_year.features[0].properties['region_ru']}}</span>
         <span>Район: {{contour.contour_year.features[0].properties['district_ru']}}</span>
