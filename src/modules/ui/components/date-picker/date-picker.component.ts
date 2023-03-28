@@ -21,12 +21,9 @@ import { FormatDatePipe } from '../../pipes/formatDate.pipe';
 })
 export class DatePickerComponent implements OnInit {
   years: number[] = [];
-  months: number[] = [
-   0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
-  ];
-  weeks: number[] = [0, 1, 2, 3, 4, 5, 6 ];
+  months: number[] = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+  weeks: number[] = [0, 1, 2, 3, 4, 5, 6];
 
-  @Output() filteredDaysOutput = new EventEmitter<IDateLocal[]>();
   @Output() selectedDateOutput = new EventEmitter<string | null>();
 
   filterDate: string[] = [];
@@ -72,7 +69,6 @@ export class DatePickerComponent implements OnInit {
     this.renderCalendar();
     this.years = this.getYears(2015);
     this.toggleDisableArrowBtns();
-    this.filteredDaysOutput.emit(this.days);
   }
 
   handleNextPrevClick(type: string) {
@@ -90,9 +86,10 @@ export class DatePickerComponent implements OnInit {
   }
 
   handleSelectDateClick(date: IDateLocal) {
-    this.selectedDateOutput.emit(date.fullDate);
-
-    this.selectedDate = date.fullDate;
+    if (date.fullDate) {
+      this.selectedDateOutput.emit(date.fullDate);
+      this.selectedDate = date.fullDate;
+    }
   }
 
   handleSelectYearClick(year: number) {
@@ -139,10 +136,6 @@ export class DatePickerComponent implements OnInit {
       this.days.push({
         day: lastDateofLastMonth - i,
         disabled: true,
-        isCurrentMonth: false,
-        fullDate: new Date(this.year, this.month, lastDateofLastMonth - i + 1)
-          .toISOString()
-          .slice(0, 10),
       });
     }
 
@@ -166,7 +159,9 @@ export class DatePickerComponent implements OnInit {
         day: i,
         disabled: !isIncludes,
         isCurrentMonth: true,
-        fullDate: includedDate[i],
+        fullDate: new Date(this.year, this.month, i + 1)
+          .toISOString()
+          .slice(0, 10),
       });
     }
 
@@ -174,10 +169,6 @@ export class DatePickerComponent implements OnInit {
       this.days.push({
         day: i - lastDayofMonth + 1,
         disabled: true,
-        isCurrentMonth: false,
-        fullDate: new Date(this.year, this.month, i - lastDayofMonth + 1)
-          .toISOString()
-          .slice(0, 10),
       });
     }
   }

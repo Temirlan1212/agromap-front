@@ -9,7 +9,7 @@
           class="dialog-item"
           *ngFor="let month of months; let indexOfelement = index"
           (click)="handleSelectMonthClick(indexOfelement)"
-          [class.disabled]="currYear === year && currMonth < (indexOfelement)"
+          [class.disabled]="currYear === year && currMonth < indexOfelement"
         >
           {{ "Month-" + month | translate }}
         </li>
@@ -67,7 +67,7 @@
       class="reset-to-current-date"
       (click)="handleResetToCurrentDateClick()"
     >
-      Текущая дата
+      {{ "CurrentDate" | translate }}
     </div>
   </div>
 </div>
