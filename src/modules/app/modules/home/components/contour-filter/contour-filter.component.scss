@@ -12,10 +12,11 @@ $indent: 0 20px;
   background-color: $lightColor;
 }
 
-.filters>button {
+.filters > button {
   width: 100%;
   border-bottom: 1px solid $secondaryColor;
-  &>h5 {
+
+  & > h5 {
     margin: 0;
   }
 }
@@ -37,5 +38,18 @@ h5 {
 
   &.closed {
     height: 0;
+  }
+}
+
+.contours-list {
+  display: flex;
+  flex-direction: column;
+  padding: 0 16px 20px 16px;
+  gap: 12px;
+
+  .card {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
   }
 }

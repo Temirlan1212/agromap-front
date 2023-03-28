@@ -1,10 +1,13 @@
 <app-side-panel>
-  <app-contour-filter></app-contour-filter>
+  <app-contour-filter
+    (onCardClick)="map.handleFeatureClick($event.layer, $event.feature)">
+  </app-contour-filter>
   <router-outlet></router-outlet>
 </app-side-panel>
 
 <div class="map-container">
   <app-map
+    #map
     (mapData)="handleMapData($event)"
     (mapMove)="handleMapMove($event)"
     (featureClick)="handleFeatureClick($event)"
@@ -39,6 +42,13 @@
       </div>
     </app-map-controls>
 
-    <app-spline-area-chart></app-spline-area-chart>
+    <app-spline-area-chart
+      [chartData]="contourData"
+      *ngIf="layerFeature && contourData.length > 0;
+      else noContourData">
+    </app-spline-area-chart>
+    <ng-template #noContourData>
+      <h3 class="no-data-text">{{'NoData' | translate}}</h3>
+    </ng-template>
   </app-map>
 </div>

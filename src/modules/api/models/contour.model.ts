@@ -16,3 +16,11 @@ export interface IContour {
   culture: number;
   farmer: number;
 }
+
+export interface ContourFiltersQuery {
+  year?: number;
+  land_type?: number;
+  region: number;
+  district: number;
+  conton: number;
+}

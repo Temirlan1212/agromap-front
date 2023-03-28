@@ -6,7 +6,8 @@
   padding: 14px;
   display: block;
   border-radius: $cardAccordeonBorderRadius;
-  min-width: 400px;
+  min-width: 200px;
+  cursor: pointer;
 
   .header {
     display: flex;
@@ -55,13 +56,13 @@
     width: 0;
     height: 0;
     top: 0;
-    right: -120%;
     opacity: 0;
     z-index: 999999;
     transition: all .2s ease;
 
     &.active {
-      right: -100%;
+      top: -90px;
+      right: 0;
       opacity: 1;
     }
 

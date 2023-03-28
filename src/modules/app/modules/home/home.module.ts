@@ -16,6 +16,8 @@ import { NgApexchartsModule } from 'ng-apexcharts';
 import { ContourFormComponent } from './components/contour-form/contour-form.component';
 import { InputComponent } from '../../../ui/components/input/input.component';
 import { MapService } from './map.service';
+import { CardAccordionComponent } from '../../../ui/components/card-accordion/card-accordion.component';
+import { TranslateModule, TranslatePipe } from '@ngx-translate/core';
 import { DatePickerComponent } from 'src/modules/ui/components/date-picker/date-picker.component';
 import { MapControlsComponent } from 'src/modules/ui/components/map-controls/map-controls.component.';
 import { MapControlLocate } from 'src/modules/ui/components/map-control-locate/map-control-locate.component';
@@ -43,6 +45,8 @@ import { MapControlVegIndexes } from 'src/modules/ui/components/map-control-veg-
     FieldsGroupComponent,
     NgApexchartsModule,
     InputComponent,
+    CardAccordionComponent,
+    TranslateModule,
     MapControlVegIndexes,
     DatePickerComponent,
     MapControlsComponent,
@@ -50,7 +54,7 @@ import { MapControlVegIndexes } from 'src/modules/ui/components/map-control-veg-
     MapControlZoomComponent,
     MapControlLayersSwitchComponent,
   ],
-  providers: [MapService]
+  providers: [MapService, TranslatePipe]
 })
 export class HomeModule {
 }

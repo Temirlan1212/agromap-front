@@ -7,7 +7,7 @@
 
   <span
     *ngIf="selectedItems && selectedItems.length > 0 && multi; else singleItem"
-  >Выбрано элементов: {{ selectedItems.length }}</span
+  >{{'Selected items' | translate}}: {{ selectedItems.length }}</span
   >
   <ng-template #singleItem>
     <div class="item" *ngIf="selectedItems && selectedItems.length > 0">
@@ -53,7 +53,7 @@
     <input
       #input
       type="text"
-      placeholder="Поиск"
+      [placeholder]="'Search' | translate"
       (keyup)="handleSearch(input.value)"/>
   </div>
 

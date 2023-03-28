@@ -13,4 +13,8 @@ export class ContourApi {
   async create(data: Partial<IContour>): Promise<IContour> {
     return await firstValueFrom(this.http.post<IContour>('gip/contour', data));
   }
+
+  async getFilteredContours(query: any): Promise<any> {
+    return await firstValueFrom(this.http.get<any>('gip/filter_contour', { params: query as any }));
+  }
 }

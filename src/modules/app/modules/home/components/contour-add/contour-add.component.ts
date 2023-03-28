@@ -9,6 +9,7 @@ import { ContourFormComponent } from '../contour-form/contour-form.component';
 import { IContour } from '../../../../../api/models/contour.model';
 import { ApiService } from '../../../../../api/api.service';
 import { MessagesService } from '../../../../../ui/components/services/messages.service';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-contour-add',
@@ -25,7 +26,8 @@ export class ContourAddComponent implements OnInit, OnDestroy {
     private mapService: MapService,
     private router: Router,
     private api: ApiService,
-    private messages: MessagesService
+    private messages: MessagesService,
+    private translate: TranslatePipe
   ) {
   }
 
@@ -35,7 +37,6 @@ export class ContourAddComponent implements OnInit, OnDestroy {
       this.mapInstance.pm.setGlobalOptions({
         allowSelfIntersection: false,
       });
-      this.mapInstance.pm.setLang('ru');
       res?.map.pm.addControls({
         position: 'topleft',
         drawCircle: false,
@@ -96,15 +97,15 @@ export class ContourAddComponent implements OnInit, OnDestroy {
       polygon: this.polygon
     };
     if (!formState.touched) {
-      this.messages.warning('Нет изменений в форме');
+      this.messages.warning(this.translate.transform('No changes in form'));
       return;
     }
     if (!formState.valid) {
-      this.messages.error('Форма заполнена неверно');
+      this.messages.error(this.translate.transform('Form is invalid'));
       return;
     }
     if (!this.polygon) {
-      this.messages.error('Определите полигон на карте');
+      this.messages.error(this.translate.transform('Define a polygon on the map'));
       return;
     }
     try {
@@ -124,7 +125,9 @@ export class ContourAddComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.mapSubscription.unsubscribe();
     this.mapInstance.pm.toggleControls();
-    this.handleDeletePolygon();
+    if (this.layer) {
+      this.handleDeletePolygon();
+    }
     this.mapInstance.off('pm:create');
     this.mapInstance.off('pm:remove');
   }

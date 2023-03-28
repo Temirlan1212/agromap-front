@@ -16,4 +16,5 @@ export interface IConton {
 export interface IContonListQuery {
   polygon?: boolean;
   district_id?: number;
+  ids?: string;
 }

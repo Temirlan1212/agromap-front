@@ -10,13 +10,14 @@ import {
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
 import { NgForOf, NgIf } from '@angular/common';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-input-select',
   templateUrl: './input-select.component.html',
   styleUrls: ['./input-select.component.scss'],
   standalone: true,
-  imports: [SvgIconComponent, NgForOf, NgIf],
+  imports: [SvgIconComponent, NgForOf, NgIf, TranslateModule],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -51,8 +52,12 @@ export class InputSelectComponent implements ControlValueAccessor, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['items'] != null && Array.isArray(this.items)) {
+      this.selectedItemsObj = {};
       this.localItems = [...this.items];
-      this.selectedItems = this.items.filter(i => i[this.idField] === this.value);
+      let values = String(this.value);
+      this.selectedItems = this.items.filter(i => values?.split(',').includes(String(i[this.idField])));
+      this.value = !this.selectedItems.map(i => i[this.idField]).join(',') ? null : this.selectedItems.map(i => i[this.idField]).join(',');
+      this.multi && this.onChange(this.value);
       this.selectedItems.forEach(i => this.selectedItemsObj[i[this.idField]] = i[this.nameField]);
     }
   }
@@ -79,11 +84,11 @@ export class InputSelectComponent implements ControlValueAccessor, OnChanges {
     } else {
       this.handleSingleSelect(e, item);
     }
-    let values: string | number = this.selectedItems?.map(i => i[this.idField]).join(',') as string;
-    values = !this.multi ? Number(values) : values;
+    this.value = this.selectedItems?.map(i => i[this.idField]).join(',') as string;
+    this.value = !this.multi ? Number(this.value) : this.value;
     this.onChange(
       this.selectedItems && this.selectedItems.length > 0
-        ? values
+        ? this.value
         : null
     );
     this.onTouched();
@@ -121,9 +126,11 @@ export class InputSelectComponent implements ControlValueAccessor, OnChanges {
         this.selectedItems &&
         this.selectedItems.filter((i) => i[this.idField] !== item[this.idField]);
       this.selectedItemsObj[item[this.idField]] = null;
+      this.value = this.selectedItems?.map(i => i[this.idField]).join(',') as string;
+      this.value = !this.multi ? Number(this.value) : this.value;
       this.onChange(
         this.selectedItems && this.selectedItems.length > 0
-          ? this.selectedItems
+          ? this.value
           : null
       );
       this.onSelectItem.emit(null);
@@ -155,6 +162,9 @@ export class InputSelectComponent implements ControlValueAccessor, OnChanges {
 
   writeValue(obj: string | number): void {
     this.value = obj;
+    if (obj == null) {
+      this.selectedItemsObj = {};
+    }
     this.selectedItems = this.items.filter(i => i[this.idField] === this.value);
     this.selectedItems.forEach(i => this.selectedItemsObj[i[this.idField]] = i[this.nameField]);
   }
