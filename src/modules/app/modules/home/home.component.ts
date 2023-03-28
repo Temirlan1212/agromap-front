@@ -11,9 +11,9 @@ import {
   MapMove,
 } from 'src/modules/ui/models/map.model';
 import { MapService } from './map.service';
-import { ActualVegQuery } from '../../../api/classes/veg.api';
 import { MessagesService } from '../../../ui/components/services/messages.service';
 import { IChartData } from './components/spline-area-chart/spline-area-chart.component';
+import { ActualVegQuery } from '../../../api/classes/veg-indexes';
 
 @Component({
   selector: 'app-home',
@@ -38,6 +38,7 @@ export class HomeComponent implements OnInit {
 
   constructor(private api: ApiService, private mapService: MapService, private messages: MessagesService) {
   }
+
   vegIndexesData: IVegSatelliteDate[] = [];
   vegIndexOptionsList: IVegIndexOption[] = [];
   loadingSatelliteDates: boolean = false;

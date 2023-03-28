@@ -11,7 +11,6 @@
   "Language": "Язык",
   "MapSettings": "Параметры карты",
   "MapType": "Тип карта",
-
   "Month-0": "Январь",
   "Month-1": "Февраль",
   "Month-2": "Март",
@@ -24,7 +23,6 @@
   "Month-9": "Октябрь",
   "Month-10": "Ноябрь",
   "Month-11": "Декабрь",
-
   "Week-0": "Вс",
   "Week-1": "Пн",
   "Week-2": "Вт",
@@ -32,18 +30,14 @@
   "Week-4": "Чв",
   "Week-5": "Пт",
   "Week-6": "Сб",
-
   "SoilLayer": "Слой почвы",
-
   "CurrentDate": "Текущая дата",
   "Google Hybrid": "Гибридная спутниковая карта",
   "Google Satellite": "Спутниковая карта",
   "Google Streets": "Карта улиц",
   "Google Terrain": "Карта местности",
   "Open Street Map": "Открытая карта улиц",
-
   "NoData": "Данных нет",
-  "Language": "Язык",
   "Indicators filter": "Фильтрация индикаторов",
   "Filter": "Фильтр",
   "Select a region": "Выберите регион",

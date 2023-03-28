@@ -11,7 +11,6 @@
   "Language": "Language",
   "MapSettings": "Map settings",
   "MapType": "Map type",
-
   "Month-0": "January",
   "Month-1": "February",
   "Month-2": "March",
@@ -24,7 +23,6 @@
   "Month-9": "October",
   "Month-10": "November",
   "Month-11": "December",
-
   "Week-0": "Sun",
   "Week-1": "Mon",
   "Week-2": "Tue",
@@ -32,19 +30,14 @@
   "Week-4": "Thur",
   "Week-5": "Fri",
   "Week-6": "Sat",
-
   "CurrentDate": "Current date",
-
   "SoilLayer": "Soil layer",
-
   "Google Hybrid": "Hybrid satellite map",
   "Google Satellite": "Satellite map",
   "Google Streets": "Street map",
   "Google Terrain": "Terrain map",
   "Open Street Map": "Open street map",
-
   "NoData": "No data",
-  "Language": "Language",
   "Indicators filter": "Indicators filter",
   "Filter": "Filter",
   "Select a region": "Select a region",
