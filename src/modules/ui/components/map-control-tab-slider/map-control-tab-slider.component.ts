@@ -119,7 +119,7 @@ export class MapControlTabSlider implements AfterViewInit, OnDestroy {
         const scrollWidthTList =
           this.timelineItemEl?.nativeElement.clientWidth *
           this.vegIndexesData.length;
-
+        
         if (clientWidthTList && scrollWidthTList) {
           const lastElement =
             this.timelineListEl?.nativeElement.lastElementChild;
@@ -130,7 +130,7 @@ export class MapControlTabSlider implements AfterViewInit, OnDestroy {
           }
         }
       }
-    }, 50);
+    }, 100);
   }
 
   ngAfterViewInit() {
