@@ -12,8 +12,13 @@
   }
 }
 
-#map {
+.map-wrapper {
   flex: 1;
+  position: relative;
+}
+
+#map {
+  height: 100%;
 }
 
 .feature-content {
