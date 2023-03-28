@@ -1,6 +1,5 @@
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
-import { GeoJSON } from 'geojson';
 import { IRegion, IRegionListQuery } from '../models/region.model';
 import { IConton, IContonListQuery } from '../models/conton.model';
 import { IDistrict, IDistrictListQuery } from '../models/district.model';
@@ -10,9 +9,9 @@ export class DictionaryApi {
   constructor(private http: HttpClient) {
   }
 
-  async getRegions(query?: IRegionListQuery): Promise<(IRegion | GeoJSON)[]> {
+  async getRegions(query?: IRegionListQuery): Promise<(IRegion)[]> {
     const response = await firstValueFrom(
-      this.http.get<(IRegion | GeoJSON)[]>('gip/region', {
+      this.http.get<(IRegion)[]>('gip/region', {
         params: query as any,
       })
     );
@@ -20,7 +19,7 @@ export class DictionaryApi {
     return response;
   }
 
-  async getConstons(query?: IContonListQuery): Promise<IConton[]> {
+  async getContons(query?: IContonListQuery): Promise<IConton[]> {
     return await firstValueFrom(
       this.http.get<IConton[]>('gip/conton', {
         params: query as any,

@@ -59,16 +59,16 @@ export class HomeComponent {
     try {
       const res = await this.api.veg.getActualVegIndexes(query);
       const data = res.reduce((acc: any, i) => {
-        if (!acc[i.index.name_ru]) {
-          acc[i.index.name_ru] = {};
-          acc[i.index.name_ru]['name'] = i.index.name_ru;
-          acc[i.index.name_ru]['data'] = [];
-          acc[i.index.name_ru]['dates'] = [];
-          acc[i.index.name_ru]['data'].push(i.average_value);
-          acc[i.index.name_ru]['dates'].push(i.date);
+        if (!acc[i.index.id]) {
+          acc[i.index.id] = {};
+          acc[i.index.id]['name'] = i.index.name_ru;
+          acc[i.index.id]['data'] = [];
+          acc[i.index.id]['dates'] = [];
+          acc[i.index.id]['data'].push(i.average_value);
+          acc[i.index.id]['dates'].push(i.date);
         } else {
-          acc[i.index.name_ru]['data'].push(i.average_value);
-          acc[i.index.name_ru]['dates'].push(i.date);
+          acc[i.index.id]['data'].push(i.average_value);
+          acc[i.index.id]['dates'].push(i.date);
         }
         return acc;
       }, {});

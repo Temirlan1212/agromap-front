@@ -1,3 +1,5 @@
+import { Polygon } from 'geojson';
+
 export interface IRegion {
   id: number;
   created_at: string;
@@ -9,6 +11,7 @@ export interface IRegion {
   population: number;
   area: number;
   density: number;
+  polygon: Polygon;
 }
 
 export interface IRegionListQuery {

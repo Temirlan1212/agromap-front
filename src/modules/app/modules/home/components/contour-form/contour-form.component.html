@@ -2,21 +2,21 @@
   <div class="field-group">
     <app-input-select
       [items]="regionList"
-      placeholder="Регион"
+      [placeholder]="'Region' | translate"
       nameField="name_ru"
       formControlName="region">
     </app-input-select>
 
     <app-input-select
       [items]="districtList"
-      placeholder="Район"
+      [placeholder]="'District' | translate"
       formControlName="district"
       nameField="name_ru">
     </app-input-select>
 
     <app-input-select
       (onSelectItem)="onChange.emit($event)"
-      placeholder="Айыльный округ"
+      [placeholder]="'Conton' | translate"
       [items]="contonList"
       nameField="name_ru"
       formControlName="conton">
@@ -26,19 +26,19 @@
       [items]="landTypeList"
       formControlName="type"
       nameField="name_ru"
-      placeholder="Вид угодий">
+      [placeholder]="'Land type' | translate">
     </app-input-select>
 
     <app-input-select
       [items]="cultureList"
       formControlName="culture"
       nameField="name_ru"
-      placeholder="Вид культуры">
+      [placeholder]="'Culture' | translate">
     </app-input-select>
 
     <app-input
       type="number"
-      placeholder="Урожайность"
+      [placeholder]="'Productivity' | translate"
       formControlName="productivity">
     </app-input>
 
@@ -46,19 +46,19 @@
       type="number"
       [min]="2010"
       [max]="2023"
-      placeholder="Год"
+      [placeholder]="'Select a year' | translate"
       formControlName="year">
     </app-input>
 
     <app-input
       type="text"
-      placeholder="Код СОАТО"
+      [placeholder]="'Code SOATO' | translate"
       formControlName="code_soato">
     </app-input>
 
     <app-input
       type="text"
-      placeholder="ИНК"
+      [placeholder]="'INK' | translate"
       formControlName="ink">
     </app-input>
   </div>

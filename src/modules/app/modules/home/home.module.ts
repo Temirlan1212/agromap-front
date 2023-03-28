@@ -17,6 +17,7 @@ import { ContourFormComponent } from './components/contour-form/contour-form.com
 import { InputComponent } from '../../../ui/components/input/input.component';
 import { MapService } from './map.service';
 import { CardAccordionComponent } from '../../../ui/components/card-accordion/card-accordion.component';
+import { TranslateModule, TranslatePipe } from '@ngx-translate/core';
 
 @NgModule({
   declarations: [
@@ -39,8 +40,9 @@ import { CardAccordionComponent } from '../../../ui/components/card-accordion/ca
     NgApexchartsModule,
     InputComponent,
     CardAccordionComponent,
+    TranslateModule,
   ],
-  providers: [MapService]
+  providers: [MapService, TranslatePipe]
 })
 export class HomeModule {
 }

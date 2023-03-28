@@ -104,7 +104,7 @@ export class ContourFormComponent implements OnInit, OnDestroy {
       polygon: true
     };
     try {
-      const res = await this.api.dictionary.getConstons(query);
+      const res = await this.api.dictionary.getContons(query);
       this.contonList = res;
       if (this.form.get('conton')?.value != null) {
         const selectedConton = this.contonList.find(c => c.id === this.form.get('conton')?.value);

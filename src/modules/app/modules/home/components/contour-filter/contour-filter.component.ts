@@ -63,7 +63,7 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
 
   async getRegions(): Promise<void> {
     try {
-      this.regions = await this.api.dictionary.getRegions({ polygon: false }) as IRegion[];
+      this.regions = await this.api.dictionary.getRegions({ polygon: false });
     } catch (e: any) {
       this.messages.error(e.message);
     }
@@ -79,7 +79,7 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
 
   async getContons() {
     try {
-      this.contons = await this.api.dictionary.getConstons({ district_id: this.form.get('district')?.value });
+      this.contons = await this.api.dictionary.getContons({ district_id: this.form.get('district')?.value });
     } catch (e: any) {
       this.messages.error(e.message);
     }
@@ -145,7 +145,7 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
 
   async handleContonChange(value: string | null) {
     if (value != null) {
-      const conton = await this.api.dictionary.getConstons({ ids: value, polygon: true });
+      const conton = await this.api.dictionary.getContons({ ids: value, polygon: true });
       this.mapInstance.fitBounds(geoJson(conton[0]?.polygon).getBounds(), { maxZoom: 13, duration: 1 });
     } else {
       this.resetMapBounds();

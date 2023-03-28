@@ -1,4 +1,4 @@
-<h4>Фильтрация показателей</h4>
+<h4>{{'Indicators filter' | translate}}</h4>
 
 <div class="filters">
   <form
@@ -6,31 +6,31 @@
     (reset)="handleFormReset()"
     (ngSubmit)="handleFormSubmit()"
   >
-    <app-fields-group title="Фильтрация">
+    <app-fields-group [title]="'Filter' | translate">
       <div class="field-group">
         <app-input-select
-          placeholder="Выберите регион"
+          [placeholder]="'Select a region' | translate"
           formControlName="region"
           [items]="regions"
           nameField="name_ru"
         ></app-input-select>
 
         <app-input-select
-          placeholder="Выберите район"
+          [placeholder]="'Select a district' | translate"
           formControlName="district"
           [items]="districts"
           nameField="name_ru"
         ></app-input-select>
 
         <app-input-select
-          placeholder="Выберите айыл-аймак"
+          [placeholder]="'Select a conton' | translate"
           formControlName="conton"
           [items]="contons"
           nameField="name_ru"
         ></app-input-select>
 
         <app-input-select
-          placeholder="Выберите тип угодий"
+          [placeholder]="'Select a land type' | translate"
           formControlName="land_type"
           [items]="landTypes"
           [multi]="true"
@@ -40,21 +40,21 @@
           type="number"
           [min]="2010"
           [max]="2023"
-          placeholder="Выберите год"
+          [placeholder]="'Select a year' | translate"
           formControlName="year">
         </app-input>
-        <button type="submit" class="success">Применить</button>
-        <button type="reset">Очистить</button>
+        <button type="submit" class="success">{{ 'Apply' | translate }}</button>
+        <button type="reset">{{ 'Clear' | translate }}</button>
       </div>
     </app-fields-group>
   </form>
 </div>
 
 <div class="contours">
-  <app-fields-group title="Контуры">
+  <app-fields-group [title]="'Contours' | translate">
     <div class="field-group">
       <button type="button" routerLink="/home/contour-add">
-        Добавить новый контур
+        {{'Add a new contour' | translate}}
       </button>
     </div>
   </app-fields-group>
@@ -64,12 +64,14 @@
       [title]="contour.contour_year.features[0].properties['contour_cs']"
       (mouseClick)="handleContourClick(contour)">
       <div class="card">
-        <span>Регион: {{contour.contour_year.features[0].properties['region_ru']}}</span>
-        <span>Район: {{contour.contour_year.features[0].properties['district_ru']}}</span>
-        <span>Айыл-аймак: {{contour.contour_year.features[0].properties['conton_ru']}}</span>
-        <span>Вид угодий: {{contour.contour_year.features[0].properties['land_type_ru']}}</span>
-        <span>Урожай: {{contour.contour_year.features[0].properties['productivity']}} ц. на га.</span>
-        <span>Площадь: {{contour.contour_year.features[0].properties['area_ha']}} га.</span>
+        <span>{{'Region'  | translate}}: {{contour.contour_year.features[0].properties['region_ru']}}</span>
+        <span>{{'District'  | translate}}: {{contour.contour_year.features[0].properties['district_ru']}}</span>
+        <span>{{'Conton'  | translate}}: {{contour.contour_year.features[0].properties['conton_ru']}}</span>
+        <span>{{'Land type' | translate}}: {{contour.contour_year.features[0].properties['land_type_ru']}}</span>
+        <span>{{'Productivity' | translate}}: {{contour.contour_year.features[0].properties['productivity']}}
+          {{'c. per ha.' | translate}}.</span>
+        <span>{{'Area' | translate}}: {{contour.contour_year.features[0].properties['area_ha']}} {{'ha' | translate}}
+          .</span>
       </div>
     </app-card-accordion>
   </div>
