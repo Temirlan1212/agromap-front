@@ -125,16 +125,15 @@ export class MapControlTabSlider implements AfterViewInit, OnDestroy {
             this.timelineListEl?.nativeElement.lastElementChild;
           lastElement && lastElement.scrollIntoView();
 
-          if (scrollWidthTList > clientWidthTList) {
-          } else {
+          if (scrollWidthTList < clientWidthTList) {
             this.isActiveNextBtn = false;
           }
         }
       }
-    }, 100);
+    }, 50);
   }
 
-  async ngAfterViewInit(): Promise<void> {
+  ngAfterViewInit() {
     this.checkIsTimelineListFull();
     this.timelineListEl.nativeElement.addEventListener('scroll', () =>
       this.toggleNextPrevBtns()

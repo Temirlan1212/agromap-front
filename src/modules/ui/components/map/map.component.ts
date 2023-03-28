@@ -4,7 +4,8 @@ import {
   HostBinding,
   Inject,
   Input,
-  LOCALE_ID, OnDestroy,
+  LOCALE_ID,
+  OnDestroy,
   OnInit,
   Output,
 } from '@angular/core';
@@ -59,8 +60,7 @@ export class MapComponent implements OnInit, OnDestroy {
     },
   });
 
-  constructor(@Inject(LOCALE_ID) public locale: string) {
-  }
+  constructor(@Inject(LOCALE_ID) public locale: string) {}
 
   ngOnInit(): void {
     this.initMap();
@@ -79,6 +79,7 @@ export class MapComponent implements OnInit, OnDestroy {
           subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
         }),
       ],
+      zoomControl: false,
     });
 
     this.map.addLayer(this.geoJson);
@@ -108,6 +109,6 @@ export class MapComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.subscriptions.forEach(s => s.unsubscribe());
+    this.subscriptions.forEach((s) => s.unsubscribe());
   }
 }
