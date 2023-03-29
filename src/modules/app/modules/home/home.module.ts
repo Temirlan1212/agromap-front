@@ -22,8 +22,13 @@ import { DatePickerComponent } from 'src/modules/ui/components/date-picker/date-
 import { MapControlsComponent } from 'src/modules/ui/components/map-controls/map-controls.component.';
 import { MapControlLocate } from 'src/modules/ui/components/map-control-locate/map-control-locate.component';
 import { MapControlZoomComponent } from 'src/modules/ui/components/map-control-zoom/map-control-zoom.component';
-import { MapControlLayersSwitchComponent } from 'src/modules/ui/components/map-control-layers-switch/map-control-layers-switch.component';
-import { MapControlVegIndexes } from 'src/modules/ui/components/map-control-veg-indexes/map-control-veg-indexes.component';
+import {
+  MapControlLayersSwitchComponent
+} from 'src/modules/ui/components/map-control-layers-switch/map-control-layers-switch.component';
+import {
+  MapControlVegIndexes
+} from 'src/modules/ui/components/map-control-veg-indexes/map-control-veg-indexes.component';
+import { QuestionDialogComponent } from '../../../ui/components/question-dialog/question-dialog.component';
 
 @NgModule({
   declarations: [
@@ -53,6 +58,7 @@ import { MapControlVegIndexes } from 'src/modules/ui/components/map-control-veg-
     MapControlLocate,
     MapControlZoomComponent,
     MapControlLayersSwitchComponent,
+    QuestionDialogComponent,
   ],
   providers: [MapService, TranslatePipe]
 })
