@@ -8,7 +8,7 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
-import { NgForOf, NgIf } from '@angular/common';
+import { CommonModule, NgForOf, NgIf } from '@angular/common';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 
@@ -17,7 +17,7 @@ import { TranslateModule } from '@ngx-translate/core';
   templateUrl: './input-select.component.html',
   styleUrls: ['./input-select.component.scss'],
   standalone: true,
-  imports: [SvgIconComponent, NgForOf, NgIf, TranslateModule],
+  imports: [SvgIconComponent, NgForOf, NgIf, TranslateModule, CommonModule],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -40,12 +40,14 @@ export class InputSelectComponent implements ControlValueAccessor, OnChanges {
 
   @Input() idField: string = 'id';
   @Input() nameField: string = 'name';
+  @Input() groupField: string | null = null;
   @Output() onSelectItem = new EventEmitter<Record<string, any> | null>();
 
   opened: boolean = false;
   selectedItemsObj: Record<string, any> = {};
   selectedItems: Record<string, any>[] | null = [];
   localItems: Record<string, any>[] = [];
+  groups: string[] = [];
 
   constructor(private elementRef: ElementRef) {
   }
@@ -59,6 +61,9 @@ export class InputSelectComponent implements ControlValueAccessor, OnChanges {
       this.value = !this.selectedItems.map(i => i[this.idField]).join(',') ? null : this.selectedItems.map(i => i[this.idField]).join(',');
       this.multi && this.onChange(this.value);
       this.selectedItems.forEach(i => this.selectedItemsObj[i[this.idField]] = i[this.nameField]);
+      if(this.items.length !== 0 && this.groupField) {
+        this.setUniqueGroups(this.items)
+      }
     }
   }
 
@@ -180,4 +185,8 @@ export class InputSelectComponent implements ControlValueAccessor, OnChanges {
   setDisabledState(isDisabled: boolean) {
     this.isDisabled = isDisabled;
   }
+
+  private setUniqueGroups(items: Record<string, any>[]) {
+    this.groups = [...new Set(items.map(item => item[this.groupField as string]))]
+  } 
 }
