@@ -13,6 +13,7 @@ import { MapService } from '../../map.service';
 import { MapData, MapLayerFeature } from '../../../../../ui/models/map.model';
 import { Feature } from 'geojson';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { QuestionDialogComponent } from '../../../../../ui/components/question-dialog/question-dialog.component';
 
 @Component({
   selector: 'app-contour-filter',
@@ -28,6 +29,7 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
   filteredContours: any = [];
   currentFeature!: Feature;
   currentLang: string = this.translateSvc.currentLang;
+  selectedId: number | null = null;
   @Output() onCardClick = new EventEmitter<MapLayerFeature>();
 
   form: FormGroup = new FormGroup({
@@ -179,6 +181,26 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
     );
     this.mapInstance.fitBounds(initBounds);
     this.mapInstance.setMaxBounds(initBounds);
+  }
+
+  handleContourDelete(contour: number, dialog: QuestionDialogComponent) {
+    this.selectedId = contour;
+    dialog.show();
+  }
+
+  async deleteItem(): Promise<void> {
+    try {
+      const res = await this.api.contour.remove(this.selectedId as number);
+      console.log(res);
+    } catch (e: any) {
+      this.messages.error(e.message);
+    }
+  }
+
+  async handleDeleteSubmitted(dialog: QuestionDialogComponent): Promise<void> {
+    await this.deleteItem();
+    this.selectedId = null;
+    dialog.close();
   }
 
   ngOnDestroy() {

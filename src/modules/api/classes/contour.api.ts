@@ -14,6 +14,10 @@ export class ContourApi {
     return await firstValueFrom(this.http.post<IContour>('gip/contour', data));
   }
 
+  async remove(id: number): Promise<IContour> {
+    return await firstValueFrom(this.http.delete<IContour>(`gip/contour/${ id }`));
+  }
+
   async getFilteredContours(query: any): Promise<any> {
     return await firstValueFrom(this.http.get<any>('gip/filter_contour', { params: query as any }));
   }

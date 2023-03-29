@@ -72,5 +72,9 @@
     "drawPolyButton": "Полигон чийүү",
     "editButton": "Катмарды оңдоо",
     "deleteButton": "Катмарды өчүрүү"
-  }
+  },
+  "Delete contour": "Контурду өчүрүү",
+  "Contour will be deleted, continue?": "Контур өчүрүлөт, улантылсын?",
+  "Yes": "Ооба",
+  "No": "Жок"
 }

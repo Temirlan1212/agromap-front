@@ -1,0 +1,102 @@
+@import "constants";
+
+:host {
+  ::ng-deep {
+    dialog {
+      min-height: auto !important;
+    }
+  }
+
+  dialog {
+    overflow: auto;
+    min-width: 320px;
+    min-height: 240px;
+    max-width: 100%;
+    max-height: 100%;
+    padding: 20px;
+    border: none;
+    border-radius: 8px;
+    filter: drop-shadow(0px 4px 32px rgba(0, 16, 61, 0.16));
+
+    &[open] {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+    }
+
+    .header {
+      display: flex;
+      gap: 15px;
+      height: 48px;
+
+      .title {
+        flex: 1 1 1px;
+        margin: 0;
+        font-size: 20px;
+        font-weight: 600;
+        line-height: 24px;
+      }
+
+      .icon {
+        cursor: pointer;
+      }
+    }
+
+    .body {
+      display: flex;
+      align-items: center;
+      width: 400px;
+
+      div[class^=icon] {
+        flex: 0 0 36px;
+        margin-right: 13px;
+      }
+
+      span {
+        font-weight: 400;
+        font-size: 15px;
+        line-height: 21px;
+      }
+    }
+
+    .footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 16px;
+      padding: 12px 20px;
+      background-color: #F9F9F9;
+      margin: 20px -20px -20px -20px;
+
+      .btn-secondary-outlined {
+        border-color: #B2CCD7;
+        color: #6B6F7B;
+      }
+    }
+  }
+
+  &.info .btn-submit {
+    background-color: $primaryColor;
+    border-color: $primaryColor;
+    color: #fff;
+  }
+
+  &.danger .btn-submit {
+    background-color: $dangerColor;
+    border-color: $dangerColor;
+    color: #fff;
+  }
+
+  &.warning .btn-submit {
+    background-color: $warningColor;
+    border-color: $warningColor;
+    color: #fff;
+  }
+
+  &.success .btn-submit {
+    background-color: $successColor;
+    border-color: $successColor;
+    color: #fff;
+  }
+}
