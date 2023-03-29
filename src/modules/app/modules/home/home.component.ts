@@ -35,7 +35,6 @@ export class HomeComponent implements OnInit {
   layerFeature: MapLayerFeature | null = null;
   selectedLayer: any;
   contourData: IChartData[] = [];
-  layerContourId: string = '';
   currentLang: string = this.translateSvc.currentLang;
 
   constructor(
@@ -69,10 +68,8 @@ export class HomeComponent implements OnInit {
         fillOpacity: 1,
         fillColor: '#f6ab39',
       });
-    this.layerContourId =
-      this.layerFeature.feature.properties?.['id'].toString();
 
-    this.getVegSatelliteDates(this.layerContourId);
+    this.getVegSatelliteDates(cid);
   }
 
   handleFeatureClose(): void {
@@ -84,7 +81,7 @@ export class HomeComponent implements OnInit {
     const query: ActualVegQuery = { contour_id: id };
     try {
       const res = await this.api.vegIndexes.getActualVegIndexes(query);
-      const data = res.reduce((acc: any, i: any) => {
+      const data = res?.reduce((acc: any, i: any) => {
         if (!acc[i.index.id]) {
           acc[i.index.id] = {};
           acc[i.index.id]['name'] = i.index[`name_${ this.currentLang }`];
@@ -98,7 +95,7 @@ export class HomeComponent implements OnInit {
         }
         return acc;
       }, {});
-      this.contourData = Object.values(data);
+      this.contourData = data ? Object.values(data) : [];
     } catch (e: any) {
       this.messages.error(e.message);
       this.contourData = [];
@@ -125,8 +122,8 @@ export class HomeComponent implements OnInit {
   }
 
   async getVegSatelliteDates(
-    contoruId: string,
-    vegIndexId: string = '1'
+    contoruId: number,
+    vegIndexId: number = 1
   ): Promise<void> {
     this.loadingSatelliteDates = true;
     try {
@@ -151,8 +148,8 @@ export class HomeComponent implements OnInit {
 
   handleVegIndexOptionClick(vegIndexOption: IVegIndexOption) {
     this.getVegSatelliteDates(
-      this.layerContourId,
-      vegIndexOption.id.toString()
+      this.layerFeature?.feature?.properties?.['contour_id'],
+      vegIndexOption.id,
     );
   }
 
