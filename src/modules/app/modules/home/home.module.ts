@@ -29,6 +29,9 @@ import {
   MapControlVegIndexes
 } from 'src/modules/ui/components/map-control-veg-indexes/map-control-veg-indexes.component';
 import { QuestionDialogComponent } from '../../../ui/components/question-dialog/question-dialog.component';
+import { MapControlSplitMap } from 'src/modules/ui/components/map-control-split-map/map-control-split-map.component';
+import { SplitMapSidebarComponent } from './components/split-map-sidebar/split-map-sidebar.component';
+import { SplitMapComponent } from 'src/modules/ui/components/split-map/split-map.component';
 
 @NgModule({
   declarations: [
@@ -37,6 +40,7 @@ import { QuestionDialogComponent } from '../../../ui/components/question-dialog/
     ContourAddComponent,
     SplineAreaChartComponent,
     ContourFormComponent,
+    SplitMapSidebarComponent
   ],
   imports: [
     CommonModule,
@@ -59,6 +63,8 @@ import { QuestionDialogComponent } from '../../../ui/components/question-dialog/
     MapControlZoomComponent,
     MapControlLayersSwitchComponent,
     QuestionDialogComponent,
+    MapControlSplitMap,
+    SplitMapComponent
   ],
   providers: [MapService, TranslatePipe]
 })

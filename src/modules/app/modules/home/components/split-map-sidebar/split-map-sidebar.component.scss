@@ -1,0 +1,82 @@
+@import "constants";
+
+li,
+ul,
+h5 {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+$indent: 0 20px;
+$transitionDelay: 0.2s;
+
+:host {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: $sidePanelContentWidth;
+  background-color: $lightColor;
+}
+
+.back {
+  display: flex;
+  align-items: center;
+  padding: $indent;
+  button {
+    padding: 0 10px 0 0;
+  }
+
+  app-svg-icon {
+    transform: rotate(90deg);
+  }
+}
+
+.content {
+  padding-bottom: 20px;
+
+  .base-filter {
+    padding: 0 20px 20px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    border-bottom: 1px solid $secondaryColor;
+
+    .select-screen-split {
+      display: flex;
+      align-items: start;
+      justify-content: space-between;
+      padding: 10px 0;
+
+      h5 {
+        font-size: 14px;
+      }
+
+      .select-split {
+        display: flex;
+        gap: 10px;
+      }
+
+      .icon {
+        color: $darkColor;
+        cursor: pointer;
+        transition: all $transitionDelay;
+        &.selected {
+          color: $successColor;
+        }
+        &:hover {
+          color: $successColor;
+        }
+      }
+    }
+  }
+
+  .analyses-list {
+    li {
+      padding: $indent;
+      font-size: 13px;
+      font-weight: 600;
+    }
+  }
+}

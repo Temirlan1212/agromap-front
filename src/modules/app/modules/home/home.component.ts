@@ -15,6 +15,9 @@ import { MessagesService } from '../../../ui/components/services/messages.servic
 import { IChartData } from './components/spline-area-chart/spline-area-chart.component';
 import { ActualVegQuery } from '../../../api/classes/veg-indexes';
 import { TranslateService } from '@ngx-translate/core';
+import { Router, NavigationEnd, Event } from '@angular/router';
+import { StoreService } from 'src/modules/api/store.service';
+import { Feature } from 'geojson';
 
 @Component({
   selector: 'app-home',
@@ -36,12 +39,15 @@ export class HomeComponent implements OnInit {
   selectedLayer: any;
   contourData: IChartData[] = [];
   currentLang: string = this.translateSvc.currentLang;
+  currentRouterPathname: string = ""
 
   constructor(
     private api: ApiService,
     private mapService: MapService,
     private messages: MessagesService,
-    private translateSvc: TranslateService) {
+    private store: StoreService,
+    private translateSvc: TranslateService, private router: Router) {
+    this.router.events.subscribe((event: Event) => event instanceof NavigationEnd ? this.currentRouterPathname = router.url : "");
     this.translateSvc.onLangChange.subscribe(res => this.currentLang = res.lang);
   }
 
@@ -68,13 +74,15 @@ export class HomeComponent implements OnInit {
         fillOpacity: 1,
         fillColor: '#f6ab39',
       });
-
+    
     this.getVegSatelliteDates(cid);
+    this.store.setItem<Feature>('selectedLayerFeature', layerFeature.feature);
   }
 
   handleFeatureClose(): void {
     this.layerFeature = null;
     this.selectedLayer.remove();
+    this.store.removeItem('selectedLayerFeature');
   }
 
   async getContourData(id: number) {

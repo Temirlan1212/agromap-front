@@ -1,0 +1,29 @@
+#split-map {
+    background: white;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left:0;
+    z-index: 1001;
+    
+    .column {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        height: 100vh;
+        gap: 3px;          
+    };
+    .map {
+        flex-grow: 1;  
+        &.isHidden {
+           display: none !important;
+        }
+    }
+
+    @for $i from 0 through 4 {
+        #map-#{$i} { 
+            flex-basis: calc(50% - 3px);  
+        }
+    }
+}

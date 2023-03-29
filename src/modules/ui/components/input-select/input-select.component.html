@@ -67,7 +67,7 @@
       <p>{{ group }}</p>
 
       <div *ngFor="let item of localItems">
-        <ng-container *ngIf="item[nameField] === group" [ngTemplateOutlet]="option" [ngTemplateOutletContext]="{item}">
+        <ng-container *ngIf="item[groupField] === group" [ngTemplateOutlet]="option" [ngTemplateOutletContext]="{item}">
         </ng-container>
       </div>
     </div>

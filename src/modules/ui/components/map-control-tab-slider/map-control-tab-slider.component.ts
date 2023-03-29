@@ -14,7 +14,7 @@ import { CommonModule } from '@angular/common';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
 import { FormatDatePipe } from '../../pipes/formatDate.pipe';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { LoadingComponent } from '../loading/loading.component';
 
 @Component({

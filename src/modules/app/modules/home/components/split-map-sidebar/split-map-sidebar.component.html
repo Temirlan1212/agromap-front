@@ -1,0 +1,75 @@
+<div class="back">
+  <button type="button" class="transparent" routerLink="..">
+    <app-svg-icon name="arrow-down" size="14"></app-svg-icon>
+  </button>
+  <h4>Сравнение снимков</h4>
+</div>
+
+<div class="content">
+  <div class="base-filter">
+    <div class="select-screen-split">
+      <h5>Выберите вид разделение карты</h5>
+      <div class="select-split">
+        <app-svg-icon
+          name="split-2"
+          size="16"
+          class="icon"
+          [class.selected]="splitMapQuantity === 2"
+          (click)="handleSplitMapClick(2)"
+        ></app-svg-icon>
+
+        <div class="select-split">
+          <app-svg-icon
+            name="split-3"
+            size="16"
+            class="icon"
+            [class.selected]="splitMapQuantity === 3"
+            (click)="handleSplitMapClick(3)"
+          ></app-svg-icon>
+
+          <app-svg-icon
+            name="split-4"
+            size="16"
+            class="icon"
+            [class.selected]="splitMapQuantity === 4"
+            (click)="handleSplitMapClick(4)"
+          ></app-svg-icon>
+        </div>
+      </div>
+    </div>
+
+    <app-input-select
+      placeholder="Выберите вегетативный индекс"
+      [formControl]="defaultSelectedVegIndex"
+      [items]="vegIndexesOptions"
+      [multi]="false"
+      (onSelectItem)="handleVegIndexOnChange($event)"
+      nameField="name_ru"
+      idField="id"
+    ></app-input-select>
+  </div>
+
+  <ul class="analyses-list">
+    <li
+      *ngFor="let quantity of [].constructor(splitMapQuantity); let i = index"
+    >
+      <p>карта-{{ i + 1 }}. Индекс вегетации {{ selectedVegIndex.name_ru }}</p>
+      <ng-container
+        [ngTemplateOutlet]="formSelect"
+        [ngTemplateOutletContext]="{ mapId: i }"
+      ></ng-container>
+    </li>
+  </ul>
+</div>
+
+<ng-template #formSelect let-mapId="mapId">
+  <app-input-select
+    placeholder="Выберите дату"
+    [items]="satelliteDateOptions"
+    [multi]="false"
+    (onSelectItem)="handleSatelliteDateChange($event, 'map-' + mapId)"
+    nameField="date"
+    idField="id"
+    groupField="group"
+  ></app-input-select>
+</ng-template>
