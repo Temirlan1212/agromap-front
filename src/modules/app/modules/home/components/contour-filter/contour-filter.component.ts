@@ -32,6 +32,7 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
   currentLang: string = this.translateSvc.currentLang;
   @Output() onCardClick = new EventEmitter<MapLayerFeature>();
   @Output() onEditClick = new EventEmitter<void>();
+  loading: boolean = false;
 
   form: FormGroup = new FormGroup({
     region: new FormControl<string | null>(null, { nonNullable: true, validators: Validators.required }),
@@ -125,11 +126,14 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
       return;
     }
     const { region, district, year, conton, land_type } = formState.value;
+    this.loading = true;
     try {
       const query: ContourFiltersQuery = { region, district, conton, land_type, year };
       this.filteredContours = await this.api.contour.getFilteredContours(query);
     } catch (e: any) {
       this.messages.error(e.message);
+    } finally {
+      this.loading = false;
     }
   }
 

@@ -134,6 +134,7 @@ export class InputSelectComponent implements ControlValueAccessor, OnChanges {
           : null
       );
       this.onSelectItem.emit(null);
+      this.onTouched();
     }
     return;
   }

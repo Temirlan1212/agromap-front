@@ -72,15 +72,15 @@ export class HomeComponent implements OnInit {
         fillOpacity: 1,
         fillColor: '#f6ab39',
       });
-    this.layerContourId =
-      this.layerFeature.feature.properties?.['id'].toString();
 
-    this.getVegSatelliteDates(this.layerContourId);
+    this.getVegSatelliteDates(String(cid));
   }
 
   handleFeatureClose(): void {
     this.layerFeature = null;
-    this.selectedLayer.remove();
+    if (this.selectedLayer) {
+      this.selectedLayer.remove();
+    }
   }
 
   async getContourData(id: number) {

@@ -72,5 +72,7 @@
     "drawPolyButton": "Полигон чийүү",
     "editButton": "Катмарды оңдоо",
     "deleteButton": "Катмарды өчүрүү"
-  }
+  },
+  "Edit": "Өзгөртүү",
+  "Delete": "Өчүрүү"
 }

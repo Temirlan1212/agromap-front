@@ -1,12 +1,14 @@
 import { Component, ElementRef, EventEmitter, HostListener, Input, Output, ViewChild } from '@angular/core';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-card-accordion',
   templateUrl: './card-accordion.component.html',
   styleUrls: ['./card-accordion.component.scss'],
   imports: [
-    SvgIconComponent
+    SvgIconComponent,
+    TranslateModule
   ],
   standalone: true
 })

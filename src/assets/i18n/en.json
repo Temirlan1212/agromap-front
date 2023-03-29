@@ -72,5 +72,7 @@
     "drawPolyButton": "Draw Polygons",
     "editButton": "Edit Layers",
     "deleteButton": "Remove Layers"
-  }
+  },
+  "Edit": "Edit",
+  "Delete": "Delete"
 }

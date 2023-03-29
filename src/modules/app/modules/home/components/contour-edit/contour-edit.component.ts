@@ -71,20 +71,23 @@ export class ContourEditComponent implements OnInit, OnDestroy {
         customControls: true
       });
       this.mapInstance?.fitBounds(geoJson(this.contour.polygon).getBounds());
-      this.mapInstance?.setMaxBounds(geoJson(this.contour.polygon).getBounds());
-      this.mapInstance.off('moveend');
+      // this.mapInstance?.setMaxBounds(geoJson(this.contour.polygon).getBounds());
+      // this.mapInstance.off('moveend');
       this.handleEditShape();
     });
   }
 
   handleEditShape() {
     this.mapInstance.on('pm:globaleditmodetoggled', (event) => {
-      if (this.mapGeo.getLayers().length > 1) {
-        this.mapGeo.clearLayers();
-        this.mapGeo.addData(this.contour.polygon);
-        this.layer = this.mapGeo?.getLayers()[0];
-      }
+      // if (this.mapGeo.getLayers().length > 1) {
+      //   this.mapGeo.clearLayers();
+      //   this.mapGeo.addData(this.contour.polygon);
+      //   this.layer = this.mapGeo?.getLayers()[0];
+      // }
+      const allLayers = this.mapGeo.getLayers();
+      this.layer = allLayers.find((i: any) => i.feature.properties.id === this.contour.id);
       if (event.enabled && this.layer) {
+        this.mapInstance.off('moveend');
         this.layer.options.pmIgnore = false;
         this.layer.options.allowSelfIntersection = true;
         PM.reInitLayer(this.layer);
@@ -134,8 +137,8 @@ export class ContourEditComponent implements OnInit, OnDestroy {
       return;
     }
     try {
-      const res = await this.api.contour.update(this.contour.id, contour);
-      // this.router.navigate(['..']);
+      await this.api.contour.update(this.contour.id, contour);
+      this.router.navigate(['../..']);
     } catch (e: any) {
       this.messages.error(e.message);
     }
@@ -149,7 +152,6 @@ export class ContourEditComponent implements OnInit, OnDestroy {
     if (this.layer) {
       this.layer.pm.disable();
     }
-    this.mapInstance.dragging.enable();
     this.mapService.contourEdited.next();
   }
 }
