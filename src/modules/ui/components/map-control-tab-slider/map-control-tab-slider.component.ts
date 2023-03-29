@@ -4,8 +4,10 @@ import {
   ElementRef,
   EventEmitter,
   Input,
+  OnChanges,
   OnDestroy,
   Output,
+  SimpleChanges,
   ViewChild,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -29,24 +31,23 @@ import { LoadingComponent } from '../loading/loading.component';
   ],
   providers: [FormatDatePipe],
 })
-export class MapControlTabSlider implements AfterViewInit, OnDestroy {
+export class MapControlTabSlider
+  implements AfterViewInit, OnDestroy, OnChanges
+{
   @ViewChild('timelineList') timelineListEl!: ElementRef<HTMLInputElement>;
   @ViewChild('timelineItem') timelineItemEl!: ElementRef<HTMLInputElement>;
   @ViewChild('timeline') timelineEl!: ElementRef<HTMLInputElement>;
 
   @Output() selectedDateOutput = new EventEmitter<string | null>();
 
-  vegIndexesDataLocal = new BehaviorSubject<string[]>([]);
-  @Input("vegIndexesData") set vegIndexesData (value: string[]) {
-    this.vegIndexesDataLocal.next(value);
-  }
+  @Input() vegIndexesData: string[] = [];
 
   @Input() loading: boolean = false;
+  @Input() isLayerChanged: boolean = false;
 
   selectedDate: string | null = null;
   currLang = this.translate.currentLang;
   translateSubscription!: Subscription;
-  vegIndexesDataSubscription!: Subscription;
 
   @Input('selectedDate') set selectedDateInput(date: string | null) {
     this.selectedDate = date;
@@ -66,10 +67,6 @@ export class MapControlTabSlider implements AfterViewInit, OnDestroy {
         }
       }
     }
-  }
-
-  @Input() set isLayerChanged(value: boolean) {
-    this.checkIsTimelineListFull();
   }
 
   isActiveNextBtn = false;
@@ -118,30 +115,22 @@ export class MapControlTabSlider implements AfterViewInit, OnDestroy {
   }
 
   private checkIsTimelineListFull() {
-    this.vegIndexesDataSubscription = this.vegIndexesDataLocal.subscribe(() => {
-      setTimeout(() => {
-        if (this.vegIndexesDataLocal.value.length !== 0) {
-          const clientWidthTList = this.timelineListEl?.nativeElement.clientWidth;
-          const scrollWidthTList =
-            this.timelineItemEl?.nativeElement.clientWidth *
-            this.vegIndexesDataLocal.value.length;
-          
-          if (clientWidthTList && scrollWidthTList) {
-            const lastElement =
-              this.timelineListEl?.nativeElement.lastElementChild;
-            lastElement && lastElement.scrollIntoView();
-  
-            if (scrollWidthTList < clientWidthTList) {
-              this.isActiveNextBtn = false;
-            }
-          }
-        }
-      }, 0);
-    })
+    const clientWidthTList = this.timelineListEl?.nativeElement.clientWidth;
+    const scrollWidthTList =
+      this.timelineItemEl?.nativeElement.clientWidth *
+      this.vegIndexesData.length;
+
+    if (clientWidthTList && scrollWidthTList) {
+      const lastElement = this.timelineListEl?.nativeElement.lastElementChild;
+      lastElement && lastElement.scrollIntoView();
+
+      if (scrollWidthTList < clientWidthTList) {
+        this.isActiveNextBtn = false;
+      }
+    }
   }
 
   ngAfterViewInit() {
-    this.checkIsTimelineListFull();
     this.timelineListEl.nativeElement.addEventListener('scroll', () =>
       this.toggleNextPrevBtns()
     );
@@ -158,8 +147,15 @@ export class MapControlTabSlider implements AfterViewInit, OnDestroy {
     );
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['vegIndexesData'] && this.vegIndexesData.length !== 0) {
+      setTimeout(() => {
+        this.checkIsTimelineListFull();
+      }, 0)
+    }
+  }
+
   ngOnDestroy(): void {
     this.translateSubscription.unsubscribe();
-    this.vegIndexesDataSubscription.unsubscribe();
   }
 }

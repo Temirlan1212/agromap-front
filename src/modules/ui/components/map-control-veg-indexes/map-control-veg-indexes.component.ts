@@ -62,12 +62,9 @@ export class MapControlVegIndexes
   @Output() imageOverlayIncstanceOutput = new EventEmitter<L.ImageOverlay>();
   @Output() vegIndexOptionClick = new EventEmitter<IVegIndexOption>();
 
-  isLayerChanged = false;
-
   @Input('layer') set layer(value: MapLayerFeature | null) {
     if (value?.feature.properties?.['id']) {
       this.layerFeature = value.feature;
-      this.isLayerChanged = !this.isLayerChanged;
       this.selectedDate = null;
 
       this.removeImageOverlay();
