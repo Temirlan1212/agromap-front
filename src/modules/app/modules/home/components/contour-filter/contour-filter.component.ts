@@ -30,6 +30,7 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
   currentFeature!: Feature;
   currentLang: string = this.translateSvc.currentLang;
   selectedId: number | null = null;
+  filtersQuery!: ContourFiltersQuery;
   @Output() onCardClick = new EventEmitter<MapLayerFeature>();
 
   form: FormGroup = new FormGroup({
@@ -114,8 +115,8 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
     }
     const { region, district, year, conton, land_type } = formState.value;
     try {
-      const query: ContourFiltersQuery = { region, district, conton, land_type, year };
-      this.filteredContours = await this.api.contour.getFilteredContours(query);
+      this.filtersQuery = { region, district, conton, land_type, year };
+      this.filteredContours = await this.api.contour.getFilteredContours(this.filtersQuery);
     } catch (e: any) {
       this.messages.error(e.message);
     }
@@ -190,8 +191,8 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
 
   async deleteItem(): Promise<void> {
     try {
-      const res = await this.api.contour.remove(this.selectedId as number);
-      console.log(res);
+      await this.api.contour.remove(this.selectedId as number);
+      this.filteredContours = await this.api.contour.getFilteredContours(this.filtersQuery);
     } catch (e: any) {
       this.messages.error(e.message);
     }
