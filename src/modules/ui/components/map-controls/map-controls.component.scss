@@ -25,15 +25,17 @@
   $tabDisabledBgColor: #5f5f5fea;
   $tabDisabledColor: rgba(165, 178, 188, 0.7);
   position: absolute;
-  top: 0;
-  bottom: 0;
   right: 10px;
+  top: 50%;
+  transform: translateY(-90px);
   display: flex;
-  align-items: center;
-  justify-content: end;
-  gap: $baseGap;
+  flex-direction: column;
+  gap: 5px;
 
   ::ng-deep {
+    div[rightPanel] {
+      display: contents;
+    }
     .tab {
       background-color: $tabBgColor;
       border-radius: $tabBorderRadius;

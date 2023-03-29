@@ -16,6 +16,10 @@
     <app-map-controls controls>
       <div rightPanel>
         <app-map-control-locate
+        *ngIf="mapData"
+        [map]="mapData.map"
+      ></app-map-control-locate>
+        <app-map-control-locate
           *ngIf="mapData"
           [map]="mapData.map"
         ></app-map-control-locate>
