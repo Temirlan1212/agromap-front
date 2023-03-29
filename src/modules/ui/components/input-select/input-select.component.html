@@ -57,12 +57,12 @@
       (keyup)="handleSearch(input.value)"/>
   </div>
 
-  <ng-container *ngIf="!isGroup">
+  <ng-container *ngIf="!groupField">
     <ng-container *ngFor="let item of localItems" [ngTemplateOutlet]="option" [ngTemplateOutletContext]="{item}">
     </ng-container>
   </ng-container>
 
-  <ng-container *ngIf="isGroup">
+  <ng-container *ngIf="groupField">
     <div *ngFor="let group of groups">
       <p>{{ group }}</p>
 

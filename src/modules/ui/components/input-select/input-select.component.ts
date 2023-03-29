@@ -31,7 +31,6 @@ export class InputSelectComponent implements ControlValueAccessor, OnChanges {
   onTouched: Function = () => null;
 
   @Input() multi: boolean = false;
-  @Input() isGroup: boolean = false;
   @Input() placeholder: string = 'placeholder';
   @HostBinding('class.disabled')
   isDisabled!: boolean;
@@ -41,7 +40,7 @@ export class InputSelectComponent implements ControlValueAccessor, OnChanges {
 
   @Input() idField: string = 'id';
   @Input() nameField: string = 'name';
-  @Input() groupField: string = "name";
+  @Input() groupField: string | null = null;
   @Output() onSelectItem = new EventEmitter<Record<string, any> | null>();
 
   opened: boolean = false;
@@ -62,7 +61,7 @@ export class InputSelectComponent implements ControlValueAccessor, OnChanges {
       this.value = !this.selectedItems.map(i => i[this.idField]).join(',') ? null : this.selectedItems.map(i => i[this.idField]).join(',');
       this.multi && this.onChange(this.value);
       this.selectedItems.forEach(i => this.selectedItemsObj[i[this.idField]] = i[this.nameField]);
-      if(this.items.length !== 0 && this.isGroup) {
+      if(this.items.length !== 0 && this.groupField) {
         this.setUniqueGroups(this.items)
       }
     }
@@ -188,6 +187,6 @@ export class InputSelectComponent implements ControlValueAccessor, OnChanges {
   }
 
   private setUniqueGroups(items: Record<string, any>[]) {
-    this.groups = [...new Set(items.map(item => item[this.groupField]))]
+    this.groups = [...new Set(items.map(item => item[this.groupField as string]))]
   } 
 }
