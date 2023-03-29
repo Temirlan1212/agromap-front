@@ -51,7 +51,7 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
     this.form.get('region')?.valueChanges.subscribe(value => this.handleRegionChange(value)) as Subscription,
     this.form.get('district')?.valueChanges.subscribe(value => this.handleDistrictChange(value)) as Subscription,
     this.form.get('conton')?.valueChanges.subscribe(value => this.handleContonChange(value)) as Subscription,
-    this.translateSvc.onLangChange.subscribe(res => this.currentLang = res.lang)
+    this.translateSvc.onLangChange.subscribe(res => this.currentLang = res.lang),
     this.mapService.map.subscribe((res: MapData | null) => {
       this.mapInstance = res?.map as Map;
       this.mapGeo = res?.geoJson as GeoJSON;
@@ -164,7 +164,7 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
 
   async handleContonChange(value: string | null) {
     if (value != null) {
-      await this.api.dictionary.getConstons({ ids: value, polygon: true });
+      await this.api.dictionary.getContons({ ids: value, polygon: true });
     } else {
       this.resetMapBounds();
     }

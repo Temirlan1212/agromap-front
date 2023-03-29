@@ -87,7 +87,7 @@ export class HomeComponent implements OnInit {
     const query: ActualVegQuery = { contour_id: id };
     try {
       const res = await this.api.vegIndexes.getActualVegIndexes(query);
-      const data = res.reduce((acc: any, i: any) => {
+      const data = res?.reduce((acc: any, i: any) => {
         if (!acc[i.index.id]) {
           acc[i.index.id] = {};
           acc[i.index.id]['name'] = i.index[`name_${ this.currentLang }`];
