@@ -105,6 +105,10 @@ export class MapComponent implements OnInit, OnDestroy {
     this.subscriptions.push(s);
   }
 
+  removeSubscriptions() {
+    this.subscriptions.forEach((s) => s.unsubscribe());
+  }
+
   handleMapMove(): void {
     if (this.map != null) {
       const zoom = this.map.getZoom();
@@ -124,6 +128,6 @@ export class MapComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.subscriptions.forEach((s) => s.unsubscribe());
+    this.removeSubscriptions();
   }
 }

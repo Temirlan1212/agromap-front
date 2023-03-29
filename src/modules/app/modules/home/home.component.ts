@@ -1,5 +1,5 @@
 import { geoJSON, Map, TileLayer, tileLayer } from 'leaflet';
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ApiService } from 'src/modules/api/api.service';
 import {
   IVegIndexOption,
@@ -16,13 +16,14 @@ import { IChartData } from './components/spline-area-chart/spline-area-chart.com
 import { ActualVegQuery } from '../../../api/classes/veg-indexes';
 import { TranslateService } from '@ngx-translate/core';
 import { MapComponent } from '../../../ui/components/map/map.component';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
   @ViewChild('featurePopup') featurePopup!: ElementRef<HTMLElement>;
   @ViewChild('map') mapComponent!: MapComponent;
 
@@ -45,9 +46,18 @@ export class HomeComponent implements OnInit {
     private mapService: MapService,
     private messages: MessagesService,
     private translateSvc: TranslateService) {
-    this.translateSvc.onLangChange.subscribe(res => this.currentLang = res.lang);
-    this.mapService.contourEdited.subscribe(() => this.mapComponent.handleMapEventSubscription());
   }
+
+  subscriptions: Subscription[] = [
+    this.translateSvc.onLangChange.subscribe(res => this.currentLang = res.lang),
+    this.mapService.contourEditingMode.subscribe((res) => {
+      if (res) {
+        this.mapComponent.removeSubscriptions();
+      } else {
+        this.mapComponent.handleMapEventSubscription();
+      }
+    })
+  ];
 
   vegIndexesData: IVegSatelliteDate[] = [];
   vegIndexOptionsList: IVegIndexOption[] = [];
@@ -161,5 +171,9 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     this.getVegIndexList();
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.forEach(s => s.unsubscribe());
   }
 }

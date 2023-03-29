@@ -71,23 +71,20 @@ export class ContourEditComponent implements OnInit, OnDestroy {
         customControls: true
       });
       this.mapInstance?.fitBounds(geoJson(this.contour.polygon).getBounds());
-      // this.mapInstance?.setMaxBounds(geoJson(this.contour.polygon).getBounds());
-      // this.mapInstance.off('moveend');
+      this.mapInstance?.setMaxBounds(geoJson(this.contour.polygon).getBounds());
       this.handleEditShape();
     });
   }
 
   handleEditShape() {
     this.mapInstance.on('pm:globaleditmodetoggled', (event) => {
-      // if (this.mapGeo.getLayers().length > 1) {
-      //   this.mapGeo.clearLayers();
-      //   this.mapGeo.addData(this.contour.polygon);
-      //   this.layer = this.mapGeo?.getLayers()[0];
-      // }
-      const allLayers = this.mapGeo.getLayers();
-      this.layer = allLayers.find((i: any) => i.feature.properties.id === this.contour.id);
+      if (this.mapGeo.getLayers().length > 1) {
+        this.mapGeo.clearLayers();
+        this.mapGeo.addData(this.contour.polygon);
+        this.layer = this.mapGeo?.getLayers()[0];
+      }
       if (event.enabled && this.layer) {
-        this.mapInstance.off('moveend');
+        this.mapService.contourEditingMode.next(true);
         this.layer.options.pmIgnore = false;
         this.layer.options.allowSelfIntersection = true;
         PM.reInitLayer(this.layer);
@@ -144,6 +141,16 @@ export class ContourEditComponent implements OnInit, OnDestroy {
     }
   }
 
+  handleCancelClick() {
+    this.router.navigate(['../..']);
+    const initBounds = latLngBounds(
+      latLng(44.0, 68.0),
+      latLng(39.0, 81.0)
+    );
+    this.mapInstance.fitBounds(initBounds);
+    this.mapInstance.setMaxBounds(initBounds);
+  }
+
   ngOnDestroy() {
     this.mapSubscription.unsubscribe();
     this.mapInstance.pm.toggleControls();
@@ -152,6 +159,6 @@ export class ContourEditComponent implements OnInit, OnDestroy {
     if (this.layer) {
       this.layer.pm.disable();
     }
-    this.mapService.contourEdited.next();
+    this.mapService.contourEditingMode.next(false);
   }
 }

@@ -5,7 +5,7 @@ import { MapData } from '../../../ui/models/map.model';
 @Injectable()
 export class MapService {
   map = new BehaviorSubject<MapData | null>(null);
-  contourEdited = new Subject<void>();
+  contourEditingMode = new Subject<boolean>();
 
   constructor() {
   }

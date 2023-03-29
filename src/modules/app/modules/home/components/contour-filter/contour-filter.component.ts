@@ -168,7 +168,8 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
 
   async handleContonChange(value: string | null) {
     if (value != null) {
-      await this.api.dictionary.getContons({ ids: value, polygon: true });
+      const res = await this.api.dictionary.getContons({ ids: value, polygon: true });
+      this.mapInstance.fitBounds(geoJson(res[0]?.polygon).getBounds(), { maxZoom: 12 });
     } else {
       this.resetMapBounds();
     }
