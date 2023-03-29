@@ -8,6 +8,7 @@ import { MessagesService } from '../../../../../ui/components/services/messages.
 import { MapService } from '../../map.service';
 import { Subscription } from 'rxjs';
 import { MapData } from '../../../../../ui/models/map.model';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-contour-edit',
@@ -29,7 +30,8 @@ export class ContourEditComponent implements OnInit, OnDestroy {
     private router: Router,
     private route: ActivatedRoute,
     private messages: MessagesService,
-    private mapService: MapService
+    private mapService: MapService,
+    private translate: TranslatePipe
   ) {
   }
 
@@ -122,15 +124,15 @@ export class ContourEditComponent implements OnInit, OnDestroy {
       polygon: this.polygon
     };
     if (!formState.touched && !this.isPolygonChanged) {
-      this.messages.warning('Нет изменений');
+      this.messages.warning(this.translate.transform('No changes in form'));
       return;
     }
     if (!formState.valid) {
-      this.messages.error('Форма заполнена неверно');
+      this.messages.error(this.translate.transform('Form is invalid'));
       return;
     }
     if (!this.polygon) {
-      this.messages.error('Определите полигон на карте');
+      this.messages.error(this.translate.transform('Define a polygon on the map'));
       return;
     }
     try {
