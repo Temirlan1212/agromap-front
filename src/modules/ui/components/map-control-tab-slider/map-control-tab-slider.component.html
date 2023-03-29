@@ -7,9 +7,9 @@
 </div>
 
 <ul class="timeline-list" #timelineList>
-  <ng-container *ngIf="vegIndexesData.length !== 0">
+  <ng-container *ngIf="vegIndexesDataLocal.value.length !== 0">
     <li
-      *ngFor="let date of vegIndexesData"
+      *ngFor="let date of vegIndexesDataLocal.value"
       (click)="handleSelectDate(date)"
       [class.selected]="selectedDate === date"
       #timelineItem
@@ -17,10 +17,10 @@
       <a>{{ date | formatDate : "fullDate" : currLang }}</a>
     </li>
   </ng-container>
-  <li *ngIf="vegIndexesData.length === 0 && !loading" class="empty">
+  <li *ngIf="vegIndexesDataLocal.value.length === 0 && !loading" class="empty">
     <a>{{ "NoData" | translate }}</a>
   </li>
-  <li *ngIf="vegIndexesData.length === 0 && loading" class="empty">
+  <li *ngIf="vegIndexesDataLocal.value.length === 0 && loading" class="empty">
     <a>
       <app-loading [loading]="loading" class="dynamic-color"></app-loading>
     </a>

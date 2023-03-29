@@ -1,6 +1,6 @@
 export interface IVegSatelliteDatesQuery {
-  contourId: string;
-  vegIndexId: string;
+  contourId: number;
+  vegIndexId: number;
 }
 
 export interface IMeaningOfAverageValue {
