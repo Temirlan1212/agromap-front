@@ -73,6 +73,10 @@
     "editButton": "Редактировать слой",
     "deleteButton": "Удалить слой"
   },
+  "Delete contour": "Удаление контура",
+  "Contour will be deleted, continue?": "Контур будет удален, продолжить?",
+  "Yes": "Да",
+  "No": "Нет",
   "Edit": "Редактировать",
   "Delete": "Удалить"
 }

@@ -64,7 +64,8 @@
         *ngFor="let contour of filteredContours"
         [title]="contour.contour_year.features[0].properties['contour_cs']"
         (mouseClick)="handleContourClick(contour)"
-        (editClick)="handleEditClick(contour)">
+        (editClick)="handleEditClick(contour)"
+        (removeClick)="handleContourDelete(contour.contour_year.features[0].properties['contour_id'], deleteDialog)">
         <div class="card">
           <span>{{'Region'  | translate}}
             : {{contour.contour_year.features[0].properties['region_' + currentLang]}}</span>
@@ -83,3 +84,11 @@
     </div>
   </app-loading>
 </div>
+
+<app-question-dialog
+  #deleteDialog
+  [title]="'Delete contour' | translate"
+  [isDanger]="true"
+  (submitted)="handleDeleteSubmitted(deleteDialog)">
+  {{'Contour will be deleted, continue?' | translate}}
+</app-question-dialog>
