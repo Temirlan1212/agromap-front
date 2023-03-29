@@ -57,10 +57,28 @@
       (keyup)="handleSearch(input.value)"/>
   </div>
 
+  <ng-container *ngIf="!isGroup">
+    <ng-container *ngFor="let item of localItems" [ngTemplateOutlet]="option" [ngTemplateOutletContext]="{item}">
+    </ng-container>
+  </ng-container>
+
+  <ng-container *ngIf="isGroup">
+    <div *ngFor="let group of groups">
+      <p>{{ group }}</p>
+
+      <div *ngFor="let item of localItems">
+        <ng-container *ngIf="item[nameField] === group" [ngTemplateOutlet]="option" [ngTemplateOutletContext]="{item}">
+        </ng-container>
+      </div>
+    </div>
+  </ng-container>
+</div>
+
+<ng-template #option let-item="item">
   <div
     class="option"
-    *ngFor="let item of localItems"
-    (click)="handleItemClick($event, item)">
+    (click)="handleItemClick($event, item)"
+  >
     <span [textContent]="item[nameField]"></span>
     <app-svg-icon
       name="tick"
@@ -68,4 +86,4 @@
       *ngIf="!!selectedItemsObj[item[idField]]"
     ></app-svg-icon>
   </div>
-</div>
+</ng-template>
