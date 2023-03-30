@@ -19,7 +19,7 @@ import { MapService } from './map.service';
 import { CardAccordionComponent } from '../../../ui/components/card-accordion/card-accordion.component';
 import { TranslateModule, TranslatePipe } from '@ngx-translate/core';
 import { DatePickerComponent } from 'src/modules/ui/components/date-picker/date-picker.component';
-import { MapControlsComponent } from 'src/modules/ui/components/map-controls/map-controls.component.';
+import { MapControlsComponent } from 'src/modules/ui/components/map-controls/map-controls.component';
 import { MapControlLocate } from 'src/modules/ui/components/map-control-locate/map-control-locate.component';
 import { MapControlZoomComponent } from 'src/modules/ui/components/map-control-zoom/map-control-zoom.component';
 import { ContourEditComponent } from './components/contour-edit/contour-edit.component';
@@ -31,6 +31,7 @@ import {
   MapControlVegIndexes
 } from 'src/modules/ui/components/map-control-veg-indexes/map-control-veg-indexes.component';
 import { QuestionDialogComponent } from '../../../ui/components/question-dialog/question-dialog.component';
+import { MapControlAiComponent } from 'src/modules/ui/components/map-control-ai/map-control-ai.component';
 
 @NgModule({
   declarations: [
@@ -62,6 +63,7 @@ import { QuestionDialogComponent } from '../../../ui/components/question-dialog/
     MapControlLocate,
     MapControlZoomComponent,
     MapControlLayersSwitchComponent,
+    MapControlAiComponent,
     QuestionDialogComponent,
   ],
   providers: [MapService, TranslatePipe]
