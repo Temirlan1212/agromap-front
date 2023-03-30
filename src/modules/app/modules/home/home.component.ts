@@ -64,6 +64,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   currentLang: string = this.translateSvc.currentLang;
   currentRouterPathname: string = ""
   isWmsAiActive: boolean = false;
+  imageOverlayIncstance: L.ImageOverlay | null = null;
 
   constructor(
     private api: ApiService,
@@ -123,6 +124,9 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.store.removeItem('selectedLayerFeature');
     if (this.selectedLayer) {
       this.selectedLayer.remove();
+    }
+    if(this.imageOverlayIncstance) {
+      this.mapData?.map.removeLayer(this.imageOverlayIncstance)
     }
   }
 
@@ -225,6 +229,10 @@ export class HomeComponent implements OnInit, OnDestroy {
     } else {
       this.mapData?.map.addLayer(this.wms);
     }
+  }
+
+  handleImageOverlayIncstance(value: L.ImageOverlay) {
+    this.imageOverlayIncstance = value;
   }
 
   ngOnInit(): void {

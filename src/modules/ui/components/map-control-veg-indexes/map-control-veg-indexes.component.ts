@@ -155,7 +155,7 @@ export class MapControlVegIndexesComponent
       this.imageOverlayIncstance = L.imageOverlay(
         imageFullUrl,
         L.geoJSON(this.layerFeature).getBounds(),
-        { opacity: 1, interactive: true }
+        { opacity: 1, interactive: true, zIndex: 500 }
       );
 
       this.imageOverlayIncstanceOutput.emit(this.imageOverlayIncstance);
