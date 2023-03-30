@@ -1,7 +1,8 @@
 <app-side-panel>
   <app-contour-filter
     (onCardClick)="map.handleFeatureClick($event.layer, $event.feature)"
-    (onEditClick)="map.handleFeatureClose()">
+    (onEditClick)="map.handleFeatureClose()"
+  >
   </app-contour-filter>
   <router-outlet></router-outlet>
 </app-side-panel>
@@ -26,6 +27,7 @@
           *ngIf="mapData && !layerFeature"
           [map]="mapData.map"
         ></app-map-control-locate>
+      <ng-container rightPanel>
         <app-map-control-zoom
           *ngIf="mapData"
           [map]="mapData.map"
@@ -34,9 +36,19 @@
           *ngIf="mapData"
           [map]="mapData.map"
         ></app-map-control-layers-switch>
-      </div>
+        <app-map-control-locate
+          *ngIf="mapData"
+          [map]="mapData.map"
+        ></app-map-control-locate>
+        <app-map-control-ai
+          *ngIf="mapData"
+          [map]="mapData.map"
+          [wms]="isWmsAiActive ? wmsAi : null"
+          (clicked)="handleMapControlAi($event)"
+        ></app-map-control-ai>
+      </ng-container>
 
-      <div topPanel>
+      <ng-container topPanel>
         <app-map-control-veg-indexes
           *ngIf="layerFeature && mapData"
           [layer]="layerFeature"
@@ -46,16 +58,16 @@
           (vegIndexOptionClick)="handleVegIndexOptionClick($event)"
           [loadingSatelliteDates]="loadingSatelliteDates"
         ></app-map-control-veg-indexes>
-      </div>
+      </ng-container>
     </app-map-controls>
 
     <app-spline-area-chart
       [chartData]="contourData"
-      *ngIf="layerFeature && contourData.length > 0;
-      else noContourData">
+      *ngIf="layerFeature && contourData.length > 0; else noContourData"
+    >
     </app-spline-area-chart>
     <ng-template #noContourData>
-      <h3 class="no-data-text">{{'NoData' | translate}}</h3>
+      <h3 class="no-data-text">{{ "NoData" | translate }}</h3>
     </ng-template>
   </app-map>
 

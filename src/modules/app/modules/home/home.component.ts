@@ -1,5 +1,12 @@
 import { geoJSON, Map, TileLayer, tileLayer } from 'leaflet';
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { GeoJSON } from 'geojson';
+import {
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { ApiService } from 'src/modules/api/api.service';
 import {
   IVegIndexOption,
@@ -20,6 +27,7 @@ import { StoreService } from 'src/modules/api/store.service';
 import { Feature } from 'geojson';
 import { MapComponent } from '../../../ui/components/map/map.component';
 import { Subscription } from 'rxjs';
+import { ActualVegIndexes } from 'src/modules/api/models/actual-veg-indexes';
 
 @Component({
   selector: 'app-home',
@@ -30,12 +38,24 @@ export class HomeComponent implements OnInit, OnDestroy {
   @ViewChild('featurePopup') featurePopup!: ElementRef<HTMLElement>;
   @ViewChild('map') mapComponent!: MapComponent;
 
-  wms: TileLayer = tileLayer.wms('https://geoserver.24mycrm.com/agromap/wms', {
-    layers: 'agromap:agromap_store',
-    format: 'image/png',
-    transparent: true,
-    zIndex: 500,
-  });
+  wms: TileLayer.WMS = tileLayer.wms(
+    'https://geoserver.24mycrm.com/agromap/wms',
+    {
+      layers: 'agromap:agromap_store',
+      format: 'image/png',
+      transparent: true,
+      zIndex: 500,
+    }
+  );
+  wmsAi: TileLayer.WMS = tileLayer.wms(
+    'https://geoserver.24mycrm.com/agromap/wms',
+    {
+      layers: 'agromap:agromap_store_ai',
+      format: 'image/png',
+      transparent: true,
+      zIndex: 500,
+    }
+  );
 
   mapData: MapData | null = null;
   layerFeature: MapLayerFeature | null = null;
@@ -43,6 +63,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   contourData: IChartData[] = [];
   currentLang: string = this.translateSvc.currentLang;
   currentRouterPathname: string = ""
+  isWmsAiActive: boolean = false;
 
   constructor(
     private api: ApiService,
@@ -55,14 +76,16 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   subscriptions: Subscription[] = [
-    this.translateSvc.onLangChange.subscribe(res => this.currentLang = res.lang),
+    this.translateSvc.onLangChange.subscribe(
+      (res) => (this.currentLang = res.lang)
+    ),
     this.mapService.contourEditingMode.subscribe((res) => {
       if (res) {
         this.mapComponent.removeSubscriptions();
       } else {
         this.mapComponent.handleMapEventSubscription();
       }
-    })
+    }),
   ];
 
   vegIndexesData: IVegSatelliteDate[] = [];
@@ -79,10 +102,13 @@ export class HomeComponent implements OnInit, OnDestroy {
     if (this.layerFeature) {
       this.selectedLayer.remove();
     }
-    const cid = layerFeature?.feature?.properties?.['contour_id'] ?? layerFeature?.feature?.properties?.['id'];
+    const cid =
+      layerFeature?.feature?.properties?.['contour_id'] ??
+      layerFeature?.feature?.properties?.['id'];
     this.getContourData(cid);
     this.layerFeature = layerFeature;
-    this.selectedLayer = geoJSON(this.layerFeature?.feature).addTo(this.mapData?.map as Map)
+    this.selectedLayer = geoJSON(this.layerFeature?.feature)
+      .addTo(this.mapData?.map as Map)
       .setStyle({
         fillOpacity: 1,
         fillColor: '#f6ab39',
@@ -103,11 +129,17 @@ export class HomeComponent implements OnInit, OnDestroy {
   async getContourData(id: number) {
     const query: ActualVegQuery = { contour_id: id };
     try {
-      const res = await this.api.vegIndexes.getActualVegIndexes(query);
+      let res: ActualVegIndexes[];
+      if (this.isWmsAiActive) {
+        res = await this.api.vegIndexes.getActualVegIndexesAi(query);
+      } else {
+        res = await this.api.vegIndexes.getActualVegIndexes(query);
+      }
+
       const data = res?.reduce((acc: any, i: any) => {
         if (!acc[i.index.id]) {
           acc[i.index.id] = {};
-          acc[i.index.id]['name'] = i.index[`name_${ this.currentLang }`];
+          acc[i.index.id]['name'] = i.index[`name_${this.currentLang}`];
           acc[i.index.id]['data'] = [];
           acc[i.index.id]['dates'] = [];
           acc[i.index.id]['data'].push(i.average_value);
@@ -131,9 +163,12 @@ export class HomeComponent implements OnInit, OnDestroy {
 
       if (mapMove.zoom >= 12) {
         try {
-          const polygons = await this.api.map.getPolygonsInScreen(
-            mapMove.bounds
-          );
+          let polygons: GeoJSON;
+          if (this.isWmsAiActive) {
+            polygons = await this.api.map.getPolygonsInScreenAi(mapMove.bounds);
+          } else {
+            polygons = await this.api.map.getPolygonsInScreen(mapMove.bounds);
+          }
           this.mapData.geoJson.options.snapIgnore = true;
           this.mapData.geoJson.options.pmIgnore = true;
           this.mapData.geoJson.addData(polygons);
@@ -150,10 +185,17 @@ export class HomeComponent implements OnInit, OnDestroy {
   ): Promise<void> {
     this.loadingSatelliteDates = true;
     try {
-      this.vegIndexesData = (await this.api.vegIndexes.getVegSatelliteDates({
+      const query = {
         contourId: contoruId,
         vegIndexId: vegIndexId,
-      })) as IVegSatelliteDate[];
+      };
+      let res: IVegSatelliteDate[];
+      if (this.isWmsAiActive) {
+        res = await this.api.vegIndexes.getVegSatelliteDatesAi(query);
+      } else {
+        res = await this.api.vegIndexes.getVegSatelliteDates(query);
+      }
+      this.vegIndexesData = res;
     } catch (e: any) {
       console.log(e);
     }
@@ -172,8 +214,17 @@ export class HomeComponent implements OnInit, OnDestroy {
   handleVegIndexOptionClick(vegIndexOption: IVegIndexOption) {
     this.getVegSatelliteDates(
       this.layerFeature?.feature?.properties?.['contour_id'],
-      vegIndexOption.id,
+      vegIndexOption.id
     );
+  }
+
+  handleMapControlAi(isActive: boolean): void {
+    this.isWmsAiActive = isActive;
+    if (isActive) {
+      this.mapData?.map.removeLayer(this.wms);
+    } else {
+      this.mapData?.map.addLayer(this.wms);
+    }
   }
 
   ngOnInit(): void {
@@ -181,6 +232,6 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.subscriptions.forEach(s => s.unsubscribe());
+    this.subscriptions.forEach((s) => s.unsubscribe());
   }
 }

@@ -25,10 +25,10 @@ export class MapControlLocateComponent implements OnInit {
 
   handleLocateClick() {
     let element = this.document.querySelector('.leaflet-control-locate a') as HTMLDivElement;
-    
+
     if(this.isLocateControlActive) {
       this.map.setView(new L.LatLng(41.84, 75.06), 7.3)
-    } 
+    }
 
     this.simulateClick(element);
 
