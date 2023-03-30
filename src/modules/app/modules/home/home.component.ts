@@ -38,7 +38,6 @@ export class HomeComponent implements OnInit, OnDestroy {
   layerFeature: MapLayerFeature | null = null;
   selectedLayer: any;
   contourData: IChartData[] = [];
-  layerContourId: string = '';
   currentLang: string = this.translateSvc.currentLang;
 
   constructor(
@@ -83,7 +82,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         fillColor: '#f6ab39',
       });
 
-    this.getVegSatelliteDates(String(cid));
+    this.getVegSatelliteDates(cid);
   }
 
   handleFeatureClose(): void {
@@ -138,8 +137,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   async getVegSatelliteDates(
-    contoruId: string,
-    vegIndexId: string = '1'
+    contoruId: number,
+    vegIndexId: number = 1
   ): Promise<void> {
     this.loadingSatelliteDates = true;
     try {
@@ -164,8 +163,8 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   handleVegIndexOptionClick(vegIndexOption: IVegIndexOption) {
     this.getVegSatelliteDates(
-      this.layerContourId,
-      vegIndexOption.id.toString()
+      this.layerFeature?.feature?.properties?.['contour_id'],
+      vegIndexOption.id,
     );
   }
 
