@@ -217,7 +217,8 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   handleVegIndexOptionClick(vegIndexOption: IVegIndexOption) {
     this.getVegSatelliteDates(
-      this.layerFeature?.feature?.properties?.['contour_id'],
+       this.layerFeature?.feature?.properties?.['contour_id'] ??
+      this.layerFeature?.feature?.properties?.['id'],
       vegIndexOption.id
     );
   }

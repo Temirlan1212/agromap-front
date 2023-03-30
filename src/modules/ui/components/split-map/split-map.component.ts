@@ -36,22 +36,6 @@ export class SplitMapComponent implements OnDestroy, AfterViewInit {
 
   constructor(public mapService: MapService) {}
 
-  initMap(id: string): L.Map {
-    return map(id, {
-      attributionControl: false,
-      center: this.center,
-      maxZoom: 16,
-      zoom: 12,
-      minZoom: 12,
-      zoomControl: false,
-      layers: [
-        tileLayer('http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}', {
-          subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
-        }),
-      ],
-    });
-  }
-
   syncMaps() {
     for (const [key1, map1] of Object.entries(this.maps)) {
       for (const [key2, map2] of Object.entries(this.maps)) {
@@ -80,7 +64,7 @@ export class SplitMapComponent implements OnDestroy, AfterViewInit {
         }
 
         if(val > i) {
-          this.maps[key] = this.initMap(key);
+          this.maps[key] = this.mapService.initMap(key);
         } else {
           this.maps[key] = null;
         }

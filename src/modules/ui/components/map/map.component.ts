@@ -28,6 +28,7 @@ import { MapData, MapLayerFeature, MapMove } from '../../models/map.model';
 import '@geoman-io/leaflet-geoman-free';
 import { debounceTime, fromEvent, Subscription } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
+import { MapService } from 'src/modules/app/modules/home/map.service';
 
 @Component({
   selector: 'app-map',
@@ -61,7 +62,7 @@ export class MapComponent implements OnInit, OnDestroy {
     },
   });
 
-  constructor(@Inject(LOCALE_ID) public locale: string, private translate: TranslateService) {
+  constructor(@Inject(LOCALE_ID) public locale: string, private translate: TranslateService, private mapService: MapService) {
   }
 
   ngOnInit(): void {
@@ -69,20 +70,7 @@ export class MapComponent implements OnInit, OnDestroy {
   }
 
   initMap(): void {
-    this.map = map('map', {
-      attributionControl: false,
-      center: this.center,
-      maxBounds: this.maxBounds,
-      maxZoom: 18,
-      minZoom: 6,
-      zoom: 6,
-      layers: [
-        tileLayer('http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}', {
-          subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
-        }),
-      ],
-      zoomControl: false,
-    });
+    this.map = this.mapService.initMap('map', {maxBounds: this.maxBounds});
 
     this.map?.pm.setLang(this.translate.currentLang as any);
     this.translate.onLangChange.subscribe(res => {
