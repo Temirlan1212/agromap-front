@@ -1,29 +1,47 @@
-#split-map {
-    background: white;
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    right: 0;
-    left:0;
-    z-index: 1001;
-    
-    .column {
-        display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
-        height: 100vh;
-        gap: 3px;          
-    };
-    .map {
-        flex-grow: 1;  
-        &.isHidden {
-           display: none !important;
-        }
-    }
+@import "constants";
+p {
+  margin: 0;
+}
 
-    @for $i from 0 through 4 {
-        #map-#{$i} { 
-            flex-basis: calc(50% - 3px);  
-        }
+#split-map {
+  background: white;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  z-index: 1001;
+
+  .column {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    height: 100vh;
+    gap: 3px;
+    .text-content {
+      position: absolute;
+      z-index: 1002;
+      bottom: 10px;
+      left: 10px;
+      color: $lightColor;
+      font-weight: 700;
+      font-size: 17px;
+      letter-spacing: 1px;
+      background-color: rgba(0, 0, 0, 0.5);
+      padding: 5px 12px;
+      border-radius: 50%;
     }
+  }
+  .map {
+    flex-grow: 1;
+    &.isHidden {
+      display: none !important;
+    }
+  }
+
+  @for $i from 0 through 4 {
+    #map-#{$i} {
+      flex-basis: calc(50% - 3px);
+    }
+  }
 }

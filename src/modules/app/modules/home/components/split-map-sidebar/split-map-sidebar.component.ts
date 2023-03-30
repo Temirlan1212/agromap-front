@@ -12,6 +12,7 @@ import { ApiService } from 'src/modules/api/api.service';
 import { FormatDatePipe } from 'src/modules/ui/pipes/formatDate.pipe';
 import { environment } from 'src/environments/environment';
 import { Subscription } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-split-map-sidebar',
@@ -20,83 +21,92 @@ import { Subscription } from 'rxjs';
   providers: [FormatDatePipe],
 })
 export class SplitMapSidebarComponent implements OnDestroy, OnInit {
+  satelliteDateData: IVegSatelliteDate[] = [];
+
   vegIndexesOptions: IVegIndexOption[] = [];
   satelliteDateOptions: Record<string, any>[] = [];
 
-  defaultSelectedVegIndex: FormControl = new FormControl('1');
-  selectedVegIndex: IVegIndexOption = {
-    name_ru: 'NDVI',
-    id: 1,
-    name_ky: '',
-    name_en: '',
-  };
+  vegIndexesOptionsForm: FormControl = new FormControl('');
+  satelliteDateOptionsForm: FormControl = new FormControl('1');
+
+  selectedVegIndex: IVegIndexOption | null = null;
+
   contourId!: number;
   bounds!: L.LatLngBounds;
+
   layerFeature!: Feature;
   maps: Record<string, L.Map | null> = {};
 
   loadingSatelliteDates: boolean = false;
+
   imageOverlayIncstance: Record<string, L.ImageOverlay> = {};
   imageOverlay: Record<string, string> = {};
 
   splitMapQuantity: number = this.splitMapService.splitMapQuantity.value;
 
+  currLang: string = this.translate.currentLang;
+
   mapsSubscription!: Subscription;
+  translateSubscription!: Subscription;
 
   constructor(
     private splitMapService: SplitMapService,
     private store: StoreService,
     private api: ApiService,
-    private formatDate: FormatDatePipe
+    private formatDate: FormatDatePipe,
+    private translate: TranslateService
   ) {}
 
   handleSplitMapClick(splitMapQuantity: number) {
     this.splitMapQuantity = splitMapQuantity;
-    this.getVegSatelliteDates(this.contourId, this.selectedVegIndex.id);
+    this.splitMapService.splitMapQuantity.next(this.splitMapQuantity);
+    this.satelliteDateOptionsForm.reset();
   }
 
-  handleVegIndexOnChange(value: Record<string, any> | null) {
-    this.selectedVegIndex = value as IVegIndexOption;
-    for (const [mapId, map] of Object.entries(this.maps)) {
-      this.removeImageOverlay(mapId);
-    }
-    this.getVegSatelliteDates(this.contourId, this.selectedVegIndex.id);
-  }
-
-  handleSatelliteDateChange(value: Record<string, any> | null, mapId: string) {
+  async handleVegIndexOnChange(
+    value: Record<string, any> | null
+  ): Promise<void> {
     if (value) {
-      this.removeImageOverlay(mapId);
-      this.setImageOverlay(mapId, value['image'], this.bounds);
+      this.selectedVegIndex = value as IVegIndexOption;
+      for (const [mapKey] of Object.entries(this.maps)) {
+        this.removeImageOverlay(mapKey);
+      }
+      await this.getVegSatelliteDates(this.contourId, this.selectedVegIndex.id);
+      this.buildSatelliteDatesOptions(this.satelliteDateData, this.currLang);
+      this.satelliteDateOptionsForm.reset();
+    } else {
+      this.selectedVegIndex = null;
+      this.satelliteDateOptionsForm.reset();
+      this.vegIndexesOptionsForm.reset();
     }
   }
 
-  async getVegSatelliteDates(
+  handleSatelliteDateChange(
+    value: Record<string, any> | null,
+    mapKey: string
+  ): void {
+    if (!value) return this.removeImageOverlay(mapKey);
+    this.removeImageOverlay(mapKey);
+    this.setImageOverlay(mapKey, value['image'], this.bounds);
+  }
+
+  private async getVegSatelliteDates(
     contoruId: number,
     vegIndexId: number
   ): Promise<void> {
     this.loadingSatelliteDates = true;
     try {
-      const vegIndexesData = (await this.api.vegIndexes.getVegSatelliteDates({
+      this.satelliteDateData = (await this.api.vegIndexes.getVegSatelliteDates({
         contourId: contoruId,
         vegIndexId: vegIndexId,
       })) as IVegSatelliteDate[];
-
-      this.satelliteDateOptions = vegIndexesData.map((indexData) => {
-        let obj = {
-          id: indexData.id,
-          date: this.formatDate.transform(indexData.date, 'fullDate', 'ru'),
-          group: indexData.date.slice(0, 4),
-          image: indexData.index_image,
-        };
-        return obj;
-      });
     } catch (e: any) {
       console.log(e);
     }
     this.loadingSatelliteDates = false;
   }
 
-  async getVegIndexList() {
+  private async getVegIndexList() {
     try {
       this.vegIndexesOptions =
         (await this.api.vegIndexes.getVegIndexList()) as IVegIndexOption[];
@@ -106,36 +116,47 @@ export class SplitMapSidebarComponent implements OnDestroy, OnInit {
   }
 
   private setImageOverlay(
-    mapId: string,
+    mapKey: string,
     imageUrl: string,
     bounds: L.LatLngBounds
   ) {
-    this.imageOverlay[mapId] = `${environment.apiUrl}${imageUrl}`;
-    this.imageOverlayIncstance[mapId] = L.imageOverlay(
-      this.imageOverlay[mapId],
+    this.imageOverlay[mapKey] = `${environment.apiUrl}${imageUrl}`;
+    this.imageOverlayIncstance[mapKey] = L.imageOverlay(
+      this.imageOverlay[mapKey],
       bounds,
       {
         opacity: 1,
         interactive: true,
       }
     );
-    console.log(this.imageOverlayIncstance[mapId]);
-    this.maps[mapId]?.addLayer(this.imageOverlayIncstance[mapId]);
+    this.maps[mapKey]?.addLayer(this.imageOverlayIncstance[mapKey]);
   }
 
-  private removeImageOverlay(mapId: string) {
-    if (this.imageOverlayIncstance[mapId] && this.maps[mapId]) {
-      this.maps[mapId]?.removeLayer(this.imageOverlayIncstance[mapId]);
+  private removeImageOverlay(mapKey: string) {
+    if (this.imageOverlayIncstance[mapKey] && this.maps[mapKey]) {
+      this.maps[mapKey]?.removeLayer(this.imageOverlayIncstance[mapKey]);
     }
   }
 
-  ngOnInit(): void {
+  private buildSatelliteDatesOptions(data: IVegSatelliteDate[], lang: string) {
+    this.satelliteDateOptions = data.map((indexData) => {
+      let obj = {
+        id: indexData.id,
+        date: this.formatDate.transform(indexData.date, 'fullDate', lang),
+        group: indexData.date.slice(0, 4),
+        image: indexData.index_image,
+      };
+      return obj;
+    });
+  }
+
+  async ngOnInit(): Promise<void> {
     this.layerFeature = this.store.getItem<Feature>('selectedLayerFeature');
     this.contourId = this.layerFeature.properties?.['id'];
     this.bounds = L.geoJSON(this.layerFeature).getBounds();
-
-    this.getVegIndexList();
-    this.getVegSatelliteDates(this.contourId, this.selectedVegIndex.id);
+    await this.getVegIndexList();
+    await this.getVegSatelliteDates(this.contourId, 1);
+    this.buildSatelliteDatesOptions(this.satelliteDateData, this.currLang);
 
     this.mapsSubscription = this.splitMapService.maps.subscribe((maps) => {
       this.maps = maps;
@@ -144,15 +165,20 @@ export class SplitMapSidebarComponent implements OnDestroy, OnInit {
         if (map) {
           L.geoJSON(this.layerFeature).addTo(map);
           map.fitBounds(L.geoJson(this.layerFeature).getBounds());
-          if (this.imageOverlay[key]) {
-            this.setImageOverlay(key, this.imageOverlay[key], this.bounds);
-          }
         }
       }
     });
+
+    this.translateSubscription = this.translate.onLangChange.subscribe(
+      (lang: Record<string, any>) => {
+        this.currLang = lang['lang'] as string;
+        this.buildSatelliteDatesOptions(this.satelliteDateData, this.currLang);
+      }
+    );
   }
 
   ngOnDestroy(): void {
     this.mapsSubscription.unsubscribe();
+    this.translateSubscription.unsubscribe();
   }
 }

@@ -76,5 +76,9 @@
   "Delete contour": "Delete contour",
   "Contour will be deleted, continue?": "Contour will be deleted, continue?",
   "Yes": "Yes",
-  "No": "No"
+  "No": "No",
+  "Choose date": "Choose date",
+  "Choose a vegetative index": "Choose a vegetative index",
+  "Comparison of images": "Comparison of images",
+  "Select the map split view": "Select the map split view"
 }

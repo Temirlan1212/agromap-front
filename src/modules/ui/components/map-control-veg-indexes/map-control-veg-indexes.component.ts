@@ -20,7 +20,7 @@ import {
   IVegIndexOption,
   IVegSatelliteDate,
 } from 'src/modules/api/models/veg-indexes.model';
-import { MapControlTabSlider } from '../map-control-tab-slider/map-control-tab-slider.component';
+import { MapControlTabSliderComponent } from '../map-control-tab-slider/map-control-tab-slider.component';
 import { MapData, MapLayerFeature } from '../../models/map.model';
 import * as L from 'leaflet';
 import { environment } from 'src/environments/environment';
@@ -36,10 +36,10 @@ import { TranslateService } from '@ngx-translate/core';
     CommonModule,
     SvgIconComponent,
     DatePickerComponent,
-    MapControlTabSlider,
+    MapControlTabSliderComponent,
   ],
 })
-export class MapControlVegIndexes
+export class MapControlVegIndexesComponent
   implements AfterViewInit, DoCheck, AfterContentChecked
 {
   private differ: KeyValueDiffer<string, IVegSatelliteDate>;

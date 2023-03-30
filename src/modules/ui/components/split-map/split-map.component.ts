@@ -1,10 +1,19 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  Input,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import * as L from 'leaflet';
 import { latLng, LatLng, map, Map, tileLayer } from 'leaflet';
 import 'leaflet.sync';
 import { SplitMapService } from '../services/split-map.services';
-import { Subscription } from "rxjs"
+import { Subscription } from 'rxjs';
+import { ILeafletMap } from 'src/modules/api/models/map.model';
+import { IVegIndexOption } from 'src/modules/api/models/veg-indexes.model';
 
 @Component({
   selector: 'app-split-map',
@@ -19,6 +28,7 @@ export class SplitMapComponent implements OnDestroy, OnInit {
   mapsQuantity!: number;
   maps: Record<string, Map | null> = {};
   splitMapQuantitySubscription!: Subscription;
+  selectedVegIndexOption: IVegIndexOption | null = null;
 
   @Input() center: LatLng = latLng(41.84, 75.06);
 
@@ -60,7 +70,7 @@ export class SplitMapComponent implements OnDestroy, OnInit {
     for (const [key1, map1] of Object.entries(this.maps)) {
       for (const [key2, map2] of Object.entries(this.maps)) {
         if (key1 !== key2 && map1 && map2) {
-          (map1 as any).sync(map2, {
+          (map1 as ILeafletMap).sync(map2, {
             syncCursor: true,
             syncCursorMarkerOptions: {
               radius: 5,
@@ -75,23 +85,24 @@ export class SplitMapComponent implements OnDestroy, OnInit {
   }
 
   ngOnInit(): void {
-    this.splitMapQuantitySubscription = this.splitMapService.splitMapQuantity.subscribe((val) => {
-      this.mapsQuantity = val;
+    this.splitMapQuantitySubscription =
+      this.splitMapService.splitMapQuantity.subscribe((val) => {
+        this.mapsQuantity = val;
 
-      setTimeout(() => {
-        this.removeMaps();
-        this.initMaps();
-        this.syncMap();
-        this.splitMapService.maps.next(this.maps);
-      }, 0);
-    });
+        setTimeout(() => {
+          this.removeMaps();
+          this.initMaps();
+          this.syncMap();
+          this.splitMapService.maps.next(this.maps);
+        }, 0);
+      });
 
     for (let i = 0; i < 4; i++) {
       this.maps[`map-${i}`] = null;
     }
   }
-  
+
   ngOnDestroy(): void {
-    this.splitMapQuantitySubscription.unsubscribe()
+    this.splitMapQuantitySubscription.unsubscribe();
   }
 }

@@ -76,5 +76,9 @@
   "Delete contour": "Удаление контура",
   "Contour will be deleted, continue?": "Контур будет удален, продолжить?",
   "Yes": "Да",
-  "No": "Нет"
+  "No": "Нет",
+  "Choose date": "Выберите дату",
+  "Choose a vegetative index": "Выберите вегетативный индекс",
+  "Comparison of images": "Сравнение снимков",
+  "Select the map split view": "Выберите вид разделение карты"
 }

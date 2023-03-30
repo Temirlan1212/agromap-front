@@ -55,7 +55,6 @@ export class HomeComponent implements OnInit {
   vegIndexOptionsList: IVegIndexOption[] = [];
   loadingSatelliteDates: boolean = false;
 
-
   handleMapData(mapData: MapData): void {
     mapData.map.addLayer(this.wms);
     this.mapData = mapData;

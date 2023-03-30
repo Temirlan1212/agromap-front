@@ -31,7 +31,7 @@ import { LoadingComponent } from '../loading/loading.component';
   ],
   providers: [FormatDatePipe],
 })
-export class MapControlTabSlider
+export class MapControlTabSliderComponent
   implements AfterViewInit, OnDestroy, OnChanges
 {
   @ViewChild('timelineList') timelineListEl!: ElementRef<HTMLInputElement>;

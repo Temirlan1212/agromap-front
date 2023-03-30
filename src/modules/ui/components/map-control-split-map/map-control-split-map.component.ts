@@ -13,7 +13,7 @@ import { SvgIconComponent } from '../svg-icon/svg-icon.component'
   ],
 })
 
-export class MapControlSplitMap implements OnInit {
+export class MapControlSplitMapComponent implements OnInit {
   @Input() isActive: boolean = false;
   constructor() {
   }
