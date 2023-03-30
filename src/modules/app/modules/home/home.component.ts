@@ -1,5 +1,11 @@
 import { geoJSON, Map, TileLayer, tileLayer } from 'leaflet';
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { ApiService } from 'src/modules/api/api.service';
 import {
   IVegIndexOption,
@@ -27,18 +33,21 @@ export class HomeComponent implements OnInit, OnDestroy {
   @ViewChild('featurePopup') featurePopup!: ElementRef<HTMLElement>;
   @ViewChild('map') mapComponent!: MapComponent;
 
-  wms: TileLayer = tileLayer.wms('https://geoserver.24mycrm.com/agromap/wms', {
+  wms: TileLayer.WMS = tileLayer.wms('https://geoserver.24mycrm.com/agromap/wms', {
     layers: 'agromap:agromap_store',
     format: 'image/png',
     transparent: true,
     zIndex: 500,
   });
-  wmsAi: TileLayer = tileLayer.wms('https://geoserver.24mycrm.com/agromap/wms', {
-    layers: 'agromap:agromap_store_ai',
-    format: 'image/png',
-    transparent: true,
-    zIndex: 500,
-  });
+  wmsAi: TileLayer.WMS = tileLayer.wms(
+    'https://geoserver.24mycrm.com/agromap/wms',
+    {
+      layers: 'agromap:agromap_store_ai',
+      format: 'image/png',
+      transparent: true,
+      zIndex: 500,
+    }
+  );
 
   mapData: MapData | null = null;
   layerFeature: MapLayerFeature | null = null;
@@ -51,24 +60,25 @@ export class HomeComponent implements OnInit, OnDestroy {
     private api: ApiService,
     private mapService: MapService,
     private messages: MessagesService,
-    private translateSvc: TranslateService) {
-  }
+    private translateSvc: TranslateService
+  ) {}
 
   subscriptions: Subscription[] = [
-    this.translateSvc.onLangChange.subscribe(res => this.currentLang = res.lang),
+    this.translateSvc.onLangChange.subscribe(
+      (res) => (this.currentLang = res.lang)
+    ),
     this.mapService.contourEditingMode.subscribe((res) => {
       if (res) {
         this.mapComponent.removeSubscriptions();
       } else {
         this.mapComponent.handleMapEventSubscription();
       }
-    })
+    }),
   ];
 
   vegIndexesData: IVegSatelliteDate[] = [];
   vegIndexOptionsList: IVegIndexOption[] = [];
   loadingSatelliteDates: boolean = false;
-
 
   handleMapData(mapData: MapData): void {
     mapData.map.addLayer(this.wms);
@@ -80,10 +90,13 @@ export class HomeComponent implements OnInit, OnDestroy {
     if (this.layerFeature) {
       this.selectedLayer.remove();
     }
-    const cid = layerFeature?.feature?.properties?.['contour_id'] ?? layerFeature?.feature?.properties?.['id'];
+    const cid =
+      layerFeature?.feature?.properties?.['contour_id'] ??
+      layerFeature?.feature?.properties?.['id'];
     this.getContourData(cid);
     this.layerFeature = layerFeature;
-    this.selectedLayer = geoJSON(this.layerFeature?.feature).addTo(this.mapData?.map as Map)
+    this.selectedLayer = geoJSON(this.layerFeature?.feature)
+      .addTo(this.mapData?.map as Map)
       .setStyle({
         fillOpacity: 1,
         fillColor: '#f6ab39',
@@ -106,7 +119,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       const data = res?.reduce((acc: any, i: any) => {
         if (!acc[i.index.id]) {
           acc[i.index.id] = {};
-          acc[i.index.id]['name'] = i.index[`name_${ this.currentLang }`];
+          acc[i.index.id]['name'] = i.index[`name_${this.currentLang}`];
           acc[i.index.id]['data'] = [];
           acc[i.index.id]['dates'] = [];
           acc[i.index.id]['data'].push(i.average_value);
@@ -171,12 +184,17 @@ export class HomeComponent implements OnInit, OnDestroy {
   handleVegIndexOptionClick(vegIndexOption: IVegIndexOption) {
     this.getVegSatelliteDates(
       this.layerFeature?.feature?.properties?.['contour_id'],
-      vegIndexOption.id,
+      vegIndexOption.id
     );
   }
 
   handleMapControlAi(isActive: boolean): void {
     this.isWmsAiActive = isActive;
+    if (isActive) {
+      this.mapData?.map.removeLayer(this.wms);
+    } else {
+      this.mapData?.map.addLayer(this.wms);
+    }
   }
 
   ngOnInit(): void {
@@ -184,6 +202,6 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.subscriptions.forEach(s => s.unsubscribe());
+    this.subscriptions.forEach((s) => s.unsubscribe());
   }
 }

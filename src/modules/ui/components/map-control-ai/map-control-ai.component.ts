@@ -19,7 +19,7 @@ import { TileLayer, Map } from 'leaflet';
 })
 export class MapControlAiComponent implements OnChanges {
   @Input() map: Map | null = null;
-  @Input() wms: TileLayer | null = null;
+  @Input() wms: TileLayer.WMS | null = null;
   @Output() clicked = new EventEmitter<boolean>();
 
   isActive: boolean = false;
