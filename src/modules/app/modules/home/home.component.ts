@@ -176,10 +176,17 @@ export class HomeComponent implements OnInit, OnDestroy {
   ): Promise<void> {
     this.loadingSatelliteDates = true;
     try {
-      this.vegIndexesData = (await this.api.vegIndexes.getVegSatelliteDates({
+      const query = {
         contourId: contoruId,
         vegIndexId: vegIndexId,
-      })) as IVegSatelliteDate[];
+      };
+      let res: IVegSatelliteDate[];
+      if (this.isWmsAiActive) {
+        res = await this.api.vegIndexes.getVegSatelliteDatesAi(query);
+      } else {
+        res = await this.api.vegIndexes.getVegSatelliteDates(query);
+      }
+      this.vegIndexesData = res;
     } catch (e: any) {
       console.log(e);
     }
