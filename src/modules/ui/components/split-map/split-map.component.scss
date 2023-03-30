@@ -34,8 +34,9 @@ p {
   }
   .map {
     flex-grow: 1;
-    &.isHidden {
-      display: none !important;
+    display: none;
+    &.initialized {
+      display: flex;
     }
   }
 

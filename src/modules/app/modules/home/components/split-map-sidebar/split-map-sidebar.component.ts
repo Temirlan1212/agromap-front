@@ -1,7 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { StoreService } from 'src/modules/api/store.service';
-import { SplitMapService } from 'src/modules/ui/components/services/split-map.services';
 import { Feature } from 'geojson';
 import * as L from 'leaflet';
 import {
@@ -13,6 +12,7 @@ import { FormatDatePipe } from 'src/modules/ui/pipes/formatDate.pipe';
 import { environment } from 'src/environments/environment';
 import { Subscription } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
+import { MapService } from '../../map.service';
 
 @Component({
   selector: 'app-split-map-sidebar',
@@ -42,7 +42,7 @@ export class SplitMapSidebarComponent implements OnDestroy, OnInit {
   imageOverlayIncstance: Record<string, L.ImageOverlay> = {};
   imageOverlay: Record<string, string> = {};
 
-  splitMapQuantity: number = this.splitMapService.splitMapQuantity.value;
+  splitMapQuantity: number = this.mapServie.splitMapQuantity.value;
 
   currLang: string = this.translate.currentLang;
 
@@ -50,7 +50,7 @@ export class SplitMapSidebarComponent implements OnDestroy, OnInit {
   translateSubscription!: Subscription;
 
   constructor(
-    private splitMapService: SplitMapService,
+    private mapServie: MapService,
     private store: StoreService,
     private api: ApiService,
     private formatDate: FormatDatePipe,
@@ -59,18 +59,19 @@ export class SplitMapSidebarComponent implements OnDestroy, OnInit {
 
   handleSplitMapClick(splitMapQuantity: number) {
     this.splitMapQuantity = splitMapQuantity;
-    this.splitMapService.splitMapQuantity.next(this.splitMapQuantity);
+    this.mapServie.splitMapQuantity.next(this.splitMapQuantity);
     this.satelliteDateOptionsForm.reset();
   }
 
   async handleVegIndexOnChange(
     value: Record<string, any> | null
   ): Promise<void> {
+    for (const [mapKey] of Object.entries(this.maps)) {
+      this.removeImageOverlay(mapKey);
+    }
+
     if (value) {
       this.selectedVegIndex = value as IVegIndexOption;
-      for (const [mapKey] of Object.entries(this.maps)) {
-        this.removeImageOverlay(mapKey);
-      }
       await this.getVegSatelliteDates(this.contourId, this.selectedVegIndex.id);
       this.buildSatelliteDatesOptions(this.satelliteDateData, this.currLang);
       this.satelliteDateOptionsForm.reset();
@@ -154,18 +155,17 @@ export class SplitMapSidebarComponent implements OnDestroy, OnInit {
     this.layerFeature = this.store.getItem<Feature>('selectedLayerFeature');
     this.contourId = this.layerFeature.properties?.['id'];
     this.bounds = L.geoJSON(this.layerFeature).getBounds();
+    
     await this.getVegIndexList();
     await this.getVegSatelliteDates(this.contourId, 1);
     this.buildSatelliteDatesOptions(this.satelliteDateData, this.currLang);
 
-    this.mapsSubscription = this.splitMapService.maps.subscribe((maps) => {
+    this.mapsSubscription = this.mapServie.maps.subscribe((maps) => {
       this.maps = maps;
-
+      this.maps["map-0"] && this.maps["map-0"].fitBounds(this.bounds, {maxZoom: 11});
+      
       for (const [key, map] of Object.entries(this.maps)) {
-        if (map) {
-          L.geoJSON(this.layerFeature).addTo(map);
-          map.fitBounds(L.geoJson(this.layerFeature).getBounds());
-        }
+        if (map) L.geoJSON(this.layerFeature).addTo(map);
       }
     });
 
