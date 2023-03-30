@@ -33,12 +33,19 @@ export class HomeComponent implements OnInit, OnDestroy {
     transparent: true,
     zIndex: 500,
   });
+  wmsAi: TileLayer = tileLayer.wms('https://geoserver.24mycrm.com/agromap/wms', {
+    layers: 'agromap:agromap_store_ai',
+    format: 'image/png',
+    transparent: true,
+    zIndex: 500,
+  });
 
   mapData: MapData | null = null;
   layerFeature: MapLayerFeature | null = null;
   selectedLayer: any;
   contourData: IChartData[] = [];
   currentLang: string = this.translateSvc.currentLang;
+  isWmsAiActive: boolean = false;
 
   constructor(
     private api: ApiService,
@@ -166,6 +173,10 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.layerFeature?.feature?.properties?.['contour_id'],
       vegIndexOption.id,
     );
+  }
+
+  handleMapControlAi(isActive: boolean): void {
+    this.isWmsAiActive = isActive;
   }
 
   ngOnInit(): void {
