@@ -76,5 +76,7 @@
   "Delete contour": "Контурду өчүрүү",
   "Contour will be deleted, continue?": "Контур өчүрүлөт, улантылсын?",
   "Yes": "Ооба",
-  "No": "Жок"
+  "No": "Жок",
+  "Edit": "Өзгөртүү",
+  "Delete": "Өчүрүү"
 }

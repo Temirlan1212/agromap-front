@@ -35,13 +35,13 @@ export class ContourFormComponent implements OnInit, OnDestroy {
       this.form.reset();
     } else {
       this.form.patchValue({
-        conton: v.properties.conton,
-        type: v.properties.type,
-        culture: v.properties.culture,
-        productivity: v.properties.productivity,
-        year: v.properties.year,
-        code_soato: v.properties.code_soato,
-        ink: v.properties.ink
+        conton: v.conton,
+        type: v.type,
+        culture: v.culture,
+        productivity: v.productivity,
+        year: v.year,
+        code_soato: v.code_soato,
+        ink: v.ink
       });
     }
   }

@@ -14,6 +14,10 @@ export class ContourApi {
     return await firstValueFrom(this.http.post<IContour>('gip/contour', data));
   }
 
+  async update(id: number, data: Partial<IContour>): Promise<IContour> {
+    return await firstValueFrom(this.http.put<IContour>(`gip/contour/${ id }`, data));
+  }
+
   async remove(id: number): Promise<IContour> {
     return await firstValueFrom(this.http.delete<IContour>(`gip/contour/${ id }`));
   }

@@ -5,11 +5,12 @@
 <div class="body" [class.body-collapsed]="isOpened">
   <ng-content></ng-content>
 </div>
-<app-svg-icon (click)="handleCollapseClick($event)" class="collapse-icon" [class.collapsed]="isOpened" name="arrow-down" size="16"></app-svg-icon>
+<app-svg-icon (click)="handleCollapseClick($event)" class="collapse-icon" [class.collapsed]="isOpened" name="arrow-down"
+              size="16"></app-svg-icon>
 
 <dialog #dialog [class.active]="dialog.open">
   <div class="dialog-content">
-    <span (click)="handleEditClick($event)">Редактировать</span>
-    <span (click)="handleRemoveClick($event)">Удалить</span>
+    <span (click)="handleEditClick($event)">{{'Edit' | translate}}</span>
+    <span (click)="handleRemoveClick($event)">{{'Delete' | translate}}</span>
   </div>
 </dialog>

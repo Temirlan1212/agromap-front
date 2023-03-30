@@ -76,5 +76,7 @@
   "Delete contour": "Delete contour",
   "Contour will be deleted, continue?": "Contour will be deleted, continue?",
   "Yes": "Yes",
-  "No": "No"
+  "No": "No",
+  "Edit": "Edit",
+  "Delete": "Delete"
 }
