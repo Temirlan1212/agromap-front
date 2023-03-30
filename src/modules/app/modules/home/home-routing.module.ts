@@ -4,6 +4,7 @@ import { ContourAddComponent } from './components/contour-add/contour-add.compon
 import { HomeComponent } from './home.component';
 import { AuthGuard } from '../../auth.guard';
 import { SplitMapSidebarComponent } from './components/split-map-sidebar/split-map-sidebar.component';
+import { ContourEditComponent } from './components/contour-edit/contour-edit.component';
 
 const routes: Routes = [
   {
@@ -12,6 +13,7 @@ const routes: Routes = [
     children: [
       { path: 'contour-add', component: ContourAddComponent, canActivate: [AuthGuard] },
       { path: 'split-map', component: SplitMapSidebarComponent },
+      { path: 'contour-edit/:id', component: ContourEditComponent, canActivate: [AuthGuard] },
     ],
   },
 ];

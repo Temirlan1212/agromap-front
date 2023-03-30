@@ -8,10 +8,11 @@ import { IDistrict } from '../../../../../api/models/district.model';
 import { Subscription } from 'rxjs';
 import { ILandType } from '../../../../../api/models/land-type.model';
 import { ContourFiltersQuery } from '../../../../../api/models/contour.model';
-import { geoJSON, geoJson, latLng, latLngBounds, Map } from 'leaflet';
+import { GeoJSON, geoJSON, geoJson, latLng, latLngBounds, Map } from 'leaflet';
 import { MapService } from '../../map.service';
 import { MapData, MapLayerFeature } from '../../../../../ui/models/map.model';
 import { Feature } from 'geojson';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { QuestionDialogComponent } from '../../../../../ui/components/question-dialog/question-dialog.component';
 
@@ -26,12 +27,15 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
   districts: IDistrict[] = [];
   landTypes: ILandType[] = [];
   mapInstance!: Map;
+  mapGeo!: GeoJSON;
   filteredContours: any = [];
   currentFeature!: Feature;
   currentLang: string = this.translateSvc.currentLang;
   selectedId: number | null = null;
   filtersQuery!: ContourFiltersQuery;
   @Output() onCardClick = new EventEmitter<MapLayerFeature>();
+  @Output() onEditClick = new EventEmitter<void>();
+  loading: boolean = false;
 
   form: FormGroup = new FormGroup({
     region: new FormControl<string | null>(null, { nonNullable: true, validators: Validators.required }),
@@ -51,14 +55,19 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
     this.form.get('region')?.valueChanges.subscribe(value => this.handleRegionChange(value)) as Subscription,
     this.form.get('district')?.valueChanges.subscribe(value => this.handleDistrictChange(value)) as Subscription,
     this.form.get('conton')?.valueChanges.subscribe(value => this.handleContonChange(value)) as Subscription,
-    this.mapService.map.subscribe((res: MapData | null) => this.mapInstance = res?.map as Map),
-    this.translateSvc.onLangChange.subscribe(res => this.currentLang = res.lang)
+    this.translateSvc.onLangChange.subscribe(res => this.currentLang = res.lang),
+    this.mapService.map.subscribe((res: MapData | null) => {
+      this.mapInstance = res?.map as Map;
+      this.mapGeo = res?.geoJson as GeoJSON;
+    })
   ];
 
   constructor(
     private api: ApiService,
     private messages: MessagesService,
     private mapService: MapService,
+    private router: Router,
+    private route: ActivatedRoute,
     private translate: TranslatePipe,
     private translateSvc: TranslateService
   ) {
@@ -107,6 +116,12 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
     this.filteredContours = [];
   }
 
+  handleEditClick(contour: any) {
+    const id = contour.contour_year.features[0].properties['contour_id'];
+    this.onEditClick.emit();
+    this.router.navigate(['contour-edit', id], { relativeTo: this.route });
+  }
+
   async handleFormSubmit(): Promise<void> {
     const formState = this.getState();
     if (!formState.valid) {
@@ -114,11 +129,14 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
       return;
     }
     const { region, district, year, conton, land_type } = formState.value;
+    this.loading = true;
     try {
       this.filtersQuery = { region, district, conton, land_type, year };
       this.filteredContours = await this.api.contour.getFilteredContours(this.filtersQuery);
     } catch (e: any) {
       this.messages.error(e.message);
+    } finally {
+      this.loading = false;
     }
   }
 
@@ -153,8 +171,8 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
 
   async handleContonChange(value: string | null) {
     if (value != null) {
-      const conton = await this.api.dictionary.getContons({ ids: value, polygon: true });
-      this.mapInstance.fitBounds(geoJson(conton[0]?.polygon).getBounds(), { maxZoom: 13, duration: 1 });
+      const res = await this.api.dictionary.getContons({ ids: value, polygon: true });
+      this.mapInstance.fitBounds(geoJson(res[0]?.polygon).getBounds(), { maxZoom: 12 });
     } else {
       this.resetMapBounds();
     }
@@ -163,7 +181,7 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
   handleContourClick(contour: any) {
     this.currentFeature = contour.contour_year.features[0];
     this.onCardClick.emit({ layer: geoJSON(this.currentFeature), feature: this.currentFeature });
-    this.mapInstance.fitBounds(geoJson(this.currentFeature).getBounds(), { maxZoom: 13, duration: 1 });
+    this.mapInstance.fitBounds(geoJson(this.currentFeature).getBounds());
   }
 
   public getState(): { value: any; valid: boolean; touched: boolean } {

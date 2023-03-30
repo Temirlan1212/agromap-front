@@ -24,6 +24,7 @@ import { MapControlLocateComponent } from 'src/modules/ui/components/map-control
 import { MapControlZoomComponent } from 'src/modules/ui/components/map-control-zoom/map-control-zoom.component';
 import { MapControlLayersSwitchComponent } from 'src/modules/ui/components/map-control-layers-switch/map-control-layers-switch.component';
 import { MapControlVegIndexesComponent } from 'src/modules/ui/components/map-control-veg-indexes/map-control-veg-indexes.component';
+import { ContourEditComponent } from './components/contour-edit/contour-edit.component';
 import { QuestionDialogComponent } from '../../../ui/components/question-dialog/question-dialog.component';
 import { MapControlSplitMapComponent } from 'src/modules/ui/components/map-control-split-map/map-control-split-map.component';
 import { SplitMapSidebarComponent } from './components/split-map-sidebar/split-map-sidebar.component';
@@ -38,6 +39,7 @@ import { LoadingComponent } from 'src/modules/ui/components/loading/loading.comp
     SplineAreaChartComponent,
     ContourFormComponent,
     SplitMapSidebarComponent,
+    ContourEditComponent,
   ],
   imports: [
     CommonModule,
@@ -52,6 +54,7 @@ import { LoadingComponent } from 'src/modules/ui/components/loading/loading.comp
     NgApexchartsModule,
     InputComponent,
     CardAccordionComponent,
+    LoadingComponent,
     TranslateModule,
     MapControlVegIndexesComponent,
     DatePickerComponent,

@@ -1,5 +1,5 @@
 import { geoJSON, Map, TileLayer, tileLayer } from 'leaflet';
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ApiService } from 'src/modules/api/api.service';
 import {
   IVegIndexOption,
@@ -18,14 +18,17 @@ import { TranslateService } from '@ngx-translate/core';
 import { Router, NavigationEnd, Event } from '@angular/router';
 import { StoreService } from 'src/modules/api/store.service';
 import { Feature } from 'geojson';
+import { MapComponent } from '../../../ui/components/map/map.component';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
   @ViewChild('featurePopup') featurePopup!: ElementRef<HTMLElement>;
+  @ViewChild('map') mapComponent!: MapComponent;
 
   wms: TileLayer = tileLayer.wms('https://geoserver.24mycrm.com/agromap/wms', {
     layers: 'agromap:agromap_store',
@@ -50,6 +53,17 @@ export class HomeComponent implements OnInit {
     this.router.events.subscribe((event: Event) => event instanceof NavigationEnd ? this.currentRouterPathname = router.url : "");
     this.translateSvc.onLangChange.subscribe(res => this.currentLang = res.lang);
   }
+
+  subscriptions: Subscription[] = [
+    this.translateSvc.onLangChange.subscribe(res => this.currentLang = res.lang),
+    this.mapService.contourEditingMode.subscribe((res) => {
+      if (res) {
+        this.mapComponent.removeSubscriptions();
+      } else {
+        this.mapComponent.handleMapEventSubscription();
+      }
+    })
+  ];
 
   vegIndexesData: IVegSatelliteDate[] = [];
   vegIndexOptionsList: IVegIndexOption[] = [];
@@ -80,8 +94,10 @@ export class HomeComponent implements OnInit {
 
   handleFeatureClose(): void {
     this.layerFeature = null;
-    this.selectedLayer.remove();
     this.store.removeItem('selectedLayerFeature');
+    if (this.selectedLayer) {
+      this.selectedLayer.remove();
+    }
   }
 
   async getContourData(id: number) {
@@ -162,5 +178,9 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     this.getVegIndexList();
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.forEach(s => s.unsubscribe());
   }
 }
