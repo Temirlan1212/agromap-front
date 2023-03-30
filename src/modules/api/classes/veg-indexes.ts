@@ -38,4 +38,8 @@ export class VegIndexesApi {
   async getActualVegIndexes(query: ActualVegQuery): Promise<ActualVegIndexes[]> {
     return await firstValueFrom(this.http.get<ActualVegIndexes[]>('veg/actual-veg-indexes', { params: query as any }));
   }
+
+  async getActualVegIndexesAi(query: ActualVegQuery): Promise<ActualVegIndexes[]> {
+    return await firstValueFrom(this.http.get<ActualVegIndexes[]>('veg/ai-actual-veg-indexes', { params: query as any }));
+  }
 }

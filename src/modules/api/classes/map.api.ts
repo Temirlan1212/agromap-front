@@ -13,4 +13,12 @@ export class MapApi {
 
     return response;
   }
+
+  async getPolygonsInScreenAi(data: LatLngBounds): Promise<GeoJSON> {
+    const response = await firstValueFrom(
+      this.http.post<GeoJSON>('ai/contour-in-screen', data)
+    );
+
+    return response;
+  }
 }
