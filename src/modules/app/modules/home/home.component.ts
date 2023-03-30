@@ -1,4 +1,5 @@
 import { geoJSON, Map, TileLayer, tileLayer } from 'leaflet';
+import { GeoJSON } from 'geojson';
 import {
   Component,
   ElementRef,
@@ -23,6 +24,7 @@ import { ActualVegQuery } from '../../../api/classes/veg-indexes';
 import { TranslateService } from '@ngx-translate/core';
 import { MapComponent } from '../../../ui/components/map/map.component';
 import { Subscription } from 'rxjs';
+import { ActualVegIndexes } from 'src/modules/api/models/actual-veg-indexes';
 
 @Component({
   selector: 'app-home',
@@ -33,12 +35,15 @@ export class HomeComponent implements OnInit, OnDestroy {
   @ViewChild('featurePopup') featurePopup!: ElementRef<HTMLElement>;
   @ViewChild('map') mapComponent!: MapComponent;
 
-  wms: TileLayer.WMS = tileLayer.wms('https://geoserver.24mycrm.com/agromap/wms', {
-    layers: 'agromap:agromap_store',
-    format: 'image/png',
-    transparent: true,
-    zIndex: 500,
-  });
+  wms: TileLayer.WMS = tileLayer.wms(
+    'https://geoserver.24mycrm.com/agromap/wms',
+    {
+      layers: 'agromap:agromap_store',
+      format: 'image/png',
+      transparent: true,
+      zIndex: 500,
+    }
+  );
   wmsAi: TileLayer.WMS = tileLayer.wms(
     'https://geoserver.24mycrm.com/agromap/wms',
     {
@@ -115,7 +120,13 @@ export class HomeComponent implements OnInit, OnDestroy {
   async getContourData(id: number) {
     const query: ActualVegQuery = { contour_id: id };
     try {
-      const res = await this.api.vegIndexes.getActualVegIndexes(query);
+      let res: ActualVegIndexes[];
+      if (this.isWmsAiActive) {
+        res = await this.api.vegIndexes.getActualVegIndexesAi(query);
+      } else {
+        res = await this.api.vegIndexes.getActualVegIndexes(query);
+      }
+
       const data = res?.reduce((acc: any, i: any) => {
         if (!acc[i.index.id]) {
           acc[i.index.id] = {};
@@ -143,9 +154,12 @@ export class HomeComponent implements OnInit, OnDestroy {
 
       if (mapMove.zoom >= 12) {
         try {
-          const polygons = await this.api.map.getPolygonsInScreen(
-            mapMove.bounds
-          );
+          let polygons: GeoJSON;
+          if (this.isWmsAiActive) {
+            polygons = await this.api.map.getPolygonsInScreenAi(mapMove.bounds);
+          } else {
+            polygons = await this.api.map.getPolygonsInScreen(mapMove.bounds);
+          }
           this.mapData.geoJson.options.snapIgnore = true;
           this.mapData.geoJson.options.pmIgnore = true;
           this.mapData.geoJson.addData(polygons);
