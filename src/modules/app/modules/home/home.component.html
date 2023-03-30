@@ -23,10 +23,6 @@
           [isActive]="currentRouterPathname === '/home/split-map'"
         >
         </app-map-control-split-map>
-        <app-map-control-locate
-          *ngIf="mapData && !layerFeature"
-          [map]="mapData.map"
-        ></app-map-control-locate>
       <ng-container rightPanel>
         <app-map-control-zoom
           *ngIf="mapData"
@@ -37,7 +33,7 @@
           [map]="mapData.map"
         ></app-map-control-layers-switch>
         <app-map-control-locate
-          *ngIf="mapData"
+          *ngIf="mapData && !layerFeature"
           [map]="mapData.map"
         ></app-map-control-locate>
         <app-map-control-ai
@@ -47,7 +43,7 @@
           (clicked)="handleMapControlAi($event)"
         ></app-map-control-ai>
       </ng-container>
-
+      </div>
       <ng-container topPanel>
         <app-map-control-veg-indexes
           *ngIf="layerFeature && mapData"
