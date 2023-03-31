@@ -18,7 +18,7 @@ p {
     flex-wrap: wrap;
     height: 100vh;
     gap: 3px;
-    .text-content {
+    .mapNumber {
       position: absolute;
       z-index: 1002;
       bottom: 10px;
@@ -35,14 +35,9 @@ p {
   .map {
     flex-grow: 1;
     display: none;
+    flex-basis: calc(50% - 3px);
     &.initialized {
       display: flex;
-    }
-  }
-
-  @for $i from 0 through 4 {
-    #map-#{$i} {
-      flex-basis: calc(50% - 3px);
     }
   }
 }
