@@ -62,18 +62,24 @@ export class MapComponent implements OnInit, OnDestroy {
     },
   });
 
-  constructor(@Inject(LOCALE_ID) public locale: string, private translate: TranslateService, private mapService: MapService) {
-  }
+  constructor(
+    @Inject(LOCALE_ID) public locale: string,
+    private translate: TranslateService,
+    private mapService: MapService
+  ) {}
 
   ngOnInit(): void {
     this.initMap();
   }
 
   initMap(): void {
-    this.map = this.mapService.initMap('map', {maxBounds: this.maxBounds});
+    this.map = this.mapService.initMap('map', {
+      maxBounds: this.maxBounds,
+      center: this.center,
+    });
 
     this.map?.pm.setLang(this.translate.currentLang as any);
-    this.translate.onLangChange.subscribe(res => {
+    this.translate.onLangChange.subscribe((res) => {
       if (res.lang === 'ky') {
         this.map?.pm.setLang('ko', res.translations);
       } else {
