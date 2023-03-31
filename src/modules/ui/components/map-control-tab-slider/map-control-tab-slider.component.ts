@@ -1,5 +1,6 @@
 import {
   AfterViewInit,
+  ChangeDetectorRef,
   Component,
   ElementRef,
   EventEmitter,
@@ -14,7 +15,7 @@ import { CommonModule } from '@angular/common';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
 import { FormatDatePipe } from '../../pipes/formatDate.pipe';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { LoadingComponent } from '../loading/loading.component';
 
 @Component({
@@ -31,7 +32,7 @@ import { LoadingComponent } from '../loading/loading.component';
   ],
   providers: [FormatDatePipe],
 })
-export class MapControlTabSlider
+export class MapControlTabSliderComponent
   implements AfterViewInit, OnDestroy, OnChanges
 {
   @ViewChild('timelineList') timelineListEl!: ElementRef<HTMLInputElement>;
@@ -74,7 +75,8 @@ export class MapControlTabSlider
 
   constructor(
     public translate: TranslateService,
-    private formatDate: FormatDatePipe
+    private formatDate: FormatDatePipe,
+    private cd: ChangeDetectorRef
   ) {
     this.translateSubscription = translate.onLangChange.subscribe(
       () => (this.currLang = translate.currentLang)
@@ -149,9 +151,8 @@ export class MapControlTabSlider
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['vegIndexesData'] && this.vegIndexesData.length !== 0) {
-      setTimeout(() => {
-        this.checkIsTimelineListFull();
-      }, 0)
+      this.cd.detectChanges();
+      this.checkIsTimelineListFull();
     }
   }
 

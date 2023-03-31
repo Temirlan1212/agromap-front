@@ -15,7 +15,7 @@ import "leaflet.locatecontrol"
   ],
 })
 
-export class MapControlLocate implements OnInit {
+export class MapControlLocateComponent implements OnInit {
   @Input() map!: L.Map;
 
   isLocateControlActive = false;

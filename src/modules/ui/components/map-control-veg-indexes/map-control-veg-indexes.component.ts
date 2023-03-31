@@ -1,7 +1,4 @@
 import {
-  AfterContentChecked,
-  AfterViewInit,
-  ChangeDetectorRef,
   Component,
   DoCheck,
   ElementRef,
@@ -10,6 +7,8 @@ import {
   Input,
   KeyValueDiffer,
   KeyValueDiffers,
+  OnDestroy,
+  OnInit,
   Output,
   ViewChild,
 } from '@angular/core';
@@ -20,12 +19,13 @@ import {
   IVegIndexOption,
   IVegSatelliteDate,
 } from 'src/modules/api/models/veg-indexes.model';
-import { MapControlTabSlider } from '../map-control-tab-slider/map-control-tab-slider.component';
+import { MapControlTabSliderComponent } from '../map-control-tab-slider/map-control-tab-slider.component';
 import { MapData, MapLayerFeature } from '../../models/map.model';
 import * as L from 'leaflet';
 import { environment } from 'src/environments/environment';
 import { Feature } from 'geojson';
 import { TranslateService } from '@ngx-translate/core';
+import { MapService } from 'src/modules/app/modules/home/map.service';
 
 @Component({
   selector: 'app-map-control-veg-indexes',
@@ -36,13 +36,13 @@ import { TranslateService } from '@ngx-translate/core';
     CommonModule,
     SvgIconComponent,
     DatePickerComponent,
-    MapControlTabSlider,
+    MapControlTabSliderComponent,
   ],
 })
-export class MapControlVegIndexes
-  implements AfterViewInit, DoCheck, AfterContentChecked
+export class MapControlVegIndexesComponent
+  implements DoCheck, OnDestroy, OnInit
 {
-  private differ: KeyValueDiffer<string, IVegSatelliteDate>;
+  private vegIndexesDataDiffer: KeyValueDiffer<string, IVegSatelliteDate>;
 
   @ViewChild('vegIndexesDialog')
   vegIndexesDialogEl!: ElementRef<HTMLInputElement>;
@@ -59,28 +59,24 @@ export class MapControlVegIndexes
 
   @Input() loadingSatelliteDates: boolean = false;
 
-  @Output() imageOverlayIncstanceOutput = new EventEmitter<L.ImageOverlay>();
   @Output() vegIndexOptionClick = new EventEmitter<IVegIndexOption>();
 
   @Input('layer') set layer(value: MapLayerFeature | null) {
     if (value?.feature.properties?.['id']) {
       this.layerFeature = value.feature;
       this.selectedDate = null;
+      this.bounds = L.geoJSON(this.layerFeature).getBounds();
 
       this.removeImageOverlay();
     }
   }
 
+  bounds!: L.LatLngBounds;
   layerFeatureContourId: string = '';
   layerFeature: Feature | null = null;
 
   selectedDate: string | null = null;
-  selectedVegOption: IVegIndexOption = {
-    id: 1,
-    name_ru: 'NDVI',
-    name_en: '',
-    name_ky: '',
-  };
+  selectedVegOption: IVegIndexOption | null = null;
 
   imageOverlayIncstance: L.ImageOverlay | null = null;
 
@@ -91,10 +87,10 @@ export class MapControlVegIndexes
 
   constructor(
     private differs: KeyValueDiffers,
-    private ref: ChangeDetectorRef,
-    public translate: TranslateService
+    public translate: TranslateService,
+    private mapServie: MapService
   ) {
-    this.differ = this.differs.find(this.vegIndexesData).create();
+    this.vegIndexesDataDiffer = this.differs.find(this.vegIndexesData).create();
   }
 
   @HostListener('document:click', ['$event.target'])
@@ -119,7 +115,7 @@ export class MapControlVegIndexes
     }
   }
 
-  async handleSelectVegIndexOptionClick(index: IVegIndexOption) {
+  handleSelectVegIndexOptionClick(index: IVegIndexOption) {
     this.selectedVegOption = index;
     this.selectedDate = null;
     this.removeImageOverlay();
@@ -131,6 +127,7 @@ export class MapControlVegIndexes
     if (date) {
       this.selectedDate = date;
       this.isCollapsedDateDialog = false;
+      this.removeImageOverlay();
       this.setImageOverlay(date);
     }
   }
@@ -139,28 +136,27 @@ export class MapControlVegIndexes
     if (date) {
       this.selectedDate = date;
       this.isCollapsedDateDialog = false;
+      this.removeImageOverlay();
       this.setImageOverlay(date);
     }
   }
 
   private setImageOverlay(date: string) {
+    if (this.mapData?.map && this.bounds) {
+      this.imageOverlayIncstance = this.mapServie.setImageOverlay(
+        this.mapData?.map as L.Map,
+        this.buildImageUrl(date),
+        this.bounds,
+        { zIndex: 500 }
+      );
+    }
+  }
+
+  private buildImageUrl(date: string): string {
     const imageUrl = this.vegIndexesData.filter(
       (vegIndex) => vegIndex.date === date
     )[0].index_image;
-    let imageFullUrl = `${environment.apiUrl}${imageUrl}`;
-
-    this.removeImageOverlay();
-
-    if (this.layerFeature && this.mapData?.map) {
-      this.imageOverlayIncstance = L.imageOverlay(
-        imageFullUrl,
-        L.geoJSON(this.layerFeature).getBounds(),
-        { opacity: 1, interactive: true }
-      );
-
-      this.imageOverlayIncstanceOutput.emit(this.imageOverlayIncstance);
-      this.mapData.map.addLayer(this.imageOverlayIncstance);
-    }
+    return `${environment.apiUrl}${imageUrl}`;
   }
 
   private removeImageOverlay() {
@@ -170,16 +166,22 @@ export class MapControlVegIndexes
     }
   }
 
-  async ngAfterViewInit() {}
+  ngDoCheck(): void {
+    const vegIndexesDataChanges = this.vegIndexesDataDiffer.diff(
+      this.vegIndexesData as any
+    );
 
-  async ngDoCheck(): Promise<void> {
-    const changes = this.differ.diff(this.vegIndexesData as any);
-    if (changes) {
+    if (vegIndexesDataChanges) {
       this.activeDates = this.vegIndexesData.map((index) => index.date);
     }
   }
 
-  ngAfterContentChecked() {
-    this.ref.detectChanges();
+  ngOnInit(): void {
+    this.selectedVegOption = this.vegIndexOptionsList[0];
+  }
+
+  ngOnDestroy(): void {
+    if (this.imageOverlayIncstance)
+      this.mapData?.map.removeLayer(this.imageOverlayIncstance);
   }
 }

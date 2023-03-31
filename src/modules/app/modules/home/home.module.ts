@@ -20,17 +20,16 @@ import { CardAccordionComponent } from '../../../ui/components/card-accordion/ca
 import { TranslateModule, TranslatePipe } from '@ngx-translate/core';
 import { DatePickerComponent } from 'src/modules/ui/components/date-picker/date-picker.component';
 import { MapControlsComponent } from 'src/modules/ui/components/map-controls/map-controls.component';
-import { MapControlLocate } from 'src/modules/ui/components/map-control-locate/map-control-locate.component';
+import { MapControlLocateComponent } from 'src/modules/ui/components/map-control-locate/map-control-locate.component';
 import { MapControlZoomComponent } from 'src/modules/ui/components/map-control-zoom/map-control-zoom.component';
+import { MapControlLayersSwitchComponent } from 'src/modules/ui/components/map-control-layers-switch/map-control-layers-switch.component';
+import { MapControlVegIndexesComponent } from 'src/modules/ui/components/map-control-veg-indexes/map-control-veg-indexes.component';
 import { ContourEditComponent } from './components/contour-edit/contour-edit.component';
-import { LoadingComponent } from '../../../ui/components/loading/loading.component';
-import {
-  MapControlLayersSwitchComponent
-} from 'src/modules/ui/components/map-control-layers-switch/map-control-layers-switch.component';
-import {
-  MapControlVegIndexes
-} from 'src/modules/ui/components/map-control-veg-indexes/map-control-veg-indexes.component';
 import { QuestionDialogComponent } from '../../../ui/components/question-dialog/question-dialog.component';
+import { MapControlSplitMapComponent } from 'src/modules/ui/components/map-control-split-map/map-control-split-map.component';
+import { SplitMapSidebarComponent } from './components/split-map-sidebar/split-map-sidebar.component';
+import { SplitMapComponent } from 'src/modules/ui/components/split-map/split-map.component';
+import { LoadingComponent } from 'src/modules/ui/components/loading/loading.component';
 import { MapControlAiComponent } from 'src/modules/ui/components/map-control-ai/map-control-ai.component';
 
 @NgModule({
@@ -40,6 +39,7 @@ import { MapControlAiComponent } from 'src/modules/ui/components/map-control-ai/
     ContourAddComponent,
     SplineAreaChartComponent,
     ContourFormComponent,
+    SplitMapSidebarComponent,
     ContourEditComponent,
   ],
   imports: [
@@ -57,16 +57,18 @@ import { MapControlAiComponent } from 'src/modules/ui/components/map-control-ai/
     CardAccordionComponent,
     LoadingComponent,
     TranslateModule,
-    MapControlVegIndexes,
+    MapControlVegIndexesComponent,
     DatePickerComponent,
     MapControlsComponent,
-    MapControlLocate,
+    MapControlLocateComponent,
     MapControlZoomComponent,
     MapControlLayersSwitchComponent,
     MapControlAiComponent,
     QuestionDialogComponent,
+    MapControlSplitMapComponent,
+    SplitMapComponent,
+    LoadingComponent,
   ],
-  providers: [MapService, TranslatePipe]
+  providers: [MapService, TranslatePipe],
 })
-export class HomeModule {
-}
+export class HomeModule {}

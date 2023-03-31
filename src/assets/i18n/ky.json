@@ -77,6 +77,10 @@
   "Contour will be deleted, continue?": "Контур өчүрүлөт, улантылсын?",
   "Yes": "Ооба",
   "No": "Жок",
+  "Choose date": "Датаны тандаңыз",
+  "Choose a vegetative index": "Вегетативдик индексти тандаңыз",
+  "Comparison of images": "Сүрөттөрдү салыштыруу",
+  "Select the map split view": "Картаны тандаңыз бөлүнгөн көрүнүш",
   "Edit": "Өзгөртүү",
   "Delete": "Өчүрүү"
 }

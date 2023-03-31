@@ -22,6 +22,9 @@ import { MessagesService } from '../../../ui/components/services/messages.servic
 import { IChartData } from './components/spline-area-chart/spline-area-chart.component';
 import { ActualVegQuery } from '../../../api/classes/veg-indexes';
 import { TranslateService } from '@ngx-translate/core';
+import { Router, NavigationEnd, Event } from '@angular/router';
+import { StoreService } from 'src/modules/api/store.service';
+import { Feature } from 'geojson';
 import { MapComponent } from '../../../ui/components/map/map.component';
 import { Subscription } from 'rxjs';
 import { ActualVegIndexes } from 'src/modules/api/models/actual-veg-indexes';
@@ -59,14 +62,18 @@ export class HomeComponent implements OnInit, OnDestroy {
   selectedLayer: any;
   contourData: IChartData[] = [];
   currentLang: string = this.translateSvc.currentLang;
+  currentRouterPathname: string = ""
   isWmsAiActive: boolean = false;
 
   constructor(
     private api: ApiService,
     private mapService: MapService,
     private messages: MessagesService,
-    private translateSvc: TranslateService
-  ) {}
+    private store: StoreService,
+    private translateSvc: TranslateService, private router: Router) {
+    this.router.events.subscribe((event: Event) => event instanceof NavigationEnd ? this.currentRouterPathname = router.url : "");
+    this.translateSvc.onLangChange.subscribe(res => this.currentLang = res.lang);
+  }
 
   subscriptions: Subscription[] = [
     this.translateSvc.onLangChange.subscribe(
@@ -106,12 +113,14 @@ export class HomeComponent implements OnInit, OnDestroy {
         fillOpacity: 1,
         fillColor: '#f6ab39',
       });
-
+    
     this.getVegSatelliteDates(cid);
+    this.store.setItem<Feature>('selectedLayerFeature', layerFeature.feature);
   }
 
   handleFeatureClose(): void {
     this.layerFeature = null;
+    this.store.removeItem('selectedLayerFeature');
     if (this.selectedLayer) {
       this.selectedLayer.remove();
     }
@@ -204,7 +213,8 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   handleVegIndexOptionClick(vegIndexOption: IVegIndexOption) {
     this.getVegSatelliteDates(
-      this.layerFeature?.feature?.properties?.['contour_id'],
+       this.layerFeature?.feature?.properties?.['contour_id'] ??
+      this.layerFeature?.feature?.properties?.['id'],
       vegIndexOption.id
     );
   }
