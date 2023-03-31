@@ -1,45 +1,51 @@
 <form class="content" [formGroup]="form">
-  <div class="field-group">
+  <div class="field-group" *ngIf="!loading">
     <app-input-select
       [items]="regionList"
       [placeholder]="'Region' | translate"
-      [nameField]="'name_'+currentLang"
-      formControlName="region">
+      [nameField]="'name_' + currentLang"
+      formControlName="region"
+    >
     </app-input-select>
 
     <app-input-select
       [items]="districtList"
       [placeholder]="'District' | translate"
       formControlName="district"
-      [nameField]="'name_'+currentLang">
+      [nameField]="'name_' + currentLang"
+    >
     </app-input-select>
 
     <app-input-select
       (onSelectItem)="onChange.emit($event)"
       [placeholder]="'Conton' | translate"
       [items]="contonList"
-      [nameField]="'name_'+currentLang"
-      formControlName="conton">
+      [nameField]="'name_' + currentLang"
+      formControlName="conton"
+    >
     </app-input-select>
 
     <app-input-select
       [items]="landTypeList"
       formControlName="type"
-      [nameField]="'name_'+currentLang"
-      [placeholder]="'Land type' | translate">
+      [nameField]="'name_' + currentLang"
+      [placeholder]="'Land type' | translate"
+    >
     </app-input-select>
 
     <app-input-select
       [items]="cultureList"
       formControlName="culture"
-      [nameField]="'name_'+currentLang"
-      [placeholder]="'Culture' | translate">
+      [nameField]="'name_' + currentLang"
+      [placeholder]="'Culture' | translate"
+    >
     </app-input-select>
 
     <app-input
       type="number"
       [placeholder]="'Productivity' | translate"
-      formControlName="productivity">
+      formControlName="productivity"
+    >
     </app-input>
 
     <app-input
@@ -47,19 +53,24 @@
       [min]="2010"
       [max]="2023"
       [placeholder]="'Select a year' | translate"
-      formControlName="year">
+      formControlName="year"
+    >
     </app-input>
 
     <app-input
       type="text"
       [placeholder]="'Code SOATO' | translate"
-      formControlName="code_soato">
+      formControlName="code_soato"
+    >
     </app-input>
 
     <app-input
       type="text"
       [placeholder]="'INK' | translate"
-      formControlName="ink">
+      formControlName="ink"
+    >
     </app-input>
   </div>
+
+  <app-loading [loading]="loading" class="dynamic-color"></app-loading>
 </form>
