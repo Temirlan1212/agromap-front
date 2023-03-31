@@ -1,7 +1,4 @@
 import {
-  AfterContentChecked,
-  AfterViewInit,
-  ChangeDetectorRef,
   Component,
   DoCheck,
   ElementRef,
@@ -11,6 +8,7 @@ import {
   KeyValueDiffer,
   KeyValueDiffers,
   OnDestroy,
+  OnInit,
   Output,
   ViewChild,
 } from '@angular/core';
@@ -42,7 +40,7 @@ import { MapService } from 'src/modules/app/modules/home/map.service';
   ],
 })
 export class MapControlVegIndexesComponent
-  implements DoCheck, AfterContentChecked, OnDestroy, AfterViewInit
+  implements DoCheck, OnDestroy, OnInit
 {
   private vegIndexesDataDiffer: KeyValueDiffer<string, IVegSatelliteDate>;
 
@@ -89,7 +87,6 @@ export class MapControlVegIndexesComponent
 
   constructor(
     private differs: KeyValueDiffers,
-    private ref: ChangeDetectorRef,
     public translate: TranslateService,
     private mapServie: MapService
   ) {
@@ -179,11 +176,7 @@ export class MapControlVegIndexesComponent
     }
   }
 
-  ngAfterContentChecked() {
-    this.ref.detectChanges();
-  }
-
-  ngAfterViewInit(): void {
+  ngOnInit(): void {
     this.selectedVegOption = this.vegIndexOptionsList[0];
   }
 
