@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { MapData } from '../../../ui/models/map.model';
 import {
-  Layer,
   tileLayer,
   map,
   LatLng,
@@ -12,7 +11,6 @@ import {
   latLngBounds,
   MapOptions,
 } from 'leaflet';
-import { environment } from 'src/environments/environment';
 import { imageOverlay } from 'leaflet';
 import { ImageOverlay } from 'leaflet';
 
@@ -62,10 +60,6 @@ export class MapService {
     });
     map.addLayer(imageOverlayIncstance);
     return imageOverlayIncstance;
-  }
-
-  removeLayer(map: Map, layer: Layer): Map {
-    return map.removeLayer(layer);
   }
 
   constructor() {}
