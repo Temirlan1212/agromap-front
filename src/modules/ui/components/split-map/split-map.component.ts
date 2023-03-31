@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import {
   AfterViewInit,
+  ChangeDetectorRef,
   Component,
   ElementRef,
   Input,
@@ -35,7 +36,7 @@ export class SplitMapComponent implements OnDestroy, AfterViewInit {
 
   @Input() center: LatLng = latLng(41.84, 75.06);
 
-  constructor(public mapService: MapService) {}
+  constructor(public mapService: MapService, private cd: ChangeDetectorRef) {}
 
   syncMaps() {
     for (const [key1, map1] of Object.entries(this.maps)) {
@@ -74,7 +75,7 @@ export class SplitMapComponent implements OnDestroy, AfterViewInit {
         }
 
         this.syncMaps();
-
+        this.cd.detectChanges();
         this.mapService.maps.next(this.maps);
       });
   }
