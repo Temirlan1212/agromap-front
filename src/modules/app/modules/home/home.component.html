@@ -46,11 +46,7 @@
       </div>
       <ng-container topPanel>
         <app-map-control-veg-indexes
-          *ngIf="
-            layerFeature &&
-            mapData &&
-            currentRouterPathname !== '/home/split-map'
-          "
+          *ngIf="layerFeature && mapData"
           [layer]="layerFeature"
           [mapData]="mapData"
           [vegIndexesData]="vegIndexesData"
