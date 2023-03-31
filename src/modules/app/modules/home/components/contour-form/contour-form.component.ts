@@ -6,7 +6,10 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
-import { IConton, IContonListQuery } from '../../../../../api/models/conton.model';
+import {
+  IConton,
+  IContonListQuery,
+} from '../../../../../api/models/conton.model';
 import { ApiService } from '../../../../../api/api.service';
 import { IDistrict } from '../../../../../api/models/district.model';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
@@ -20,7 +23,7 @@ import { TranslateService } from '@ngx-translate/core';
 @Component({
   selector: 'app-contour-form',
   templateUrl: './contour-form.component.html',
-  styleUrls: ['./contour-form.component.scss']
+  styleUrls: ['./contour-form.component.scss'],
 })
 export class ContourFormComponent implements OnInit, OnDestroy {
   contonList: IConton[] = [];
@@ -41,14 +44,20 @@ export class ContourFormComponent implements OnInit, OnDestroy {
         productivity: v.productivity,
         year: v.year,
         code_soato: v.code_soato,
-        ink: v.ink
+        ink: v.ink,
       });
     }
   }
 
   form: FormGroup = new FormGroup({
-    region: new FormControl<string | number | null>({ value: null, disabled: true }),
-    district: new FormControl<string | number | null>({ value: null, disabled: true }),
+    region: new FormControl<string | number | null>({
+      value: null,
+      disabled: true,
+    }),
+    district: new FormControl<string | number | null>({
+      value: null,
+      disabled: true,
+    }),
     conton: new FormControl<string | number | null>(null, Validators.required),
     type: new FormControl<string | number | null>(null),
     culture: new FormControl<string | number | null>(null),
@@ -60,30 +69,35 @@ export class ContourFormComponent implements OnInit, OnDestroy {
   @Output() onChange = new EventEmitter<any>();
 
   formSubscriptions: Subscription[] = [
-    this.form.get('conton')?.valueChanges.subscribe(res => {
+    this.form.get('conton')?.valueChanges.subscribe((res) => {
       if (res) {
-        const selectedConton = this.contonList.find(c => c.id === res);
-        this.form.patchValue({ district: selectedConton?.district, region: selectedConton?.region });
+        const selectedConton = this.contonList.find((c) => c.id === res);
+        this.form.patchValue({
+          district: selectedConton?.district,
+          region: selectedConton?.region,
+        });
       } else {
         this.form.patchValue({ district: null, region: null });
       }
     }) as Subscription,
-    this.form.get('type')?.valueChanges.subscribe(res => {
-      if (res && res === 1) {
+    this.form.get('type')?.valueChanges.subscribe((res) => {
+      if (res && res === 2) {
         this.form.get('culture')?.disable();
         this.form.get('culture')?.patchValue(null);
       } else {
         this.form.get('culture')?.enable();
       }
     }) as Subscription,
-    this.translateSvc.onLangChange.subscribe(res => this.currentLang = res.lang)
+    this.translateSvc.onLangChange.subscribe(
+      (res) => (this.currentLang = res.lang)
+    ),
   ];
 
   constructor(
     private api: ApiService,
     private messages: MessagesService,
-    private translateSvc: TranslateService) {
-  }
+    private translateSvc: TranslateService
+  ) {}
 
   ngOnInit() {
     this.getRegions();
@@ -102,17 +116,21 @@ export class ContourFormComponent implements OnInit, OnDestroy {
     this.api.form.setError(error, this.form);
   }
 
-
   async getContons() {
     const query: IContonListQuery = {
-      polygon: true
+      polygon: true,
     };
     try {
       const res = await this.api.dictionary.getContons(query);
       this.contonList = res;
       if (this.form.get('conton')?.value != null) {
-        const selectedConton = this.contonList.find(c => c.id === this.form.get('conton')?.value);
-        this.form.patchValue({ district: selectedConton?.district, region: selectedConton?.region });
+        const selectedConton = this.contonList.find(
+          (c) => c.id === this.form.get('conton')?.value
+        );
+        this.form.patchValue({
+          district: selectedConton?.district,
+          region: selectedConton?.region,
+        });
       }
     } catch (e: any) {
       this.messages.error(e.message);
@@ -130,7 +148,7 @@ export class ContourFormComponent implements OnInit, OnDestroy {
 
   async getRegions() {
     try {
-      const res = await this.api.dictionary.getRegions() as IRegion[];
+      const res = (await this.api.dictionary.getRegions()) as IRegion[];
       this.regionList = res;
     } catch (e: any) {
       this.messages.error(e.message);
@@ -156,6 +174,6 @@ export class ContourFormComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.formSubscriptions.forEach(s => s.unsubscribe());
+    this.formSubscriptions.forEach((s) => s.unsubscribe());
   }
 }
