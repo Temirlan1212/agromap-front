@@ -30,7 +30,6 @@ import { MapControlSplitMapComponent } from 'src/modules/ui/components/map-contr
 import { SplitMapSidebarComponent } from './components/split-map-sidebar/split-map-sidebar.component';
 import { SplitMapComponent } from 'src/modules/ui/components/split-map/split-map.component';
 import { LoadingComponent } from 'src/modules/ui/components/loading/loading.component';
-import { MapControlAiComponent } from 'src/modules/ui/components/map-control-ai/map-control-ai.component';
 
 @NgModule({
   declarations: [
@@ -63,7 +62,6 @@ import { MapControlAiComponent } from 'src/modules/ui/components/map-control-ai/
     MapControlLocateComponent,
     MapControlZoomComponent,
     MapControlLayersSwitchComponent,
-    MapControlAiComponent,
     QuestionDialogComponent,
     MapControlSplitMapComponent,
     SplitMapComponent,

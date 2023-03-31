@@ -31,17 +31,14 @@
           <app-map-control-layers-switch
             *ngIf="mapData"
             [map]="mapData.map"
+            [baseLayers]="baseLayers"
+            [wmsLayers]="wmsLayers"
+            (wmsLayerChanged)="handleWmsLayerChanged($event)"
           ></app-map-control-layers-switch>
           <app-map-control-locate
             *ngIf="mapData && !layerFeature"
             [map]="mapData.map"
           ></app-map-control-locate>
-          <app-map-control-ai
-            *ngIf="mapData"
-            [map]="mapData.map"
-            [wms]="isWmsAiActive ? wmsAi : null"
-            (clicked)="handleMapControlAi($event)"
-          ></app-map-control-ai>
         </ng-container>
       </div>
       <ng-container topPanel>

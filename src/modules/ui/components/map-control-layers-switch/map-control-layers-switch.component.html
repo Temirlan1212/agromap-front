@@ -1,42 +1,35 @@
-<div class="relative">
-  <div
-    class="tab"
-    [class.active]="isCollapsed"
-    (click)="handleCollapseClick($event)"
-  >
-    <app-svg-icon name="layer" class="icon" size="16px"></app-svg-icon>
-  </div>
-  <ng-container [ngTemplateOutlet]="dialog"></ng-container>
+<div
+  class="tab"
+  [class.active]="isCollapsed"
+  (click)="handleCollapseClick($event)"
+>
+  <app-svg-icon name="layer" class="icon" size="16px"></app-svg-icon>
 </div>
 
-<ng-template #dialog>
-  <div class="dialog" [class.collapsed]="isCollapsed">
-    <h4>{{ "MapSettings" | translate }}</h4>
-    <div class="over-layers-group">
-      <div
-        *ngFor="let layer of wmsLayersArr"
-        class="card"
-        (click)="handleSelectWmsLayerClick(layer)"
-        [class.active]="layer.active"
-      >
-        <div class="radio"></div>
-        <label>{{ layer.name | translate }}</label>
-      </div>
-    </div>
-
-    <div class="divider"></div>
-
-    <h4>{{ "MapType" | translate }}</h4>
-    <div class="base-layers-group">
-      <div
-        *ngFor="let layer of baseLayersArr"
-        class="card"
-        (click)="handleSelectBaseLayerClick(layer)"
-        [class.active]="layer.layer === activeBaseLayer"
-      >
-        <div class="radio"></div>
-        <label>{{ layer.name | translate }}</label>
-      </div>
-    </div>
+<div class="dialog" [class.collapsed]="isCollapsed">
+  <h5>{{ "MapSettings" | translate }}</h5>
+  <div class="over-layers-group">
+    <app-input-radio
+      class="vertical"
+      name="wmsLayers"
+      nameField="title"
+      valueField="name"
+      [options]="wmsLayers"
+      (changed)="handleWmsLayerChange($event)"
+    ></app-input-radio>
   </div>
-</ng-template>
+
+  <hr />
+
+  <h5>{{ "MapType" | translate }}</h5>
+  <div class="base-layers-group">
+    <app-input-radio
+      class="vertical"
+      name="baseLayers"
+      nameField="title"
+      valueField="name"
+      [options]="baseLayers"
+      (changed)="handleBaseLayerChange($event)"
+    ></app-input-radio>
+  </div>
+</div>
