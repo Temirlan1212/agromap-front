@@ -1,5 +1,6 @@
 import {
   AfterContentChecked,
+  AfterViewInit,
   ChangeDetectorRef,
   Component,
   DoCheck,
@@ -41,10 +42,9 @@ import { MapService } from 'src/modules/app/modules/home/map.service';
   ],
 })
 export class MapControlVegIndexesComponent
-  implements DoCheck, AfterContentChecked, OnDestroy
+  implements DoCheck, AfterContentChecked, OnDestroy, AfterViewInit
 {
   private vegIndexesDataDiffer: KeyValueDiffer<string, IVegSatelliteDate>;
-  private vegIndexOptionsListDiffer: KeyValueDiffer<string, IVegIndexOption[]>;
 
   @ViewChild('vegIndexesDialog')
   vegIndexesDialogEl!: ElementRef<HTMLInputElement>;
@@ -94,9 +94,6 @@ export class MapControlVegIndexesComponent
     private mapServie: MapService
   ) {
     this.vegIndexesDataDiffer = this.differs.find(this.vegIndexesData).create();
-    this.vegIndexOptionsListDiffer = this.differs
-      .find(this.vegIndexOptionsList)
-      .create();
   }
 
   @HostListener('document:click', ['$event.target'])
@@ -176,19 +173,18 @@ export class MapControlVegIndexesComponent
     const vegIndexesDataChanges = this.vegIndexesDataDiffer.diff(
       this.vegIndexesData as any
     );
-    const vegIndexOptionsListChanges = this.vegIndexOptionsListDiffer.diff(
-      this.vegIndexOptionsList as any
-    );
+
     if (vegIndexesDataChanges) {
       this.activeDates = this.vegIndexesData.map((index) => index.date);
-    }
-    if (vegIndexOptionsListChanges) {
-      this.selectedVegOption = this.vegIndexOptionsList[0];
     }
   }
 
   ngAfterContentChecked() {
     this.ref.detectChanges();
+  }
+
+  ngAfterViewInit(): void {
+    this.selectedVegOption = this.vegIndexOptionsList[0];
   }
 
   ngOnDestroy(): void {

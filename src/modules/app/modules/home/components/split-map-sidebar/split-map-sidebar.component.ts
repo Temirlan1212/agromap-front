@@ -67,7 +67,9 @@ export class SplitMapSidebarComponent implements OnDestroy, OnInit {
     value: Record<string, any> | null
   ): Promise<void> {
     for (const [mapKey] of Object.entries(this.maps)) {
-      this.maps[mapKey]?.removeLayer(this.imageOverlayIncstance[mapKey]);
+      if (this.imageOverlayIncstance[mapKey]) {
+        this.maps[mapKey]?.removeLayer(this.imageOverlayIncstance[mapKey]);
+      }
     }
 
     if (value) {
@@ -87,11 +89,15 @@ export class SplitMapSidebarComponent implements OnDestroy, OnInit {
     mapKey: string
   ): void {
     if (!value) {
-      this.maps[mapKey]?.removeLayer(this.imageOverlayIncstance[mapKey]);
+      if (this.imageOverlayIncstance[mapKey]) {
+        this.maps[mapKey]?.removeLayer(this.imageOverlayIncstance[mapKey]);
+      }
       return;
     }
 
-    this.maps[mapKey]?.removeLayer(this.imageOverlayIncstance[mapKey]);
+    if (this.imageOverlayIncstance[mapKey]) {
+      this.maps[mapKey]?.removeLayer(this.imageOverlayIncstance[mapKey]);
+    }
     this.imageOverlay[mapKey] = `${environment.apiUrl}${value['image']}`;
     if (this.maps[mapKey]) {
       this.imageOverlayIncstance[mapKey] = this.mapServie.setImageOverlay(
