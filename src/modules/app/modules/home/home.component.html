@@ -17,36 +17,44 @@
   >
     <app-map-controls controls>
       <div rightPanel>
-        <app-map-control-split-map  
-          [routerLink]="currentRouterPathname === '/home/split-map' ? '/home' : '/home/split-map'"
+        <app-map-control-split-map
+          [routerLink]="
+            currentRouterPathname === '/home/split-map'
+              ? '/home'
+              : '/home/split-map'
+          "
           *ngIf="layerFeature"
           [isActive]="currentRouterPathname === '/home/split-map'"
         >
         </app-map-control-split-map>
-      <ng-container rightPanel>
-        <app-map-control-zoom
-          *ngIf="mapData"
-          [map]="mapData.map"
-        ></app-map-control-zoom>
-        <app-map-control-layers-switch
-          *ngIf="mapData"
-          [map]="mapData.map"
-        ></app-map-control-layers-switch>
-        <app-map-control-locate
-          *ngIf="mapData && !layerFeature"
-          [map]="mapData.map"
-        ></app-map-control-locate>
-        <app-map-control-ai
-          *ngIf="mapData"
-          [map]="mapData.map"
-          [wms]="isWmsAiActive ? wmsAi : null"
-          (clicked)="handleMapControlAi($event)"
-        ></app-map-control-ai>
-      </ng-container>
+        <ng-container rightPanel>
+          <app-map-control-zoom
+            *ngIf="mapData"
+            [map]="mapData.map"
+          ></app-map-control-zoom>
+          <app-map-control-layers-switch
+            *ngIf="mapData"
+            [map]="mapData.map"
+          ></app-map-control-layers-switch>
+          <app-map-control-locate
+            *ngIf="mapData && !layerFeature"
+            [map]="mapData.map"
+          ></app-map-control-locate>
+          <app-map-control-ai
+            *ngIf="mapData"
+            [map]="mapData.map"
+            [wms]="isWmsAiActive ? wmsAi : null"
+            (clicked)="handleMapControlAi($event)"
+          ></app-map-control-ai>
+        </ng-container>
       </div>
       <ng-container topPanel>
         <app-map-control-veg-indexes
-          *ngIf="layerFeature && mapData"
+          *ngIf="
+            layerFeature &&
+            mapData &&
+            currentRouterPathname !== '/home/split-map'
+          "
           [layer]="layerFeature"
           [mapData]="mapData"
           [vegIndexesData]="vegIndexesData"
@@ -67,5 +75,7 @@
     </ng-template>
   </app-map>
 
-  <app-split-map *ngIf="currentRouterPathname === '/home/split-map'"></app-split-map>
+  <app-split-map
+    *ngIf="currentRouterPathname === '/home/split-map'"
+  ></app-split-map>
 </div>
