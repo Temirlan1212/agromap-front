@@ -151,7 +151,7 @@ export class MapControlTabSliderComponent
     if (changes['vegIndexesData'] && this.vegIndexesData.length !== 0) {
       setTimeout(() => {
         this.checkIsTimelineListFull();
-      }, 0)
+      }, 0);
     }
   }
 

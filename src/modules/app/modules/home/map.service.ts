@@ -1,8 +1,21 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { MapData } from '../../../ui/models/map.model';
-import { tileLayer, map, LatLng, LatLngBounds, Map, latLng, latLngBounds } from 'leaflet';
-type TInitMap = (mapId: string, options: {center: LatLng}) => Map;
+import {
+  Layer,
+  tileLayer,
+  map,
+  LatLng,
+  LatLngBounds,
+  Map,
+  latLng,
+  latLngBounds,
+  MapOptions,
+} from 'leaflet';
+import { environment } from 'src/environments/environment';
+import { imageOverlay } from 'leaflet';
+import { ImageOverlay } from 'leaflet';
+
 @Injectable()
 export class MapService {
   map = new BehaviorSubject<MapData | null>(null);
@@ -16,23 +29,44 @@ export class MapService {
     latLng(39.0, 81.0)
   );
 
-  initMap = (mapId: string, options?: { center?: LatLng, maxBounds?: LatLngBounds, maxZoom?: number, minZoom?: number, zoom?: number}) => {
+  initMap = (mapId: string, options?: MapOptions): Map => {
     return map(mapId, {
-      attributionControl: false,
-      center: options?.center ?? this.center,
-      maxBounds: options?.maxBounds,
-      maxZoom: options?.maxZoom ?? 18,
-      minZoom: options?.zoom ?? 6,
-      zoom: options?.minZoom ?? 6,
-      layers: [
-        tileLayer('http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}', {
-          subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
-        }),
-      ],
-      zoomControl: false,
+      ...Object.assign(
+        {
+          center: this.center,
+          maxBounds: this.maxBounds,
+          maxZoom: 18,
+          minZoom: 6,
+          zoom: 6,
+          attributionControl: false,
+          zoomControl: false,
+          layers: [
+            tileLayer('http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}', {
+              subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+            }),
+          ],
+        },
+        options
+      ),
     });
+  };
+
+  setImageOverlay(
+    map: Map,
+    imageUrl: string,
+    bounds: L.LatLngBounds,
+    options?: L.ImageOverlayOptions
+  ): ImageOverlay {
+    const imageOverlayIncstance = imageOverlay(imageUrl, bounds, {
+      ...Object.assign({ opacity: 1, interactive: true }, options),
+    });
+    map.addLayer(imageOverlayIncstance);
+    return imageOverlayIncstance;
   }
 
-  constructor() {
+  removeLayer(map: Map, layer: Layer): Map {
+    return map.removeLayer(layer);
   }
+
+  constructor() {}
 }

@@ -9,6 +9,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import * as L from 'leaflet';
+import { Layer } from 'leaflet';
 import { latLng, LatLng, map, Map, tileLayer } from 'leaflet';
 import 'leaflet.sync';
 import { Subscription } from 'rxjs';
@@ -56,27 +57,26 @@ export class SplitMapComponent implements OnDestroy, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.splitMapQuantitySubscription =
-    this.mapService.splitMapQuantity.subscribe((val) => {
-      for (let i = 0; i < 4; i++) {
-        let key = `map-${i}`;
-        if (this.maps[key]) {
-          this.maps[key]?.remove();
+      this.mapService.splitMapQuantity.subscribe((val) => {
+        for (let i = 0; i < 4; i++) {
+          let key = `map-${i}`;
+          if (this.maps[key]) {
+            this.maps[key]?.remove();
+          }
+
+          if (val > i) {
+            this.maps[key] = this.mapService.initMap(key);
+          } else {
+            this.maps[key] = null;
+          }
+
+          setTimeout(() => this.maps[key]?.invalidateSize());
         }
 
-        if(val > i) {
-          this.maps[key] = this.mapService.initMap(key);
-        } else {
-          this.maps[key] = null;
-        }
+        this.syncMaps();
 
-        setTimeout(() => this.maps[key]?.invalidateSize());
-      }
-
-      this.syncMaps();
-    
-      this.mapService.maps.next(this.maps);
-    });
-
+        this.mapService.maps.next(this.maps);
+      });
   }
 
   ngOnDestroy(): void {

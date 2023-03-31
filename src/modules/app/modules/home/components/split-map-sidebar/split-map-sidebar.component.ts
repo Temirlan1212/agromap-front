@@ -67,7 +67,7 @@ export class SplitMapSidebarComponent implements OnDestroy, OnInit {
     value: Record<string, any> | null
   ): Promise<void> {
     for (const [mapKey] of Object.entries(this.maps)) {
-      this.removeImageOverlay(mapKey);
+      this.maps[mapKey]?.removeLayer(this.imageOverlayIncstance[mapKey]);
     }
 
     if (value) {
@@ -86,9 +86,20 @@ export class SplitMapSidebarComponent implements OnDestroy, OnInit {
     value: Record<string, any> | null,
     mapKey: string
   ): void {
-    if (!value) return this.removeImageOverlay(mapKey);
-    this.removeImageOverlay(mapKey);
-    this.setImageOverlay(mapKey, value['image'], this.bounds);
+    if (!value) {
+      this.maps[mapKey]?.removeLayer(this.imageOverlayIncstance[mapKey]);
+      return;
+    }
+
+    this.maps[mapKey]?.removeLayer(this.imageOverlayIncstance[mapKey]);
+    this.imageOverlay[mapKey] = `${environment.apiUrl}${value['image']}`;
+    if (this.maps[mapKey]) {
+      this.imageOverlayIncstance[mapKey] = this.mapServie.setImageOverlay(
+        this.maps[mapKey] as L.Map,
+        this.imageOverlay[mapKey],
+        this.bounds
+      );
+    }
   }
 
   private async getVegSatelliteDates(
@@ -116,29 +127,6 @@ export class SplitMapSidebarComponent implements OnDestroy, OnInit {
     }
   }
 
-  private setImageOverlay(
-    mapKey: string,
-    imageUrl: string,
-    bounds: L.LatLngBounds
-  ) {
-    this.imageOverlay[mapKey] = `${environment.apiUrl}${imageUrl}`;
-    this.imageOverlayIncstance[mapKey] = L.imageOverlay(
-      this.imageOverlay[mapKey],
-      bounds,
-      {
-        opacity: 1,
-        interactive: true,
-      }
-    );
-    this.maps[mapKey]?.addLayer(this.imageOverlayIncstance[mapKey]);
-  }
-
-  private removeImageOverlay(mapKey: string) {
-    if (this.imageOverlayIncstance[mapKey] && this.maps[mapKey]) {
-      this.maps[mapKey]?.removeLayer(this.imageOverlayIncstance[mapKey]);
-    }
-  }
-
   private buildSatelliteDatesOptions(data: IVegSatelliteDate[], lang: string) {
     this.satelliteDateOptions = data.map((indexData) => {
       let obj = {
@@ -155,15 +143,16 @@ export class SplitMapSidebarComponent implements OnDestroy, OnInit {
     this.layerFeature = this.store.getItem<Feature>('selectedLayerFeature');
     this.contourId = this.layerFeature.properties?.['id'];
     this.bounds = L.geoJSON(this.layerFeature).getBounds();
-    
+
     await this.getVegIndexList();
     await this.getVegSatelliteDates(this.contourId, 1);
     this.buildSatelliteDatesOptions(this.satelliteDateData, this.currLang);
 
     this.mapsSubscription = this.mapServie.maps.subscribe((maps) => {
       this.maps = maps;
-      this.maps["map-0"] && this.maps["map-0"].fitBounds(this.bounds, {maxZoom: 11});
-      
+      this.maps['map-0'] &&
+        this.maps['map-0'].fitBounds(this.bounds, { maxZoom: 11 });
+
       for (const [key, map] of Object.entries(this.maps)) {
         if (map) L.geoJSON(this.layerFeature).addTo(map);
       }

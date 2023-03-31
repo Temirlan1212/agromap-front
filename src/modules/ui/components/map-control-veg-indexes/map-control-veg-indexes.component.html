@@ -5,18 +5,22 @@
       [class.collapsed]="isCollapsedIndexDialog"
       (click)="handleCollapseClick('index')"
     >
-      <span>{{ selectedVegOption["name_" + translate.currentLang] }}</span>
+      <span *ngIf="selectedVegOption">{{
+        selectedVegOption["name_" + translate.currentLang]
+      }}</span>
       <app-svg-icon name="arrow-down" class="icon" size="12"></app-svg-icon>
     </div>
 
     <ul class="dialog" [class.collapsed]="isCollapsedIndexDialog">
-      <li
-        [class.active]="index.id == selectedVegOption.id"
-        *ngFor="let index of vegIndexOptionsList"
-        (click)="handleSelectVegIndexOptionClick(index)"
-      >
-        {{ index["name_" + translate.currentLang] }}
-      </li>
+      <ng-container *ngFor="let index of vegIndexOptionsList">
+        <li
+          [class.active]="index.id == selectedVegOption.id"
+          *ngIf="selectedVegOption"
+          (click)="handleSelectVegIndexOptionClick(index)"
+        >
+          {{ index["name_" + translate.currentLang] }}
+        </li>
+      </ng-container>
     </ul>
   </div>
 
