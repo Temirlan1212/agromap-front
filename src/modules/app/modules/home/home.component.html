@@ -18,11 +18,7 @@
     <app-map-controls controls>
       <div rightPanel>
         <app-map-control-split-map
-          [routerLink]="
-            currentRouterPathname === '/home/split-map'
-              ? '/home'
-              : '/home/split-map'
-          "
+          routerLink="/home/split-map"
           *ngIf="layerFeature"
           [isActive]="currentRouterPathname === '/home/split-map'"
         >
