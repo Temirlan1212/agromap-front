@@ -1,5 +1,6 @@
 import {
   AfterViewInit,
+  ChangeDetectorRef,
   Component,
   ElementRef,
   EventEmitter,
@@ -74,7 +75,8 @@ export class MapControlTabSliderComponent
 
   constructor(
     public translate: TranslateService,
-    private formatDate: FormatDatePipe
+    private formatDate: FormatDatePipe,
+    private cd: ChangeDetectorRef
   ) {
     this.translateSubscription = translate.onLangChange.subscribe(
       () => (this.currLang = translate.currentLang)
@@ -149,9 +151,8 @@ export class MapControlTabSliderComponent
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['vegIndexesData'] && this.vegIndexesData.length !== 0) {
-      setTimeout(() => {
-        this.checkIsTimelineListFull();
-      }, 0);
+      this.cd.detectChanges();
+      this.checkIsTimelineListFull();
     }
   }
 

@@ -70,13 +70,15 @@ export class SplitMapComponent implements OnDestroy, AfterViewInit {
           } else {
             this.maps[key] = null;
           }
-
-          setTimeout(() => this.maps[key]?.invalidateSize());
         }
 
         this.syncMaps();
-        this.cd.detectChanges();
         this.mapService.maps.next(this.maps);
+        this.cd.detectChanges();
+
+        for (let i = 0; i < 4; i++) {
+          this.maps[`map-${i}`]?.invalidateSize();
+        }
       });
   }
 
