@@ -1,6 +1,7 @@
 import { geoJSON, Map, TileLayer, tileLayer } from 'leaflet';
 import { GeoJSON } from 'geojson';
 import {
+  AfterViewInit,
   Component,
   ElementRef,
   OnDestroy,
@@ -28,13 +29,14 @@ import { Feature } from 'geojson';
 import { MapComponent } from '../../../ui/components/map/map.component';
 import { Subscription } from 'rxjs';
 import { ActualVegIndexes } from 'src/modules/api/models/actual-veg-indexes';
+import { IRegionPolygon } from 'src/modules/api/models/map.model';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
 })
-export class HomeComponent implements OnInit, OnDestroy {
+export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('featurePopup') featurePopup!: ElementRef<HTMLElement>;
   @ViewChild('map') mapComponent!: MapComponent;
 
@@ -62,7 +64,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   selectedLayer: any;
   contourData: IChartData[] = [];
   currentLang: string = this.translateSvc.currentLang;
-  currentRouterPathname: string = ""
+  currentRouterPathname: string = '';
   isWmsAiActive: boolean = false;
   culture: string | null = null;
 
@@ -71,9 +73,17 @@ export class HomeComponent implements OnInit, OnDestroy {
     private mapService: MapService,
     private messages: MessagesService,
     private store: StoreService,
-    private translateSvc: TranslateService, private router: Router) {
-    this.router.events.subscribe((event: Event) => event instanceof NavigationEnd ? this.currentRouterPathname = router.url : "");
-    this.translateSvc.onLangChange.subscribe(res => this.currentLang = res.lang);
+    private translateSvc: TranslateService,
+    private router: Router
+  ) {
+    this.router.events.subscribe((event: Event) =>
+      event instanceof NavigationEnd
+        ? (this.currentRouterPathname = router.url)
+        : ''
+    );
+    this.translateSvc.onLangChange.subscribe(
+      (res) => (this.currentLang = res.lang)
+    );
   }
 
   subscriptions: Subscription[] = [
@@ -116,7 +126,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         fillOpacity: 1,
         fillColor: '#f6ab39',
       });
-    
+
     this.getVegSatelliteDates(cid);
     this.store.setItem<Feature>('selectedLayerFeature', layerFeature.feature);
   }
@@ -182,6 +192,23 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
   }
 
+  async getRegionsPolygon() {
+    try {
+      let polygons: IRegionPolygon[];
+      polygons = await this.api.map.getRegionsPolygon();
+      polygons.map((polygon) => {
+        if (this.mapData?.map != null) {
+          this.mapData.geoJson.options.snapIgnore = true;
+          this.mapData.geoJson.options.pmIgnore = true;
+          this.mapData.geoJson.options.style = { fillOpacity: 0 };
+          this.mapData.geoJson.addData(polygon.polygon);
+        }
+      });
+    } catch (e: any) {
+      console.log(e);
+    }
+  }
+
   async getVegSatelliteDates(
     contoruId: number,
     vegIndexId: number = 1
@@ -216,8 +243,8 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   handleVegIndexOptionClick(vegIndexOption: IVegIndexOption) {
     this.getVegSatelliteDates(
-       this.layerFeature?.feature?.properties?.['contour_id'] ??
-      this.layerFeature?.feature?.properties?.['id'],
+      this.layerFeature?.feature?.properties?.['contour_id'] ??
+        this.layerFeature?.feature?.properties?.['id'],
       vegIndexOption.id
     );
   }
@@ -234,6 +261,10 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.getVegIndexList();
+  }
+
+  ngAfterViewInit(): void {
+    this.getRegionsPolygon();
   }
 
   ngOnDestroy() {
