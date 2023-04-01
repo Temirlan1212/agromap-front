@@ -32,6 +32,7 @@ export class ContourFormComponent implements OnInit, OnDestroy {
   landTypeList: ILandType[] = [];
   cultureList: ICulture[] = [];
   currentLang: string = this.translateSvc.currentLang;
+  loading: boolean = false;
 
   @Input() set value(v: any | null) {
     if (v == null) {
@@ -100,11 +101,13 @@ export class ContourFormComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
+    this.loading = true;
     this.getRegions();
     this.getDistricts();
     this.getContons();
     this.getCultures();
     this.getLandTypes();
+    this.loading = false;
   }
 
   public getState(): { value: any; valid: boolean; touched: boolean } {
