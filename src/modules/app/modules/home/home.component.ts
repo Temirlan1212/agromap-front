@@ -221,6 +221,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   handleMapControlAi(isActive: boolean): void {
     this.isWmsAiActive = isActive;
+    this.mapService.isWmsAiActive.next(this.isWmsAiActive);
     if (isActive) {
       this.mapData?.map.removeLayer(this.wms);
     } else {
