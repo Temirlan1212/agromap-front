@@ -70,15 +70,29 @@
     <span culture *ngIf="culture; else noCulture">
       {{'Culture' | translate}}: {{culture}}
     </span>
+    <button actions type="button" class="transparent" (click)="handleEditClick(map)">
+      <app-svg-icon name="edit" size="18"></app-svg-icon>
+    </button>
+    <button actions type="button" class="transparent" (click)="deleteDialog.show()">
+      <app-svg-icon name="delete" size="18"></app-svg-icon>
+    </button>
     <ng-template #noCulture>
       <span>
         {{'Culture' | translate}}: {{'Unknown culture' | translate}}
       </span>
     </ng-template>
-   
+
   </app-map>
 
   <app-split-map
     *ngIf="currentRouterPathname === '/home/split-map'"
   ></app-split-map>
 </div>
+
+<app-question-dialog
+  #deleteDialog
+  [title]="'Delete contour' | translate"
+  [isDanger]="true"
+  (submitted)="handleDeleteSubmitted(deleteDialog, map)">
+  {{'Contour will be deleted, continue?' | translate}}
+</app-question-dialog>

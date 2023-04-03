@@ -8,9 +8,12 @@
       <span [textContent]=""></span>
       <ng-content select="[culture]"></ng-content>
     </h4>
-    <button type="button" class="transparent" (click)="handleFeatureClose()">
-      <app-svg-icon name="clear" size="14"></app-svg-icon>
-    </button>
+    <div class="actions-block">
+      <ng-content select="[actions]"></ng-content>
+      <button type="button" class="transparent" (click)="handleFeatureClose()">
+        <app-svg-icon name="clear" size="14"></app-svg-icon>
+      </button>
+    </div>
   </div>
   <div class="body">
     <ng-content select="[chart]"></ng-content>
