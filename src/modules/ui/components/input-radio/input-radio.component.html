@@ -8,9 +8,5 @@
     [checked]="value === option[valueField]"
     (click)="handleClick(option[valueField])"
   />
-  <label
-    [for]="option[nameField]"
-    [textContent]="option[nameField]"
-    (click)="handleClick(option[valueField])"
-  ></label>
+  <label [for]="option[nameField]" [textContent]="option[nameField]"></label>
 </div>
