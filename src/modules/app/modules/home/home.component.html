@@ -10,6 +10,9 @@
 <div class="map-container">
   <app-map
     #map
+    [featureTitle]="
+      ('Culture' | translate) + ':' | unit : (culture | checkExist)
+    "
     (mapData)="handleMapData($event)"
     (mapMove)="handleMapMove($event)"
     (featureClick)="handleFeatureClick($event)"
@@ -31,17 +34,14 @@
           <app-map-control-layers-switch
             *ngIf="mapData"
             [map]="mapData.map"
+            [baseLayers]="baseLayers"
+            [wmsLayers]="wmsLayers"
+            (wmsLayerChanged)="handleWmsLayerChanged($event)"
           ></app-map-control-layers-switch>
           <app-map-control-locate
             *ngIf="mapData && !layerFeature"
             [map]="mapData.map"
           ></app-map-control-locate>
-          <app-map-control-ai
-            *ngIf="mapData"
-            [map]="mapData.map"
-            [wms]="isWmsAiActive ? wmsAi : null"
-            (clicked)="handleMapControlAi($event)"
-          ></app-map-control-ai>
         </ng-container>
       </div>
       <ng-container topPanel>
@@ -58,30 +58,20 @@
     </app-map-controls>
 
     <app-spline-area-chart
+      featureBody
       [chartData]="contourData"
       *ngIf="layerFeature && contourData.length > 0; else noContourData"
-      chart
     >
     </app-spline-area-chart>
     <ng-template #noContourData>
-      <h3 class="no-data-text">{{ "NoData" | translate }}</h3>
+      <h3 class="no-data-text">{{ "No data" | translate }}</h3>
     </ng-template>
-
-    <span culture *ngIf="culture; else noCulture">
-      {{'Culture' | translate}}: {{culture}}
-    </span>
     <button actions type="button" class="transparent" (click)="handleEditClick(map)">
       <app-svg-icon name="edit" size="18"></app-svg-icon>
     </button>
     <button actions type="button" class="transparent" (click)="deleteDialog.show()">
       <app-svg-icon name="delete" size="18"></app-svg-icon>
     </button>
-    <ng-template #noCulture>
-      <span>
-        {{'Culture' | translate}}: {{'Unknown culture' | translate}}
-      </span>
-    </ng-template>
-
   </app-map>
 
   <app-split-map

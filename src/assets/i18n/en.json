@@ -37,7 +37,7 @@
   "Google Streets": "Street map",
   "Google Terrain": "Terrain map",
   "Open Street Map": "Open street map",
-  "NoData": "No data",
+  "No data": "No data",
   "Indicators filter": "Indicators filter",
   "Filter": "Filter",
   "Select a region": "Select a region",
@@ -83,7 +83,11 @@
   "Select the map split view": "Select the map split view",
   "Edit": "Edit",
   "Delete": "Delete",
-  "Culture": "Culture",
+  "Base": "Base",
+  "AI": "AI",
+  "Artificial intelligence": "Artificial intelligence",
+  "Layer": "Layer",
+  "Unknown": "Unknown",
   "Unknown culture": "Unknown culture",
   "Polygon created successfully": "Polygon created successfully"
 }

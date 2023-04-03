@@ -1,5 +1,5 @@
 import { Feature } from 'geojson';
-import { Map, GeoJSON, Layer, LatLngBounds } from 'leaflet';
+import { Map, GeoJSON, Layer, LatLngBounds, TileLayer } from 'leaflet';
 
 export interface MapData {
   map: Map;
@@ -14,4 +14,10 @@ export interface MapLayerFeature {
 export interface MapMove {
   zoom: number;
   bounds: LatLngBounds;
+}
+
+export interface ITileLayer {
+  title: string;
+  name: string;
+  layer: TileLayer;
 }

@@ -5,8 +5,7 @@
 <div class="feature-content">
   <div class="header">
     <h4>
-      <span [textContent]=""></span>
-      <ng-content select="[culture]"></ng-content>
+      <span [textContent]="featureTitle"></span>
     </h4>
     <div class="actions-block">
       <ng-content select="[actions]"></ng-content>
@@ -16,6 +15,6 @@
     </div>
   </div>
   <div class="body">
-    <ng-content select="[chart]"></ng-content>
+    <ng-content select="[featureBody]"></ng-content>
   </div>
 </div>
