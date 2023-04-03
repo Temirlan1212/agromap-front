@@ -78,8 +78,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   wmsLayers: ITileLayer[] = [
     {
       title: `
-        ${this.translate.transform('Base')}
-        ${this.translate.transform('Layer').toLowerCase()}
+        ${ this.translate.transform('Base') }
+        ${ this.translate.transform('Layer').toLowerCase() }
       `,
       name: 'agromap_store',
       layer: tileLayer.wms('https://geoserver.24mycrm.com/agromap/wms', {
