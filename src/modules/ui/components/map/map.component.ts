@@ -44,6 +44,7 @@ export class MapComponent implements OnInit, OnDestroy {
     latLng(44.0, 68.0),
     latLng(39.0, 81.0)
   );
+  @Input() featureTitle: string = '';
   subscriptions: Subscription[] = [];
   @Output() mapData = new EventEmitter<MapData>();
   @Output() mapMove = new EventEmitter<MapMove>();

@@ -37,7 +37,7 @@
   "Google Streets": "Карта улиц",
   "Google Terrain": "Карта местности",
   "Open Street Map": "Открытая карта улиц",
-  "NoData": "Данных нет",
+  "No data": "Данных нет",
   "Indicators filter": "Фильтрация индикаторов",
   "Filter": "Фильтр",
   "Select a region": "Выберите регион",
@@ -83,6 +83,9 @@
   "Select the map split view": "Выберите вид разделение карты",
   "Edit": "Редактировать",
   "Delete": "Удалить",
-  "Culture": "Культура",
-  "Unknown culture": "Неизвестная культура"
+  "Base": "Основной",
+  "AI": "ИИ",
+  "Artificial intelligence": "Искусственный интеллект",
+  "Layer": "Слой",
+  "Unknown": "Неизвестный"
 }
