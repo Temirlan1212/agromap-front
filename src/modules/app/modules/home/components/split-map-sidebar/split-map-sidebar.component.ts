@@ -45,9 +45,11 @@ export class SplitMapSidebarComponent implements OnDestroy, OnInit {
   splitMapQuantity: number = this.mapServie.splitMapQuantity.value;
 
   currLang: string = this.translate.currentLang;
+  isWmsAiActive: boolean = false;
 
   mapsSubscription!: Subscription;
   translateSubscription!: Subscription;
+  isWmsAiActiveSubscription!: Subscription;
 
   constructor(
     private mapServie: MapService,
@@ -108,22 +110,29 @@ export class SplitMapSidebarComponent implements OnDestroy, OnInit {
     }
   }
 
-  private async getVegSatelliteDates(
+  async getVegSatelliteDates(
     contoruId: number,
-    vegIndexId: number
+    vegIndexId: number = 1
   ): Promise<void> {
     this.loadingSatelliteDates = true;
     try {
-      this.satelliteDateData = (await this.api.vegIndexes.getVegSatelliteDates({
+      const query = {
         contourId: contoruId,
         vegIndexId: vegIndexId,
-      })) as IVegSatelliteDate[];
+      };
+      let res: IVegSatelliteDate[];
+      if (this.isWmsAiActive) {
+        res = await this.api.vegIndexes.getVegSatelliteDatesAi(query);
+      } else {
+        res = await this.api.vegIndexes.getVegSatelliteDates(query);
+      }
+      this.satelliteDateData = res;
     } catch (e: any) {
       console.log(e);
     }
     this.loadingSatelliteDates = false;
   }
-
+  
   private async getVegIndexList() {
     try {
       this.vegIndexesOptions =
@@ -170,10 +179,13 @@ export class SplitMapSidebarComponent implements OnDestroy, OnInit {
         this.buildSatelliteDatesOptions(this.satelliteDateData, this.currLang);
       }
     );
+
+    this.isWmsAiActiveSubscription = this.mapServie.isWmsAiActive.subscribe((isActive: boolean) => this.isWmsAiActive = isActive)
   }
 
   ngOnDestroy(): void {
     this.mapsSubscription.unsubscribe();
     this.translateSubscription.unsubscribe();
+    this.isWmsAiActiveSubscription.unsubscribe();
   }
 }

@@ -30,6 +30,8 @@ import { MapControlSplitMapComponent } from 'src/modules/ui/components/map-contr
 import { SplitMapSidebarComponent } from './components/split-map-sidebar/split-map-sidebar.component';
 import { SplitMapComponent } from 'src/modules/ui/components/split-map/split-map.component';
 import { LoadingComponent } from 'src/modules/ui/components/loading/loading.component';
+import { UnitPipe } from 'src/modules/ui/pipes/unit.pipe';
+import { CheckExistPipe } from 'src/modules/ui/pipes/check-exist.pipe';
 
 @NgModule({
   declarations: [
@@ -66,6 +68,8 @@ import { LoadingComponent } from 'src/modules/ui/components/loading/loading.comp
     MapControlSplitMapComponent,
     SplitMapComponent,
     LoadingComponent,
+    UnitPipe,
+    CheckExistPipe,
   ],
   providers: [MapService, TranslatePipe],
 })

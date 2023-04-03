@@ -37,7 +37,7 @@
   "Google Streets": "Көчө картасы",
   "Google Terrain": "Жердин түзүлүшүнун картасы",
   "Open Street Map": "Ачык көчө картасы",
-  "NoData": "Маалымат жок",
+  "No data": "Маалымат жок",
   "Indicators filter": "Көрсөткүчтөр боюнча электөө",
   "Filter": "Электөө",
   "Select a region": "Регионду тандаңыз",
@@ -83,6 +83,9 @@
   "Select the map split view": "Картаны тандаңыз бөлүнгөн көрүнүш",
   "Edit": "Өзгөртүү",
   "Delete": "Өчүрүү",
-  "Base": "Base",
-  "AI": "Жасалма интеллект"
+  "Base": "Негизги",
+  "AI": "ЖИ",
+  "Artificial intelligence": "Жасалма интеллект",
+  "Layer": "Катмар",
+  "Unknown": "Белгисиз"
 }

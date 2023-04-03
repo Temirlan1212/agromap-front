@@ -44,9 +44,10 @@ h5 {
 .contours-list {
   display: flex;
   flex-direction: column;
-  padding: 0 16px 20px 16px;
   gap: 12px;
   flex: 1;
+  overflow-y: auto;
+  height: 80vh;
 
   .card {
     display: flex;

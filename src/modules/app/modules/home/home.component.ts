@@ -76,7 +76,10 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   wmsLayers: ITileLayer[] = [
     {
-      title: this.translate.transform('Base'),
+      title: `
+        ${this.translate.transform('Base')}
+        ${this.translate.transform('Layer').toLowerCase()}
+      `,
       name: 'agromap_store',
       layer: tileLayer.wms('https://geoserver.24mycrm.com/agromap/wms', {
         layers: 'agromap:agromap_store',
@@ -89,7 +92,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       title: this.translate.transform('AI'),
       name: 'agromap_store_ai1',
       layer: tileLayer.wms('https://geoserver.24mycrm.com/agromap/wms', {
-        layers: 'agromap:agromap_store_ai1',
+        layers: 'agromap:agromap_store_ai',
         format: 'image/png',
         transparent: true,
         zIndex: 500,
@@ -114,6 +117,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   currentLang: string = this.translateSvc.currentLang;
   currentRouterPathname: string = '';
   isWmsAiActive: boolean = false;
+  culture: string | null = null;
 
   constructor(
     private api: ApiService,
@@ -163,6 +167,8 @@ export class HomeComponent implements OnInit, OnDestroy {
     const cid =
       layerFeature?.feature?.properties?.['contour_id'] ??
       layerFeature?.feature?.properties?.['id'];
+    this.culture = layerFeature?.feature?.properties?.['culture'];
+
     this.getContourData(cid);
     this.layerFeature = layerFeature;
     this.selectedLayer = geoJSON(this.layerFeature?.feature)
@@ -286,8 +292,6 @@ export class HomeComponent implements OnInit, OnDestroy {
       } else {
         this.isWmsAiActive = false;
       }
-    } else {
-      this.isWmsAiActive = false;
     }
   }
 

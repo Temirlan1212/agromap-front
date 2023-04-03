@@ -10,6 +10,9 @@
 <div class="map-container">
   <app-map
     #map
+    [featureTitle]="
+      ('Culture' | translate) + ':' | unit : (culture | checkExist)
+    "
     (mapData)="handleMapData($event)"
     (mapMove)="handleMapMove($event)"
     (featureClick)="handleFeatureClick($event)"
@@ -55,12 +58,13 @@
     </app-map-controls>
 
     <app-spline-area-chart
+      featureBody
       [chartData]="contourData"
       *ngIf="layerFeature && contourData.length > 0; else noContourData"
     >
     </app-spline-area-chart>
     <ng-template #noContourData>
-      <h3 class="no-data-text">{{ "NoData" | translate }}</h3>
+      <h3 class="no-data-text">{{ "No data" | translate }}</h3>
     </ng-template>
   </app-map>
 

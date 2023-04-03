@@ -37,7 +37,7 @@
   "Google Streets": "Street map",
   "Google Terrain": "Terrain map",
   "Open Street Map": "Open street map",
-  "NoData": "No data",
+  "No data": "No data",
   "Indicators filter": "Indicators filter",
   "Filter": "Filter",
   "Select a region": "Select a region",
@@ -84,5 +84,8 @@
   "Edit": "Edit",
   "Delete": "Delete",
   "Base": "Base",
-  "AI": "Artificial intelligence"
+  "AI": "AI",
+  "Artificial intelligence": "Artificial intelligence",
+  "Layer": "Layer",
+  "Unknown": "Unknown"
 }
