@@ -1,0 +1,41 @@
+@import "constants";
+
+:host {
+  display: flex;
+  height: 100%;
+}
+
+.dictionary-list {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  overflow: hidden auto;
+  width: $sidePanelContentWidth;
+  background-color: $lightColor;
+
+  h4 {
+    text-align: center;
+  }
+
+  nav {
+    display: flex;
+    flex-direction: column;
+
+    a {
+      font-size: 15px;
+      padding: 16px;
+      cursor: pointer;
+
+      &:hover {
+        background-color: $sideNavMenuItemHoverBgColor;
+      }
+    }
+  }
+
+}
+
+.content {
+  position: relative;
+  flex: 1;
+}

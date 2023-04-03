@@ -87,5 +87,11 @@
   "AI": "AI",
   "Artificial intelligence": "Artificial intelligence",
   "Layer": "Layer",
-  "Unknown": "Unknown"
+  "Unknown": "Unknown",
+  "Dictionary": "Dictionary",
+  "Cultures": "Cultures",
+  "Indexes": "Indexes",
+  "Regions": "Regions",
+  "Districts": "Districts",
+  "Contons": "Contons"
 }

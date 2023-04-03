@@ -33,6 +33,14 @@ const routes: Routes = [
       import('./modules/reports/reports.module').then((m) => m.ReportsModule),
   },
   {
+    title: 'Dictionary',
+    path: 'dictionary',
+    data: { position: 'top', icon: 'dictionary', authenticated: true },
+    canActivate: [AuthGuard],
+    loadChildren: () =>
+      import('./modules/dictionary/dictionary.module').then((m) => m.DictionaryModule),
+  },
+  {
     title: 'Profile',
     path: 'profile',
     data: { position: 'bottom', icon: 'user' },
