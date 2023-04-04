@@ -32,6 +32,7 @@ export class InputComponent implements ControlValueAccessor {
   @Input() value: string | null = null;
   @Input() min: number = 0;
   @Input() max: number = 100;
+  @Input() step: number = 1;
 
   handleRightIconClick(e: Event) {
     e.preventDefault();

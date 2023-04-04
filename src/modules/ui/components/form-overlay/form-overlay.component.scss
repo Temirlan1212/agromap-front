@@ -1,0 +1,32 @@
+@import "constants";
+
+:host {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  overflow: hidden auto;
+  width: 100%;
+  background-color: $lightColor;
+  padding: 40px 40px 0 40px;
+
+  .actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    background-color: #f4f4fb;
+    position: absolute;
+    width: 100%;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 20px 40px;
+
+    button {
+      width: 15%;
+    }
+  }
+}

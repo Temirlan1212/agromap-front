@@ -1,0 +1,77 @@
+@import "constants";
+
+:host {
+  display: block;
+  padding: 30px;
+
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+
+    .title {
+      margin: 0 20px 10px 0;
+      font-weight: 600;
+      font-size: 24px;
+    }
+
+    .actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 10px;
+
+      button {
+        display: flex;
+        justify-content: space-between;
+        gap: 5px;
+      }
+    }
+  }
+
+  .list {
+    margin-bottom: 20px;
+    overflow: auto;
+
+    .column-aligner.mno-container {
+      gap: 4px;
+    }
+
+    .subtext {
+      overflow: inherit;
+      text-overflow: inherit;
+      color: #999EAE;
+    }
+
+    .subtext.full-width {
+      display: block;
+      margin: 0;
+    }
+
+    .column-aligner.actions {
+      visibility: hidden;
+      justify-content: end;
+      margin: 0;
+
+      .edit-item,
+      .delete-item {
+        color: $darkColor;
+
+        &:hover {
+          color: $primaryColor;
+        }
+      }
+    }
+
+    tr:hover .column-aligner.actions {
+      visibility: visible;
+    }
+
+    button {
+      padding: 0;
+    }
+  }
+
+}

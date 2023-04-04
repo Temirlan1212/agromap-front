@@ -93,5 +93,19 @@
   "Indexes": "Indexes",
   "Regions": "Regions",
   "Districts": "Districts",
-  "Contons": "Contons"
+  "Contons": "Contons",
+  "Name": "Name",
+  "Create": "Create",
+  "Coefficient": "Coefficient",
+  "Actions": "Actions",
+  "Name in russian": "Name in russian",
+  "Name in kyrgyz": "Name in kyrgyz",
+  "Name in english": "Name in english",
+  "Create a culture": "Create a culture",
+  "Add": "Add",
+  "Edit a culture": "Edit a culture",
+  "Delete culture": "Delete culture",
+  "Culture will be deleted, continue?": "Culture will be deleted, continue?",
+  "Culture successfully created": "Culture successfully created",
+  "Culture successfully updated": "Culture successfully updated"
 }

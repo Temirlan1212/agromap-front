@@ -1,0 +1,6 @@
+<app-form-overlay
+  [title]="'Create a culture' | translate"
+  (cancel)="handleCancelClick()"
+  (save)="handleSaveClick(form)">
+  <app-culture-form #form></app-culture-form>
+</app-form-overlay>
