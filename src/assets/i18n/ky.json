@@ -95,5 +95,9 @@
   "Indexes": "Индекстер",
   "Regions": "Региондор",
   "Districts": "Райондор",
-  "Contons": "Айыл аймактар"
+  "Contons": "Айыл аймактар",
+  "Fullname": "Аты-жөнү",
+  "Phone number": "Телефон номер",
+  "Password": "Жашыруун белги",
+  "Logout": "Чыгуу"
 }

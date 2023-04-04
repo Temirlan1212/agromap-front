@@ -1,0 +1,14 @@
+:host {
+  display: block;
+  padding: 40px;
+
+  form {
+    margin-bottom: 20px;
+  }
+
+  .actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 20px;
+  }
+}

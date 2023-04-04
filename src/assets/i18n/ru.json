@@ -95,5 +95,9 @@
   "Indexes": "Индексы",
   "Regions": "Регионы",
   "Districts": "Районы",
-  "Contons": "Айыльные округи"
+  "Contons": "Айыльные округи",
+  "Fullname": "ФИО",
+  "Phone number": "Номер телефона",
+  "Password": "Пароль",
+  "Logout": "Выйти"
 }

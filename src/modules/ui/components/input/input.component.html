@@ -1,8 +1,4 @@
-<app-svg-icon
-  size="16"
-  class="left"
-  *ngIf="leftIcon != null"
-  [name]="leftIcon">
+<app-svg-icon size="16" class="left" *ngIf="leftIcon != null" [name]="leftIcon">
 </app-svg-icon>
 
 <input
@@ -13,19 +9,23 @@
   [max]="max"
   (keyup)="handleInputChange($event)"
   (change)="handleInputChange($event)"
-  [ngStyle]="{'padding-left':leftIcon == null ? '16px' : '35px' }">
+  [ngStyle]="{ 'padding-left': leftIcon == null ? '16px' : '35px' }"
+/>
 
-<span class="placeholder"
-      (click)="input.focus()"
-      [class.active]="value != null"
-      [textContent]="placeholder"
-      [ngStyle]="{'left':leftIcon == null ? '12px' : '30px' }">
+<span
+  class="placeholder"
+  (click)="input.focus()"
+  [class.active]="value != null"
+  [textContent]="placeholder"
+  [ngStyle]="{ left: leftIcon == null ? '12px' : '30px' }"
+>
 </span>
 
 <app-svg-icon
   size="14px"
   class="right"
   [name]="rightIcon"
-  *ngIf="rightIcon != null"
-  (click)="handleRightIconClick($event)">
+  *ngIf="rightIcon != null && value != null"
+  (click)="handleRightIconClick($event)"
+>
 </app-svg-icon>

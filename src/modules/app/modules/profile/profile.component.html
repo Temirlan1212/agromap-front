@@ -1,3 +1,30 @@
-<button type="button" class="danger" (click)="handleLogoutClick()">
-  Выйти
-</button>
+<h2>{{ "Profile" | translate }}</h2>
+<form [formGroup]="form">
+  <div class="field-group">
+    <app-input
+      type="text"
+      [placeholder]="'Fullname' | translate"
+      formControlName="fullname"
+    >
+    </app-input>
+    <app-input
+      type="text"
+      [placeholder]="'Phone number' | translate"
+      formControlName="phone"
+    >
+    </app-input>
+    <app-input
+      type="text"
+      [placeholder]="'Password' | translate"
+      formControlName="password"
+    >
+    </app-input>
+  </div>
+</form>
+
+<div class="actions">
+  <button type="button" class="danger" (click)="handleLogoutClick()">
+    {{ "Logout" | translate }}
+  </button>
+  <button type="button" class="success">{{ "Save" | translate }}</button>
+</div>

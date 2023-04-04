@@ -95,5 +95,9 @@
   "Indexes": "Indexes",
   "Regions": "Regions",
   "Districts": "Districts",
-  "Contons": "Contons"
+  "Contons": "Contons",
+  "Fullname": "Fullname",
+  "Phone number": "Phone number",
+  "Password": "Password",
+  "Logout": "Logout"
 }
