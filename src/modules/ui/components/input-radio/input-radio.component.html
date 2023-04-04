@@ -1,15 +1,15 @@
 <div class="option" *ngFor="let option of options">
   <input
     type="radio"
-    [id]="option[nameField]"
+    [id]="option[valueField]"
     [name]="name"
     [value]="option[valueField]"
     [disabled]="disabled"
     [checked]="value === option[valueField]"
-    (click)="handleClick(option[valueField])"
   />
   <label
-    [for]="option[nameField]"
+    [class.active]="value === option[valueField]"
+    [for]="option[valueField]"
     [textContent]="option[nameField]"
     (click)="handleClick(option[valueField])"
   ></label>

@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { StoreService } from 'src/modules/api/store.service';
-import { Feature } from 'geojson';
+import { Feature, GeoJSON } from 'geojson';
 import * as L from 'leaflet';
 import {
   IVegIndexOption,
@@ -34,7 +34,7 @@ export class SplitMapSidebarComponent implements OnDestroy, OnInit {
   contourId!: number;
   bounds!: L.LatLngBounds;
 
-  layerFeature!: Feature;
+  layerFeature: Feature | null = null;
   maps: Record<string, L.Map | null> = {};
 
   loadingSatelliteDates: boolean = false;
@@ -132,7 +132,7 @@ export class SplitMapSidebarComponent implements OnDestroy, OnInit {
     }
     this.loadingSatelliteDates = false;
   }
-  
+
   private async getVegIndexList() {
     try {
       this.vegIndexesOptions =
@@ -156,31 +156,38 @@ export class SplitMapSidebarComponent implements OnDestroy, OnInit {
 
   async ngOnInit(): Promise<void> {
     this.layerFeature = this.store.getItem<Feature>('selectedLayerFeature');
-    this.contourId = this.layerFeature.properties?.['id'];
-    this.bounds = L.geoJSON(this.layerFeature).getBounds();
+    if (this.layerFeature != null) {
+      this.contourId = this.layerFeature.properties?.['id'];
+      this.bounds = L.geoJSON(this.layerFeature).getBounds();
 
-    await this.getVegIndexList();
-    await this.getVegSatelliteDates(this.contourId, 1);
-    this.buildSatelliteDatesOptions(this.satelliteDateData, this.currLang);
+      await this.getVegIndexList();
+      await this.getVegSatelliteDates(this.contourId, 1);
+      this.buildSatelliteDatesOptions(this.satelliteDateData, this.currLang);
 
-    this.mapsSubscription = this.mapServie.maps.subscribe((maps) => {
-      this.maps = maps;
-      this.maps['map-0'] &&
-        this.maps['map-0'].fitBounds(this.bounds, { maxZoom: 11 });
+      this.mapsSubscription = this.mapServie.maps.subscribe((maps) => {
+        this.maps = maps;
+        this.maps['map-0'] &&
+          this.maps['map-0'].fitBounds(this.bounds, { maxZoom: 11 });
 
-      for (const [key, map] of Object.entries(this.maps)) {
-        if (map) L.geoJSON(this.layerFeature).addTo(map);
-      }
-    });
+        for (const [key, map] of Object.entries(this.maps)) {
+          if (map) L.geoJSON(this.layerFeature as GeoJSON).addTo(map);
+        }
+      });
 
-    this.translateSubscription = this.translate.onLangChange.subscribe(
-      (lang: Record<string, any>) => {
-        this.currLang = lang['lang'] as string;
-        this.buildSatelliteDatesOptions(this.satelliteDateData, this.currLang);
-      }
-    );
+      this.translateSubscription = this.translate.onLangChange.subscribe(
+        (lang: Record<string, any>) => {
+          this.currLang = lang['lang'] as string;
+          this.buildSatelliteDatesOptions(
+            this.satelliteDateData,
+            this.currLang
+          );
+        }
+      );
 
-    this.isWmsAiActiveSubscription = this.mapServie.isWmsAiActive.subscribe((isActive: boolean) => this.isWmsAiActive = isActive)
+      this.isWmsAiActiveSubscription = this.mapServie.isWmsAiActive.subscribe(
+        (isActive: boolean) => (this.isWmsAiActive = isActive)
+      );
+    }
   }
 
   ngOnDestroy(): void {
