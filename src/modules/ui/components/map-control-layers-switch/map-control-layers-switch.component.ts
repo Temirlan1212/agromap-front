@@ -1,71 +1,40 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, HostListener, Input } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  HostListener,
+  Input,
+  OnChanges,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
-import * as L from 'leaflet';
+import { Map } from 'leaflet';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { IBaseLayerObject, IWmsLayerObject } from '../../models/map-controls';
+import { ITileLayer } from '../../models/map.model';
+import { InputRadioComponent } from '../input-radio/input-radio.component';
 
 @Component({
   selector: 'app-map-control-layers-switch',
   standalone: true,
   templateUrl: './map-control-layers-switch.component.html',
   styleUrls: ['./map-control-layers-switch.component.scss'],
-  imports: [CommonModule, SvgIconComponent, TranslateModule],
+  imports: [
+    CommonModule,
+    SvgIconComponent,
+    TranslateModule,
+    InputRadioComponent,
+  ],
 })
 export class MapControlLayersSwitchComponent {
-  @Input() map!: L.Map;
-
-  baseLayersArr: IBaseLayerObject[] = [
-    {
-      name: 'Google Hybrid',
-      layer: L.tileLayer(
-        'http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}',
-        {
-          maxZoom: 20,
-          subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
-        }
-      ),
-    },
-    {
-      name: 'Google Satellite',
-      layer: L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
-        maxZoom: 20,
-        subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
-      }),
-    },
-    {
-      name: 'Google Streets',
-      layer: L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
-        maxZoom: 20,
-        subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
-      }),
-    },
-    {
-      name: 'Google Terrain',
-      layer: L.tileLayer('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}', {
-        maxZoom: 20,
-        subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
-      }),
-    },
-    {
-      name: 'Open Street Map',
-      layer: L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 20,
-        subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
-      }),
-    },
-  ];
-
-  wmsLayersArr: IWmsLayerObject[] = [
-    {
-      name: 'SoilLayer',
-      layers: 'agromap:soil_agromap',
-      active: false,
-    },
-  ];
-
-  activeBaseLayer: L.TileLayer = this.baseLayersArr[0].layer;
-  activeWmsLayer: L.TileLayer | null = null;
+  @Input() map!: Map;
+  @Input() baseLayers: ITileLayer[] = [];
+  @Input() wmsLayers: ITileLayer[] = [];
+  @Input() activeBaseLayer: ITileLayer | null = null;
+  @Input() activeWmsLayer: ITileLayer | null = null;
+  @Output() wmsLayerChanged = new EventEmitter<ITileLayer | null>();
+  @Output() baseLayerChanged = new EventEmitter<ITileLayer | null>();
 
   isCollapsed = false;
 
@@ -84,40 +53,33 @@ export class MapControlLayersSwitchComponent {
     this.isCollapsed = !this.isCollapsed;
   }
 
-  handleSelectBaseLayerClick(selectedLayer: IBaseLayerObject) {
-    if (this.activeBaseLayer === selectedLayer.layer) return;
-
-    this.baseLayersArr.map((layer) => {
-      this.map.removeLayer(layer.layer);
-    });
-
-    this.map.addLayer(selectedLayer.layer);
-    this.activeBaseLayer = selectedLayer.layer;
-  }
-
-  handleSelectWmsLayerClick(selectedLayer: IWmsLayerObject) {
-    if (selectedLayer.active && this.activeWmsLayer) {
-      this.map.removeLayer(this.activeWmsLayer);
-      selectedLayer.active = !selectedLayer.active;
-      return;
+  handleWmsLayerChange(layerName: string | number): void {
+    if (this.activeWmsLayer != null) {
+      this.map.removeLayer(this.activeWmsLayer.layer);
+      this.activeWmsLayer = null;
     }
 
-    this.wmsLayersArr.map((layer) => {
-      layer.active = false;
-      this.activeWmsLayer && this.map.removeLayer(this.activeWmsLayer);
-    });
+    const current = this.wmsLayers.find((l) => l.name === layerName);
+    if (current != null) {
+      this.activeWmsLayer = current;
+      this.map.addLayer(this.activeWmsLayer.layer);
+    }
 
-    this.activeWmsLayer = L.tileLayer.wms(
-      'https://geoserver.24mycrm.com/agromap/wms?',
-      {
-        layers: selectedLayer.layers,
-        format: 'image/png',
-        zIndex: 1,
-        transparent: true,
-      }
-    );
+    this.wmsLayerChanged.emit(this.activeWmsLayer);
+  }
 
-    this.map.addLayer(this.activeWmsLayer);
-    selectedLayer.active = !selectedLayer.active;
+  handleBaseLayerChange(layerName: string | number): void {
+    if (this.activeBaseLayer != null) {
+      this.map.removeLayer(this.activeBaseLayer.layer);
+      this.activeBaseLayer = null;
+    }
+
+    const current = this.baseLayers.find((l) => l.name === layerName);
+    if (current != null) {
+      this.activeBaseLayer = current;
+      this.map.addLayer(this.activeBaseLayer.layer);
+    }
+
+    this.baseLayerChanged.emit(this.activeBaseLayer);
   }
 }

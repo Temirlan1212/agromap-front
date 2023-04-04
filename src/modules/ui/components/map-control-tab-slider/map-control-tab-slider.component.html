@@ -16,7 +16,7 @@
     <a>{{ date | formatDate : "fullDate" : currLang }}</a>
   </li>
   <li *ngIf="vegIndexesData.length === 0 && !loading" class="empty">
-    <a>{{ "NoData" | translate }}</a>
+    <a>{{ "No data" | translate }}</a>
   </li>
   <li *ngIf="vegIndexesData.length === 0 && loading" class="empty">
     <a>

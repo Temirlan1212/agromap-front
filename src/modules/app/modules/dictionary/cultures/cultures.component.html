@@ -1,0 +1,106 @@
+<div class="header">
+  <h1 class="title">{{ "Cultures" | translate }}</h1>
+  <div class="actions">
+    <button
+      type="button"
+      [title]="'Create' | translate"
+      class="success"
+      (click)="handleAddClick()"
+    >
+      <app-svg-icon name="plus" size="18"></app-svg-icon>
+      <span>{{ "Create" | translate }}</span>
+    </button>
+  </div>
+</div>
+<div class="list">
+  <table>
+    <thead>
+      <tr>
+        <th [title]="'Name' | translate">
+          <div class="column-aligner">
+            <span class="column-text-cutter">{{ "Name" | translate }}</span>
+          </div>
+        </th>
+        <th [title]="'Coefficient' | translate">
+          <div class="column-aligner">
+            <span class="column-text-cutter">{{
+              "Coefficient" | translate
+            }}</span>
+          </div>
+        </th>
+        <th [title]="'Actions' | translate"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <ng-container *ngIf="list.length > 0; else noItems">
+        <tr class="clickable" *ngFor="let item of list">
+          <td [title]="item['name_' + currentLang] | checkExist | translate">
+            <div class="column-text-cutter">
+              <span
+                [textContent]="
+                  item['name_' + currentLang] | checkExist | translate
+                "
+              ></span>
+            </div>
+          </td>
+          <td [title]="item.coefficient_crop | checkExist | translate">
+            <div class="column-text-cutter">
+              <span
+                [textContent]="item.coefficient_crop | checkExist | translate"
+              ></span>
+            </div>
+          </td>
+          <td [title]="'Actions' | translate">
+            <div class="column-aligner actions">
+              <button
+                type="button"
+                class="transparent"
+                (click)="handleEditClick(item.id)"
+              >
+                <app-svg-icon
+                  class="edit-item"
+                  name="edit"
+                  size="18"
+                  [title]="'Edit' | translate"
+                >
+                </app-svg-icon>
+              </button>
+              <button
+                type="button"
+                class="transparent"
+                (click)="handleDeleteClick(deleteDialog, item.id)"
+              >
+                <app-svg-icon
+                  class="delete-item"
+                  name="delete"
+                  size="18"
+                  [title]="'Delete' | translate"
+                >
+                </app-svg-icon>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </ng-container>
+      <ng-template #noItems>
+        <tr>
+          <td colspan="3" [title]="'No data' | translate">
+            <app-loading [loading]="loading">
+              <span>{{ "No data" | translate }}</span>
+            </app-loading>
+          </td>
+        </tr>
+      </ng-template>
+    </tbody>
+  </table>
+</div>
+<router-outlet></router-outlet>
+
+<app-question-dialog
+  #deleteDialog
+  [title]="'Delete culture' | translate"
+  [isDanger]="true"
+  (submitted)="handleDeleteSubmitted(deleteDialog)"
+>
+  {{ "Culture will be deleted, continue?" | translate }}
+</app-question-dialog>

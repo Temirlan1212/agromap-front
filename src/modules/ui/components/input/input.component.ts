@@ -1,4 +1,10 @@
-import { Component, ElementRef, forwardRef, Input, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  forwardRef,
+  Input,
+  ViewChild,
+} from '@angular/core';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
 import { NgIf, NgStyle } from '@angular/common';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -9,17 +15,15 @@ export type InputType = 'text' | 'number' | 'password' | 'email';
   selector: 'app-input',
   templateUrl: './input.component.html',
   styleUrls: ['./input.component.scss'],
-  imports: [
-    SvgIconComponent,
-    NgIf,
-    NgStyle
-  ],
+  imports: [SvgIconComponent, NgIf, NgStyle],
   standalone: true,
-  providers: [{
-    provide: NG_VALUE_ACCESSOR,
-    useExisting: forwardRef(() => InputComponent),
-    multi: true
-  }]
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => InputComponent),
+      multi: true,
+    },
+  ],
 })
 export class InputComponent implements ControlValueAccessor {
   onChange: Function = () => null;
@@ -32,11 +36,15 @@ export class InputComponent implements ControlValueAccessor {
   @Input() value: string | null = null;
   @Input() min: number = 0;
   @Input() max: number = 100;
+  @Input() step: number = 1;
 
   handleRightIconClick(e: Event) {
     e.preventDefault();
     e.stopPropagation();
-    if (this.rightIcon === 'clear' && this.inputElement.nativeElement.value != '') {
+    if (
+      this.rightIcon === 'clear' &&
+      this.inputElement.nativeElement.value != ''
+    ) {
       this.inputElement.nativeElement.value = '';
       this.onChange(null);
     }
@@ -65,5 +73,4 @@ export class InputComponent implements ControlValueAccessor {
   registerOnTouched(fn: Function): void {
     this.onTouched = fn;
   }
-
 }

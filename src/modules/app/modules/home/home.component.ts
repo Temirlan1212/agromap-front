@@ -1,4 +1,4 @@
-import { geoJSON, Map, TileLayer, tileLayer } from 'leaflet';
+import { geoJSON, Map, tileLayer } from 'leaflet';
 import { GeoJSON } from 'geojson';
 import {
   AfterViewInit,
@@ -22,14 +22,16 @@ import { MapService } from './map.service';
 import { MessagesService } from '../../../ui/components/services/messages.service';
 import { IChartData } from './components/spline-area-chart/spline-area-chart.component';
 import { ActualVegQuery } from '../../../api/classes/veg-indexes';
-import { TranslateService } from '@ngx-translate/core';
-import { Router, NavigationEnd, Event } from '@angular/router';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { Router, NavigationEnd, Event, ActivatedRoute } from '@angular/router';
 import { StoreService } from 'src/modules/api/store.service';
 import { Feature } from 'geojson';
 import { MapComponent } from '../../../ui/components/map/map.component';
 import { Subscription } from 'rxjs';
 import { ActualVegIndexes } from 'src/modules/api/models/actual-veg-indexes';
 import { IRegionPolygon } from 'src/modules/api/models/map.model';
+import { ITileLayer } from 'src/modules/ui/models/map.model';
+import { QuestionDialogComponent } from '../../../ui/components/question-dialog/question-dialog.component';
 
 @Component({
   selector: 'app-home',
@@ -40,24 +42,76 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('featurePopup') featurePopup!: ElementRef<HTMLElement>;
   @ViewChild('map') mapComponent!: MapComponent;
 
-  wms: TileLayer.WMS = tileLayer.wms(
-    'https://geoserver.24mycrm.com/agromap/wms',
+  baseLayers: ITileLayer[] = [
     {
-      layers: 'agromap:agromap_store',
-      format: 'image/png',
-      transparent: true,
-      zIndex: 500,
-    }
-  );
-  wmsAi: TileLayer.WMS = tileLayer.wms(
-    'https://geoserver.24mycrm.com/agromap/wms',
+      title: this.translate.transform('Google Satellite'),
+      name: 'Google Satellite',
+      layer: tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+        maxZoom: 20,
+        subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+      }),
+    },
     {
-      layers: 'agromap:agromap_store_ai',
-      format: 'image/png',
-      transparent: true,
-      zIndex: 500,
-    }
-  );
+      title: this.translate.transform('Google Streets'),
+      name: 'Google Streets',
+      layer: tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+        maxZoom: 20,
+        subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+      }),
+    },
+    {
+      title: this.translate.transform('Google Terrain'),
+      name: 'Google Terrain',
+      layer: tileLayer('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}', {
+        maxZoom: 20,
+        subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+      }),
+    },
+    {
+      title: this.translate.transform('Open Street Map'),
+      name: 'Open Street Map',
+      layer: tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 20,
+        subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+      }),
+    },
+  ];
+
+  wmsLayers: ITileLayer[] = [
+    {
+      title: `
+        ${this.translate.transform('Base')}
+        ${this.translate.transform('Layer').toLowerCase()}
+      `,
+      name: 'agromap_store',
+      layer: tileLayer.wms('https://geoserver.24mycrm.com/agromap/wms', {
+        layers: 'agromap:agromap_store',
+        format: 'image/png',
+        transparent: true,
+        zIndex: 500,
+      }),
+    },
+    {
+      title: this.translate.transform('AI'),
+      name: 'agromap_store_ai1',
+      layer: tileLayer.wms('https://geoserver.24mycrm.com/agromap/wms', {
+        layers: 'agromap:agromap_store_ai',
+        format: 'image/png',
+        transparent: true,
+        zIndex: 500,
+      }),
+    },
+    {
+      title: this.translate.transform('SoilLayer'),
+      name: 'soil_agromap',
+      layer: tileLayer.wms('https://geoserver.24mycrm.com/agromap/wms', {
+        layers: 'agromap:soil_agromap',
+        format: 'image/png',
+        transparent: true,
+        zIndex: 500,
+      }),
+    },
+  ];
 
   mapData: MapData | null = null;
   layerFeature: MapLayerFeature | null = null;
@@ -74,7 +128,9 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     private messages: MessagesService,
     private store: StoreService,
     private translateSvc: TranslateService,
-    private router: Router
+    private router: Router,
+    private translate: TranslatePipe,
+    private route: ActivatedRoute
   ) {
     this.router.events.subscribe((event: Event) =>
       event instanceof NavigationEnd
@@ -104,7 +160,6 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   loadingSatelliteDates: boolean = false;
 
   handleMapData(mapData: MapData): void {
-    mapData.map.addLayer(this.wms);
     this.mapData = mapData;
     this.mapService.map.next(mapData);
   }
@@ -184,6 +239,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
           }
           this.mapData.geoJson.options.snapIgnore = true;
           this.mapData.geoJson.options.pmIgnore = true;
+          this.mapData.geoJson.options.style = { fillOpacity: 0, weight: 0.4 };
           this.mapData.geoJson.addData(polygons);
         } catch (e: any) {
           console.log(e);
@@ -249,13 +305,42 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     );
   }
 
-  handleMapControlAi(isActive: boolean): void {
-    this.isWmsAiActive = isActive;
-    this.mapService.isWmsAiActive.next(this.isWmsAiActive);
-    if (isActive) {
-      this.mapData?.map.removeLayer(this.wms);
-    } else {
-      this.mapData?.map.addLayer(this.wms);
+  handleWmsLayerChanged(layer: ITileLayer | null): void {
+    this.mapData?.geoJson.clearLayers();
+    if (layer != null) {
+      const finded = this.wmsLayers.find((l) => l.name === layer.name);
+      if (finded != null && finded.name === 'agromap_store_ai1') {
+        this.isWmsAiActive = true;
+      } else {
+        this.isWmsAiActive = false;
+      }
+    }
+  }
+
+  handleEditClick(map: MapComponent) {
+    const id = this.layerFeature?.feature?.properties?.['id'];
+    this.router.navigate(['contour-edit', id], { relativeTo: this.route });
+    map.handleFeatureClose();
+    this.handleFeatureClose();
+  }
+
+  async handleDeleteSubmitted(
+    dialog: QuestionDialogComponent,
+    map: MapComponent
+  ): Promise<void> {
+    await this.deleteItem();
+    dialog.close();
+    map.handleFeatureClose();
+    this.mapData?.map.fitBounds(this.mapService.maxBounds);
+    this.mapData?.map.setMaxBounds(this.mapService.maxBounds);
+  }
+
+  async deleteItem(): Promise<void> {
+    const id = this.layerFeature?.feature?.properties?.['id'];
+    try {
+      await this.api.contour.remove(Number(id));
+    } catch (e: any) {
+      this.messages.error(e.message);
     }
   }
 
