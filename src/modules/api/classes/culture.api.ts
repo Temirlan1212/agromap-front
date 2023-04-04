@@ -9,4 +9,20 @@ export class CultureApi {
   async getList(): Promise<ICulture[]> {
     return await firstValueFrom(this.http.get<ICulture[]>('gip/culture'));
   }
+
+  async getOne(id: number): Promise<ICulture> {
+    return await firstValueFrom(this.http.get<ICulture>(`gip/culture/${ id }`));
+  }
+
+  async create(data: Partial<ICulture>): Promise<ICulture> {
+    return await firstValueFrom(this.http.post<ICulture>('gip/culture', data));
+  }
+
+  async update(id: number, data: Partial<ICulture>): Promise<ICulture> {
+    return await firstValueFrom(this.http.put<ICulture>(`gip/culture/${ id }`, data));
+  }
+
+  async delete(id: number): Promise<ICulture> {
+    return await firstValueFrom(this.http.delete<ICulture>(`gip/culture/${ id }`));
+  }
 }
