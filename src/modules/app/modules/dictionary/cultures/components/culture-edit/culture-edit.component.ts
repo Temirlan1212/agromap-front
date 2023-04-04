@@ -5,12 +5,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ICulture } from '../../../../../../api/models/culture.model';
 import { CultureFormComponent } from '../culture-form/culture-form.component';
 import { TranslatePipe } from '@ngx-translate/core';
-import { DictionaryService } from '../../../../../../api/dictionary.service';
+import { StoreService } from '../../../../../../api/store.service';
 
 @Component({
   selector: 'app-culture-edit',
   templateUrl: './culture-edit.component.html',
-  styleUrls: ['./culture-edit.component.scss']
+  styleUrls: ['./culture-edit.component.scss'],
 })
 export class CultureEditComponent implements OnInit {
   culture!: ICulture;
@@ -21,9 +21,8 @@ export class CultureEditComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private translate: TranslatePipe,
-    private dictionary: DictionaryService
-  ) {
-  }
+    private store: StoreService
+  ) {}
 
   ngOnInit() {
     this.getCulture();
@@ -54,9 +53,11 @@ export class CultureEditComponent implements OnInit {
     }
     try {
       await this.api.culture.update(this.culture.id, formState.value);
-      this.messages.success(this.translate.transform('Culture successfully updated'));
+      this.messages.success(
+        this.translate.transform('Culture successfully updated')
+      );
       this.router.navigate(['..'], { relativeTo: this.route });
-      this.dictionary.culturesAction.next();
+      this.store.culturesAction.next();
     } catch (e: any) {
       this.messages.error(e.message);
     }

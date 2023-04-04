@@ -5,12 +5,12 @@ import { Subscription } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { QuestionDialogComponent } from '../../../../ui/components/question-dialog/question-dialog.component';
 import { MessagesService } from '../../../../ui/components/services/messages.service';
-import { DictionaryService } from '../../../../api/dictionary.service';
+import { StoreService } from '../../../../api/store.service';
 
 @Component({
   selector: 'app-cultures',
   templateUrl: './cultures.component.html',
-  styleUrls: ['./cultures.component.scss', '../../../../../styles/table.scss']
+  styleUrls: ['./cultures.component.scss', '../../../../../styles/table.scss'],
 })
 export class CulturesComponent implements OnInit, OnDestroy {
   loading: boolean = false;
@@ -21,7 +21,7 @@ export class CulturesComponent implements OnInit, OnDestroy {
     this.translateSvc.onLangChange.subscribe(
       (res) => (this.currentLang = res.lang)
     ),
-    this.dictionary.culturesAction.subscribe(() => this.getList())
+    this.store.culturesAction.subscribe(() => this.getList()),
   ];
 
   constructor(
@@ -30,8 +30,8 @@ export class CulturesComponent implements OnInit, OnDestroy {
     private translateSvc: TranslateService,
     private route: ActivatedRoute,
     private router: Router,
-    private dictionary: DictionaryService) {
-  }
+    private store: StoreService
+  ) {}
 
   ngOnInit() {
     this.getList();
@@ -71,7 +71,7 @@ export class CulturesComponent implements OnInit, OnDestroy {
 
   async handleDeleteSubmitted(dialog: QuestionDialogComponent) {
     await this.deleteItem();
-    this.dictionary.culturesAction.next();
+    this.store.culturesAction.next();
     this.selectedId = null;
     dialog.close();
   }

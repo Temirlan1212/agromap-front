@@ -4,12 +4,12 @@ import { ApiService } from '../../../../../../api/api.service';
 import { CultureFormComponent } from '../culture-form/culture-form.component';
 import { MessagesService } from '../../../../../../ui/components/services/messages.service';
 import { TranslatePipe } from '@ngx-translate/core';
-import { DictionaryService } from '../../../../../../api/dictionary.service';
+import { StoreService } from '../../../../../../api/store.service';
 
 @Component({
   selector: 'app-culture-add',
   templateUrl: './culture-add.component.html',
-  styleUrls: ['./culture-add.component.scss']
+  styleUrls: ['./culture-add.component.scss'],
 })
 export class CultureAddComponent {
   constructor(
@@ -18,8 +18,8 @@ export class CultureAddComponent {
     private route: ActivatedRoute,
     private messages: MessagesService,
     private translate: TranslatePipe,
-    private dictionary: DictionaryService) {
-  }
+    private store: StoreService
+  ) {}
 
   handleCancelClick() {
     this.router.navigate(['..'], { relativeTo: this.route });
@@ -37,9 +37,11 @@ export class CultureAddComponent {
     }
     try {
       await this.api.culture.create(formState.value);
-      this.messages.success(this.translate.transform('Culture successfully created'));
+      this.messages.success(
+        this.translate.transform('Culture successfully created')
+      );
       this.router.navigate(['..'], { relativeTo: this.route });
-      this.dictionary.culturesAction.next();
+      this.store.culturesAction.next();
     } catch (e: any) {
       this.messages.error(e.message);
     }
