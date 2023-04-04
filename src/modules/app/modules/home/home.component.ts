@@ -22,13 +22,14 @@ import { MessagesService } from '../../../ui/components/services/messages.servic
 import { IChartData } from './components/spline-area-chart/spline-area-chart.component';
 import { ActualVegQuery } from '../../../api/classes/veg-indexes';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { Router, NavigationEnd, Event } from '@angular/router';
+import { Router, NavigationEnd, Event, ActivatedRoute } from '@angular/router';
 import { StoreService } from 'src/modules/api/store.service';
 import { Feature } from 'geojson';
 import { MapComponent } from '../../../ui/components/map/map.component';
 import { Subscription } from 'rxjs';
 import { ActualVegIndexes } from 'src/modules/api/models/actual-veg-indexes';
 import { ITileLayer } from 'src/modules/ui/models/map.model';
+import { QuestionDialogComponent } from '../../../ui/components/question-dialog/question-dialog.component';
 
 @Component({
   selector: 'app-home',
@@ -126,7 +127,8 @@ export class HomeComponent implements OnInit, OnDestroy {
     private store: StoreService,
     private translateSvc: TranslateService,
     private translate: TranslatePipe,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {
     this.router.events.subscribe((event: Event) =>
       event instanceof NavigationEnd
@@ -235,6 +237,7 @@ export class HomeComponent implements OnInit, OnDestroy {
           }
           this.mapData.geoJson.options.snapIgnore = true;
           this.mapData.geoJson.options.pmIgnore = true;
+          this.mapData.geoJson.options.style = { fillOpacity: 0, weight: 0.4 };
           this.mapData.geoJson.addData(polygons);
         } catch (e: any) {
           console.log(e);
@@ -292,6 +295,33 @@ export class HomeComponent implements OnInit, OnDestroy {
       } else {
         this.isWmsAiActive = false;
       }
+    }
+  }
+
+  handleEditClick(map: MapComponent) {
+    const id = this.layerFeature?.feature?.properties?.['id'];
+    this.router.navigate(['contour-edit', id], { relativeTo: this.route });
+    map.handleFeatureClose();
+    this.handleFeatureClose();
+  }
+
+  async handleDeleteSubmitted(
+    dialog: QuestionDialogComponent,
+    map: MapComponent
+  ): Promise<void> {
+    await this.deleteItem();
+    dialog.close();
+    map.handleFeatureClose();
+    this.mapData?.map.fitBounds(this.mapService.maxBounds);
+    this.mapData?.map.setMaxBounds(this.mapService.maxBounds);
+  }
+
+  async deleteItem(): Promise<void> {
+    const id = this.layerFeature?.feature?.properties?.['id'];
+    try {
+      await this.api.contour.remove(Number(id));
+    } catch (e: any) {
+      this.messages.error(e.message);
     }
   }
 

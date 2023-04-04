@@ -13,12 +13,8 @@
 .option {
   display: inline-block;
 
-  input[type=radio] {
+  input[type="radio"] {
     display: none;
-
-    &:checked+label::before {
-      border: 4px solid $successColor;
-    }
   }
 
   label {
@@ -34,6 +30,10 @@
       height: 14px;
       border-radius: 50%;
       background-color: $lightColor;
+    }
+
+    &.active::before {
+      border: 4px solid $successColor;
     }
   }
 }
