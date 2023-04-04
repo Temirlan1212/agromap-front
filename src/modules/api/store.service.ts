@@ -5,7 +5,6 @@ import { IStore } from './models/store.model';
 @Injectable({ providedIn: 'root' })
 export class StoreService {
   public readonly watch: Subject<IStore> = new Subject();
-  public readonly culturesAction = new Subject<void>();
 
   constructor() {}
 

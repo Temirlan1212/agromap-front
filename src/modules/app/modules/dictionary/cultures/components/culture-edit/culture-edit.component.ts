@@ -57,7 +57,7 @@ export class CultureEditComponent implements OnInit {
         this.translate.transform('Culture successfully updated')
       );
       this.router.navigate(['..'], { relativeTo: this.route });
-      this.store.culturesAction.next();
+      this.store.setItem('CultureEditComponent', { updated: true });
     } catch (e: any) {
       this.messages.error(e.message);
     }

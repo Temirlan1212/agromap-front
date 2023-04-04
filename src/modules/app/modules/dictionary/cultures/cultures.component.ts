@@ -21,7 +21,17 @@ export class CulturesComponent implements OnInit, OnDestroy {
     this.translateSvc.onLangChange.subscribe(
       (res) => (this.currentLang = res.lang)
     ),
-    this.store.culturesAction.subscribe(() => this.getList()),
+    this.store.watch.subscribe((v) => {
+      const createdCondition =
+        v.name === 'CultureAddComponent' && v.value.created;
+      const updatedCondition =
+        v.name === 'CultureEditComponent' && v.value.updated;
+      const deletedCondition =
+        v.name === 'CulturesComponent' && v.value.deleted;
+      if (createdCondition || updatedCondition || deletedCondition) {
+        this.getList();
+      }
+    }),
   ];
 
   constructor(
@@ -71,7 +81,7 @@ export class CulturesComponent implements OnInit, OnDestroy {
 
   async handleDeleteSubmitted(dialog: QuestionDialogComponent) {
     await this.deleteItem();
-    this.store.culturesAction.next();
+    this.store.setItem('CulturesComponent', { deleted: true });
     this.selectedId = null;
     dialog.close();
   }

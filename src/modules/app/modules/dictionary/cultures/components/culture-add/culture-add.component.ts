@@ -41,7 +41,7 @@ export class CultureAddComponent {
         this.translate.transform('Culture successfully created')
       );
       this.router.navigate(['..'], { relativeTo: this.route });
-      this.store.culturesAction.next();
+      this.store.setItem('CultureAddComponent', { created: true });
     } catch (e: any) {
       this.messages.error(e.message);
     }
