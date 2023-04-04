@@ -78,8 +78,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   wmsLayers: ITileLayer[] = [
     {
       title: `
-        ${ this.translate.transform('Base') }
-        ${ this.translate.transform('Layer').toLowerCase() }
+        ${this.translate.transform('Base')}
+        ${this.translate.transform('Layer').toLowerCase()}
       `,
       name: 'agromap_store',
       layer: tileLayer.wms('https://geoserver.24mycrm.com/agromap/wms', {
@@ -205,7 +205,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       const data = res?.reduce((acc: any, i: any) => {
         if (!acc[i.index.id]) {
           acc[i.index.id] = {};
-          acc[i.index.id]['name'] = i.index[`name_${ this.currentLang }`];
+          acc[i.index.id]['name'] = i.index[`name_${this.currentLang}`];
           acc[i.index.id]['data'] = [];
           acc[i.index.id]['dates'] = [];
           acc[i.index.id]['data'].push(i.average_value);
@@ -281,7 +281,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   handleVegIndexOptionClick(vegIndexOption: IVegIndexOption) {
     this.getVegSatelliteDates(
       this.layerFeature?.feature?.properties?.['contour_id'] ??
-      this.layerFeature?.feature?.properties?.['id'],
+        this.layerFeature?.feature?.properties?.['id'],
       vegIndexOption.id
     );
   }
@@ -305,7 +305,10 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.handleFeatureClose();
   }
 
-  async handleDeleteSubmitted(dialog: QuestionDialogComponent, map: MapComponent): Promise<void> {
+  async handleDeleteSubmitted(
+    dialog: QuestionDialogComponent,
+    map: MapComponent
+  ): Promise<void> {
     await this.deleteItem();
     dialog.close();
     map.handleFeatureClose();

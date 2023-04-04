@@ -89,5 +89,11 @@
   "Layer": "Layer",
   "Unknown": "Unknown",
   "Unknown culture": "Unknown culture",
-  "Polygon created successfully": "Polygon created successfully"
+  "Polygon created successfully": "Polygon created successfully",
+  "Dictionary": "Dictionary",
+  "Cultures": "Cultures",
+  "Indexes": "Indexes",
+  "Regions": "Regions",
+  "Districts": "Districts",
+  "Contons": "Contons"
 }

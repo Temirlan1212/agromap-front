@@ -89,5 +89,11 @@
   "Layer": "Слой",
   "Unknown": "Неизвестный",
   "Unknown culture": "Неизвестная культура",
-  "Polygon created successfully": "Полигон успешно создан"
+  "Polygon created successfully": "Полигон успешно создан",
+  "Dictionary": "Справочник",
+  "Cultures": "Культуры",
+  "Indexes": "Индексы",
+  "Regions": "Регионы",
+  "Districts": "Районы",
+  "Contons": "Айыльные округи"
 }

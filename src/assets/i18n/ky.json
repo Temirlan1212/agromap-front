@@ -89,5 +89,11 @@
   "Layer": "Катмар",
   "Unknown": "Белгисиз",
   "Unknown culture": "Белгисиз өсүмдүк",
-  "Polygon created successfully": "Полигон ийгиликтүү түзүлдү"
+  "Polygon created successfully": "Полигон ийгиликтүү түзүлдү",
+  "Dictionary": "Маалымдама",
+  "Cultures": "Өсүмдүктүн түрлөрү",
+  "Indexes": "Индекстер",
+  "Regions": "Региондор",
+  "Districts": "Райондор",
+  "Contons": "Айыл аймактар"
 }

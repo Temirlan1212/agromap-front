@@ -66,10 +66,20 @@
     <ng-template #noContourData>
       <h3 class="no-data-text">{{ "No data" | translate }}</h3>
     </ng-template>
-    <button actions type="button" class="transparent" (click)="handleEditClick(map)">
+    <button
+      actions
+      type="button"
+      class="transparent"
+      (click)="handleEditClick(map)"
+    >
       <app-svg-icon name="edit" size="18"></app-svg-icon>
     </button>
-    <button actions type="button" class="transparent" (click)="deleteDialog.show()">
+    <button
+      actions
+      type="button"
+      class="transparent"
+      (click)="deleteDialog.show()"
+    >
       <app-svg-icon name="delete" size="18"></app-svg-icon>
     </button>
   </app-map>
@@ -83,6 +93,7 @@
   #deleteDialog
   [title]="'Delete contour' | translate"
   [isDanger]="true"
-  (submitted)="handleDeleteSubmitted(deleteDialog, map)">
-  {{'Contour will be deleted, continue?' | translate}}
+  (submitted)="handleDeleteSubmitted(deleteDialog, map)"
+>
+  {{ "Contour will be deleted, continue?" | translate }}
 </app-question-dialog>
