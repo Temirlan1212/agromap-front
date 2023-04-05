@@ -176,8 +176,9 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.selectedLayer = geoJSON(this.layerFeature?.feature)
       .addTo(this.mapData?.map as Map)
       .setStyle({
-        fillOpacity: 1,
-        fillColor: '#f6ab39',
+        fillOpacity: 0,
+        weight: 5,
+        color: '#f6ab39',
       });
 
     this.getVegSatelliteDates(cid);
