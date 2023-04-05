@@ -241,6 +241,7 @@ export class HomeComponent implements OnInit, OnDestroy {
           this.mapData.geoJson.options.pmIgnore = true;
           this.mapData.geoJson.options.style = { fillOpacity: 0, weight: 0.4 };
           this.mapData.geoJson.setZIndex(400);
+          this.mapData.geoJson.options.interactive = true;
           this.mapData.geoJson.addData(polygons);
         } catch (e: any) {
           console.log(e);
