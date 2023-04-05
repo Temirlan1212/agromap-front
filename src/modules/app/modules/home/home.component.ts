@@ -120,6 +120,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   currentRouterPathname: string = '';
   isWmsAiActive: boolean = false;
   culture: string | null = null;
+  isBottomSheetOpened: boolean = true;
 
   constructor(
     private api: ApiService,

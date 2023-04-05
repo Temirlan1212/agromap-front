@@ -1,4 +1,5 @@
 @import "constants";
+$transitionDelay: 0.2s;
 
 :host {
   display: flex;
@@ -12,4 +13,25 @@
 
 .no-data-text {
   text-align: center;
+}
+
+.arrow-down {
+  transform: rotate(180deg);
+  transition: all $transitionDelay;
+  &.collapse {
+    transform: rotate(0deg);
+  }
+}
+
+::ng-deep {
+  .feature-content {
+    transition: flex $transitionDelay;
+  }
+  .map-container.collapsed {
+    .feature-content {
+      transition: flex $transitionDelay;
+      flex: 0;
+      padding-bottom: 0;
+    }
+  }
 }
