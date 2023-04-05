@@ -57,6 +57,14 @@
       </ng-container>
     </app-map-controls>
 
+    <h4 featureBody>
+      <span
+        [textContent]="
+          ('Productivity' | translate) + ':'
+            | unit : (productivity | checkExist)
+        "
+      ></span>
+    </h4>
     <app-spline-area-chart
       featureBody
       [chartData]="contourData"
