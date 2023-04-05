@@ -5,10 +5,8 @@ import { TranslateModule } from '@ngx-translate/core';
   selector: 'app-form-overlay',
   templateUrl: './form-overlay.component.html',
   styleUrls: ['./form-overlay.component.scss'],
-  imports: [
-    TranslateModule
-  ],
-  standalone: true
+  imports: [TranslateModule],
+  standalone: true,
 })
 export class FormOverlayComponent {
   @Input() title: string = '';
@@ -16,8 +14,7 @@ export class FormOverlayComponent {
   @Output() cancel = new EventEmitter<void>();
   @Output() save = new EventEmitter<void>();
 
-  constructor() {
-  }
+  constructor() {}
 
   handleCancelClick() {
     this.cancel.emit();

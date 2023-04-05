@@ -6,7 +6,6 @@ import { Pipe, PipeTransform } from '@angular/core';
   pure: true,
 })
 export class CheckExistPipe implements PipeTransform {
-
   transform(value: any): any {
     return value != null ? value : 'No data';
   }

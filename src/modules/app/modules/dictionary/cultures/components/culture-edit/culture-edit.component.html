@@ -1,9 +1,7 @@
 <app-form-overlay
   [title]="'Edit a culture' | translate"
   (cancel)="handleCancelClick()"
-  (save)="handleSaveClick(form)">
-  <app-culture-form
-    #form
-    [value]="culture">
-  </app-culture-form>
+  (save)="handleSaveClick(form)"
+>
+  <app-culture-form #form [value]="culture"> </app-culture-form>
 </app-form-overlay>

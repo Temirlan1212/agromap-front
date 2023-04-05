@@ -9,14 +9,16 @@
     type="button"
     [title]="'Create' | translate"
     class="danger"
-    (click)="handleCancelClick()">
-    <span>{{'Cancel' | translate}}</span>
+    (click)="handleCancelClick()"
+  >
+    <span>{{ "Cancel" | translate }}</span>
   </button>
   <button
     type="button"
     [title]="'Create' | translate"
     class="success"
-    (click)="handleSaveClick()">
-    <span>{{'Save' | translate}}</span>
+    (click)="handleSaveClick()"
+  >
+    <span>{{ "Save" | translate }}</span>
   </button>
 </div>

@@ -30,6 +30,7 @@ import { Subscription } from 'rxjs';
 import { ActualVegIndexes } from 'src/modules/api/models/actual-veg-indexes';
 import { ITileLayer } from 'src/modules/ui/models/map.model';
 import { QuestionDialogComponent } from '../../../ui/components/question-dialog/question-dialog.component';
+import { IRegion } from 'src/modules/api/models/region.model';
 
 @Component({
   selector: 'app-home',
@@ -126,8 +127,8 @@ export class HomeComponent implements OnInit, OnDestroy {
     private messages: MessagesService,
     private store: StoreService,
     private translateSvc: TranslateService,
-    private translate: TranslatePipe,
     private router: Router,
+    private translate: TranslatePipe,
     private route: ActivatedRoute
   ) {
     this.router.events.subscribe((event: Event) =>
@@ -226,6 +227,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   async handleMapMove(mapMove: MapMove): Promise<void> {
     if (this.mapData?.map != null) {
       this.mapData.geoJson.clearLayers();
+      this.getRegionsPolygon();
 
       if (mapMove.zoom >= 12) {
         try {
@@ -238,11 +240,33 @@ export class HomeComponent implements OnInit, OnDestroy {
           this.mapData.geoJson.options.snapIgnore = true;
           this.mapData.geoJson.options.pmIgnore = true;
           this.mapData.geoJson.options.style = { fillOpacity: 0, weight: 0.4 };
+          this.mapData.geoJson.setZIndex(400);
+          this.mapData.geoJson.options.interactive = true;
           this.mapData.geoJson.addData(polygons);
         } catch (e: any) {
           console.log(e);
         }
       }
+    }
+  }
+
+  async getRegionsPolygon() {
+    try {
+      let polygons: IRegion[];
+      polygons = await this.api.dictionary.getRegions({
+        polygon: true,
+      });
+      polygons.map((polygon) => {
+        if (this.mapData?.map != null) {
+          this.mapData.geoJson.options.snapIgnore = true;
+          this.mapData.geoJson.options.pmIgnore = true;
+          this.mapData.geoJson.options.style = { fillOpacity: 0 };
+          this.mapData.geoJson.options.interactive = false;
+          this.mapData.geoJson.addData(polygon.polygon);
+        }
+      });
+    } catch (e: any) {
+      console.log(e);
     }
   }
 
@@ -288,6 +312,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   handleWmsLayerChanged(layer: ITileLayer | null): void {
     this.mapData?.geoJson.clearLayers();
+    this.getRegionsPolygon();
     if (layer != null) {
       const finded = this.wmsLayers.find((l) => l.name === layer.name);
       if (finded != null && finded.name === 'agromap_store_ai1') {
@@ -327,6 +352,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.getVegIndexList();
+    this.getRegionsPolygon();
   }
 
   ngOnDestroy() {
