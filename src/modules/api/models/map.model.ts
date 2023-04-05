@@ -1,5 +1,4 @@
 import { Map } from 'leaflet';
-import { Polygon } from 'geojson';
 
 export interface IFeatureProperties {
   contour_id: number;
