@@ -6,17 +6,14 @@ import {
   ElementRef,
   Input,
   OnDestroy,
-  OnInit,
   ViewChild,
 } from '@angular/core';
-import * as L from 'leaflet';
-import { Layer } from 'leaflet';
-import { latLng, LatLng, map, Map, tileLayer } from 'leaflet';
+import { latLng, LatLng, Map } from 'leaflet';
 import 'leaflet.sync';
 import { Subscription } from 'rxjs';
-import { ILeafletMap } from 'src/modules/api/models/map.model';
 import { IVegIndexOption } from 'src/modules/api/models/veg-indexes.model';
 import { MapService } from 'src/modules/app/modules/home/map.service';
+import { ILeafletMap } from '../../models/map.model';
 
 @Component({
   selector: 'app-split-map',

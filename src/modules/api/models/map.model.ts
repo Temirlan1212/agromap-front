@@ -9,7 +9,3 @@ export interface IFeatureProperties {
   productivity: number;
   land_type: number;
 }
-
-export interface ILeafletMap extends Map {
-  sync: (map: Map, options: Record<string, any>) => any;
-}
