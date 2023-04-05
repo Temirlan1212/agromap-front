@@ -1,11 +1,17 @@
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ApiService } from 'src/modules/api/api.service';
 import { IRegion } from 'src/modules/api/models/region.model';
 import { MessagesService } from '../../../../../ui/components/services/messages.service';
 import { IConton } from '../../../../../api/models/conton.model';
 import { IDistrict } from '../../../../../api/models/district.model';
-import { Subscription } from 'rxjs';
+import { filter, Subscription } from 'rxjs';
 import { ILandType } from '../../../../../api/models/land-type.model';
 import { ContourFiltersQuery } from '../../../../../api/models/contour.model';
 import { GeoJSON, geoJSON, geoJson, latLng, latLngBounds, Map } from 'leaflet';
@@ -15,6 +21,7 @@ import { Feature } from 'geojson';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { QuestionDialogComponent } from '../../../../../ui/components/question-dialog/question-dialog.component';
+import { StoreService } from '../../../../../api/store.service';
 
 @Component({
   selector: 'app-contour-filter',
@@ -33,33 +40,67 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
   currentLang: string = this.translateSvc.currentLang;
   selectedId: number | null = null;
   filtersQuery!: ContourFiltersQuery;
+  radioOptions: any = [
+    { name: this.translate.transform('AI'), value: 'agromap_store_ai' },
+    { name: this.translate.transform('Base'), value: 'agromap_store' },
+  ];
   @Output() onCardClick = new EventEmitter<MapLayerFeature>();
   @Output() onEditClick = new EventEmitter<void>();
+  @Output() onModeChanged = new EventEmitter<string>();
   loading: boolean = false;
-
   form: FormGroup = new FormGroup({
-    region: new FormControl<string | null>(null, { nonNullable: true, validators: Validators.required }),
-    district: new FormControl<string | null>({ value: null, disabled: true }, {
+    region: new FormControl<string | null>(null, {
       nonNullable: true,
-      validators: Validators.required
+      validators: Validators.required,
     }),
-    conton: new FormControl<string | null>({ value: null, disabled: true }, {
-      nonNullable: true,
-      validators: Validators.required
-    }),
+    district: new FormControl<string | null>(
+      { value: null, disabled: true },
+      {
+        nonNullable: true,
+        validators: Validators.required,
+      }
+    ),
+    conton: new FormControl<string | null>(
+      { value: null, disabled: true },
+      {
+        nonNullable: true,
+      }
+    ),
     land_type: new FormControl<string | null>(null, { nonNullable: true }),
-    year: new FormControl<number | null>(2022, { nonNullable: true })
+    year: new FormControl<number | null>(2022, { nonNullable: true }),
   });
+  mode: FormControl = new FormControl<string | null>(null);
 
   subscriptions: Subscription[] = [
-    this.form.get('region')?.valueChanges.subscribe(value => this.handleRegionChange(value)) as Subscription,
-    this.form.get('district')?.valueChanges.subscribe(value => this.handleDistrictChange(value)) as Subscription,
-    this.form.get('conton')?.valueChanges.subscribe(value => this.handleContonChange(value)) as Subscription,
-    this.translateSvc.onLangChange.subscribe(res => this.currentLang = res.lang),
+    this.form
+      .get('region')
+      ?.valueChanges.subscribe((value) =>
+        this.handleRegionChange(value)
+      ) as Subscription,
+    this.form
+      .get('district')
+      ?.valueChanges.subscribe((value) =>
+        this.handleDistrictChange(value)
+      ) as Subscription,
+    this.form
+      .get('conton')
+      ?.valueChanges.subscribe((value) =>
+        this.handleContonChange(value)
+      ) as Subscription,
+    this.mode?.valueChanges.pipe(filter((res) => !!res)).subscribe((value) => {
+      this.store.setItem('mode', value);
+      this.onModeChanged.emit(value);
+    }) as Subscription,
+    this.translateSvc.onLangChange.subscribe(
+      (res) => (this.currentLang = res.lang)
+    ),
     this.mapService.map.subscribe((res: MapData | null) => {
       this.mapInstance = res?.map as Map;
       this.mapGeo = res?.geoJson as GeoJSON;
-    })
+    }),
+    this.store.watch.subscribe((v) =>
+      this.mode?.patchValue(v.value, { emitEvent: false })
+    ),
   ];
 
   constructor(
@@ -69,11 +110,12 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
     private router: Router,
     private route: ActivatedRoute,
     private translate: TranslatePipe,
-    private translateSvc: TranslateService
-  ) {
-  }
+    private translateSvc: TranslateService,
+    private store: StoreService
+  ) {}
 
   ngOnInit(): void {
+    this.mode?.patchValue('agromap_store_ai');
     this.getRegions();
     this.getLandTypes();
   }
@@ -88,7 +130,9 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
 
   async getDistricts() {
     try {
-      this.districts = await this.api.dictionary.getDistricts({ region_id: this.form.get('region')?.value });
+      this.districts = await this.api.dictionary.getDistricts({
+        region_id: this.form.get('region')?.value,
+      });
     } catch (e: any) {
       this.messages.error(e.message);
     }
@@ -96,7 +140,9 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
 
   async getContons() {
     try {
-      this.contons = await this.api.dictionary.getContons({ district_id: this.form.get('district')?.value });
+      this.contons = await this.api.dictionary.getContons({
+        district_id: this.form.get('district')?.value,
+      });
     } catch (e: any) {
       this.messages.error(e.message);
     }
@@ -128,11 +174,20 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
       this.messages.error(this.translate.transform('Form is invalid'));
       return;
     }
-    const { region, district, year, conton, land_type } = formState.value;
+    const { region, district, year, conton, land_type, mode } = formState.value;
     this.loading = true;
     try {
-      this.filtersQuery = { region, district, conton, land_type, year };
-      this.filteredContours = await this.api.contour.getFilteredContours(this.filtersQuery);
+      this.filtersQuery = {
+        ...(region && { region }),
+        ...(district && { district }),
+        ...(conton && { conton }),
+        land_type,
+        year,
+        ...(mode == 'agromap_store_ai' && { ai: true }),
+      };
+      this.filteredContours = await this.api.contour.getFilteredContours(
+        this.filtersQuery
+      );
     } catch (e: any) {
       this.messages.error(e.message);
     } finally {
@@ -156,7 +211,10 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
   async handleDistrictChange(value: string | null) {
     const contonVal = this.form.get('conton');
     if (value != null) {
-      const district = await this.api.dictionary.getDistricts({ ids: value, polygon: true });
+      const district = await this.api.dictionary.getDistricts({
+        ids: value,
+        polygon: true,
+      });
       this.mapInstance.fitBounds(geoJson(district[0]?.polygon).getBounds());
       await this.getContons();
       contonVal?.enable({ emitEvent: false });
@@ -171,8 +229,13 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
 
   async handleContonChange(value: string | null) {
     if (value != null) {
-      const res = await this.api.dictionary.getContons({ ids: value, polygon: true });
-      this.mapInstance.fitBounds(geoJson(res[0]?.polygon).getBounds(), { maxZoom: 12 });
+      const res = await this.api.dictionary.getContons({
+        ids: value,
+        polygon: true,
+      });
+      this.mapInstance.fitBounds(geoJson(res[0]?.polygon).getBounds(), {
+        maxZoom: 12,
+      });
     } else {
       this.resetMapBounds();
     }
@@ -180,7 +243,10 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
 
   handleContourClick(contour: any) {
     this.currentFeature = contour.contour_year.features[0];
-    this.onCardClick.emit({ layer: geoJSON(this.currentFeature), feature: this.currentFeature });
+    this.onCardClick.emit({
+      layer: geoJSON(this.currentFeature),
+      feature: this.currentFeature,
+    });
     this.mapInstance.fitBounds(geoJson(this.currentFeature).getBounds());
   }
 
@@ -194,10 +260,7 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
   }
 
   resetMapBounds() {
-    const initBounds = latLngBounds(
-      latLng(44.0, 68.0),
-      latLng(39.0, 81.0)
-    );
+    const initBounds = latLngBounds(latLng(44.0, 68.0), latLng(39.0, 81.0));
     this.mapInstance.fitBounds(initBounds);
     this.mapInstance.setMaxBounds(initBounds);
   }
@@ -210,7 +273,9 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
   async deleteItem(): Promise<void> {
     try {
       await this.api.contour.remove(this.selectedId as number);
-      this.filteredContours = await this.api.contour.getFilteredContours(this.filtersQuery);
+      this.filteredContours = await this.api.contour.getFilteredContours(
+        this.filtersQuery
+      );
     } catch (e: any) {
       this.messages.error(e.message);
     }
@@ -223,6 +288,6 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.subscriptions.forEach(s => s.unsubscribe());
+    this.subscriptions.forEach((s) => s.unsubscribe());
   }
 }

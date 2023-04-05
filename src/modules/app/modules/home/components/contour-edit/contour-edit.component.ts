@@ -9,11 +9,12 @@ import { MapService } from '../../map.service';
 import { Subscription } from 'rxjs';
 import { MapData } from '../../../../../ui/models/map.model';
 import { TranslatePipe } from '@ngx-translate/core';
+import { StoreService } from '../../../../../api/store.service';
 
 @Component({
   selector: 'app-contour-edit',
   templateUrl: './contour-edit.component.html',
-  styleUrls: ['./contour-edit.component.scss']
+  styleUrls: ['./contour-edit.component.scss'],
 })
 export class ContourEditComponent implements OnInit, OnDestroy {
   loading: boolean = false;
@@ -24,6 +25,7 @@ export class ContourEditComponent implements OnInit, OnDestroy {
   layer: any = null;
   polygon: GeoJSON.Polygon | null = null;
   isPolygonChanged: boolean = false;
+  mode: string = this.store.getItem('mode') as string;
 
   constructor(
     private api: ApiService,
@@ -31,51 +33,58 @@ export class ContourEditComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private messages: MessagesService,
     private mapService: MapService,
-    private translate: TranslatePipe
-  ) {
-  }
+    private translate: TranslatePipe,
+    private store: StoreService
+  ) {}
 
   async ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
     try {
       this.loading = true;
-      const res = await this.api.contour.getOne(Number(id));
-      this.contour = res;
-      this.polygon = res.polygon;
+      if (this.mode === 'ai') {
+        this.contour = await this.api.aiContour.getOne(Number(id));
+      } else {
+        this.contour = await this.api.contour.getOne(Number(id));
+      }
+      this.polygon = this.contour.polygon;
     } catch (e: any) {
       this.messages.error(e.message);
     } finally {
       this.loading = false;
     }
 
-    this.mapSubscription = this.mapService.map.subscribe((res: MapData | null) => {
-      this.mapInstance = res?.map as Map;
-      this.mapGeo = res?.geoJson as GeoJSON;
-      this.mapInstance.pm.setGlobalOptions({
-        allowSelfIntersection: false,
-      });
-      this.mapInstance.pm.setLang('ru');
-      res?.map.pm.addControls({
-        position: 'topleft',
-        drawCircle: false,
-        drawCircleMarker: false,
-        drawPolyline: false,
-        drawRectangle: false,
-        drawPolygon: true,
-        editMode: true,
-        dragMode: false,
-        cutPolygon: false,
-        removalMode: true,
-        drawMarker: false,
-        drawText: false,
-        rotateMode: false,
-        oneBlock: true,
-        customControls: true
-      });
-      this.mapInstance?.fitBounds(geoJson(this.contour.polygon).getBounds());
-      this.mapInstance?.setMaxBounds(geoJson(this.contour.polygon).getBounds());
-      this.handleEditShape();
-    });
+    this.mapSubscription = this.mapService.map.subscribe(
+      (res: MapData | null) => {
+        this.mapInstance = res?.map as Map;
+        this.mapGeo = res?.geoJson as GeoJSON;
+        this.mapInstance.pm.setGlobalOptions({
+          allowSelfIntersection: false,
+        });
+        this.mapInstance.pm.setLang('ru');
+        res?.map.pm.addControls({
+          position: 'topleft',
+          drawCircle: false,
+          drawCircleMarker: false,
+          drawPolyline: false,
+          drawRectangle: false,
+          drawPolygon: true,
+          editMode: true,
+          dragMode: false,
+          cutPolygon: false,
+          removalMode: true,
+          drawMarker: false,
+          drawText: false,
+          rotateMode: false,
+          oneBlock: true,
+          customControls: true,
+        });
+        this.mapInstance?.fitBounds(geoJson(this.contour.polygon).getBounds());
+        this.mapInstance?.setMaxBounds(
+          geoJson(this.contour.polygon).getBounds()
+        );
+        this.handleEditShape();
+      }
+    );
   }
 
   handleEditShape() {
@@ -95,7 +104,9 @@ export class ContourEditComponent implements OnInit, OnDestroy {
 
       this.layer.on('pm:update', (e: any) => {
         this.layer = e['layer'];
-        const geoJson: any = this.mapInstance.pm.getGeomanLayers(true).toGeoJSON();
+        const geoJson: any = this.mapInstance.pm
+          .getGeomanLayers(true)
+          .toGeoJSON();
         this.polygon = geoJson['features'][0]['geometry'];
         this.layer.pm.disable();
         this.isPolygonChanged = true;
@@ -107,10 +118,7 @@ export class ContourEditComponent implements OnInit, OnDestroy {
     if (layer != null && layer['polygon'] != null) {
       this.mapInstance.fitBounds(geoJson(layer['polygon']).getBounds());
     } else {
-      const initBounds = latLngBounds(
-        latLng(44.0, 68.0),
-        latLng(39.0, 81.0)
-      );
+      const initBounds = latLngBounds(latLng(44.0, 68.0), latLng(39.0, 81.0));
       this.mapInstance.fitBounds(initBounds);
       this.mapInstance.setMaxBounds(initBounds);
     }
@@ -121,7 +129,7 @@ export class ContourEditComponent implements OnInit, OnDestroy {
     const { region, district, ...rest } = formState.value;
     const contour: Partial<IContour> = {
       ...rest,
-      polygon: this.polygon
+      polygon: this.polygon,
     };
     if (!formState.touched && !this.isPolygonChanged) {
       this.messages.warning(this.translate.transform('No changes in form'));
@@ -132,7 +140,9 @@ export class ContourEditComponent implements OnInit, OnDestroy {
       return;
     }
     if (!this.polygon) {
-      this.messages.error(this.translate.transform('Define a polygon on the map'));
+      this.messages.error(
+        this.translate.transform('Define a polygon on the map')
+      );
       return;
     }
     try {
@@ -145,12 +155,8 @@ export class ContourEditComponent implements OnInit, OnDestroy {
 
   handleCancelClick() {
     this.router.navigate(['../..']);
-    const initBounds = latLngBounds(
-      latLng(44.0, 68.0),
-      latLng(39.0, 81.0)
-    );
-    this.mapInstance.fitBounds(initBounds);
-    this.mapInstance.setMaxBounds(initBounds);
+    this.mapInstance.fitBounds(this.mapService.maxBounds);
+    this.mapInstance.setMaxBounds(this.mapService.maxBounds);
   }
 
   ngOnDestroy() {
@@ -162,5 +168,7 @@ export class ContourEditComponent implements OnInit, OnDestroy {
       this.layer.pm.disable();
     }
     this.mapService.contourEditingMode.next(false);
+    this.mapInstance.fitBounds(this.mapService.maxBounds);
+    this.mapInstance.setMaxBounds(this.mapService.maxBounds);
   }
 }

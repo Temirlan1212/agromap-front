@@ -46,12 +46,15 @@ h5 {
   flex-direction: column;
   gap: 12px;
   flex: 1;
-  overflow-y: auto;
-  height: 80vh;
 
   .card {
     display: flex;
     flex-direction: column;
     gap: 10px;
   }
+}
+
+.no-data-text {
+  text-align: center;
+  width: 100%;
 }

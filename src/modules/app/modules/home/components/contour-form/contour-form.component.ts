@@ -33,6 +33,7 @@ export class ContourFormComponent implements OnInit, OnDestroy {
   cultureList: ICulture[] = [];
   currentLang: string = this.translateSvc.currentLang;
   loading: boolean = false;
+  @Input() mode!: string;
 
   @Input() set value(v: any | null) {
     if (v == null) {
@@ -46,6 +47,7 @@ export class ContourFormComponent implements OnInit, OnDestroy {
         year: v.year,
         code_soato: v.code_soato,
         ink: v.ink,
+        ...(this.mode == 'ai' && { disctrict: v.disctrict }),
       });
     }
   }
@@ -78,7 +80,9 @@ export class ContourFormComponent implements OnInit, OnDestroy {
           region: selectedConton?.region,
         });
       } else {
-        this.form.patchValue({ district: null, region: null });
+        if (this.mode != 'ai') {
+          this.form.patchValue({ district: null, region: null });
+        }
       }
     }) as Subscription,
     this.form.get('type')?.valueChanges.subscribe((res) => {

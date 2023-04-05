@@ -39,7 +39,7 @@ import { QuestionDialogComponent } from '../../../ui/components/question-dialog/
 export class HomeComponent implements OnInit, OnDestroy {
   @ViewChild('featurePopup') featurePopup!: ElementRef<HTMLElement>;
   @ViewChild('map') mapComponent!: MapComponent;
-
+  mode!: string;
   baseLayers: ITileLayer[] = [
     {
       title: this.translate.transform('Google Satellite'),
@@ -91,7 +91,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     },
     {
       title: this.translate.transform('AI'),
-      name: 'agromap_store_ai1',
+      name: 'agromap_store_ai',
       layer: tileLayer.wms('https://geoserver.24mycrm.com/agromap/wms', {
         layers: 'agromap:agromap_store_ai',
         format: 'image/png',
@@ -286,15 +286,15 @@ export class HomeComponent implements OnInit, OnDestroy {
     );
   }
 
+  handleModeChange(mode: string | null) {
+    this.mode = mode as string;
+  }
+
   handleWmsLayerChanged(layer: ITileLayer | null): void {
     this.mapData?.geoJson.clearLayers();
     if (layer != null) {
       const finded = this.wmsLayers.find((l) => l.name === layer.name);
-      if (finded != null && finded.name === 'agromap_store_ai1') {
-        this.isWmsAiActive = true;
-      } else {
-        this.isWmsAiActive = false;
-      }
+      this.isWmsAiActive = finded != null && finded.name === 'agromap_store_ai';
     }
   }
 
