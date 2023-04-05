@@ -1,5 +1,3 @@
-import { Map } from 'leaflet';
-
 export interface IFeatureProperties {
   contour_id: number;
   contour_ink: number;
