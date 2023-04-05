@@ -1,7 +1,6 @@
 import { geoJSON, Map, tileLayer } from 'leaflet';
 import { GeoJSON } from 'geojson';
 import {
-  AfterViewInit,
   Component,
   ElementRef,
   OnDestroy,
@@ -38,7 +37,7 @@ import { QuestionDialogComponent } from '../../../ui/components/question-dialog/
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
 })
-export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
+export class HomeComponent implements OnInit, OnDestroy {
   @ViewChild('featurePopup') featurePopup!: ElementRef<HTMLElement>;
   @ViewChild('map') mapComponent!: MapComponent;
 
@@ -228,6 +227,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   async handleMapMove(mapMove: MapMove): Promise<void> {
     if (this.mapData?.map != null) {
       this.mapData.geoJson.clearLayers();
+      this.getRegionsPolygon();
 
       if (mapMove.zoom >= 12) {
         try {
@@ -257,6 +257,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
           this.mapData.geoJson.options.snapIgnore = true;
           this.mapData.geoJson.options.pmIgnore = true;
           this.mapData.geoJson.options.style = { fillOpacity: 0 };
+          this.mapData.geoJson.options.interactive = false;
           this.mapData.geoJson.addData(polygon.polygon);
         }
       });
@@ -346,9 +347,6 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnInit(): void {
     this.getVegIndexList();
-  }
-
-  ngAfterViewInit(): void {
     this.getRegionsPolygon();
   }
 
