@@ -31,6 +31,8 @@ import { ActualVegIndexes } from 'src/modules/api/models/actual-veg-indexes';
 import { ITileLayer } from 'src/modules/ui/models/map.model';
 import { QuestionDialogComponent } from '../../../ui/components/question-dialog/question-dialog.component';
 import { IRegion } from 'src/modules/api/models/region.model';
+import { ContourFiltersQuery } from 'src/modules/api/models/contour.model';
+import { IStore } from 'src/modules/api/models/store.model';
 
 @Component({
   selector: 'app-home',
@@ -46,7 +48,6 @@ export class HomeComponent implements OnInit, OnDestroy {
       title: this.translate.transform('Google Satellite'),
       name: 'Google Satellite',
       layer: tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
-        maxZoom: 20,
         subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
       }),
     },
@@ -54,7 +55,6 @@ export class HomeComponent implements OnInit, OnDestroy {
       title: this.translate.transform('Google Streets'),
       name: 'Google Streets',
       layer: tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
-        maxZoom: 20,
         subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
       }),
     },
@@ -62,19 +62,22 @@ export class HomeComponent implements OnInit, OnDestroy {
       title: this.translate.transform('Google Terrain'),
       name: 'Google Terrain',
       layer: tileLayer('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}', {
-        maxZoom: 20,
         subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
       }),
     },
     {
       title: this.translate.transform('Open Street Map'),
       name: 'Open Street Map',
-      layer: tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 20,
-        subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
-      }),
+      layer: tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png'),
     },
   ];
+
+  wmsCQLFilter: string | null = null;
+  wmsLayersOptions = {
+    format: 'image/png',
+    transparent: true,
+    zIndex: 500,
+  };
 
   wmsLayers: ITileLayer[] = [
     {
@@ -85,19 +88,15 @@ export class HomeComponent implements OnInit, OnDestroy {
       name: 'agromap_store',
       layer: tileLayer.wms('https://geoserver.24mycrm.com/agromap/wms', {
         layers: 'agromap:agromap_store',
-        format: 'image/png',
-        transparent: true,
-        zIndex: 500,
+        ...this.wmsLayersOptions,
       }),
     },
     {
       title: this.translate.transform('AI'),
-      name: 'agromap_store_ai1',
+      name: 'agromap_store_ai',
       layer: tileLayer.wms('https://geoserver.24mycrm.com/agromap/wms', {
         layers: 'agromap:agromap_store_ai',
-        format: 'image/png',
-        transparent: true,
-        zIndex: 500,
+        ...this.wmsLayersOptions,
       }),
     },
     {
@@ -105,9 +104,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       name: 'soil_agromap',
       layer: tileLayer.wms('https://geoserver.24mycrm.com/agromap/wms', {
         layers: 'agromap:soil_agromap',
-        format: 'image/png',
-        transparent: true,
-        zIndex: 500,
+        ...this.wmsLayersOptions,
       }),
     },
   ];
@@ -315,7 +312,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.getRegionsPolygon();
     if (layer != null) {
       const finded = this.wmsLayers.find((l) => l.name === layer.name);
-      if (finded != null && finded.name === 'agromap_store_ai1') {
+      if (finded != null && finded.name === 'agromap_store_ai') {
         this.isWmsAiActive = true;
       } else {
         this.isWmsAiActive = false;
@@ -350,9 +347,61 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
   }
 
+  private setWmsParams(): void {
+    if (this.isWmsAiActive) {
+      const finded = this.wmsLayers.find(
+        (w) => w.name === 'agromap_store_ai'
+      ) as any;
+      if (finded != null) {
+        delete finded.layer.wmsParams.cql_filter;
+        if (this.wmsCQLFilter != null) {
+          finded.layer.setParams({ cql_filter: this.wmsCQLFilter });
+        }
+      }
+    } else {
+      const finded = this.wmsLayers.find(
+        (w) => w.name === 'agromap_store'
+      ) as any;
+      if (finded != null) {
+        delete finded.layer.wmsParams.cql_filter;
+        if (this.wmsCQLFilter != null) {
+          finded.layer?.setParams({ cql_filter: this.wmsCQLFilter });
+        }
+      }
+    }
+  }
+
   ngOnInit(): void {
     this.getVegIndexList();
     this.getRegionsPolygon();
+    this.store.watch.subscribe((v: IStore<ContourFiltersQuery | null>) => {
+      if (v.value != null) {
+        this.wmsCQLFilter = '';
+        if (v.value.region) {
+          if (this.wmsCQLFilter.length > 0) {
+            this.wmsCQLFilter += '&&';
+          }
+          this.wmsCQLFilter += 'rgn=' + v.value.region;
+        }
+        if (v.value.district) {
+          if (this.wmsCQLFilter.length > 0) {
+            this.wmsCQLFilter += '&&';
+          }
+          this.wmsCQLFilter += 'dst=' + v.value.district;
+        }
+        if (v.value.conton) {
+          if (this.wmsCQLFilter.length > 0) {
+            this.wmsCQLFilter += '&&';
+          }
+          this.wmsCQLFilter += 'cntn=' + v.value.conton;
+        }
+
+        this.setWmsParams();
+      } else {
+        this.wmsCQLFilter = null;
+        this.setWmsParams();
+      }
+    });
   }
 
   ngOnDestroy() {
