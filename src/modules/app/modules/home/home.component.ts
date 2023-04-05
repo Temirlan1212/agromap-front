@@ -254,7 +254,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     try {
       let polygons: IRegion[];
       polygons = await this.api.dictionary.getRegions({
-        polygon: this.isWmsAiActive,
+        polygon: true,
       });
       polygons.map((polygon) => {
         if (this.mapData?.map != null) {
