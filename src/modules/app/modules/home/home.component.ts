@@ -28,9 +28,9 @@ import { Feature } from 'geojson';
 import { MapComponent } from '../../../ui/components/map/map.component';
 import { Subscription } from 'rxjs';
 import { ActualVegIndexes } from 'src/modules/api/models/actual-veg-indexes';
-import { IRegionPolygon } from 'src/modules/api/models/map.model';
 import { ITileLayer } from 'src/modules/ui/models/map.model';
 import { QuestionDialogComponent } from '../../../ui/components/question-dialog/question-dialog.component';
+import { IRegion } from 'src/modules/api/models/region.model';
 
 @Component({
   selector: 'app-home',
@@ -250,8 +250,10 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   async getRegionsPolygon() {
     try {
-      let polygons: IRegionPolygon[];
-      polygons = await this.api.map.getRegionsPolygon();
+      let polygons: IRegion[];
+      polygons = await this.api.dictionary.getRegions({
+        polygon: this.isWmsAiActive,
+      });
       polygons.map((polygon) => {
         if (this.mapData?.map != null) {
           this.mapData.geoJson.options.snapIgnore = true;
