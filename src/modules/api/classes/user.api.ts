@@ -55,11 +55,13 @@ export class UserApi {
 
   async updatePassword(data: IPassword): Promise<IPassword> {
     return await firstValueFrom(
-      this.http.put<IPassword>(`change_password/`, data)
+      this.http.post<IPassword>(`change_password/`, data)
     );
   }
 
   async updateProfile(data: IProfile): Promise<IProfile> {
-    return await firstValueFrom(this.http.put<IProfile>(`edit_profile`, data));
+    return await firstValueFrom(
+      this.http.patch<IProfile>(`edit_profile`, data)
+    );
   }
 }

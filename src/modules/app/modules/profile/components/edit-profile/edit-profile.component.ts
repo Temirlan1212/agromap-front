@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ApiService } from '../../../../../api/api.service';
 import { MessagesService } from '../../../../../ui/components/services/messages.service';
-import { IProfile } from '../../../../../api/models/user.model';
 
 @Component({
   selector: 'app-edit-profile',
@@ -14,15 +13,29 @@ export class EditProfileComponent implements OnInit {
     full_name: new FormControl<string | null>(null),
     phone_number: new FormControl<string | null>(null),
   });
-  userId!: number;
-  user!: IProfile;
 
   constructor(private api: ApiService, private messages: MessagesService) {}
 
   async ngOnInit() {
-    this.userId = this.api.user.getLoggedInUser()?.user_id as number;
+    this.getUser();
+  }
+
+  async getUser() {
     try {
-      this.user = await this.api.user.getUser();
+      const user = await this.api.user.getUser();
+      this.form.setValue({
+        full_name: user.full_name,
+        phone_number: user.phone_number,
+      });
+    } catch (e: any) {
+      this.messages.error(e.message);
+    }
+  }
+
+  async handleSaveClick() {
+    try {
+      await this.api.user.updateProfile(this.form.value);
+      await this.getUser();
     } catch (e: any) {
       this.messages.error(e.message);
     }

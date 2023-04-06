@@ -19,7 +19,6 @@ export class ResetPasswordComponent implements OnInit {
   oldPasswordShow: boolean = false;
   passwordShow: boolean = false;
   confirmPasswordShow: boolean = false;
-  userId!: number;
 
   constructor(
     private api: ApiService,
@@ -27,8 +26,11 @@ export class ResetPasswordComponent implements OnInit {
     private translate: TranslatePipe
   ) {}
 
-  ngOnInit() {
-    this.userId = this.api.user.getLoggedInUser()?.user_id as number;
+  async ngOnInit() {
+    try {
+    } catch (e: any) {
+      this.messages.error(e.message);
+    }
   }
 
   public getState(): { value: any; valid: boolean; touched: boolean } {

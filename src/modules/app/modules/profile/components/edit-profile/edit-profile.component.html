@@ -16,7 +16,9 @@
     </app-input>
 
     <div class="actions">
-      <button type="button" class="success">{{ "Save" | translate }}</button>
+      <button type="button" class="success" (click)="handleSaveClick()">
+        {{ "Save" | translate }}
+      </button>
     </div>
   </div>
 </form>
