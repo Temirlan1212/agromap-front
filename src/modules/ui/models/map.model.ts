@@ -21,3 +21,7 @@ export interface ITileLayer {
   name: string;
   layer: TileLayer;
 }
+
+export interface ILeafletMap extends Map {
+  sync: (map: Map, options: Record<string, any>) => any;
+}
