@@ -117,6 +117,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   currentRouterPathname: string = '';
   isWmsAiActive: boolean = false;
   culture: string | null = null;
+  productivity: string | null = null;
 
   constructor(
     private api: ApiService,
@@ -168,6 +169,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       layerFeature?.feature?.properties?.['contour_id'] ??
       layerFeature?.feature?.properties?.['id'];
     this.culture = layerFeature?.feature?.properties?.['culture'];
+    this.productivity = layerFeature?.feature?.properties?.['productivity'];
 
     this.getContourData(cid);
     this.layerFeature = layerFeature;

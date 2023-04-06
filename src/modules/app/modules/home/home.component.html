@@ -11,7 +11,7 @@
   <app-map
     #map
     [featureTitle]="
-      ('Culture' | translate) + ':' | unit : (culture | checkExist)
+      ('Culture' | translate) + ':' | unit : (culture | checkExist | translate)
     "
     (mapData)="handleMapData($event)"
     (mapMove)="handleMapMove($event)"
@@ -57,6 +57,14 @@
       </ng-container>
     </app-map-controls>
 
+    <h4 featureBody>
+      <span
+        [textContent]="
+          ('Productivity' | translate) + ':'
+            | unit : (productivity | checkExist)
+        "
+      ></span>
+    </h4>
     <app-spline-area-chart
       featureBody
       [chartData]="contourData"
