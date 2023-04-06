@@ -11,7 +11,11 @@ import { CommonModule } from '@angular/common';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
 import { TranslateModule } from '@ngx-translate/core';
 import { QuestionDialogComponent } from '../question-dialog/question-dialog.component';
-import { ITableAction, ITableItem } from '../../models/table.model';
+import {
+  ITableAction,
+  ITableField,
+  ITableItem,
+} from '../../models/table.model';
 
 @Component({
   selector: 'app-table',
@@ -28,7 +32,7 @@ import { ITableAction, ITableItem } from '../../models/table.model';
 export class TableComponent implements OnChanges {
   @ViewChild('deleteDialog') deleteDialog!: QuestionDialogComponent;
   @Input() actions: boolean = false;
-  @Input() fields: { title: string; field: string }[] = [];
+  @Input() fields: ITableField[] = [];
   @Input() items: ITableItem[] = [];
   @Output() actionClick = new EventEmitter<ITableAction>();
 
