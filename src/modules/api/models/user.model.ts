@@ -6,3 +6,14 @@ export interface IUser {
   is_superuser: boolean;
   is_active: boolean;
 }
+
+export interface IProfile {
+  full_name: string;
+  phone_number: string;
+}
+
+export interface IPassword {
+  old_password: string;
+  password: string;
+  password_confirm: string;
+}

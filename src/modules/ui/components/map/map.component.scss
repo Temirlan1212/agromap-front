@@ -24,7 +24,7 @@ $transitionDelay: 0.2s;
       }
       .arrow-down {
         transition: all $transitionDelay;
-        transform: rotate(0deg);
+        transform: rotate(180deg);
       }
     }
   }
@@ -64,7 +64,7 @@ $transitionDelay: 0.2s;
   }
 
   .arrow-down {
-    transform: rotate(180deg);
+    transform: rotate(0deg);
     transition: all $transitionDelay;
   }
 }

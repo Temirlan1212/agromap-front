@@ -1,3 +1,21 @@
-<button type="button" class="danger" (click)="handleLogoutClick()">
-  Выйти
-</button>
+<app-side-panel>
+  <div class="profile-options">
+    <div>
+      <h4>{{ "Profile" | translate }}</h4>
+      <nav>
+        <a routerLink="edit" routerLinkActive="active">{{
+          "Edit profile" | translate
+        }}</a>
+        <a routerLink="reset-password" routerLinkActive="active">{{
+          "Reset password" | translate
+        }}</a>
+      </nav>
+    </div>
+    <button type="submit" class="danger" (click)="handleLogoutClick()">
+      {{ "Logout" | translate }}
+    </button>
+  </div>
+</app-side-panel>
+<div class="content">
+  <router-outlet></router-outlet>
+</div>
