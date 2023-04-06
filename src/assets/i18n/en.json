@@ -119,5 +119,7 @@
   "New password": "New password",
   "Confirm password": "Confirm password",
   "Old password": "Old password",
-  "Passwords do not match, please retype": "Passwords do not match, please retype"
+  "Passwords do not match, please retype": "Passwords do not match, please retype",
+  "Delete record": "Delete record",
+  "Record will be deleted, continue?": "Record will be deleted, continue?"
 }

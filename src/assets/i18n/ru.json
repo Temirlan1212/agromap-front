@@ -119,5 +119,7 @@
   "New password": "Новый пароль",
   "Confirm password": "Подтвердить пароль",
   "Old password": "Старый пароль",
-  "Passwords do not match, please retype": "Пароли не совпадают, введите еще раз"
+  "Passwords do not match, please retype": "Пароли не совпадают, введите еще раз",
+  "Delete record": "Удаление записи",
+  "Record will be deleted, continue?": "Запись будет удалена, продолжить?"
 }

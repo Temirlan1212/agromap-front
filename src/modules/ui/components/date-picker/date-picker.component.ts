@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
-import { IDateLocal } from '../../models/date-picker';
+import { IDateLocal } from '../../models/date-picker.model';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { FormatDatePipe } from '../../pipes/formatDate.pipe';
 
