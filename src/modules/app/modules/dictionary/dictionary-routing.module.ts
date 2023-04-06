@@ -13,7 +13,7 @@ const routes: Routes = [
       {
         path: '',
         redirectTo: 'cultures',
-        pathMatch: 'full'
+        pathMatch: 'full',
       },
       {
         path: 'cultures',
@@ -21,14 +21,14 @@ const routes: Routes = [
         children: [
           {
             path: 'add',
-            component: CultureAddComponent
+            component: CultureAddComponent,
           },
           {
             path: ':id',
-            component: CultureEditComponent
+            component: CultureEditComponent,
           },
-        ]
-      }
+        ],
+      },
     ],
   },
 ];
@@ -37,5 +37,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class DictionaryRoutingModule {
-}
+export class DictionaryRoutingModule {}

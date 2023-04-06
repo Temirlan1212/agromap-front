@@ -38,7 +38,9 @@ const routes: Routes = [
     data: { position: 'top', icon: 'dictionary', authenticated: true },
     canActivate: [AuthGuard],
     loadChildren: () =>
-      import('./modules/dictionary/dictionary.module').then((m) => m.DictionaryModule),
+      import('./modules/dictionary/dictionary.module').then(
+        (m) => m.DictionaryModule
+      ),
   },
   {
     title: 'Profile',
@@ -54,5 +56,4 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {
-}
+export class AppRoutingModule {}

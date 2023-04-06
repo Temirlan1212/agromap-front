@@ -17,14 +17,13 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { FormOverlayComponent } from '../../../ui/components/form-overlay/form-overlay.component';
 import { QuestionDialogComponent } from '../../../ui/components/question-dialog/question-dialog.component';
 
-
 @NgModule({
   declarations: [
     DictionaryComponent,
     CulturesComponent,
     CultureAddComponent,
     CultureEditComponent,
-    CultureFormComponent
+    CultureFormComponent,
   ],
   imports: [
     CommonModule,
@@ -40,7 +39,6 @@ import { QuestionDialogComponent } from '../../../ui/components/question-dialog/
     FormOverlayComponent,
     QuestionDialogComponent,
   ],
-  providers: [TranslatePipe]
+  providers: [TranslatePipe],
 })
-export class DictionaryModule {
-}
+export class DictionaryModule {}

@@ -21,7 +21,7 @@ import { Feature } from 'geojson';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { QuestionDialogComponent } from '../../../../../ui/components/question-dialog/question-dialog.component';
-import { StoreService } from '../../../../../api/store.service';
+import { StoreService } from 'src/modules/api/store.service';
 
 @Component({
   selector: 'app-contour-filter',
@@ -160,6 +160,10 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
     this.form.reset();
     this.resetMapBounds();
     this.filteredContours = [];
+    this.store.setItem<ContourFiltersQuery | null>(
+      'ContourFilterComponent',
+      null
+    );
   }
 
   handleEditClick(contour: any) {
@@ -186,6 +190,10 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
         ...(mode == 'agromap_store_ai' && { ai: true }),
       };
       this.filteredContours = await this.api.contour.getFilteredContours(
+        this.filtersQuery
+      );
+      this.store.setItem<ContourFiltersQuery | null>(
+        'ContourFilterComponent',
         this.filtersQuery
       );
     } catch (e: any) {
