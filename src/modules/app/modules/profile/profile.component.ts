@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { ApiService } from 'src/modules/api/api.service';
 import { MessagesService } from '../../../ui/components/services/messages.service';
@@ -18,12 +18,5 @@ export class ProfileComponent {
   handleLogoutClick(): void {
     this.api.user.logOut();
     this.router.navigate(['']);
-  }
-
-  async handleSaveClick(): Promise<void> {
-    try {
-    } catch (e: any) {
-      this.messages.error(e.message);
-    }
   }
 }
