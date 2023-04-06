@@ -55,7 +55,7 @@ export class UserApi {
 
   async updatePassword(data: IPassword): Promise<IPassword> {
     return await firstValueFrom(
-      this.http.post<IPassword>(`change_password/`, data)
+      this.http.post<IPassword>(`change_password`, data)
     );
   }
 
