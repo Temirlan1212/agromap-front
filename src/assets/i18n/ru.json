@@ -109,5 +109,15 @@
   "Delete culture": "Удаление культуры",
   "Culture will be deleted, continue?": "Культура будет удалена, продолжить?",
   "Culture successfully created": "Культура успешно добавлена",
-  "Culture successfully updated": "Культура успешно обновлена"
+  "Culture successfully updated": "Культура успешно обновлена",
+  "Fullname": "ФИО",
+  "Phone number": "Номер телефона",
+  "Password": "Пароль",
+  "Logout": "Выйти",
+  "Edit profile": "Изменить профиль",
+  "Reset password": "Сброс пароля",
+  "New password": "Новый пароль",
+  "Confirm password": "Подтвердить пароль",
+  "Old password": "Старый пароль",
+  "Passwords do not match, please retype": "Пароли не совпадают, введите еще раз"
 }

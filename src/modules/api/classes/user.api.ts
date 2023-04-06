@@ -1,6 +1,6 @@
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
-import { IUser } from '../models/user.model';
+import { IPassword, IProfile, IUser } from '../models/user.model';
 
 export class UserApi {
   constructor(private http: HttpClient) {}
@@ -47,5 +47,21 @@ export class UserApi {
     }
 
     return result;
+  }
+
+  async getUser(): Promise<IProfile> {
+    return await firstValueFrom(this.http.get<IProfile>(`get_profile`));
+  }
+
+  async updatePassword(data: IPassword): Promise<IPassword> {
+    return await firstValueFrom(
+      this.http.post<IPassword>(`change_password`, data)
+    );
+  }
+
+  async updateProfile(data: IProfile): Promise<IProfile> {
+    return await firstValueFrom(
+      this.http.patch<IProfile>(`edit_profile`, data)
+    );
   }
 }

@@ -109,5 +109,15 @@
   "Delete culture": "Delete culture",
   "Culture will be deleted, continue?": "Culture will be deleted, continue?",
   "Culture successfully created": "Culture successfully created",
-  "Culture successfully updated": "Culture successfully updated"
+  "Culture successfully updated": "Culture successfully updated",
+  "Fullname": "Fullname",
+  "Phone number": "Phone number",
+  "Password": "Password",
+  "Logout": "Logout",
+  "Edit profile": "Edit profile",
+  "Reset password": "Reset password",
+  "New password": "New password",
+  "Confirm password": "Confirm password",
+  "Old password": "Old password",
+  "Passwords do not match, please retype": "Passwords do not match, please retype"
 }
