@@ -33,7 +33,7 @@ export class ContourFormComponent implements OnInit, OnDestroy {
   cultureList: ICulture[] = [];
   currentLang: string = this.translateSvc.currentLang;
   loading: boolean = false;
-  @Input() mode!: string;
+  @Input() mode!: string | null;
 
   @Input() set value(v: any | null) {
     if (v == null) {

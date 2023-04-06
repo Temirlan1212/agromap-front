@@ -25,7 +25,7 @@ export class ContourEditComponent implements OnInit, OnDestroy {
   layer: any = null;
   polygon: GeoJSON.Polygon | null = null;
   isPolygonChanged: boolean = false;
-  mode: string = this.store.getItem('mode') as string;
+  mode: string | null = this.store.getItem<string>('mode');
 
   constructor(
     private api: ApiService,
@@ -41,7 +41,7 @@ export class ContourEditComponent implements OnInit, OnDestroy {
     const id = this.route.snapshot.paramMap.get('id');
     try {
       this.loading = true;
-      if (this.mode === 'ai') {
+      if (this.mode === 'agromap_store_ai') {
         this.contour = await this.api.aiContour.getOne(Number(id));
       } else {
         this.contour = await this.api.contour.getOne(Number(id));

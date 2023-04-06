@@ -82,48 +82,48 @@
             "
           >
             <div class="card">
-              <span
-                >{{ "Region" | translate }} :
+              <span>
+                {{ "Region" | translate }} :
                 {{
                   contour.contour_year.features[0].properties[
                     "region_" + currentLang
                   ]
-                }}</span
-              >
-              <span
-                >{{ "District" | translate }} :
+                }}
+              </span>
+              <span>
+                {{ "District" | translate }} :
                 {{
                   contour.contour_year.features[0].properties[
                     "district_" + currentLang
                   ]
-                }}</span
-              >
-              <span
-                >{{ "Conton" | translate }} :
+                }}
+              </span>
+              <span>
+                {{ "Conton" | translate }} :
                 {{
                   contour.contour_year.features[0].properties[
                     "conton_" + currentLang
                   ]
-                }}</span
-              >
-              <span
-                >{{ "Land type" | translate }} :
+                }}
+              </span>
+              <span>
+                {{ "Land type" | translate }} :
                 {{
                   contour.contour_year.features[0].properties[
                     "land_type_" + currentLang
                   ]
-                }}</span
-              >
-              <span
-                >{{ "Productivity" | translate }} :
+                }}
+              </span>
+              <span>
+                {{ "Productivity" | translate }} :
                 {{ contour.contour_year.features[0].properties["productivity"]
-                }}{{ "c. per ha." | translate }}</span
-              >
-              <span
-                >{{ "Area" | translate }} :
+                }}{{ "c. per ha." | translate }}
+              </span>
+              <span>
+                {{ "Area" | translate }} :
                 {{ contour.contour_year.features[0].properties["area_ha"] }}
-                {{ "ha" | translate }} .</span
-              >
+                {{ "ha" | translate }} .
+              </span>
             </div>
           </app-card-accordion>
         </div>
