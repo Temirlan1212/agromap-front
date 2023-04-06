@@ -49,15 +49,17 @@ export class UserApi {
     return result;
   }
 
-  async updatePassword(id: number, data: IPassword): Promise<IPassword> {
+  async getUser(): Promise<IProfile> {
+    return await firstValueFrom(this.http.get<IProfile>(`get_profile`));
+  }
+
+  async updatePassword(data: IPassword): Promise<IPassword> {
     return await firstValueFrom(
-      this.http.put<IPassword>(`change_password/${id}`, data)
+      this.http.put<IPassword>(`change_password/`, data)
     );
   }
 
-  async updateProfile(id: number, data: IProfile): Promise<IProfile> {
-    return await firstValueFrom(
-      this.http.put<IProfile>(`edit_profile/${id}`, data)
-    );
+  async updateProfile(data: IProfile): Promise<IProfile> {
+    return await firstValueFrom(this.http.put<IProfile>(`edit_profile`, data));
   }
 }

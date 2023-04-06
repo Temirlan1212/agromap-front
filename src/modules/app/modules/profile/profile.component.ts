@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ApiService } from 'src/modules/api/api.service';
 import { MessagesService } from '../../../ui/components/services/messages.service';

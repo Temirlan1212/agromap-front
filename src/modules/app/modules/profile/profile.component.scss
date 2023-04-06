@@ -6,12 +6,19 @@
 
   .profile-options {
     position: absolute;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     top: 0;
     left: 0;
     bottom: 0;
     overflow: hidden auto;
     width: $sidePanelContentWidth;
     background-color: $lightColor;
+
+    button {
+      margin: 0 20px 20px 20px;
+    }
 
     h4 {
       text-align: center;
