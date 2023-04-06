@@ -54,6 +54,9 @@ export class MapComponent implements OnInit, OnDestroy {
   @HostBinding('class.open')
   featureOpen: boolean = false;
 
+  @HostBinding('class.collapsed')
+  feautureCollapse: boolean = false;
+
   map: Map | null = null;
   geoJson: GeoJSON = geoJSON(undefined, {
     onEachFeature: (feature: Feature, layer: Layer) => {
@@ -120,6 +123,10 @@ export class MapComponent implements OnInit, OnDestroy {
   handleFeatureClose(): void {
     this.featureOpen = false;
     this.featureClose.emit();
+  }
+
+  handleFeatureCollapseToggle() {
+    this.feautureCollapse = !this.feautureCollapse;
   }
 
   ngOnDestroy() {

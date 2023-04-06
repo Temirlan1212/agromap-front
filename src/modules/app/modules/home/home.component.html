@@ -7,7 +7,7 @@
   <router-outlet></router-outlet>
 </app-side-panel>
 
-<div class="map-container" [class.collapsed]="!isBottomSheetOpened">
+<div class="map-container">
   <app-map
     #map
     [featureTitle]="
@@ -59,17 +59,15 @@
     <app-spline-area-chart
       featureBody
       [chartData]="contourData"
-      *ngIf="
-        layerFeature && contourData.length > 0 && isBottomSheetOpened;
-        else noContourData
-      "
+      *ngIf="layerFeature && contourData.length > 0; else noContourData"
     >
     </app-spline-area-chart>
     <ng-template #noContourData>
-      <h3 *ngIf="isBottomSheetOpened" class="no-data-text">
+      <h3 class="no-data-text">
         {{ "No data" | translate }}
       </h3>
     </ng-template>
+
     <button
       actions
       type="button"
@@ -85,15 +83,6 @@
       (click)="deleteDialog.show()"
     >
       <app-svg-icon name="delete" size="18"></app-svg-icon>
-    </button>
-    <button
-      actions
-      type="button"
-      class="transparent arrow-down"
-      [class.collapse]="isBottomSheetOpened"
-      (click)="isBottomSheetOpened = !isBottomSheetOpened"
-    >
-      <app-svg-icon name="arrow-down" size="16"></app-svg-icon>
     </button>
   </app-map>
 
