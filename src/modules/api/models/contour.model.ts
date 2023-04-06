@@ -25,4 +25,5 @@ export interface ContourFiltersQuery {
   region: number;
   district: number;
   conton: number;
+  ai?: boolean;
 }

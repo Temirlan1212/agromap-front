@@ -58,6 +58,7 @@
     </app-input>
 
     <app-input
+      *ngIf="mode != 'agromap_store_ai'"
       type="text"
       [placeholder]="'Code SOATO' | translate"
       formControlName="code_soato"
@@ -65,6 +66,7 @@
     </app-input>
 
     <app-input
+      *ngIf="mode != 'agromap_store_ai'"
       type="text"
       [placeholder]="'INK' | translate"
       formControlName="ink"

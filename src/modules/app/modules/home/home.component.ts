@@ -42,7 +42,7 @@ import { IStore } from 'src/modules/api/models/store.model';
 export class HomeComponent implements OnInit, OnDestroy {
   @ViewChild('featurePopup') featurePopup!: ElementRef<HTMLElement>;
   @ViewChild('map') mapComponent!: MapComponent;
-
+  mode!: string;
   baseLayers: ITileLayer[] = [
     {
       title: this.translate.transform('Google Satellite'),
@@ -308,6 +308,10 @@ export class HomeComponent implements OnInit, OnDestroy {
         this.layerFeature?.feature?.properties?.['id'],
       vegIndexOption.id
     );
+  }
+
+  handleModeChange(mode: string | null) {
+    this.mode = mode as string;
   }
 
   handleWmsLayerChanged(layer: ITileLayer | null): void {
