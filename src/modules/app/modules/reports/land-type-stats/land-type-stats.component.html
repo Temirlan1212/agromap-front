@@ -1,0 +1,32 @@
+<div class="land-type-stats">
+  <div class="header">
+    <h4>Land type statistics</h4>
+    <button type="button" class="success">Apply</button>
+  </div>
+  <form class="form-fields" [formGroup]="form">
+    <app-input-select
+      [placeholder]="'Land type' | translate"
+      [formControl]="land_type"
+      [items]="landTypes"
+      [nameField]="'name_ru'"
+    ></app-input-select>
+    <app-input-select
+      [placeholder]="'Select a region' | translate"
+      formControlName="region"
+      [items]="regions"
+      [nameField]="'name_ru'"
+    ></app-input-select>
+    <app-input-select
+      [placeholder]="'Select a region' | translate"
+      formControlName="district"
+      [items]="districts"
+      [nameField]="'name_ru'"
+    ></app-input-select>
+    <app-input-select
+      [placeholder]="'Select a region' | translate"
+      formControlName="conton"
+      [items]="contons"
+      [nameField]="'name_ru'"
+    ></app-input-select>
+  </form>
+</div>
