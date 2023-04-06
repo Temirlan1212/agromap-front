@@ -2,6 +2,7 @@
   <app-contour-filter
     (onCardClick)="map.handleFeatureClick($event.layer, $event.feature)"
     (onEditClick)="map.handleFeatureClose()"
+    (onModeChanged)="handleModeChange($event)"
   >
   </app-contour-filter>
   <router-outlet></router-outlet>
@@ -11,7 +12,7 @@
   <app-map
     #map
     [featureTitle]="
-      ('Culture' | translate) + ':' | unit : (culture | checkExist)
+      ('Culture' | translate) + ':' | unit : (culture | checkExist | translate)
     "
     (mapData)="handleMapData($event)"
     (mapMove)="handleMapMove($event)"
@@ -32,6 +33,7 @@
             [map]="mapData.map"
           ></app-map-control-zoom>
           <app-map-control-layers-switch
+            [mode]="mode"
             *ngIf="mapData"
             [map]="mapData.map"
             [baseLayers]="baseLayers"
@@ -57,6 +59,14 @@
       </ng-container>
     </app-map-controls>
 
+    <h4 featureBody>
+      <span
+        [textContent]="
+          ('Productivity' | translate) + ':'
+            | unit : (productivity | checkExist)
+        "
+      ></span>
+    </h4>
     <app-spline-area-chart
       featureBody
       [chartData]="contourData"

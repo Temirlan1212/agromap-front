@@ -14,6 +14,7 @@ import { Map } from 'leaflet';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ITileLayer } from '../../models/map.model';
 import { InputRadioComponent } from '../input-radio/input-radio.component';
+import { StoreService } from '../../../api/store.service';
 
 @Component({
   selector: 'app-map-control-layers-switch',
@@ -27,21 +28,33 @@ import { InputRadioComponent } from '../input-radio/input-radio.component';
     InputRadioComponent,
   ],
 })
-export class MapControlLayersSwitchComponent {
+export class MapControlLayersSwitchComponent implements OnChanges {
   @Input() map!: Map;
+  @Input() mode!: string;
   @Input() baseLayers: ITileLayer[] = [];
   @Input() wmsLayers: ITileLayer[] = [];
   @Input() activeBaseLayer: ITileLayer | null = null;
   @Input() activeWmsLayer: ITileLayer | null = null;
   @Output() wmsLayerChanged = new EventEmitter<ITileLayer | null>();
   @Output() baseLayerChanged = new EventEmitter<ITileLayer | null>();
-
+  selected!: string;
   isCollapsed = false;
 
   constructor(
     private elementRef: ElementRef,
-    public translate: TranslateService
+    public translate: TranslateService,
+    private store: StoreService
   ) {}
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['mode'].currentValue == 'agromap_store_ai') {
+      this.selected = 'agromap_store_ai';
+      this.handleWmsLayerChange('agromap_store_ai');
+    } else {
+      this.selected = 'agromap_store';
+      this.handleWmsLayerChange('agromap_store');
+    }
+  }
 
   @HostListener('document:click', ['$event.target'])
   public onClick(target: any) {
@@ -54,6 +67,9 @@ export class MapControlLayersSwitchComponent {
   }
 
   handleWmsLayerChange(layerName: string | number): void {
+    if (!!layerName) {
+      this.store.setItem('mode', layerName);
+    }
     if (this.activeWmsLayer != null) {
       this.map.removeLayer(this.activeWmsLayer.layer);
       this.activeWmsLayer = null;

@@ -1,0 +1,24 @@
+<div class="container">
+  <h2 [textContent]="title"></h2>
+
+  <ng-content></ng-content>
+</div>
+
+<div class="actions">
+  <button
+    type="button"
+    [title]="'Create' | translate"
+    class="danger"
+    (click)="handleCancelClick()"
+  >
+    <span>{{ "Cancel" | translate }}</span>
+  </button>
+  <button
+    type="button"
+    [title]="'Create' | translate"
+    class="success"
+    (click)="handleSaveClick()"
+  >
+    <span>{{ "Save" | translate }}</span>
+  </button>
+</div>

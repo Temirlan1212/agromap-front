@@ -1,0 +1,70 @@
+@import "constants";
+
+table {
+  width: 100%;
+  font-weight: 400;
+  line-height: 16px;
+  border-collapse: collapse;
+  text-align: left;
+
+  th,
+  td {
+    padding: 12px 16px;
+
+    &.clickable {
+      cursor: pointer;
+    }
+
+    .column-aligner {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      [class^="icon"] {
+        aspect-ratio: 1;
+      }
+    }
+
+    .column-text-cutter {
+      display: block;
+      max-width: 430px;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+  }
+
+  thead {
+    height: 50px;
+    font-weight: 700;
+    background-color: $tableHeaderBackgroundColor;
+    color: $tableHeaderTextColor;
+
+    tr {
+      border-bottom: 3px solid $tableHeaderBorderColor;
+    }
+  }
+
+  tbody {
+    background-color: $tableBodyBackgroundColor;
+    color: $tableBodyTextColor;
+
+    tr {
+      border-bottom: 1px solid $tableBodyRowBorderColor;
+
+      &:hover {
+        background-color: $tableBodyRowHoverBackgroundColor;
+      }
+
+      &.clickable {
+        cursor: pointer;
+      }
+
+      .loading-block {
+        display: block;
+        width: 100%;
+        text-align: center;
+      }
+    }
+  }
+}
