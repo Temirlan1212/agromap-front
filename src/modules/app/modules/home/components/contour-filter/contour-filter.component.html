@@ -116,8 +116,10 @@
               </span>
               <span>
                 {{ "Productivity" | translate }} :
-                {{ contour.contour_year.features[0].properties["productivity"]
-                }}{{ "c. per ha." | translate }}
+                {{
+                  contour.contour_year.features[0].properties["productivity"]
+                }}
+                {{ "c. per ha." | translate }}
               </span>
               <span>
                 {{ "Area" | translate }} :
