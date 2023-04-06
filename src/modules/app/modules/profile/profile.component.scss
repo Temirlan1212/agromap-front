@@ -1,14 +1,42 @@
-:host {
-  display: block;
-  padding: 40px;
+@import "constants";
 
-  form {
-    margin-bottom: 20px;
+:host {
+  display: flex;
+  height: 100%;
+
+  .profile-options {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    overflow: hidden auto;
+    width: $sidePanelContentWidth;
+    background-color: $lightColor;
+
+    h4 {
+      text-align: center;
+    }
+
+    nav {
+      display: flex;
+      flex-direction: column;
+
+      a {
+        font-size: 15px;
+        padding: 16px;
+        cursor: pointer;
+        text-decoration: none;
+
+        &:hover,
+        &.active {
+          background-color: $sideNavMenuItemHoverBgColor;
+        }
+      }
+    }
   }
 
-  .actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 20px;
+  .content {
+    position: relative;
+    flex: 1;
   }
 }

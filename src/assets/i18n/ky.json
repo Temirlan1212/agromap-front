@@ -98,6 +98,12 @@
   "Contons": "Айыл аймактар",
   "Fullname": "Аты-жөнү",
   "Phone number": "Телефон номер",
-  "Password": "Жашыруун белги",
-  "Logout": "Чыгуу"
+  "Password": "Пароль",
+  "Logout": "Чыгуу",
+  "Edit profile": "Профилди өзгөртүү",
+  "Reset password": "Паролду жаңылоо",
+  "New password": "Жаңы пароль",
+  "Confirm password": "Паролду ырастоо",
+  "Old password": "Эски пароль",
+  "Passwords do not match, please retype": "Паролдор дал келген жок, кайра териңиз"
 }

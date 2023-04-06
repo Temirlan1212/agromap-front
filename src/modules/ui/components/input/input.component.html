@@ -1,4 +1,10 @@
-<app-svg-icon size="16" class="left" *ngIf="leftIcon != null" [name]="leftIcon">
+<app-svg-icon
+  size="16"
+  class="left"
+  *ngIf="leftIcon != null"
+  [name]="leftIcon"
+  (click)="handleLeftIconClick()"
+>
 </app-svg-icon>
 
 <input

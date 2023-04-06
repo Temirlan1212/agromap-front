@@ -1,8 +1,10 @@
 import {
   Component,
   ElementRef,
+  EventEmitter,
   forwardRef,
   Input,
+  Output,
   ViewChild,
 } from '@angular/core';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
@@ -36,6 +38,7 @@ export class InputComponent implements ControlValueAccessor {
   @Input() value: string | null = null;
   @Input() min: number = 0;
   @Input() max: number = 100;
+  @Output() leftIconClick = new EventEmitter<void>();
 
   handleRightIconClick(e: Event) {
     e.preventDefault();
@@ -49,6 +52,10 @@ export class InputComponent implements ControlValueAccessor {
       this.onChange(this.value);
     }
     return;
+  }
+
+  handleLeftIconClick() {
+    this.leftIconClick.emit();
   }
 
   handleInputChange(e: Event) {

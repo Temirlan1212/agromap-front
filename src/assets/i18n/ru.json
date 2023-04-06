@@ -99,5 +99,11 @@
   "Fullname": "ФИО",
   "Phone number": "Номер телефона",
   "Password": "Пароль",
-  "Logout": "Выйти"
+  "Logout": "Выйти",
+  "Edit profile": "Изменить профиль",
+  "Reset password": "Сброс пароля",
+  "New password": "Новый пароль",
+  "Confirm password": "Подтвердить пароль",
+  "Old password": "Старый пароль",
+  "Passwords do not match, please retype": "Пароли не совпадают, введите еще раз"
 }

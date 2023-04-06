@@ -99,5 +99,11 @@
   "Fullname": "Fullname",
   "Phone number": "Phone number",
   "Password": "Password",
-  "Logout": "Logout"
+  "Logout": "Logout",
+  "Edit profile": "Edit profile",
+  "Reset password": "Reset password",
+  "New password": "New password",
+  "Confirm password": "Confirm password",
+  "Old password": "Old password",
+  "Passwords do not match, please retype": "Passwords do not match, please retype"
 }
