@@ -11,7 +11,7 @@
   <app-map
     #map
     [featureTitle]="
-      ('Culture' | translate) + ':' | unit : (culture | checkExist)
+      ('Culture' | translate) + ':' | unit : (culture | checkExist | translate)
     "
     (mapData)="handleMapData($event)"
     (mapMove)="handleMapMove($event)"
