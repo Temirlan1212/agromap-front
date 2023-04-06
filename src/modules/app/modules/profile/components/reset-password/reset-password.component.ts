@@ -4,6 +4,7 @@ import { ApiService } from '../../../../../api/api.service';
 import { MessagesService } from '../../../../../ui/components/services/messages.service';
 import { TranslatePipe } from '@ngx-translate/core';
 import { IProfile } from '../../../../../api/models/user.model';
+import { ActivatedRoute, Route, Router } from '@angular/router';
 
 @Component({
   selector: 'app-reset-password',
@@ -23,7 +24,9 @@ export class ResetPasswordComponent implements OnInit {
   constructor(
     private api: ApiService,
     private messages: MessagesService,
-    private translate: TranslatePipe
+    private translate: TranslatePipe,
+    private router: Router,
+    private route: ActivatedRoute
   ) {}
 
   async ngOnInit() {
@@ -51,6 +54,8 @@ export class ResetPasswordComponent implements OnInit {
       return;
     }
     try {
+      await this.api.user.updatePassword(formState.value);
+      this.router.navigate(['..'], { relativeTo: this.route });
     } catch (e) {
     } finally {
     }
