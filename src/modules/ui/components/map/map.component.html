@@ -8,7 +8,16 @@
       <span [textContent]="featureTitle"></span>
     </h4>
     <div class="actions-block">
-      <ng-content select="[actions]"></ng-content>
+      <ng-content select="[actions]"> </ng-content>
+
+      <button
+        type="button"
+        class="transparent arrow-down"
+        (click)="handleFeatureCollapseToggle()"
+      >
+        <app-svg-icon name="arrow-down" size="16"></app-svg-icon>
+      </button>
+
       <button type="button" class="transparent" (click)="handleFeatureClose()">
         <app-svg-icon name="clear" size="14"></app-svg-icon>
       </button>
