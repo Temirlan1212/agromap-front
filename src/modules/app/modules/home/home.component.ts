@@ -410,9 +410,12 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   ngAfterViewInit(): void {
     const bounds = this.store.getItem('bounds');
     const newBounds = latLngBounds(bounds._southWest, bounds._northEast);
-    let options: FitBoundsOptions = new Object();
-    options.duration = 1.6;
-    if (newBounds) this.mapData?.map.flyToBounds(newBounds, options);
+
+    if (newBounds) {
+      this.mapData?.map.flyToBounds(newBounds, {
+        duration: 1.6,
+      });
+    }
   }
 
   ngOnDestroy() {
