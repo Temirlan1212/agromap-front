@@ -1,6 +1,7 @@
-import { geoJSON, Map, tileLayer } from 'leaflet';
+import { geoJSON, latLngBounds, LatLngBounds, Map, tileLayer } from 'leaflet';
 import { GeoJSON } from 'geojson';
 import {
+  AfterViewInit,
   Component,
   ElementRef,
   OnDestroy,
@@ -33,13 +34,14 @@ import { QuestionDialogComponent } from '../../../ui/components/question-dialog/
 import { IRegion } from 'src/modules/api/models/region.model';
 import { ContourFiltersQuery } from 'src/modules/api/models/contour.model';
 import { IStore } from 'src/modules/api/models/store.model';
+import { FitBoundsOptions } from 'leaflet';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
 })
-export class HomeComponent implements OnInit, OnDestroy {
+export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('featurePopup') featurePopup!: ElementRef<HTMLElement>;
   @ViewChild('map') mapComponent!: MapComponent;
 
@@ -222,6 +224,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   async handleMapMove(mapMove: MapMove): Promise<void> {
+    this.store.setItem<LatLngBounds>('bounds', mapMove.bounds);
     if (this.mapData?.map != null) {
       this.mapData.geoJson.clearLayers();
       this.getRegionsPolygon();
@@ -402,6 +405,14 @@ export class HomeComponent implements OnInit, OnDestroy {
         this.setWmsParams();
       }
     });
+  }
+
+  ngAfterViewInit(): void {
+    const bounds = this.store.getItem('bounds');
+    const newBounds = latLngBounds(bounds._southWest, bounds._northEast);
+    let options: FitBoundsOptions = new Object();
+    options.duration = 1.6;
+    if (newBounds) this.mapData?.map.flyToBounds(newBounds, options);
   }
 
   ngOnDestroy() {
