@@ -121,5 +121,8 @@
   "Old password": "Старый пароль",
   "Passwords do not match, please retype": "Пароли не совпадают, введите еще раз",
   "Delete record": "Удаление записи",
-  "Record will be deleted, continue?": "Запись будет удалена, продолжить?"
+  "Record will be deleted, continue?": "Запись будет удалена, продолжить?",
+  "Pasture productivity area": "Площадь продуктивности пастбищ",
+  "Unproductive": "Малопродуктивный",
+  "Productive": "Продуктивный"
 }

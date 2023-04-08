@@ -3,6 +3,19 @@
 :host {
   display: block;
   overflow: auto;
+  min-height: 100px;
+
+  &::-webkit-scrollbar {
+    width: 3px;
+    height: 3px;
+    border-radius: 8px;
+    background-color: $lightColor;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: $successColor;
+    border-radius: 5px;
+  }
 }
 
 table {
@@ -25,7 +38,7 @@ table {
 
   th,
   td {
-    padding: 12px 16px;
+    padding: 10px 5px;
 
     &.actions {
       display: flex;
@@ -45,6 +58,8 @@ table {
     font-weight: 700;
     background-color: $tableHeaderBackgroundColor;
     color: $tableHeaderTextColor;
+    position: sticky;
+    top: 0;
 
     tr {
       border-bottom: 3px solid $tableHeaderBorderColor;
@@ -65,6 +80,25 @@ table {
           visibility: visible;
         }
       }
+    }
+  }
+
+  &.dark {
+    thead {
+      background-color: $darkColor;
+    }
+    tbody {
+      background-color: transparent;
+      color: $lightColor;
+    }
+    tr {
+      border-bottom: none !important;
+      &:hover {
+        background-color: transparent !important;
+      }
+    }
+    th {
+      color: $lightColor;
     }
   }
 }

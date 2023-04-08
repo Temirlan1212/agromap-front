@@ -33,11 +33,18 @@ import { QuestionDialogComponent } from '../../../ui/components/question-dialog/
 import { IRegion } from 'src/modules/api/models/region.model';
 import { ContourFiltersQuery } from 'src/modules/api/models/contour.model';
 import { IStore } from 'src/modules/api/models/store.model';
+import {
+  IContourStatisticsProductivity,
+  IContourStatisticsProductivityQuery,
+} from 'src/modules/api/models/statistics.model';
+import { ITableItem } from 'src/modules/ui/models/table.model';
+import { DecimalPipe } from '@angular/common';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
+  providers: [DecimalPipe],
 })
 export class HomeComponent implements OnInit, OnDestroy {
   @ViewChild('featurePopup') featurePopup!: ElementRef<HTMLElement>;
@@ -118,6 +125,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   isWmsAiActive: boolean = false;
   culture: string | null = null;
   productivity: string | null = null;
+  contourStatisticsProductivityTableItems: ITableItem[][] = [];
+  contourStatisticsProductivityAreaTitle: string = '';
 
   constructor(
     private api: ApiService,
@@ -127,7 +136,8 @@ export class HomeComponent implements OnInit, OnDestroy {
     private translateSvc: TranslateService,
     private router: Router,
     private translate: TranslatePipe,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private decimalPipe: DecimalPipe
   ) {
     this.router.events.subscribe((event: Event) =>
       event instanceof NavigationEnd
@@ -270,6 +280,14 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
   }
 
+  handleFilterFormReset(): void {
+    this.contourStatisticsProductivityTableItems = [];
+  }
+
+  handleFilterFormSubmit(formValue: Record<string, any>) {
+    this.getContourStatisticsProductivity(formValue['value']);
+  }
+
   async getVegSatelliteDates(
     contoruId: number,
     vegIndexId: number = 1
@@ -351,6 +369,47 @@ export class HomeComponent implements OnInit, OnDestroy {
       await this.api.contour.remove(Number(id));
     } catch (e: any) {
       this.messages.error(e.message);
+    }
+  }
+
+  async getContourStatisticsProductivity(
+    query: IContourStatisticsProductivityQuery
+  ): Promise<IContourStatisticsProductivity | void> {
+    this.contourStatisticsProductivityTableItems = [];
+    try {
+      let res: IContourStatisticsProductivity;
+      res = await this.api.statistics.getContourStatisticsProductivity({
+        ...query,
+        ai: this.isWmsAiActive,
+      });
+      this.contourStatisticsProductivityAreaTitle = res.type;
+
+      let tableItem = {
+        areaType: res.name,
+        productive: `${this.decimalPipe.transform(res.Productive.ha)} га`,
+        unproductive: `${this.decimalPipe.transform(res.Unproductive.ha)} га`,
+      };
+
+      this.contourStatisticsProductivityTableItems.push([tableItem]);
+
+      if (res.Children && res.Children.length !== 0) {
+        this.contourStatisticsProductivityTableItems.push(
+          res.Children?.map((elem) => {
+            let tableItem = {
+              areaType: elem.name,
+              productive: `${this.decimalPipe.transform(
+                elem.Productive.ha
+              )} га`,
+              unproductive: `${this.decimalPipe.transform(
+                elem.Unproductive.ha
+              )} га`,
+            };
+            return tableItem;
+          })
+        );
+      }
+    } catch (e: any) {
+      console.log(e);
     }
   }
 
