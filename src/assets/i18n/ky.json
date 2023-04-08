@@ -121,5 +121,7 @@
   "Old password": "Эски пароль",
   "Passwords do not match, please retype": "Паролдор дал келген жок, кайра териңиз",
   "Delete record": "Жазылышты өчүрүү",
-  "Record will be deleted, continue?": "Жазылыш өчүрүлөт, улантылсын?"
+  "Record will be deleted, continue?": "Жазылыш өчүрүлөт, улантылсын?",
+  "Page not found": "Барак табылган жок",
+  "To the main page": "Башкы бетке"
 }

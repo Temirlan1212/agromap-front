@@ -121,5 +121,7 @@
   "Old password": "Old password",
   "Passwords do not match, please retype": "Passwords do not match, please retype",
   "Delete record": "Delete record",
-  "Record will be deleted, continue?": "Record will be deleted, continue?"
+  "Record will be deleted, continue?": "Record will be deleted, continue?",
+  "Page not found": "Page not found",
+  "To the main page": "To the main page"
 }

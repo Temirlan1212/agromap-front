@@ -50,6 +50,15 @@ const routes: Routes = [
     loadChildren: () =>
       import('./modules/profile/profile.module').then((m) => m.ProfileModule),
   },
+  {
+    title: 'NotFoundPage',
+    path: '**',
+    canActivate: [AuthGuard],
+    loadChildren: () =>
+      import('./modules/not-found-page/not-found-page.module').then(
+        (m) => m.NotFoundPageModule
+      ),
+  },
 ];
 
 @NgModule({

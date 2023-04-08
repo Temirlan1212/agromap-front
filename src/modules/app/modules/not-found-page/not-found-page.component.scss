@@ -1,0 +1,17 @@
+@import "./constants";
+
+.wrapper {
+  background-color: $secondaryColor;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: $darkColor;
+  font-weight: 700;
+
+  img {
+    max-width: 70px;
+    width: 100%;
+  }
+}
