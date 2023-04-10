@@ -8,9 +8,15 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { LandTypeStatsComponent } from './land-type-stats/land-type-stats.component';
 import { InputComponent } from '../../../ui/components/input/input.component';
+import { SplineAreaChartComponent } from './components/spline-area-chart/spline-area-chart.component';
+import { NgApexchartsModule } from 'ng-apexcharts';
 
 @NgModule({
-  declarations: [ReportsComponent, LandTypeStatsComponent],
+  declarations: [
+    ReportsComponent,
+    LandTypeStatsComponent,
+    SplineAreaChartComponent,
+  ],
   imports: [
     CommonModule,
     ReportsRoutingModule,
@@ -18,6 +24,7 @@ import { InputComponent } from '../../../ui/components/input/input.component';
     ReactiveFormsModule,
     TranslateModule,
     InputComponent,
+    NgApexchartsModule,
   ],
 })
 export class ReportsModule {}
