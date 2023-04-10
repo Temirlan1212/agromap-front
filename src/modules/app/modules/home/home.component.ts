@@ -224,7 +224,9 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   async handleMapMove(mapMove: MapMove): Promise<void> {
-    this.store.setItem<LatLngBounds>('bounds', mapMove.bounds);
+    this.store.setItem<Record<string, LatLngBounds>>('HomeComponent', {
+      mapBounds: mapMove.bounds,
+    });
     if (this.mapData?.map != null) {
       this.mapData.geoJson.clearLayers();
       this.getRegionsPolygon();
@@ -408,13 +410,18 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    const bounds = this.store.getItem('bounds');
-    const newBounds = latLngBounds(bounds._southWest, bounds._northEast);
+    if (localStorage.hasOwnProperty('HomeComponent')) {
+      const { mapBounds } = this.store.getItem('HomeComponent');
+      const newBounds = latLngBounds(
+        mapBounds._southWest,
+        mapBounds._northEast
+      );
 
-    if (newBounds) {
-      this.mapData?.map.flyToBounds(newBounds, {
-        duration: 1.6,
-      });
+      if (newBounds) {
+        this.mapData?.map.flyToBounds(newBounds, {
+          duration: 1.6,
+        });
+      }
     }
   }
 
