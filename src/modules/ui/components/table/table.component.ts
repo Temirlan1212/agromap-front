@@ -34,6 +34,7 @@ export class TableComponent implements OnChanges {
   @Input() actions: boolean = false;
   @Input() fields: ITableField[] = [];
   @Input() items: ITableItem[] = [];
+  @Input() mode = 'light';
   @Output() actionClick = new EventEmitter<ITableAction>();
 
   columns: string[] = [];

@@ -123,5 +123,8 @@
   "Delete record": "Удаление записи",
   "Record will be deleted, continue?": "Запись будет удалена, продолжить?",
   "Page not found": "Страница не найдена",
-  "To the main page": "На главную страницу"
+  "To the main page": "На главную страницу",
+  "Pasture productivity area": "Площадь продуктивности пастбищ",
+  "Unproductive": "Малопродуктивный",
+  "Productive": "Продуктивный"
 }

@@ -1,0 +1,19 @@
+<div class="wrapper">
+  <div class="tab" (click)="toggle()" [class.isCollapsed]="isCollapsed">
+    <app-svg-icon name="info" class="icon" size="14px"></app-svg-icon>
+  </div>
+  <div class="container" [class.isCollapsed]="isCollapsed">
+    <header>
+      <app-svg-icon
+        (click)="toggle()"
+        name="clear"
+        class="icon"
+        size="16px"
+      ></app-svg-icon>
+      <h4>{{ title | translate }}</h4>
+    </header>
+    <div class="body">
+      <ng-content></ng-content>
+    </div>
+  </div>
+</div>

@@ -47,6 +47,8 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
   @Output() onCardClick = new EventEmitter<MapLayerFeature>();
   @Output() onEditClick = new EventEmitter<void>();
   @Output() onModeChanged = new EventEmitter<string>();
+  @Output() onFormSubmit = new EventEmitter<Record<string, any>>();
+  @Output() onFormReset = new EventEmitter<Record<string, any>>();
   loading: boolean = false;
   form: FormGroup = new FormGroup({
     region: new FormControl<string | null>(null, {
@@ -160,6 +162,7 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
     this.form.reset();
     this.resetMapBounds();
     this.filteredContours = [];
+    this.onFormReset.emit();
     this.store.setItem<ContourFiltersQuery | null>(
       'ContourFilterComponent',
       null
@@ -174,6 +177,7 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
 
   async handleFormSubmit(): Promise<void> {
     const formState = this.getState();
+    this.onFormSubmit.emit(formState);
     if (!formState.valid) {
       this.messages.error(this.translate.transform('Form is invalid'));
       return;
