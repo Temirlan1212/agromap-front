@@ -32,6 +32,10 @@ import { SplitMapComponent } from 'src/modules/ui/components/split-map/split-map
 import { LoadingComponent } from 'src/modules/ui/components/loading/loading.component';
 import { UnitPipe } from 'src/modules/ui/pipes/unit.pipe';
 import { CheckExistPipe } from 'src/modules/ui/pipes/check-exist.pipe';
+import { InputRadioComponent } from '../../../ui/components/input-radio/input-radio.component';
+import { MapControlStatisticsComponent } from 'src/modules/ui/components/map-control-statistics/map-control-statistics.component';
+import { TableComponent } from 'src/modules/ui/components/table/table.component';
+import { TruncatePipe } from 'src/modules/ui/pipes/truncate.pipe';
 
 @NgModule({
   declarations: [
@@ -70,6 +74,10 @@ import { CheckExistPipe } from 'src/modules/ui/pipes/check-exist.pipe';
     LoadingComponent,
     UnitPipe,
     CheckExistPipe,
+    InputRadioComponent,
+    MapControlStatisticsComponent,
+    TableComponent,
+    TruncatePipe,
   ],
   providers: [MapService, TranslatePipe],
 })

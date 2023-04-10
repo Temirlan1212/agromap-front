@@ -1,0 +1,24 @@
+<h2>{{ "Edit profile" | translate }}</h2>
+<form [formGroup]="form">
+  <div class="field-group">
+    <app-input
+      type="text"
+      [placeholder]="'Fullname' | translate"
+      formControlName="full_name"
+    >
+    </app-input>
+
+    <app-input
+      type="text"
+      [placeholder]="'Phone number' | translate"
+      formControlName="phone_number"
+    >
+    </app-input>
+
+    <div class="actions">
+      <button type="button" class="success" (click)="handleSaveClick()">
+        {{ "Save" | translate }}
+      </button>
+    </div>
+  </div>
+</form>

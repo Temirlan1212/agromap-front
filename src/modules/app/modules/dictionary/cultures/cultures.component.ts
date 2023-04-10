@@ -3,14 +3,14 @@ import { ApiService } from '../../../../api/api.service';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
-import { QuestionDialogComponent } from '../../../../ui/components/question-dialog/question-dialog.component';
 import { MessagesService } from '../../../../ui/components/services/messages.service';
 import { StoreService } from '../../../../api/store.service';
+import { ITableAction } from 'src/modules/ui/models/table.model';
 
 @Component({
   selector: 'app-cultures',
   templateUrl: './cultures.component.html',
-  styleUrls: ['./cultures.component.scss', '../../../../../styles/table.scss'],
+  styleUrls: ['./cultures.component.scss'],
 })
 export class CulturesComponent implements OnInit, OnDestroy {
   loading: boolean = false;
@@ -58,17 +58,20 @@ export class CulturesComponent implements OnInit, OnDestroy {
     }
   }
 
-  handleEditClick(id: number) {
-    this.router.navigate([id], { relativeTo: this.route });
-  }
-
   handleAddClick() {
     this.router.navigate(['add'], { relativeTo: this.route });
   }
 
-  handleDeleteClick(dialog: QuestionDialogComponent, id: number) {
-    this.selectedId = id;
-    dialog.show();
+  async handleTableActionClick(action: ITableAction) {
+    this.selectedId = action.item['id'] as number;
+    if (action.type === 'delete') {
+      await this.deleteItem();
+      this.store.setItem('CulturesComponent', { deleted: true });
+    }
+    if (action.type === 'edit') {
+      this.router.navigate([this.selectedId], { relativeTo: this.route });
+    }
+    this.selectedId = null;
   }
 
   async deleteItem(): Promise<void> {
@@ -77,13 +80,6 @@ export class CulturesComponent implements OnInit, OnDestroy {
     } catch (e: any) {
       this.messages.error(e.message);
     }
-  }
-
-  async handleDeleteSubmitted(dialog: QuestionDialogComponent) {
-    await this.deleteItem();
-    this.store.setItem('CulturesComponent', { deleted: true });
-    this.selectedId = null;
-    dialog.close();
   }
 
   ngOnDestroy() {

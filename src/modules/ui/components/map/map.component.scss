@@ -1,13 +1,31 @@
 @import "constants";
 
+$transitionDelay: 0.2s;
+
 :host {
   display: flex;
   flex-direction: column;
   height: 100%;
+  transition: flex $transitionDelay;
 
   &.open {
     .feature-content {
       display: block;
+    }
+  }
+
+  &.collapsed {
+    .feature-content {
+      transition: flex $transitionDelay;
+      flex: 0;
+      padding-bottom: 0;
+      .body {
+        display: none;
+      }
+      .arrow-down {
+        transition: all $transitionDelay;
+        transform: rotate(180deg);
+      }
     }
   }
 }
@@ -42,5 +60,11 @@
 
   .actions-block {
     display: flex;
+    overflow-y: hidden;
+  }
+
+  .arrow-down {
+    transform: rotate(0deg);
+    transition: all $transitionDelay;
   }
 }

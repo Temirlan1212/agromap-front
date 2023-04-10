@@ -56,7 +56,8 @@
 
       .image {
         width: 100%;
-        max-width: $sideNavMenuWidth - $sideNavMenuItemPadding - $sideNavMenuItemIconMargin;
+        max-width: $sideNavMenuWidth - $sideNavMenuItemPadding -
+          $sideNavMenuItemIconMargin;
       }
 
       .icon {
@@ -77,6 +78,7 @@
   left: $sideNavMenuWidth;
   width: calc(100% - $sideNavMenuWidth);
   transition: all $sideNavTransitionDelay;
+  overflow: auto;
 }
 
 .language-switcher {
@@ -95,11 +97,12 @@
     flex-direction: column;
     list-style: none;
     background-color: $lightColor;
-    box-shadow: 0px 3px 6px -4px rgba(0, 0, 0, 0.12), 0px 6px 16px rgba(0, 0, 0, 0.08), 0px 9px 28px 8px rgba(0, 0, 0, 0.05);
+    box-shadow: 0px 3px 6px -4px rgba(0, 0, 0, 0.12),
+      0px 6px 16px rgba(0, 0, 0, 0.08), 0px 9px 28px 8px rgba(0, 0, 0, 0.05);
     visibility: hidden;
     opacity: 0;
     transform: translateX(100px);
-    transition: all .2s ease;
+    transition: all 0.2s ease;
     border-radius: 4px;
 
     &.languages-opened {

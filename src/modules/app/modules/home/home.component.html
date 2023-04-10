@@ -2,6 +2,9 @@
   <app-contour-filter
     (onCardClick)="map.handleFeatureClick($event.layer, $event.feature)"
     (onEditClick)="map.handleFeatureClose()"
+    (onModeChanged)="handleModeChange($event)"
+    (onFormSubmit)="handleFilterFormSubmit($event)"
+    (onFormReset)="handleFilterFormReset()"
   >
   </app-contour-filter>
   <router-outlet></router-outlet>
@@ -11,7 +14,7 @@
   <app-map
     #map
     [featureTitle]="
-      ('Culture' | translate) + ':' | unit : (culture | checkExist)
+      ('Culture' | translate) + ':' | unit : (culture | checkExist | translate)
     "
     (mapData)="handleMapData($event)"
     (mapMove)="handleMapMove($event)"
@@ -32,6 +35,7 @@
             [map]="mapData.map"
           ></app-map-control-zoom>
           <app-map-control-layers-switch
+            [mode]="mode"
             *ngIf="mapData"
             [map]="mapData.map"
             [baseLayers]="baseLayers"
@@ -54,9 +58,41 @@
           (vegIndexOptionClick)="handleVegIndexOptionClick($event)"
           [loadingSatelliteDates]="loadingSatelliteDates"
         ></app-map-control-veg-indexes>
+        <app-map-control-statistics
+          *ngIf="!layerFeature"
+          title="Pasture productivity area"
+        >
+          <app-table
+            *ngFor="let item of contourStatisticsProductivityTableItems"
+            [items]="item"
+            mode="dark"
+            [fields]="[
+              {
+                title: contourStatisticsProductivityAreaTitle | translate,
+                field: 'areaType'
+              },
+              {
+                title: 'Productive' | translate | truncate : 10,
+                field: 'productive'
+              },
+              {
+                title: 'Unproductive' | translate | truncate : 10,
+                field: 'unproductive'
+              }
+            ]"
+          ></app-table>
+        </app-map-control-statistics>
       </ng-container>
     </app-map-controls>
 
+    <h4 featureBody>
+      <span
+        [textContent]="
+          ('Productivity' | translate) + ':'
+            | unit : (productivity | checkExist)
+        "
+      ></span>
+    </h4>
     <app-spline-area-chart
       featureBody
       [chartData]="contourData"
@@ -64,8 +100,11 @@
     >
     </app-spline-area-chart>
     <ng-template #noContourData>
-      <h3 class="no-data-text">{{ "No data" | translate }}</h3>
+      <h3 class="no-data-text">
+        {{ "No data" | translate }}
+      </h3>
     </ng-template>
+
     <button
       actions
       type="button"

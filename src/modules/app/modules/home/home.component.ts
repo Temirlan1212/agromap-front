@@ -34,17 +34,23 @@ import { QuestionDialogComponent } from '../../../ui/components/question-dialog/
 import { IRegion } from 'src/modules/api/models/region.model';
 import { ContourFiltersQuery } from 'src/modules/api/models/contour.model';
 import { IStore } from 'src/modules/api/models/store.model';
-import { FitBoundsOptions } from 'leaflet';
+import {
+  IContourStatisticsProductivity,
+  IContourStatisticsProductivityQuery,
+} from 'src/modules/api/models/statistics.model';
+import { ITableItem } from 'src/modules/ui/models/table.model';
+import { DecimalPipe } from '@angular/common';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
+  providers: [DecimalPipe],
 })
 export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('featurePopup') featurePopup!: ElementRef<HTMLElement>;
   @ViewChild('map') mapComponent!: MapComponent;
-
+  mode!: string;
   baseLayers: ITileLayer[] = [
     {
       title: this.translate.transform('Google Satellite'),
@@ -119,6 +125,9 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   currentRouterPathname: string = '';
   isWmsAiActive: boolean = false;
   culture: string | null = null;
+  productivity: string | null = null;
+  contourStatisticsProductivityTableItems: ITableItem[][] = [];
+  contourStatisticsProductivityAreaTitle: string = '';
 
   constructor(
     private api: ApiService,
@@ -128,7 +137,8 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     private translateSvc: TranslateService,
     private router: Router,
     private translate: TranslatePipe,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private decimalPipe: DecimalPipe
   ) {
     this.router.events.subscribe((event: Event) =>
       event instanceof NavigationEnd
@@ -170,14 +180,16 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       layerFeature?.feature?.properties?.['contour_id'] ??
       layerFeature?.feature?.properties?.['id'];
     this.culture = layerFeature?.feature?.properties?.['culture'];
+    this.productivity = layerFeature?.feature?.properties?.['productivity'];
 
     this.getContourData(cid);
     this.layerFeature = layerFeature;
     this.selectedLayer = geoJSON(this.layerFeature?.feature)
       .addTo(this.mapData?.map as Map)
       .setStyle({
-        fillOpacity: 1,
-        fillColor: '#f6ab39',
+        fillOpacity: 0,
+        weight: 5,
+        color: '#f6ab39',
       });
 
     this.getVegSatelliteDates(cid);
@@ -272,6 +284,14 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
+  handleFilterFormReset(): void {
+    this.contourStatisticsProductivityTableItems = [];
+  }
+
+  handleFilterFormSubmit(formValue: Record<string, any>) {
+    this.getContourStatisticsProductivity(formValue['value']);
+  }
+
   async getVegSatelliteDates(
     contoruId: number,
     vegIndexId: number = 1
@@ -312,6 +332,10 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     );
   }
 
+  handleModeChange(mode: string | null) {
+    this.mode = mode as string;
+  }
+
   handleWmsLayerChanged(layer: ITileLayer | null): void {
     this.mapData?.geoJson.clearLayers();
     this.getRegionsPolygon();
@@ -349,6 +373,47 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       await this.api.contour.remove(Number(id));
     } catch (e: any) {
       this.messages.error(e.message);
+    }
+  }
+
+  async getContourStatisticsProductivity(
+    query: IContourStatisticsProductivityQuery
+  ): Promise<IContourStatisticsProductivity | void> {
+    this.contourStatisticsProductivityTableItems = [];
+    try {
+      let res: IContourStatisticsProductivity;
+      res = await this.api.statistics.getContourStatisticsProductivity({
+        ...query,
+        ai: this.isWmsAiActive,
+      });
+      this.contourStatisticsProductivityAreaTitle = res.type;
+
+      let tableItem = {
+        areaType: res.name,
+        productive: `${this.decimalPipe.transform(res.Productive.ha)} га`,
+        unproductive: `${this.decimalPipe.transform(res.Unproductive.ha)} га`,
+      };
+
+      this.contourStatisticsProductivityTableItems.push([tableItem]);
+
+      if (res.Children && res.Children.length !== 0) {
+        this.contourStatisticsProductivityTableItems.push(
+          res.Children?.map((elem) => {
+            let tableItem = {
+              areaType: elem.name,
+              productive: `${this.decimalPipe.transform(
+                elem.Productive.ha
+              )} га`,
+              unproductive: `${this.decimalPipe.transform(
+                elem.Unproductive.ha
+              )} га`,
+            };
+            return tableItem;
+          })
+        );
+      }
+    } catch (e: any) {
+      console.log(e);
     }
   }
 

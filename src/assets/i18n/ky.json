@@ -109,5 +109,22 @@
   "Delete culture": "Өсүмдүктүн түрүн өчүрүү",
   "Culture will be deleted, continue?": "Өсүмдүктүн түрү өчүрүлөт, улантылсын?",
   "Culture successfully created": "Өсүмдүктүн түрү ийгиликтүү кошулду",
-  "Culture successfully updated": "Өсүмдүктүн түрү ийгиликтүү өзгөртүлдү"
+  "Culture successfully updated": "Өсүмдүктүн түрү ийгиликтүү өзгөртүлдү",
+  "Fullname": "Аты-жөнү",
+  "Phone number": "Телефон номер",
+  "Password": "Пароль",
+  "Logout": "Чыгуу",
+  "Edit profile": "Профилди өзгөртүү",
+  "Reset password": "Паролду жаңылоо",
+  "New password": "Жаңы пароль",
+  "Confirm password": "Паролду ырастоо",
+  "Old password": "Эски пароль",
+  "Passwords do not match, please retype": "Паролдор дал келген жок, кайра териңиз",
+  "Delete record": "Жазылышты өчүрүү",
+  "Record will be deleted, continue?": "Жазылыш өчүрүлөт, улантылсын?",
+  "Page not found": "Барак табылган жок",
+  "To the main page": "Башкы бетке",
+  "Pasture productivity area": "Жайыттардын түшүмдүүлүк аянты",
+  "Unproductive": "Аз түшүмдүү",
+  "Productive": "Түшүмдүү"
 }
