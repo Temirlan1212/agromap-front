@@ -1,0 +1,7 @@
+@import "constants";
+
+$indent: 40px;
+:host {
+  padding: $indent;
+  display: block;
+}

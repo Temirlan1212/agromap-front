@@ -1,15 +1,13 @@
-<div class="land-type-stats">
-  <div class="header">
-    <h4>Land type statistics</h4>
-    <button type="button" class="success">Apply</button>
-  </div>
+<div class="pasture-filter">
   <form class="form-fields" [formGroup]="form">
-    <app-input-select
-      [placeholder]="'Land type' | translate"
-      [formControl]="land_type"
-      [items]="landTypes"
-      [nameField]="'name_ru'"
-    ></app-input-select>
+    <app-input
+      type="number"
+      [min]="2010"
+      [max]="2023"
+      [placeholder]="'Select a year' | translate"
+      formControlName="year"
+    >
+    </app-input>
     <app-input-select
       [placeholder]="'Select a region' | translate"
       formControlName="region"
@@ -17,13 +15,13 @@
       [nameField]="'name_ru'"
     ></app-input-select>
     <app-input-select
-      [placeholder]="'Select a region' | translate"
+      [placeholder]="'Select a district' | translate"
       formControlName="district"
       [items]="districts"
       [nameField]="'name_ru'"
     ></app-input-select>
     <app-input-select
-      [placeholder]="'Select a region' | translate"
+      [placeholder]="'Select a conton' | translate"
       formControlName="conton"
       [items]="contons"
       [nameField]="'name_ru'"

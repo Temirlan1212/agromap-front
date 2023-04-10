@@ -1,0 +1,13 @@
+:host {
+  display: block;
+
+  .form-fields {
+    display: flex;
+    gap: 50px;
+
+    app-input-select,
+    app-input {
+      width: 100%;
+    }
+  }
+}
