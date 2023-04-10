@@ -1,4 +1,7 @@
-<table *ngIf="items.length > 0">
+<table
+  *ngIf="items.length > 0"
+  [ngClass]="[mode === 'light' ? 'light' : 'dark']"
+>
   <thead>
     <tr>
       <ng-container *ngIf="fields.length > 0; else byColumns">

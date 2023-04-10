@@ -121,5 +121,8 @@
   "Old password": "Эски пароль",
   "Passwords do not match, please retype": "Паролдор дал келген жок, кайра териңиз",
   "Delete record": "Жазылышты өчүрүү",
-  "Record will be deleted, continue?": "Жазылыш өчүрүлөт, улантылсын?"
+  "Record will be deleted, continue?": "Жазылыш өчүрүлөт, улантылсын?",
+  "Pasture productivity area": "Жайыттардын түшүмдүүлүк аянты",
+  "Unproductive": "Аз түшүмдүү",
+  "Productive": "Түшүмдүү"
 }

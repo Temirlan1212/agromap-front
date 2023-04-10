@@ -121,5 +121,8 @@
   "Old password": "Old password",
   "Passwords do not match, please retype": "Passwords do not match, please retype",
   "Delete record": "Delete record",
-  "Record will be deleted, continue?": "Record will be deleted, continue?"
+  "Record will be deleted, continue?": "Record will be deleted, continue?",
+  "Pasture productivity area": "Pasture productivity area",
+  "Unproductive": "Unproductive",
+  "Productive": "Productive"
 }
