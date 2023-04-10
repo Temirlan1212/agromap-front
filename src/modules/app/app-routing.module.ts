@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './auth.guard';
+import { NotFoundPageComponent } from '../ui/components/not-found-page/not-found-page.component';
 
 const routes: Routes = [
   {
@@ -53,11 +54,7 @@ const routes: Routes = [
   {
     title: 'NotFoundPage',
     path: '**',
-    canActivate: [AuthGuard],
-    loadChildren: () =>
-      import('./modules/not-found-page/not-found-page.module').then(
-        (m) => m.NotFoundPageModule
-      ),
+    component: NotFoundPageComponent,
   },
 ];
 
