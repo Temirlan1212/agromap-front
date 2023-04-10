@@ -1,0 +1,75 @@
+<table
+  *ngIf="items.length > 0"
+  [ngClass]="[mode === 'light' ? 'light' : 'dark']"
+>
+  <thead>
+    <tr>
+      <ng-container *ngIf="fields.length > 0; else byColumns">
+        <th
+          *ngFor="let field of fields"
+          [title]="field.title"
+          [textContent]="field.title"
+        ></th>
+      </ng-container>
+      <ng-template #byColumns>
+        <th
+          *ngFor="let column of columns"
+          [title]="column"
+          [textContent]="column"
+        ></th>
+      </ng-template>
+      <th [title]="'Actions' | translate" *ngIf="actions"></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let item of items">
+      <ng-container *ngIf="fields.length > 0; else byColumns">
+        <td
+          *ngFor="let field of fields"
+          [title]="item[field.field]"
+          [textContent]="item[field.field]"
+        ></td>
+      </ng-container>
+      <ng-template #byColumns>
+        <td
+          *ngFor="let column of columns"
+          [title]="item[column]"
+          [textContent]="item[column]"
+        ></td>
+      </ng-template>
+      <td class="actions" *ngIf="actions">
+        <button
+          type="button"
+          class="transparent"
+          (click)="handleActionClick('edit', item)"
+        >
+          <app-svg-icon
+            name="edit"
+            size="18"
+            [title]="'Edit' | translate"
+          ></app-svg-icon>
+        </button>
+        <button
+          type="button"
+          class="transparent"
+          (click)="handleActionClick('delete', item)"
+        >
+          <app-svg-icon
+            name="delete"
+            size="18"
+            [title]="'Delete' | translate"
+          ></app-svg-icon>
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<app-question-dialog
+  #deleteDialog
+  [title]="'Delete record' | translate"
+  [isDanger]="true"
+  (submitted)="handleDeleteSubmitted()"
+>
+  {{ "Record will be deleted, continue?" | translate }}
+</app-question-dialog>

@@ -1,0 +1,104 @@
+@import "constants";
+
+:host {
+  display: block;
+  overflow: auto;
+  min-height: 100px;
+
+  &::-webkit-scrollbar {
+    width: 3px;
+    height: 3px;
+    border-radius: 8px;
+    background-color: $lightColor;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: $successColor;
+    border-radius: 5px;
+  }
+}
+
+table {
+  width: 100%;
+  font-weight: 400;
+  line-height: 16px;
+  border-collapse: collapse;
+  text-align: left;
+
+  &.nonwrap {
+    th,
+    td {
+      display: block;
+      max-width: 430px;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+  }
+
+  th,
+  td {
+    padding: 10px 5px;
+
+    &.actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 10px;
+      visibility: hidden;
+
+      button {
+        padding: 0;
+      }
+    }
+  }
+
+  thead {
+    height: 50px;
+    font-weight: 700;
+    background-color: $tableHeaderBackgroundColor;
+    color: $tableHeaderTextColor;
+    position: sticky;
+    top: 0;
+
+    tr {
+      border-bottom: 3px solid $tableHeaderBorderColor;
+    }
+  }
+
+  tbody {
+    background-color: $tableBodyBackgroundColor;
+    color: $tableBodyTextColor;
+
+    tr {
+      border-bottom: 1px solid $tableBodyRowBorderColor;
+
+      &:hover {
+        background-color: $tableBodyRowHoverBackgroundColor;
+
+        td.actions {
+          visibility: visible;
+        }
+      }
+    }
+  }
+
+  &.dark {
+    thead {
+      background-color: $darkColor;
+    }
+    tbody {
+      background-color: transparent;
+      color: $lightColor;
+    }
+    tr {
+      border-bottom: none !important;
+      &:hover {
+        background-color: transparent !important;
+      }
+    }
+    th {
+      color: $lightColor;
+    }
+  }
+}

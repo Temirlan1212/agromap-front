@@ -1,0 +1,77 @@
+@import "constants";
+h4 {
+  padding: 0;
+  margin: 0;
+}
+$transitionDelay: 0.2s;
+$bgColor: rgba(50, 44, 44, 0.75);
+$indent: 15px 10px;
+
+p {
+  color: $lightColor;
+  padding: 0 15px;
+}
+
+.wrapper {
+  position: relative;
+
+  .container {
+    z-index: 402;
+    user-select: none;
+    background-color: $bgColor;
+    max-width: 45%;
+    border-radius: 8px;
+    position: absolute;
+    opacity: 0;
+    transition: all $transitionDelay;
+    top: 0;
+    min-width: 350px;
+    pointer-events: none;
+    padding: $indent;
+    backdrop-filter: blur(4);
+    .icon {
+      color: $lightColor;
+      margin-bottom: 10px;
+      cursor: pointer;
+      pointer-events: initial;
+    }
+
+    &.isCollapsed {
+      opacity: 1;
+      pointer-events: initial;
+    }
+
+    h4 {
+      font-size: 17px;
+      font-weight: 600;
+      color: $lightColor;
+      margin: 5px 0 15px 0;
+    }
+
+    .body {
+      display: flex;
+      flex-direction: column;
+      gap: 30px 0;
+      overflow: auto;
+      max-height: 30vh;
+
+      &::-webkit-scrollbar {
+        width: 3px;
+        border-radius: 8px;
+        background-color: $lightColor;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background-color: $successColor;
+        border-radius: 5px;
+      }
+    }
+  }
+
+  .tab {
+    transition: all $transitionDelay;
+    &.isCollapsed {
+      opacity: 0;
+    }
+  }
+}

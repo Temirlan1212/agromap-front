@@ -119,5 +119,12 @@
   "New password": "Жаңы пароль",
   "Confirm password": "Паролду ырастоо",
   "Old password": "Эски пароль",
-  "Passwords do not match, please retype": "Паролдор дал келген жок, кайра териңиз"
+  "Passwords do not match, please retype": "Паролдор дал келген жок, кайра териңиз",
+  "Delete record": "Жазылышты өчүрүү",
+  "Record will be deleted, continue?": "Жазылыш өчүрүлөт, улантылсын?",
+  "Page not found": "Барак табылган жок",
+  "To the main page": "Башкы бетке",
+  "Pasture productivity area": "Жайыттардын түшүмдүүлүк аянты",
+  "Unproductive": "Аз түшүмдүү",
+  "Productive": "Түшүмдүү"
 }
