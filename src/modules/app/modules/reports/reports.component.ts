@@ -8,8 +8,5 @@ import { ApiService } from 'src/modules/api/api.service';
 })
 export class ReportsComponent implements AfterViewInit {
   constructor(private api: ApiService) {}
-
-  ngAfterViewInit(): void {
-    // this.api.statistics.getContourStatisticsProductivity()
-  }
+  ngAfterViewInit(): void {}
 }

@@ -1,0 +1,12 @@
+<div class="header">
+  <h4>{{ title | translate }}</h4>
+  <button type="button" class="success" (click)="handleButtonClick()">
+    {{ "Apply" | translate }}
+  </button>
+</div>
+<app-report-form #form [culture]="true"></app-report-form>
+
+<app-table [items]="data" [fields]="columns"></app-table>
+<button (click)="handleExportAsPdfClick()" class="success">
+  {{ "Export" | translate }}
+</button>

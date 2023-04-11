@@ -5,7 +5,6 @@ import {
   SimpleChanges,
   ViewChild,
   ElementRef,
-  AfterViewInit,
 } from '@angular/core';
 import {
   ChartComponent,
@@ -27,13 +26,8 @@ export type ChartOptions = {
   tooltip: ApexTooltip;
   title?: ApexTitleSubtitle;
   legend: ApexLegend;
+  colors: any;
 };
-
-export interface IChartData {
-  name: string;
-  data: number[];
-  dates: string[];
-}
 
 @Component({
   selector: 'app-simple-pie-chart',
@@ -42,10 +36,13 @@ export interface IChartData {
 })
 export class SimplePieChartComponent implements OnChanges {
   @ViewChild('chart') chart!: ChartComponent | ElementRef;
-  @Input() chartData!: IChartData[];
+
+  @Input() series!: number[];
+  @Input() labels!: string[] | number[];
+  @Input() dataLabelUnitOfMeasure: string = '';
 
   chartOptions: ChartOptions = {
-    series: [44, 55],
+    series: this.series,
     chart: {
       height: 400,
       type: 'pie',
@@ -53,7 +50,7 @@ export class SimplePieChartComponent implements OnChanges {
         show: true,
       },
     },
-    labels: ['Продуктивный', 'Непродуктивный'],
+    labels: this.labels,
     responsive: [
       {
         breakpoint: 480,
@@ -69,27 +66,36 @@ export class SimplePieChartComponent implements OnChanges {
     ],
     dataLabels: {
       enabled: true,
-      formatter: function (val: number): string {
-        return val.toFixed(1) + 'га';
+      formatter: (percent: number, opts): string => {
+        const seriesIndex = opts.seriesIndex;
+
+        return `${opts.w.config.series[seriesIndex].toFixed(1)} ${
+          this.dataLabelUnitOfMeasure
+        }`;
       },
     },
     tooltip: {
       enabled: true,
       y: {
-        formatter: function (value) {
-          return value.toFixed(1) + '%';
+        formatter: function (value: number, opts) {
+          const total = opts.config.series.reduce(
+            (curr: any, prev: any) => curr + prev,
+            0
+          );
+          return `${((value / total) * 100).toFixed(2)} %`;
         },
       },
     },
     legend: {
       position: 'bottom',
     },
+    colors: ['#1BA87D', '#B3EC84'],
   };
 
   constructor() {}
 
   ngOnChanges(changes: SimpleChanges) {
-    // this.chartOptions.series = this.chartData;
-    // this.chartOptions.xaxis.categories = this.chartData[0].dates;
+    this.chartOptions.labels = this.labels;
+    this.chartOptions.series = this.series;
   }
 }

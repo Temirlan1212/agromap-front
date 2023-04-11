@@ -1,31 +1,40 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ApiService } from '../../../../../api/api.service';
 import { IRegion } from '../../../../../api/models/region.model';
 import { IConton } from '../../../../../api/models/conton.model';
 import { IDistrict } from '../../../../../api/models/district.model';
-import { ILandType } from '../../../../../api/models/land-type.model';
 import { MessagesService } from '../../../../../ui/components/services/messages.service';
 import { Subscription } from 'rxjs';
 import { TranslatePipe } from '@ngx-translate/core';
+import { ILandType } from 'src/modules/api/models/land-type.model';
+import { ICulture } from 'src/modules/api/models/culture.model';
 
 @Component({
-  selector: 'app-pasture-form',
-  templateUrl: './pasture-form.component.html',
-  styleUrls: ['./pasture-form.component.scss'],
+  selector: 'app-report-form',
+  templateUrl: './report-form.component.html',
+  styleUrls: ['./report-form.component.scss'],
 })
-export class PastureFormComponent implements OnInit {
+export class LandTypeFormComponent implements OnInit {
+  get(arg0: string) {
+    throw new Error('Method not implemented.');
+  }
   form: FormGroup = new FormGroup({
     region: new FormControl<number | null>(null),
     district: new FormControl<string | null>({ value: null, disabled: true }),
     conton: new FormControl<string | null>({ value: null, disabled: true }),
     year: new FormControl<string | null>('2022', { nonNullable: true }),
-    land_type: new FormControl<string | null>('2'),
+    land_type: new FormControl<number | null>(null),
+    culture: new FormControl<number | null>(null),
   });
 
   regions: IRegion[] = [];
   contons: IConton[] = [];
   districts: IDistrict[] = [];
+  land_types: ILandType[] = [];
+  cultures: ICulture[] = [];
+
+  @Input() culture: boolean = false;
 
   subscriptions: Subscription[] = [
     this.form
@@ -76,6 +85,22 @@ export class PastureFormComponent implements OnInit {
     }
   }
 
+  async getLandType() {
+    try {
+      this.land_types = await this.api.dictionary.getLandType();
+    } catch (e: any) {
+      this.messages.error(e.message);
+    }
+  }
+
+  async getCulture() {
+    try {
+      this.cultures = await this.api.culture.getList();
+    } catch (e: any) {
+      this.messages.error(e.message);
+    }
+  }
+
   async handleRegionChange(value: number | null) {
     const districtVal = this.form.get('district');
     if (value != null && districtVal?.disabled) {
@@ -109,6 +134,8 @@ export class PastureFormComponent implements OnInit {
 
   ngOnInit() {
     this.getRegions();
+    this.getLandType();
+    this.getCulture();
     this.form.get('region')?.setValue(3);
   }
 }

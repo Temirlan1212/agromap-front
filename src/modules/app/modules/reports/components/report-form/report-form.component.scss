@@ -1,0 +1,26 @@
+:host {
+  display: block;
+
+  .form-fields {
+    display: flex;
+    gap: 20px;
+
+    app-input-select,
+    app-input {
+      width: 300px;
+    }
+    ::ng-deep {
+      .options {
+        position: absolute;
+        z-index: 100;
+        width: 100%;
+      }
+    }
+  }
+
+  @media (max-width: 1200px) {
+    .form-fields {
+      flex-wrap: wrap;
+    }
+  }
+}

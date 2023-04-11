@@ -9,15 +9,19 @@ import { TranslateModule, TranslatePipe } from '@ngx-translate/core';
 import { InputComponent } from '../../../ui/components/input/input.component';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { SimplePieChartComponent } from './components/simple-pie-chart/simple-pie-chart.component';
-import { PastureFormComponent } from './components/pasture-form/pasture-form.component';
+import { LandTypeFormComponent } from './components/report-form/report-form.component';
 import { PastureProductivityStatsComponent } from './components/pasture-productivity-stats/pasture-productivity-stats.component';
+import { LoadingComponent } from 'src/modules/ui/components/loading/loading.component';
+import { CultureStatsComponent } from './components/culture-stats/culture-stats.component';
+import { TableComponent } from 'src/modules/ui/components/table/table.component';
 
 @NgModule({
   declarations: [
     ReportsComponent,
     SimplePieChartComponent,
-    PastureFormComponent,
+    LandTypeFormComponent,
     PastureProductivityStatsComponent,
+    CultureStatsComponent,
   ],
   imports: [
     CommonModule,
@@ -27,6 +31,8 @@ import { PastureProductivityStatsComponent } from './components/pasture-producti
     TranslateModule,
     InputComponent,
     NgApexchartsModule,
+    LoadingComponent,
+    TableComponent,
   ],
   providers: [TranslatePipe],
 })

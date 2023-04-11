@@ -21,10 +21,12 @@
       <th [title]="'Actions' | translate" *ngIf="actions"></th>
     </tr>
   </thead>
+
   <tbody>
     <tr *ngFor="let item of items">
       <ng-container *ngIf="fields.length > 0; else byColumns">
         <td
+          [attr.data-label]="field.title"
           *ngFor="let field of fields"
           [title]="item[field.field]"
           [textContent]="item[field.field]"

@@ -1,8 +1,19 @@
 <div class="header">
-  <h4>Статистика площади продуктивности пастбищ</h4>
-  <button type="button" class="success" (click)="handleApplyClick(form)">
+  <h4>{{ "Pasture productivity area" | translate }}</h4>
+  <button type="button" class="success" (click)="handleButtonClick()">
     {{ "Apply" | translate }}
   </button>
 </div>
-<app-pasture-form #form></app-pasture-form>
-<app-simple-pie-chart></app-simple-pie-chart>
+<app-report-form #form></app-report-form>
+<app-simple-pie-chart
+  *ngIf="series.length > 0; else noData"
+  [series]="series"
+  [labels]="['Productive' | translate, 'Unproductive' | translate]"
+  [dataLabelUnitOfMeasure]="'ha' | translate"
+></app-simple-pie-chart>
+
+<ng-template #noData>
+  <p *ngIf="!loading">{{ "No data" | translate }}</p>
+</ng-template>
+
+<app-loading [loading]="loading"></app-loading>
