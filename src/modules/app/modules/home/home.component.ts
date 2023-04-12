@@ -475,11 +475,11 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    if (localStorage.hasOwnProperty('HomeComponent')) {
-      const { mapBounds } = this.store.getItem('HomeComponent');
+    const data = this.store.getItem('HomeComponent');
+    if (data !== null) {
       const newBounds = latLngBounds(
-        mapBounds._southWest,
-        mapBounds._northEast
+        data.mapBounds._southWest,
+        data.mapBounds._northEast
       );
 
       if (newBounds) {
