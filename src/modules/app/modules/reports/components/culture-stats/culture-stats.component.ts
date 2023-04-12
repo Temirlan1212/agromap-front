@@ -25,10 +25,23 @@ export class CultureStatsComponent implements AfterViewInit, OnDestroy {
   @ViewChild('table') table!: TableComponent;
   loading: boolean = false;
   title: string = 'Square of cultures';
+  territory: string = '';
 
   data: ITableItem[] = [];
 
   currLang: string = this.translateSvc.currentLang;
+
+  columns = [
+    {
+      title: this.translate.transform('Name'),
+      field: 'culture_name_' + this.currLang,
+    },
+    { title: this.translate.transform('Area'), field: 'area_ha' },
+    {
+      title: this.translate.transform('Territory'),
+      field: 'territory_' + this.currLang,
+    },
+  ];
 
   subscriptions: Subscription[] = [
     this.translateSvc.onLangChange.subscribe((lang) => {
@@ -73,32 +86,50 @@ export class CultureStatsComponent implements AfterViewInit, OnDestroy {
           }`,
         };
       });
+      this.territory = res[0].territory_en;
     } catch (error: any) {
       this.messages.error(this.translate.transform(error.message));
     }
     this.loading = false;
   }
 
-  handleExportAsPdfClick(): void {
+  async handleExportAsPdfClick(): Promise<void> {
+    const doc = new jsPDF();
     if (this.table.table.nativeElement) {
-      const doc = new jsPDF('p', 'mm', 'a4');
       html2canvas(this.table.table.nativeElement).then((canvas) => {
         const imgData = canvas.toDataURL('image/png');
-        const imgWidth = 210; // A4 size
+        const imgWidth = 185; // A4 size
         const pageHeight = 297; // A4 size
         const imgHeight = (canvas.height * imgWidth) / canvas.width;
         let heightLeft = imgHeight;
-        let position = 0;
-        doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+        let position = 13;
+
+        const margin = 10;
+        doc.setLineWidth(0.5);
+        doc.setDrawColor(0, 0, 0);
+        doc.line(margin, margin, 210 - margin, margin); // top border
+        doc.line(margin, 297 - margin, 210 - margin, 297 - margin); // bottom border
+        doc.line(margin, margin, margin, 297 - margin); // left border
+        doc.line(210 - margin, margin, 210 - margin, 297 - margin); // right border
+
+        const centerX = 105 - imgWidth / 2;
+        doc.addImage(imgData, 'PNG', centerX, position, imgWidth, imgHeight);
         heightLeft -= pageHeight;
 
-        while (heightLeft >= 0) {
-          position = heightLeft - imgHeight;
-          doc.addPage();
-          doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-          heightLeft -= pageHeight;
+        const totalPages = Math.ceil(heightLeft / pageHeight);
+        for (let i = 1; i <= totalPages; i++) {
+          doc.text(`Page ${i} of ${totalPages}`, 10, 297 - 10);
+          doc.addImage(
+            imgData,
+            'PNG',
+            centerX,
+            -pageHeight * i,
+            imgWidth,
+            imgHeight
+          );
         }
-        doc.save('export.pdf');
+
+        doc.save(`${this.territory}-cultures.pdf`);
       });
     }
   }

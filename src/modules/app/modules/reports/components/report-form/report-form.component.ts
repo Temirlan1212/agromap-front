@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ApiService } from '../../../../../api/api.service';
 import { IRegion } from '../../../../../api/models/region.model';
@@ -15,7 +15,7 @@ import { ICulture } from 'src/modules/api/models/culture.model';
   templateUrl: './report-form.component.html',
   styleUrls: ['./report-form.component.scss'],
 })
-export class LandTypeFormComponent implements OnInit {
+export class LandTypeFormComponent implements OnInit, OnDestroy {
   get(arg0: string) {
     throw new Error('Method not implemented.');
   }
@@ -111,7 +111,7 @@ export class LandTypeFormComponent implements OnInit {
 
   async handleRegionChange(value: number | null) {
     const districtVal = this.form.get('district');
-    if (value != null && districtVal?.disabled) {
+    if (value != null) {
       await this.getDistricts(value);
       districtVal?.enable({ emitEvent: false });
     } else if (value != null && districtVal?.enabled) {
@@ -144,5 +144,9 @@ export class LandTypeFormComponent implements OnInit {
     this.getRegions();
     this.getLandType();
     this.getCulture();
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.map((subscription) => subscription.unsubscribe());
   }
 }

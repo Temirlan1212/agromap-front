@@ -21,6 +21,10 @@
   <p *ngIf="!loading">{{ "No data" | translate }}</p>
 </ng-template>
 
-<button (click)="handleExportAsPdfClick()" class="success">
+<button
+  (click)="handleExportAsPdfClick()"
+  *ngIf="data.length > 0"
+  class="success"
+>
   {{ "Export" | translate }}
 </button>
