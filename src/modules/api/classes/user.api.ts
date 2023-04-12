@@ -20,7 +20,7 @@ export class UserApi {
 
   async logOut(): Promise<boolean> {
     let result = false;
-    await this.logout();
+    await firstValueFrom(this.http.get<any>(`account/logout_agromap`));
 
     if (document != null) {
       document.cookie = 'user=;';
@@ -64,9 +64,5 @@ export class UserApi {
     return await firstValueFrom(
       this.http.patch<IProfile>(`account/edit_profile`, data)
     );
-  }
-
-  private async logout(): Promise<any> {
-    return await firstValueFrom(this.http.get<any>(`account/logout_agromap`));
   }
 }
