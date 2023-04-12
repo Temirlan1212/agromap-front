@@ -21,9 +21,10 @@ export interface IContour {
 
 export interface ContourFiltersQuery {
   year?: number;
-  land_type?: number;
+  land_type?: number | string;
   region: number;
   district: number;
   conton: number;
+  culture?: number | string;
   ai?: boolean;
 }
