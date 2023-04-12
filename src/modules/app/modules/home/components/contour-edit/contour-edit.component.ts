@@ -79,9 +79,6 @@ export class ContourEditComponent implements OnInit, OnDestroy {
           customControls: true,
         });
         this.mapInstance?.fitBounds(geoJson(this.contour.polygon).getBounds());
-        this.mapInstance?.setMaxBounds(
-          geoJson(this.contour.polygon).getBounds()
-        );
         this.handleEditShape();
       }
     );

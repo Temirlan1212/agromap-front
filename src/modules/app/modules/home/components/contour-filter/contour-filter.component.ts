@@ -22,6 +22,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { QuestionDialogComponent } from '../../../../../ui/components/question-dialog/question-dialog.component';
 import { StoreService } from 'src/modules/api/store.service';
+import { ICulture } from '../../../../../api/models/culture.model';
 
 @Component({
   selector: 'app-contour-filter',
@@ -33,6 +34,7 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
   contons: IConton[] = [];
   districts: IDistrict[] = [];
   landTypes: ILandType[] = [];
+  cultures: ICulture[] = [];
   mapInstance!: Map;
   mapGeo!: GeoJSON;
   filteredContours: any = [];
@@ -53,13 +55,11 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
   form: FormGroup = new FormGroup({
     region: new FormControl<string | null>(null, {
       nonNullable: true,
-      validators: Validators.required,
     }),
     district: new FormControl<string | null>(
       { value: null, disabled: true },
       {
         nonNullable: true,
-        validators: Validators.required,
       }
     ),
     conton: new FormControl<string | null>(
@@ -68,8 +68,15 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
         nonNullable: true,
       }
     ),
-    land_type: new FormControl<string | null>(null, { nonNullable: true }),
-    year: new FormControl<number | null>(2022, { nonNullable: true }),
+    land_type: new FormControl<string | null>(null, {
+      nonNullable: true,
+      validators: Validators.required,
+    }),
+    culture: new FormControl<string | null>(null, { nonNullable: true }),
+    year: new FormControl<number | null>(2022, {
+      nonNullable: true,
+      validators: Validators.required,
+    }),
   });
   mode: FormControl = new FormControl<string | null>(null);
 
@@ -100,9 +107,11 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
       this.mapInstance = res?.map as Map;
       this.mapGeo = res?.geoJson as GeoJSON;
     }),
-    this.store.watch.subscribe((v) =>
-      this.mode?.patchValue(v.value, { emitEvent: false })
-    ),
+    this.store.watch.subscribe((v) => {
+      if (v.name === 'mode') {
+        this.mode?.patchValue(v.value, { emitEvent: false });
+      }
+    }),
   ];
 
   constructor(
@@ -117,9 +126,12 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.mode?.patchValue('agromap_store_ai');
+    if (this.store.getItem('mode') == null) {
+      this.mode?.patchValue('agromap_store_ai');
+    }
     this.getRegions();
     this.getLandTypes();
+    this.getCultures();
   }
 
   async getRegions(): Promise<void> {
@@ -158,6 +170,14 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
     }
   }
 
+  async getCultures() {
+    try {
+      this.cultures = await this.api.culture.getList();
+    } catch (e: any) {
+      this.messages.error(e.message);
+    }
+  }
+
   handleFormReset(): void {
     this.form.reset();
     this.resetMapBounds();
@@ -177,12 +197,13 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
 
   async handleFormSubmit(): Promise<void> {
     const formState = this.getState();
-    this.onFormSubmit.emit(formState);
     if (!formState.valid) {
       this.messages.error(this.translate.transform('Form is invalid'));
       return;
     }
-    const { region, district, year, conton, land_type, mode } = formState.value;
+    this.onFormSubmit.emit(formState);
+    const { region, district, year, conton, land_type, culture } =
+      formState.value;
     this.loading = true;
     try {
       this.filtersQuery = {
@@ -190,12 +211,13 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
         ...(district && { district }),
         ...(conton && { conton }),
         land_type,
+        culture,
         year,
-        ...(mode == 'agromap_store_ai' && { ai: true }),
+        ...(this.mode.value == 'agromap_store_ai' && { ai: true }),
       };
-      this.filteredContours = await this.api.contour.getFilteredContours(
-        this.filtersQuery
-      );
+      // this.filteredContours = await this.api.contour.getFilteredContours(
+      //   this.filtersQuery
+      // );
       this.store.setItem<ContourFiltersQuery | null>(
         'ContourFilterComponent',
         this.filtersQuery
@@ -209,6 +231,11 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
 
   async handleRegionChange(value: string | null) {
     const districtVal = this.form.get('district');
+    const region = this.regions.find((r) => r.id == Number(value));
+    region &&
+      this.mapInstance.fitBounds(geoJson(region?.polygon).getBounds(), {
+        maxZoom: 12,
+      });
     if (value != null && districtVal?.disabled) {
       await this.getDistricts();
       districtVal?.enable({ emitEvent: false });
@@ -217,6 +244,7 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
     } else {
       districtVal?.patchValue(null);
       districtVal?.disable({ emitEvent: false });
+      this.resetMapBounds();
     }
   }
 
@@ -235,7 +263,6 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
     } else {
       contonVal?.patchValue(null, { emitEvent: false });
       contonVal?.disable({ emitEvent: false });
-      this.resetMapBounds();
     }
   }
 
