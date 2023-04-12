@@ -47,7 +47,7 @@ export class ContourFormComponent implements OnInit, OnDestroy {
         year: v.year,
         code_soato: v.code_soato,
         ink: v.ink,
-        ...(this.mode == 'ai' && { disctrict: v.disctrict }),
+        ...(this.mode == 'agromap_store_ai' && { disctrict: v.disctrict }),
       });
     }
   }
@@ -80,7 +80,7 @@ export class ContourFormComponent implements OnInit, OnDestroy {
           region: selectedConton?.region,
         });
       } else {
-        if (this.mode != 'ai') {
+        if (this.mode != 'agromap_store_ai') {
           this.form.patchValue({ district: null, region: null });
         }
       }

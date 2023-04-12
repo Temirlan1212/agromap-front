@@ -123,7 +123,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   currentLang: string = this.translateSvc.currentLang;
   currentRouterPathname: string = '';
   isWmsAiActive: boolean = false;
-  culture: string | null = null;
+  culture: any = null;
   productivity: string | null = null;
   contourStatisticsProductivityTableItems: ITableItem[][] = [];
   contourStatisticsProductivityAreaTitle: string = '';
@@ -143,9 +143,6 @@ export class HomeComponent implements OnInit, OnDestroy {
       event instanceof NavigationEnd
         ? (this.currentRouterPathname = router.url)
         : ''
-    );
-    this.translateSvc.onLangChange.subscribe(
-      (res) => (this.currentLang = res.lang)
     );
   }
 
@@ -178,9 +175,10 @@ export class HomeComponent implements OnInit, OnDestroy {
     const cid =
       layerFeature?.feature?.properties?.['contour_id'] ??
       layerFeature?.feature?.properties?.['id'];
-    this.culture = layerFeature?.feature?.properties?.['culture'];
+    this.getOneCulture(
+      Number(layerFeature?.feature?.properties?.['culture_id'])
+    );
     this.productivity = layerFeature?.feature?.properties?.['productivity'];
-
     this.getContourData(cid);
     this.layerFeature = layerFeature;
     this.selectedLayer = geoJSON(this.layerFeature?.feature)
@@ -276,6 +274,14 @@ export class HomeComponent implements OnInit, OnDestroy {
         }
       });
     } catch (e: any) {
+      console.log(e);
+    }
+  }
+
+  async getOneCulture(id: number) {
+    try {
+      this.culture = await this.api.culture.getOne(id);
+    } catch (e) {
       console.log(e);
     }
   }
@@ -385,9 +391,9 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.contourStatisticsProductivityAreaTitle = res.type;
 
       let tableItem = {
-        areaType: res.name,
-        productive: `${this.decimalPipe.transform(res.Productive.ha)} га`,
-        unproductive: `${this.decimalPipe.transform(res.Unproductive.ha)} га`,
+        areaType: res?.name,
+        productive: `${this.decimalPipe.transform(res.Productive?.ha)} га`,
+        unproductive: `${this.decimalPipe.transform(res.Unproductive?.ha)} га`,
       };
 
       this.contourStatisticsProductivityTableItems.push([tableItem]);
@@ -441,7 +447,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.getVegIndexList();
     this.getRegionsPolygon();
     this.store.watch.subscribe((v: IStore<ContourFiltersQuery | null>) => {
-      if (v.value != null) {
+      if (v.value != null && v.name === 'ContourFilterComponent') {
         this.wmsCQLFilter = '';
         if (v.value.region) {
           if (this.wmsCQLFilter.length > 0) {
@@ -461,7 +467,36 @@ export class HomeComponent implements OnInit, OnDestroy {
           }
           this.wmsCQLFilter += 'cntn=' + v.value.conton;
         }
-
+        if (v.value.culture) {
+          const val = v.value.culture;
+          if (this.wmsCQLFilter.length > 0) {
+            this.wmsCQLFilter += '&&';
+          }
+          if (typeof val === 'string' && val.split(',').length > 1) {
+            this.wmsCQLFilter += val
+              .split(',')
+              .reduce((acc, i) => (acc += 'clt=' + i + ' OR '), '')
+              .slice(0, -3)
+              .trim();
+          } else {
+            this.wmsCQLFilter += 'clt=' + v.value.culture;
+          }
+        }
+        if (v.value.land_type) {
+          const val = v.value.land_type;
+          if (this.wmsCQLFilter.length > 0) {
+            this.wmsCQLFilter += '&&';
+          }
+          if (typeof val === 'string' && val.split(',').length > 1) {
+            this.wmsCQLFilter += val
+              .split(',')
+              .reduce((acc, i) => (acc += 'ltype=' + i + ' OR '), '')
+              .slice(0, -3)
+              .trim();
+          } else {
+            this.wmsCQLFilter += 'ltype=' + v.value.land_type;
+          }
+        }
         this.setWmsParams();
       } else {
         this.wmsCQLFilter = null;

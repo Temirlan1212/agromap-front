@@ -1,10 +1,13 @@
 import {
   Component,
-  ElementRef, EventEmitter,
-  forwardRef, HostBinding,
+  ElementRef,
+  EventEmitter,
+  forwardRef,
+  HostBinding,
   HostListener,
   Input,
-  OnChanges, Output,
+  OnChanges,
+  Output,
   SimpleChanges,
 } from '@angular/core';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
@@ -49,20 +52,25 @@ export class InputSelectComponent implements ControlValueAccessor, OnChanges {
   localItems: Record<string, any>[] = [];
   groups: string[] = [];
 
-  constructor(private elementRef: ElementRef) {
-  }
+  constructor(private elementRef: ElementRef) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['items'] != null && Array.isArray(this.items)) {
       this.selectedItemsObj = {};
       this.localItems = [...this.items];
       let values = String(this.value);
-      this.selectedItems = this.items.filter(i => values?.split(',').includes(String(i[this.idField])));
-      this.value = !this.selectedItems.map(i => i[this.idField]).join(',') ? null : this.selectedItems.map(i => i[this.idField]).join(',');
+      this.selectedItems = this.items.filter((i) =>
+        values?.split(',').includes(String(i[this.idField]))
+      );
+      this.value = !this.selectedItems.map((i) => i[this.idField]).join(',')
+        ? null
+        : this.selectedItems.map((i) => i[this.idField]).join(',');
       this.multi && this.onChange(this.value);
-      this.selectedItems.forEach(i => this.selectedItemsObj[i[this.idField]] = i[this.nameField]);
-      if(this.items.length !== 0 && this.groupField) {
-        this.setUniqueGroups(this.items)
+      this.selectedItems.forEach(
+        (i) => (this.selectedItemsObj[i[this.idField]] = i[this.nameField])
+      );
+      if (this.items.length !== 0 && this.groupField) {
+        this.setUniqueGroups(this.items);
       }
     }
   }
@@ -88,13 +96,14 @@ export class InputSelectComponent implements ControlValueAccessor, OnChanges {
       this.handleMultiSelect(e, item);
     } else {
       this.handleSingleSelect(e, item);
+      this.opened = !this.opened;
     }
-    this.value = this.selectedItems?.map(i => i[this.idField]).join(',') as string;
+    this.value = this.selectedItems
+      ?.map((i) => i[this.idField])
+      .join(',') as string;
     this.value = !this.multi ? Number(this.value) : this.value;
     this.onChange(
-      this.selectedItems && this.selectedItems.length > 0
-        ? this.value
-        : null
+      this.selectedItems && this.selectedItems.length > 0 ? this.value : null
     );
     this.onTouched();
   }
@@ -129,14 +138,16 @@ export class InputSelectComponent implements ControlValueAccessor, OnChanges {
       e.stopPropagation();
       this.selectedItems =
         this.selectedItems &&
-        this.selectedItems.filter((i) => i[this.idField] !== item[this.idField]);
+        this.selectedItems.filter(
+          (i) => i[this.idField] !== item[this.idField]
+        );
       this.selectedItemsObj[item[this.idField]] = null;
-      this.value = this.selectedItems?.map(i => i[this.idField]).join(',') as string;
+      this.value = this.selectedItems
+        ?.map((i) => i[this.idField])
+        .join(',') as string;
       this.value = !this.multi ? Number(this.value) : this.value;
       this.onChange(
-        this.selectedItems && this.selectedItems.length > 0
-          ? this.value
-          : null
+        this.selectedItems && this.selectedItems.length > 0 ? this.value : null
       );
       this.onSelectItem.emit(null);
       this.onTouched();
@@ -152,7 +163,6 @@ export class InputSelectComponent implements ControlValueAccessor, OnChanges {
       this.opened = !this.opened;
     }
   }
-
 
   handleSearch(search: string) {
     this.localItems = this.items.filter((i) =>
@@ -171,8 +181,12 @@ export class InputSelectComponent implements ControlValueAccessor, OnChanges {
     if (obj == null) {
       this.selectedItemsObj = {};
     }
-    this.selectedItems = this.items.filter(i => i[this.idField] === this.value);
-    this.selectedItems.forEach(i => this.selectedItemsObj[i[this.idField]] = i[this.nameField]);
+    this.selectedItems = this.items.filter(
+      (i) => i[this.idField] === this.value
+    );
+    this.selectedItems.forEach(
+      (i) => (this.selectedItemsObj[i[this.idField]] = i[this.nameField])
+    );
   }
 
   registerOnChange(fn: Function): void {
@@ -188,6 +202,8 @@ export class InputSelectComponent implements ControlValueAccessor, OnChanges {
   }
 
   private setUniqueGroups(items: Record<string, any>[]) {
-    this.groups = [...new Set(items.map(item => item[this.groupField as string]))]
-  } 
+    this.groups = [
+      ...new Set(items.map((item) => item[this.groupField as string])),
+    ];
+  }
 }

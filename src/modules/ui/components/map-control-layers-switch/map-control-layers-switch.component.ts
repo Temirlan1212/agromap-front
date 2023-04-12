@@ -68,7 +68,7 @@ export class MapControlLayersSwitchComponent implements OnChanges {
 
   handleWmsLayerChange(layerName: string | number): void {
     if (!!layerName) {
-      this.store.setItem('mode', layerName);
+      this.store.setItem('ContourFilterComponentMode', layerName);
     }
     if (this.activeWmsLayer != null) {
       this.map.removeLayer(this.activeWmsLayer.layer);
