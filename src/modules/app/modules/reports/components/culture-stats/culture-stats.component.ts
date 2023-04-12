@@ -86,7 +86,7 @@ export class CultureStatsComponent implements AfterViewInit, OnDestroy {
           }`,
         };
       });
-      this.territory = res[0].territory_en;
+      this.territory = res[0]?.territory_en;
     } catch (error: any) {
       this.messages.error(this.translate.transform(error.message));
     }
