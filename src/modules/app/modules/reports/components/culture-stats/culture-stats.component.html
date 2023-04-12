@@ -1,0 +1,30 @@
+<div class="header">
+  <h4>{{ title | translate }}</h4>
+  <button type="button" class="success" (click)="handleButtonClick()">
+    {{ "Apply" | translate }}
+  </button>
+</div>
+<app-report-form #form [culture]="true"></app-report-form>
+
+<app-table
+  #table
+  *ngIf="data.length > 0 && !loading; else noData"
+  [items]="data"
+  [fields]="[
+    { title: 'Name' | translate, field: 'culture_name_' + currLang },
+    { title: 'Area' | translate, field: 'area_ha' },
+    { title: 'Territory' | translate, field: 'territory_' + currLang }
+  ]"
+></app-table>
+<app-loading [loading]="loading"></app-loading>
+<ng-template #noData>
+  <p *ngIf="!loading">{{ "No data" | translate }}</p>
+</ng-template>
+
+<button
+  (click)="handleExportAsPdfClick()"
+  *ngIf="data.length > 0"
+  class="success"
+>
+  {{ "Export" | translate }}
+</button>

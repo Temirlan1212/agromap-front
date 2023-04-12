@@ -6,6 +6,7 @@ import {
   Output,
   SimpleChanges,
   ViewChild,
+  ElementRef,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
@@ -16,6 +17,7 @@ import {
   ITableField,
   ITableItem,
 } from '../../models/table.model';
+import { CheckExistPipe } from '../../pipes/check-exist.pipe';
 
 @Component({
   selector: 'app-table',
@@ -25,12 +27,14 @@ import {
     SvgIconComponent,
     QuestionDialogComponent,
     TranslateModule,
+    CheckExistPipe,
   ],
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.scss'],
 })
 export class TableComponent implements OnChanges {
   @ViewChild('deleteDialog') deleteDialog!: QuestionDialogComponent;
+  @ViewChild('table') table!: ElementRef<HTMLElement>;
   @Input() actions: boolean = false;
   @Input() fields: ITableField[] = [];
   @Input() items: ITableItem[] = [];

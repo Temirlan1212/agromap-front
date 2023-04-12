@@ -47,12 +47,19 @@ export class MapControlLayersSwitchComponent implements OnChanges {
   ) {}
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes['mode'].currentValue == 'agromap_store_ai') {
-      this.selected = 'agromap_store_ai';
-      this.handleWmsLayerChange('agromap_store_ai');
+    if (!changes['mode'].firstChange) {
+      if (changes['mode'].currentValue == 'agromap_store_ai') {
+        this.selected = 'agromap_store_ai';
+        this.handleWmsLayerChange('agromap_store_ai');
+      } else {
+        this.selected = 'agromap_store';
+        this.handleWmsLayerChange('agromap_store');
+      }
     } else {
-      this.selected = 'agromap_store';
-      this.handleWmsLayerChange('agromap_store');
+      this.selected = this.store.getItem(
+        'ContourFilterComponentMode'
+      ) as string;
+      this.handleWmsLayerChange(this.selected);
     }
   }
 
@@ -68,7 +75,7 @@ export class MapControlLayersSwitchComponent implements OnChanges {
 
   handleWmsLayerChange(layerName: string | number): void {
     if (!!layerName) {
-      this.store.setItem('mode', layerName);
+      this.store.setItem('ContourFilterComponentMode', layerName);
     }
     if (this.activeWmsLayer != null) {
       this.map.removeLayer(this.activeWmsLayer.layer);

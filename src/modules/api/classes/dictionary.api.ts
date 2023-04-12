@@ -4,14 +4,14 @@ import { IRegion, IRegionListQuery } from '../models/region.model';
 import { IConton, IContonListQuery } from '../models/conton.model';
 import { IDistrict, IDistrictListQuery } from '../models/district.model';
 import { ILandType } from '../models/land-type.model';
+import { Index } from '../models/actual-veg-indexes';
 
 export class DictionaryApi {
-  constructor(private http: HttpClient) {
-  }
+  constructor(private http: HttpClient) {}
 
-  async getRegions(query?: IRegionListQuery): Promise<(IRegion)[]> {
+  async getRegions(query?: IRegionListQuery): Promise<IRegion[]> {
     const response = await firstValueFrom(
-      this.http.get<(IRegion)[]>('gip/region', {
+      this.http.get<IRegion[]>('gip/region', {
         params: query as any,
       })
     );
@@ -36,7 +36,10 @@ export class DictionaryApi {
   }
 
   async getLandType(): Promise<ILandType[]> {
-    return await firstValueFrom(
-      this.http.get<ILandType[]>('gip/land-type'));
+    return await firstValueFrom(this.http.get<ILandType[]>('gip/land-type'));
+  }
+
+  async getIndexes(): Promise<Index[]> {
+    return await firstValueFrom(this.http.get<Index[]>('info/index-list'));
   }
 }
