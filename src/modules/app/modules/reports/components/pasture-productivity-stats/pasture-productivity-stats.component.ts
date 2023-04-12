@@ -31,10 +31,18 @@ export class PastureProductivityStatsComponent implements AfterViewInit {
     const formState = this.form.getState();
     const { value } = formState;
     const land_type = this.form.form.get('land_type');
+    const region = this.form.form.get('region');
     land_type?.setValue(2);
     land_type?.disable();
+    region?.setValue(3);
 
-    if (!value.region) {
+    const params = {
+      ...value,
+      land_type: 2,
+      region: 3,
+    };
+
+    if (!params.region) {
       this.messages.error(this.translate.transform('Form is invalid'));
       return;
     }
@@ -42,10 +50,9 @@ export class PastureProductivityStatsComponent implements AfterViewInit {
     this.series = [];
     this.loading = true;
     try {
-      const res = await this.api.statistics.getContourStatisticsProductivity({
-        ...value,
-        land_type: 2,
-      });
+      const res = await this.api.statistics.getContourStatisticsProductivity(
+        params
+      );
       this.series = [...this.series, res.Productive.ha, res.Unproductive.ha];
     } catch (error: any) {
       this.messages.error(this.translate.transform(error.message));

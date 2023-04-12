@@ -6,6 +6,7 @@ import {
   Output,
   SimpleChanges,
   ViewChild,
+  ElementRef,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
@@ -31,6 +32,7 @@ import {
 })
 export class TableComponent implements OnChanges {
   @ViewChild('deleteDialog') deleteDialog!: QuestionDialogComponent;
+  @ViewChild('table') table!: ElementRef<HTMLElement>;
   @Input() actions: boolean = false;
   @Input() fields: ITableField[] = [];
   @Input() items: ITableItem[] = [];

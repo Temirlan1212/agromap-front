@@ -6,7 +6,7 @@ import { IConton } from '../../../../../api/models/conton.model';
 import { IDistrict } from '../../../../../api/models/district.model';
 import { MessagesService } from '../../../../../ui/components/services/messages.service';
 import { Subscription } from 'rxjs';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { ILandType } from 'src/modules/api/models/land-type.model';
 import { ICulture } from 'src/modules/api/models/culture.model';
 
@@ -34,6 +34,8 @@ export class LandTypeFormComponent implements OnInit {
   land_types: ILandType[] = [];
   cultures: ICulture[] = [];
 
+  currLang: string = this.translateSvc.currentLang;
+
   @Input() culture: boolean = false;
 
   subscriptions: Subscription[] = [
@@ -47,12 +49,17 @@ export class LandTypeFormComponent implements OnInit {
       ?.valueChanges.subscribe((value) =>
         this.handleDistrictChange(value)
       ) as Subscription,
+
+    this.translateSvc.onLangChange.subscribe(
+      (lang) => (this.currLang = lang.lang)
+    ) as Subscription,
   ];
 
   constructor(
     private api: ApiService,
     private messages: MessagesService,
-    private translate: TranslatePipe
+    private translate: TranslatePipe,
+    private translateSvc: TranslateService
   ) {}
 
   async getRegions(): Promise<void> {
@@ -136,6 +143,5 @@ export class LandTypeFormComponent implements OnInit {
     this.getRegions();
     this.getLandType();
     this.getCulture();
-    this.form.get('region')?.setValue(3);
   }
 }

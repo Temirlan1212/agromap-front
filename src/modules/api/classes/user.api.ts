@@ -7,7 +7,7 @@ export class UserApi {
 
   async logIn(data: Partial<IUser>): Promise<IUser> {
     const response = await firstValueFrom(
-      this.http.post<IUser>('login_agromap', data)
+      this.http.post<IUser>('account/login_agromap', data)
     );
 
     if (document != null && response != null) {

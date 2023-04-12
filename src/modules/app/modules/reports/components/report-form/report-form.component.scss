@@ -4,6 +4,7 @@
   .form-fields {
     display: flex;
     gap: 20px;
+    flex-wrap: wrap;
 
     app-input-select,
     app-input {
@@ -19,8 +20,5 @@
   }
 
   @media (max-width: 1200px) {
-    .form-fields {
-      flex-wrap: wrap;
-    }
   }
 }
