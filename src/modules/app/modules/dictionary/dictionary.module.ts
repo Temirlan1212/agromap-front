@@ -17,6 +17,10 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { FormOverlayComponent } from '../../../ui/components/form-overlay/form-overlay.component';
 import { QuestionDialogComponent } from '../../../ui/components/question-dialog/question-dialog.component';
 import { TableComponent } from 'src/modules/ui/components/table/table.component';
+import { RegionsComponent } from './regions/regions.component';
+import { DistrictsComponent } from './districts/districts.component';
+import { ContonsComponent } from './contons/contons.component';
+import { IndexesComponent } from './indexes/indexes.component';
 
 @NgModule({
   declarations: [
@@ -25,6 +29,10 @@ import { TableComponent } from 'src/modules/ui/components/table/table.component'
     CultureAddComponent,
     CultureEditComponent,
     CultureFormComponent,
+    RegionsComponent,
+    DistrictsComponent,
+    ContonsComponent,
+    IndexesComponent,
   ],
   imports: [
     CommonModule,
