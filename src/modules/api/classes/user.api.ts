@@ -18,8 +18,9 @@ export class UserApi {
     return response;
   }
 
-  logOut(): boolean {
+  async logOut(): Promise<boolean> {
     let result = false;
+    await firstValueFrom(this.http.get<any>(`account/logout_agromap`));
 
     if (document != null) {
       document.cookie = 'user=;';
@@ -50,18 +51,18 @@ export class UserApi {
   }
 
   async getUser(): Promise<IProfile> {
-    return await firstValueFrom(this.http.get<IProfile>(`get_profile`));
+    return await firstValueFrom(this.http.get<IProfile>(`account/get_profile`));
   }
 
   async updatePassword(data: IPassword): Promise<IPassword> {
     return await firstValueFrom(
-      this.http.post<IPassword>(`change_password`, data)
+      this.http.post<IPassword>(`account/change_password`, data)
     );
   }
 
   async updateProfile(data: IProfile): Promise<IProfile> {
     return await firstValueFrom(
-      this.http.patch<IProfile>(`edit_profile`, data)
+      this.http.patch<IProfile>(`account/edit_profile`, data)
     );
   }
 }
