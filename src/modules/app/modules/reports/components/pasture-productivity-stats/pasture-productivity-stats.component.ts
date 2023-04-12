@@ -8,7 +8,6 @@ import { ApiService } from 'src/modules/api/api.service';
 import { LandTypeFormComponent } from '../report-form/report-form.component';
 import { MessagesService } from 'src/modules/ui/components/services/messages.service';
 import { TranslatePipe } from '@ngx-translate/core';
-import { FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-pasture-productivity-stats',
@@ -30,16 +29,18 @@ export class PastureProductivityStatsComponent implements AfterViewInit {
   async handleButtonClick() {
     const formState = this.form.getState();
     const { value } = formState;
+
     const land_type = this.form.form.get('land_type');
     const region = this.form.form.get('region');
-    land_type?.setValue(2);
+
     land_type?.disable();
-    region?.setValue(3);
+    land_type?.setValue(2);
+    region?.setValue(value.region || 3);
 
     const params = {
       ...value,
       land_type: 2,
-      region: 3,
+      region: value.region || 3,
     };
 
     if (!params.region) {
