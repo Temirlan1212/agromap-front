@@ -25,7 +25,9 @@ export class ContourEditComponent implements OnInit, OnDestroy {
   layer: any = null;
   polygon: GeoJSON.Polygon | null = null;
   isPolygonChanged: boolean = false;
-  mode: string | null = this.store.getItem<string>('mode');
+  mode: string | null = this.store.getItem<string>(
+    'ContourFilterComponentMode'
+  );
 
   constructor(
     private api: ApiService,
