@@ -31,8 +31,9 @@ export class DistrictsComponent {
   async getList() {
     try {
       this.loading = true;
-      const { results } =
-        (await this.api.dictionary.getDistricts()) as IDistrictWithPagination;
+      const { results } = (await this.api.dictionary.getDistricts({
+        page_size: 100,
+      })) as IDistrictWithPagination;
 
       this.list = results;
     } catch (e: any) {

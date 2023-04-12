@@ -31,8 +31,9 @@ export class ContonsComponent {
   async getList() {
     try {
       this.loading = true;
-      const { results } =
-        (await this.api.dictionary.getContons()) as IContonWithPagination;
+      const { results } = (await this.api.dictionary.getContons({
+        page_size: 100,
+      })) as IContonWithPagination;
       this.list = results;
     } catch (e: any) {
       console.log(e.message);

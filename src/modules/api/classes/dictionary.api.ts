@@ -32,7 +32,7 @@ export class DictionaryApi {
   ): Promise<IConton[] | IContonWithPagination> {
     return await firstValueFrom(
       this.http.get<IConton[]>('gip/conton', {
-        params: { ...query, page_size: 100 } as any,
+        params: { ...query } as any,
       })
     );
   }
@@ -42,7 +42,7 @@ export class DictionaryApi {
   ): Promise<IDistrict[] | IDistrictWithPagination> {
     return await firstValueFrom(
       this.http.get<IDistrict[] | IDistrictWithPagination>('gip/district', {
-        params: { ...query, page_size: 100 } as any,
+        params: { ...query } as any,
       })
     );
   }

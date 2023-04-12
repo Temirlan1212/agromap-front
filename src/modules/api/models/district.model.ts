@@ -23,4 +23,7 @@ export interface IDistrictListQuery {
   polygon?: boolean;
   region_id?: number | boolean;
   ids?: string;
+  page_size?: number;
+  next?: null;
+  previous?: null;
 }
