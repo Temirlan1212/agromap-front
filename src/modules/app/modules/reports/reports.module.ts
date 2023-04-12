@@ -3,15 +3,37 @@ import { CommonModule } from '@angular/common';
 
 import { ReportsRoutingModule } from './reports-routing.module';
 import { ReportsComponent } from './reports.component';
-
+import { InputSelectComponent } from '../../../ui/components/input-select/input-select.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { TranslateModule, TranslatePipe } from '@ngx-translate/core';
+import { InputComponent } from '../../../ui/components/input/input.component';
+import { NgApexchartsModule } from 'ng-apexcharts';
+import { SimplePieChartComponent } from './components/simple-pie-chart/simple-pie-chart.component';
+import { LandTypeFormComponent } from './components/report-form/report-form.component';
+import { PastureProductivityStatsComponent } from './components/pasture-productivity-stats/pasture-productivity-stats.component';
+import { LoadingComponent } from 'src/modules/ui/components/loading/loading.component';
+import { CultureStatsComponent } from './components/culture-stats/culture-stats.component';
+import { TableComponent } from 'src/modules/ui/components/table/table.component';
 
 @NgModule({
   declarations: [
-    ReportsComponent
+    ReportsComponent,
+    SimplePieChartComponent,
+    LandTypeFormComponent,
+    PastureProductivityStatsComponent,
+    CultureStatsComponent,
   ],
   imports: [
     CommonModule,
-    ReportsRoutingModule
-  ]
+    ReportsRoutingModule,
+    InputSelectComponent,
+    ReactiveFormsModule,
+    TranslateModule,
+    InputComponent,
+    NgApexchartsModule,
+    LoadingComponent,
+    TableComponent,
+  ],
+  providers: [TranslatePipe],
 })
-export class ReportsModule { }
+export class ReportsModule {}

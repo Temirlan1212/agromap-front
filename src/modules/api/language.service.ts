@@ -7,6 +7,9 @@ import { ELanguageCode, ILanguageStore } from './models/language.model';
 
 @Injectable()
 export class LanguageService implements TranslateLoader {
+  transform(arg0: string): string {
+    throw new Error('Method not implemented.');
+  }
   constructor(private http: HttpClient) {}
 
   getTranslation(lang: string): Observable<any> {
