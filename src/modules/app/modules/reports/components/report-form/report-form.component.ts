@@ -3,7 +3,10 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { ApiService } from '../../../../../api/api.service';
 import { IRegion } from '../../../../../api/models/region.model';
 import { IConton } from '../../../../../api/models/conton.model';
-import { IDistrict } from '../../../../../api/models/district.model';
+import {
+  IDistrict,
+  IDistrictWithPagination,
+} from '../../../../../api/models/district.model';
 import { MessagesService } from '../../../../../ui/components/services/messages.service';
 import { Subscription } from 'rxjs';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -73,10 +76,13 @@ export class LandTypeFormComponent implements OnInit, OnDestroy {
   async getDistricts(regionId?: number) {
     if (!regionId) return;
     const query = {
-      ...(regionId && { region_id: regionId }),
+      ...(regionId && { region_id: regionId, polygon: true }),
     };
     try {
-      this.districts = await this.api.dictionary.getDistricts(query);
+      const res = (await this.api.dictionary.getDistricts(
+        query
+      )) as IDistrict[];
+      this.districts = res;
     } catch (e: any) {
       this.messages.error(e.message);
     }
@@ -85,9 +91,10 @@ export class LandTypeFormComponent implements OnInit, OnDestroy {
   async getContons() {
     const district_id = this.form.get('district')?.value;
     try {
-      this.contons = await this.api.dictionary.getContons({
+      this.contons = (await this.api.dictionary.getContons({
         district_id: district_id ? this.form.get('district')?.value : '',
-      });
+        polygon: true,
+      })) as IConton[];
     } catch (e: any) {
       this.messages.error(e.message);
     }

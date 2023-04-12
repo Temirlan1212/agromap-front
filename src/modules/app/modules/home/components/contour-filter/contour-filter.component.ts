@@ -144,9 +144,11 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
 
   async getDistricts() {
     try {
-      this.districts = await this.api.dictionary.getDistricts({
+      const results = (await this.api.dictionary.getDistricts({
         region_id: this.form.get('region')?.value,
-      });
+        polygon: true,
+      })) as IDistrict[];
+      this.districts = results;
     } catch (e: any) {
       this.messages.error(e.message);
     }
@@ -154,9 +156,10 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
 
   async getContons() {
     try {
-      this.contons = await this.api.dictionary.getContons({
+      this.contons = (await this.api.dictionary.getContons({
         district_id: this.form.get('district')?.value,
-      });
+        polygon: true,
+      })) as IConton[];
     } catch (e: any) {
       this.messages.error(e.message);
     }
@@ -251,10 +254,10 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
   async handleDistrictChange(value: string | null) {
     const contonVal = this.form.get('conton');
     if (value != null) {
-      const district = await this.api.dictionary.getDistricts({
+      const district = (await this.api.dictionary.getDistricts({
         ids: value,
         polygon: true,
-      });
+      })) as IDistrict[];
       this.mapInstance.fitBounds(geoJson(district[0]?.polygon).getBounds());
       await this.getContons();
       contonVal?.enable({ emitEvent: false });
@@ -268,10 +271,10 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
 
   async handleContonChange(value: string | null) {
     if (value != null) {
-      const res = await this.api.dictionary.getContons({
+      const res = (await this.api.dictionary.getContons({
         ids: value,
         polygon: true,
-      });
+      })) as IConton[];
       this.mapInstance.fitBounds(geoJson(res[0]?.polygon).getBounds(), {
         maxZoom: 12,
       });

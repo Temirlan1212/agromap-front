@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { ApiService } from '../../../../api/api.service';
 import { MessagesService } from '../../../../ui/components/services/messages.service';
 import { TranslateService } from '@ngx-translate/core';
+import { IContonWithPagination } from 'src/modules/api/models/conton.model';
 
 @Component({
   selector: 'app-contons',
@@ -30,7 +31,10 @@ export class ContonsComponent {
   async getList() {
     try {
       this.loading = true;
-      this.list = await this.api.dictionary.getContons({ polygon: false });
+      const { results } = (await this.api.dictionary.getContons({
+        page_size: 100,
+      })) as IContonWithPagination;
+      this.list = results;
     } catch (e: any) {
       console.log(e.message);
     } finally {

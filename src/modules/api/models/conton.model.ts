@@ -1,5 +1,3 @@
-import { GeoJSON } from 'geojson';
-
 export interface IConton {
   id: number;
   created_at: string;
@@ -13,8 +11,18 @@ export interface IConton {
   polygon: GeoJSON.MultiPolygon;
 }
 
+export interface IContonWithPagination {
+  count: number;
+  next: null;
+  previous: null;
+  results: IConton[];
+}
+
 export interface IContonListQuery {
   polygon?: boolean;
   district_id?: number;
   ids?: string;
+  page_size?: number;
+  next?: null;
+  previous?: null;
 }
