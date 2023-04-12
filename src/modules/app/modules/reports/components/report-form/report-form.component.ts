@@ -71,6 +71,7 @@ export class LandTypeFormComponent implements OnInit {
   }
 
   async getDistricts(regionId?: number) {
+    if (!regionId) return;
     const query = {
       ...(regionId && { region_id: regionId }),
     };
