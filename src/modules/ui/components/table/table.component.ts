@@ -17,6 +17,7 @@ import {
   ITableField,
   ITableItem,
 } from '../../models/table.model';
+import { CheckExistPipe } from '../../pipes/check-exist.pipe';
 
 @Component({
   selector: 'app-table',
@@ -26,6 +27,7 @@ import {
     SvgIconComponent,
     QuestionDialogComponent,
     TranslateModule,
+    CheckExistPipe,
   ],
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.scss'],
