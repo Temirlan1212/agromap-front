@@ -12,6 +12,13 @@ export interface IDistrict {
   polygon: Polygon;
 }
 
+export type IDistrictWithPagination = {
+  count: number;
+  next: null;
+  previous: null;
+  results: IDistrict[];
+};
+
 export interface IDistrictListQuery {
   polygon?: boolean;
   region_id?: number | boolean;

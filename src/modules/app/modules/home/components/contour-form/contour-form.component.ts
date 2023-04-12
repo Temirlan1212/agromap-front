@@ -11,7 +11,10 @@ import {
   IContonListQuery,
 } from '../../../../../api/models/conton.model';
 import { ApiService } from '../../../../../api/api.service';
-import { IDistrict } from '../../../../../api/models/district.model';
+import {
+  IDistrict,
+  IDistrictWithPagination,
+} from '../../../../../api/models/district.model';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { IRegion } from '../../../../../api/models/region.model';
@@ -128,7 +131,7 @@ export class ContourFormComponent implements OnInit, OnDestroy {
       polygon: true,
     };
     try {
-      const res = await this.api.dictionary.getContons(query);
+      const res = (await this.api.dictionary.getContons(query)) as IConton[];
       this.contonList = res;
       if (this.form.get('conton')?.value != null) {
         const selectedConton = this.contonList.find(
@@ -146,8 +149,10 @@ export class ContourFormComponent implements OnInit, OnDestroy {
 
   async getDistricts() {
     try {
-      const res = await this.api.dictionary.getDistricts();
-      this.districtList = res;
+      const results = (await this.api.dictionary.getDistricts({
+        polygon: true,
+      })) as IDistrict[];
+      this.districtList = results;
     } catch (e: any) {
       this.messages.error(e.message);
     }

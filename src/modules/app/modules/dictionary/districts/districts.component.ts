@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { ApiService } from '../../../../api/api.service';
 import { MessagesService } from '../../../../ui/components/services/messages.service';
 import { TranslateService } from '@ngx-translate/core';
+import { IDistrictWithPagination } from 'src/modules/api/models/district.model';
 
 @Component({
   selector: 'app-districts',
@@ -30,7 +31,10 @@ export class DistrictsComponent {
   async getList() {
     try {
       this.loading = true;
-      this.list = await this.api.dictionary.getDistricts({ polygon: false });
+      const { results } =
+        (await this.api.dictionary.getDistricts()) as IDistrictWithPagination;
+
+      this.list = results;
     } catch (e: any) {
       console.log(e.message);
     } finally {
