@@ -6,6 +6,7 @@
 
   &.disabled {
     background-color: $secondaryColor;
+    height: fit-content;
   }
 
   .placeholder {

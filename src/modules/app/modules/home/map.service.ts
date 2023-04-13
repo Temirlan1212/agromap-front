@@ -20,7 +20,6 @@ export class MapService {
   contourEditingMode = new Subject<boolean>();
   splitMapQuantity = new BehaviorSubject<number>(4);
   maps = new BehaviorSubject<Record<string, L.Map | null>>({});
-  isWmsAiActive = new BehaviorSubject<boolean>(false);
 
   center: LatLng = latLng(41.84, 75.06);
   maxBounds: LatLngBounds = latLngBounds(

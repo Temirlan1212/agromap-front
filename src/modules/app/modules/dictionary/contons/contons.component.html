@@ -1,0 +1,20 @@
+<div class="header">
+  <h1 class="title">{{ "Contons" | translate }}</h1>
+</div>
+<div class="list">
+  <app-table
+    [actions]="false"
+    [items]="list"
+    [fields]="[
+      { title: 'Name' | translate, field: 'name_' + currentLang | translate },
+      { title: 'Code SOATO' | translate, field: 'code_soato' }
+    ]"
+    *ngIf="list.length > 0; else noItems"
+  ></app-table>
+  <ng-template #noItems>
+    <app-loading [loading]="loading">
+      <h4>{{ "No data" | translate }}</h4>
+    </app-loading>
+  </ng-template>
+</div>
+<router-outlet></router-outlet>

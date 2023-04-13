@@ -55,7 +55,7 @@
   "Land type": "Жердин түрү",
   "Productivity": "Түшүмдүүлүк",
   "c. per ha.": "ц. га.",
-  "Area": "Аяты",
+  "Area": "Аянты",
   "ha": "га",
   "Add contour": "Контур кошуу",
   "Save": "Сактоо",
@@ -127,6 +127,12 @@
   "Pasture productivity area": "Жайыттардын түшүмдүүлүк аянты",
   "Unproductive": "Аз түшүмдүү",
   "Productive": "Түшүмдүү",
+  "Square of cultures": "Өсүмдүктүн түрлөрүнүн аянты",
+  "Export": "Экспорт",
+  "Territory": "Аймак",
   "Select a culture": "Өсүмдүктүн түрүн тандаңыз",
+  "Density": "Жыштыгы",
+  "Population": "Калкы",
+  "Description": "Түшүндүрмө",
   "This field is required": "Бул кутучаны толтуруңуз"
 }

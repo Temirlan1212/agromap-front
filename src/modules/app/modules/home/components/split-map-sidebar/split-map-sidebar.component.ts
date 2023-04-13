@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { StoreService } from 'src/modules/api/store.service';
 import { Feature, GeoJSON } from 'geojson';
@@ -42,26 +42,25 @@ export class SplitMapSidebarComponent implements OnDestroy, OnInit {
   imageOverlayIncstance: Record<string, L.ImageOverlay> = {};
   imageOverlay: Record<string, string> = {};
 
-  splitMapQuantity: number = this.mapServie.splitMapQuantity.value;
+  splitMapQuantity: number = this.mapService.splitMapQuantity.value;
 
   currLang: string = this.translate.currentLang;
   isWmsAiActive: boolean = false;
 
-  mapsSubscription!: Subscription;
-  translateSubscription!: Subscription;
-  isWmsAiActiveSubscription!: Subscription;
+  subscriptions: Subscription[] = [];
 
   constructor(
-    private mapServie: MapService,
+    private mapService: MapService,
     private store: StoreService,
     private api: ApiService,
     private formatDate: FormatDatePipe,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private cd: ChangeDetectorRef
   ) {}
 
   handleSplitMapClick(splitMapQuantity: number) {
     this.splitMapQuantity = splitMapQuantity;
-    this.mapServie.splitMapQuantity.next(this.splitMapQuantity);
+    this.mapService.splitMapQuantity.next(this.splitMapQuantity);
     this.satelliteDateOptionsForm.reset();
   }
 
@@ -102,7 +101,7 @@ export class SplitMapSidebarComponent implements OnDestroy, OnInit {
     }
     this.imageOverlay[mapKey] = `${environment.apiUrl}${value['image']}`;
     if (this.maps[mapKey]) {
-      this.imageOverlayIncstance[mapKey] = this.mapServie.setImageOverlay(
+      this.imageOverlayIncstance[mapKey] = this.mapService.setImageOverlay(
         this.maps[mapKey] as L.Map,
         this.imageOverlay[mapKey],
         this.bounds
@@ -163,36 +162,38 @@ export class SplitMapSidebarComponent implements OnDestroy, OnInit {
       await this.getVegIndexList();
       await this.getVegSatelliteDates(this.contourId, 1);
       this.buildSatelliteDatesOptions(this.satelliteDateData, this.currLang);
+    }
+    const contourFilterComponentMode = this.store.getItem(
+      'ContourFilterComponentMode'
+    );
 
-      this.mapsSubscription = this.mapServie.maps.subscribe((maps) => {
+    if (contourFilterComponentMode) {
+      if (contourFilterComponentMode === 'agromap_store_ai') {
+        this.isWmsAiActive = true;
+      } else {
+        this.isWmsAiActive = false;
+      }
+    }
+
+    this.subscriptions = [
+      this.mapService.maps.subscribe((maps) => {
         this.maps = maps;
         this.maps['map-0'] &&
-          this.maps['map-0'].fitBounds(this.bounds, { maxZoom: 11 });
+          this.maps['map-0'].fitBounds(this.bounds, { maxZoom: 15 });
 
         for (const [key, map] of Object.entries(this.maps)) {
           if (map) L.geoJSON(this.layerFeature as GeoJSON).addTo(map);
         }
-      });
+      }) as Subscription,
 
-      this.translateSubscription = this.translate.onLangChange.subscribe(
-        (lang: Record<string, any>) => {
-          this.currLang = lang['lang'] as string;
-          this.buildSatelliteDatesOptions(
-            this.satelliteDateData,
-            this.currLang
-          );
-        }
-      );
-
-      this.isWmsAiActiveSubscription = this.mapServie.isWmsAiActive.subscribe(
-        (isActive: boolean) => (this.isWmsAiActive = isActive)
-      );
-    }
+      this.translate.onLangChange.subscribe((lang: Record<string, any>) => {
+        this.currLang = lang['lang'] as string;
+        this.buildSatelliteDatesOptions(this.satelliteDateData, this.currLang);
+      }) as Subscription,
+    ];
   }
 
   ngOnDestroy(): void {
-    this.mapsSubscription.unsubscribe();
-    this.translateSubscription.unsubscribe();
-    this.isWmsAiActiveSubscription.unsubscribe();
+    this.subscriptions.map((subscription) => subscription.unsubscribe());
   }
 }

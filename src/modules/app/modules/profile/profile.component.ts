@@ -15,8 +15,8 @@ export class ProfileComponent {
     private messages: MessagesService
   ) {}
 
-  handleLogoutClick(): void {
-    this.api.user.logOut();
+  async handleLogoutClick(): Promise<void> {
+    await this.api.user.logOut();
     this.router.navigate(['']);
   }
 }

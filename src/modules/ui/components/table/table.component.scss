@@ -102,3 +102,38 @@ table {
     }
   }
 }
+
+@media (max-width: 992px) {
+  table thead {
+    display: none;
+  }
+  table thead tr {
+    display: contents;
+  }
+
+  table,
+  table tbody,
+  table tr,
+  table td {
+    display: block;
+    width: 100%;
+  }
+  table tr {
+    margin-bottom: 15px;
+  }
+  table td {
+    padding-left: 50%;
+    text-align: left;
+    position: relative;
+  }
+  table td::before {
+    content: attr(data-label);
+    position: absolute;
+    left: 0;
+    width: 50%;
+    padding-left: 15px;
+    font-size: 15px;
+    font-weight: bold;
+    text-align: left;
+  }
+}

@@ -1,6 +1,7 @@
-import { geoJSON, Map, tileLayer } from 'leaflet';
+import { geoJSON, latLngBounds, LatLngBounds, Map, tileLayer } from 'leaflet';
 import { GeoJSON } from 'geojson';
 import {
+  AfterViewInit,
   Component,
   ElementRef,
   OnDestroy,
@@ -46,7 +47,7 @@ import { DecimalPipe } from '@angular/common';
   styleUrls: ['./home.component.scss'],
   providers: [DecimalPipe],
 })
-export class HomeComponent implements OnInit, OnDestroy {
+export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('featurePopup') featurePopup!: ElementRef<HTMLElement>;
   @ViewChild('map') mapComponent!: MapComponent;
   mode!: string;
@@ -233,6 +234,9 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   async handleMapMove(mapMove: MapMove): Promise<void> {
+    this.store.setItem<Record<string, LatLngBounds>>('HomeComponent', {
+      mapBounds: mapMove.bounds,
+    });
     if (this.mapData?.map != null) {
       this.mapData.geoJson.clearLayers();
       this.getRegionsPolygon();
@@ -503,6 +507,22 @@ export class HomeComponent implements OnInit, OnDestroy {
         this.setWmsParams();
       }
     });
+  }
+
+  ngAfterViewInit(): void {
+    const data = this.store.getItem('HomeComponent');
+    if (data !== null) {
+      const newBounds = latLngBounds(
+        data.mapBounds._southWest,
+        data.mapBounds._northEast
+      );
+
+      if (newBounds) {
+        this.mapData?.map.flyToBounds(newBounds, {
+          duration: 1.6,
+        });
+      }
+    }
   }
 
   ngOnDestroy() {
