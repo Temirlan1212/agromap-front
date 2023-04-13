@@ -36,6 +36,7 @@ import { InputRadioComponent } from '../../../ui/components/input-radio/input-ra
 import { MapControlStatisticsComponent } from 'src/modules/ui/components/map-control-statistics/map-control-statistics.component';
 import { TableComponent } from 'src/modules/ui/components/table/table.component';
 import { TruncatePipe } from 'src/modules/ui/pipes/truncate.pipe';
+import { InputCheckboxComponent } from 'src/modules/ui/components/input-checkbox/input-checkbox.component';
 
 @NgModule({
   declarations: [
@@ -78,6 +79,7 @@ import { TruncatePipe } from 'src/modules/ui/pipes/truncate.pipe';
     MapControlStatisticsComponent,
     TableComponent,
     TruncatePipe,
+    InputCheckboxComponent,
   ],
   providers: [MapService, TranslatePipe],
 })

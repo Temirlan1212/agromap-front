@@ -15,6 +15,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ITileLayer } from '../../models/map.model';
 import { InputRadioComponent } from '../input-radio/input-radio.component';
 import { StoreService } from '../../../api/store.service';
+import { InputCheckboxComponent } from '../input-checkbox/input-checkbox.component';
 
 @Component({
   selector: 'app-map-control-layers-switch',
@@ -26,6 +27,7 @@ import { StoreService } from '../../../api/store.service';
     SvgIconComponent,
     TranslateModule,
     InputRadioComponent,
+    InputCheckboxComponent,
   ],
 })
 export class MapControlLayersSwitchComponent implements OnChanges {
@@ -33,10 +35,13 @@ export class MapControlLayersSwitchComponent implements OnChanges {
   @Input() mode!: string;
   @Input() baseLayers: ITileLayer[] = [];
   @Input() wmsLayers: ITileLayer[] = [];
+  @Input() wmsLayersOverlay: ITileLayer[] = [];
   @Input() activeBaseLayer: ITileLayer | null = null;
   @Input() activeWmsLayer: ITileLayer | null = null;
   @Output() wmsLayerChanged = new EventEmitter<ITileLayer | null>();
   @Output() baseLayerChanged = new EventEmitter<ITileLayer | null>();
+  @Output() wmsLayersOverlayChanged = new EventEmitter<ITileLayer | null>();
+
   selected!: string;
   isCollapsed = false;
 
@@ -59,6 +64,15 @@ export class MapControlLayersSwitchComponent implements OnChanges {
       this.selected = this.store.getItem(
         'ContourFilterComponentMode'
       ) as string;
+
+      const wmsLayersOverlayState = this.store.getItem('WmsLayersOverlay');
+      if (wmsLayersOverlayState) {
+        this.wmsLayersOverlay = this.wmsLayersOverlay.map((l, index) => {
+          if (wmsLayersOverlayState[index].checked) this.map.addLayer(l.layer);
+          return Object.assign({}, l, wmsLayersOverlayState[index]);
+        });
+      }
+
       this.handleWmsLayerChange(this.selected);
     }
   }
@@ -66,7 +80,9 @@ export class MapControlLayersSwitchComponent implements OnChanges {
   @HostListener('document:click', ['$event.target'])
   public onClick(target: any) {
     const clickInside = this.elementRef.nativeElement.contains(target);
-    if (!clickInside) this.isCollapsed = false;
+    if (!clickInside) {
+      this.isCollapsed = false;
+    }
   }
 
   handleCollapseClick(e: Event) {
@@ -104,5 +120,26 @@ export class MapControlLayersSwitchComponent implements OnChanges {
     }
 
     this.baseLayerChanged.emit(this.activeBaseLayer);
+  }
+
+  handleWmsLayersOverlayChange(layerName: string | number): void {
+    const wmsLayer = this.wmsLayersOverlay.find((l) => l.name === layerName);
+
+    if (wmsLayer) {
+      wmsLayer.checked = !wmsLayer.checked;
+      wmsLayer.checked
+        ? this.map.addLayer(wmsLayer.layer)
+        : this.map.removeLayer(wmsLayer.layer);
+    }
+
+    const wmsLayersOverlayState = this.wmsLayersOverlay.map(
+      ({ name, checked }) => ({
+        name,
+        checked: name === layerName ? wmsLayer?.checked : checked,
+      })
+    );
+
+    this.store.setItem('WmsLayersOverlay', wmsLayersOverlayState);
+    this.wmsLayersOverlayChanged.emit(wmsLayer);
   }
 }

@@ -1,0 +1,16 @@
+<div class="option" *ngFor="let option of options">
+  <input
+    type="checkbox"
+    [id]="option[valueField]"
+    [name]="name"
+    [value]="option[valueField]"
+    [disabled]="disabled"
+    [checked]="option[checkField]"
+  />
+  <label
+    [class.active]="option[checkField]"
+    [for]="option[valueField]"
+    [textContent]="option[nameField]"
+    (click)="handleClick(option[valueField])"
+  ></label>
+</div>

@@ -20,6 +20,7 @@ export interface ITileLayer {
   title: string;
   name: string;
   layer: TileLayer;
+  checked?: boolean;
 }
 
 export interface ILeafletMap extends Map {

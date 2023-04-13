@@ -18,6 +18,18 @@
       [options]="wmsLayers"
       (changed)="handleWmsLayerChange($event)"
     ></app-input-radio>
+
+    <hr />
+
+    <app-input-checkbox
+      class="vertical"
+      name="wmsLayers"
+      nameField="title"
+      valueField="name"
+      checkField="checked"
+      [options]="wmsLayersOverlay"
+      (changed)="handleWmsLayersOverlayChange($event)"
+    ></app-input-checkbox>
   </div>
 
   <hr />

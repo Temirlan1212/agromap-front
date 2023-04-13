@@ -40,6 +40,7 @@ import {
 } from 'src/modules/api/models/statistics.model';
 import { ITableItem } from 'src/modules/ui/models/table.model';
 import { DecimalPipe } from '@angular/common';
+import * as L from 'leaflet';
 
 @Component({
   selector: 'app-home',
@@ -87,6 +88,12 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     zIndex: 500,
   };
 
+  wmsLayersOverlayOptions = {
+    format: 'image/png',
+    transparent: true,
+    zIndex: 499,
+  };
+
   wmsLayers: ITileLayer[] = [
     {
       title: `
@@ -107,13 +114,26 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
         ...this.wmsLayersOptions,
       }),
     },
+  ];
+
+  wmsLayersOverlay: ITileLayer[] = [
     {
       title: this.translate.transform('SoilLayer'),
       name: 'soil_agromap',
       layer: tileLayer.wms('https://geoserver.24mycrm.com/agromap/wms', {
         layers: 'agromap:soil_agromap',
-        ...this.wmsLayersOptions,
+        ...this.wmsLayersOverlayOptions,
       }),
+      checked: false,
+    },
+    {
+      title: this.translate.transform('Productivity layer'),
+      name: 'my_test_store',
+      layer: tileLayer.wms('https://geoserver.24mycrm.com/my_testing/wms', {
+        layers: 'my_testing:my_test_store',
+        ...this.wmsLayersOverlayOptions,
+      }),
+      checked: false,
     },
   ];
 
