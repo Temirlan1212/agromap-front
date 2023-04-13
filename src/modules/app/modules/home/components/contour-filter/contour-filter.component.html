@@ -12,52 +12,76 @@
           >
           </app-input-radio>
         </div>
-        <app-input-select
-          [placeholder]="'Select a region' | translate"
-          formControlName="region"
-          [items]="regions"
-          [nameField]="'name_' + currentLang"
-        ></app-input-select>
+        <app-form-field name="region" #region>
+          <app-input-select
+            [placeholder]="'Select a region' | translate"
+            formControlName="region"
+            [items]="regions"
+            [nameField]="'name_' + currentLang"
+            field
+            [required]="region.required"
+          ></app-input-select>
+        </app-form-field>
 
-        <app-input-select
-          [placeholder]="'Select a district' | translate"
-          formControlName="district"
-          [items]="districts"
-          [nameField]="'name_' + currentLang"
-        ></app-input-select>
+        <app-form-field name="district" #district>
+          <app-input-select
+            [placeholder]="'Select a district' | translate"
+            formControlName="district"
+            [items]="districts"
+            [nameField]="'name_' + currentLang"
+            field
+            [required]="district.required"
+          ></app-input-select>
+        </app-form-field>
 
-        <app-input-select
-          *ngIf="mode?.value != 'agromap_store_ai'"
-          [placeholder]="'Select a conton' | translate"
-          formControlName="conton"
-          [items]="contons"
-          [nameField]="'name_' + currentLang"
-        ></app-input-select>
+        <app-form-field name="conton" #conton>
+          <app-input-select
+            *ngIf="mode?.value != 'agromap_store_ai'"
+            [placeholder]="'Select a conton' | translate"
+            formControlName="conton"
+            [items]="contons"
+            [nameField]="'name_' + currentLang"
+            field
+            [required]="conton.required"
+          ></app-input-select>
+        </app-form-field>
 
-        <app-input-select
-          [placeholder]="'Select a land type' | translate"
-          formControlName="land_type"
-          [items]="landTypes"
-          [multi]="true"
-          [nameField]="'name_' + currentLang"
-        ></app-input-select>
+        <app-form-field name="land_type" #land_type>
+          <app-input-select
+            [placeholder]="'Select a land type' | translate"
+            formControlName="land_type"
+            [items]="landTypes"
+            [multi]="true"
+            [nameField]="'name_' + currentLang"
+            field
+            [required]="land_type.required"
+          ></app-input-select>
+        </app-form-field>
 
-        <app-input-select
-          [placeholder]="'Select a culture' | translate"
-          formControlName="culture"
-          [items]="cultures"
-          [multi]="true"
-          [nameField]="'name_' + currentLang"
-        ></app-input-select>
+        <app-form-field name="culture" #culture>
+          <app-input-select
+            [placeholder]="'Select a culture' | translate"
+            formControlName="culture"
+            [items]="cultures"
+            [multi]="true"
+            [nameField]="'name_' + currentLang"
+            field
+            [required]="culture.required"
+          ></app-input-select>
+        </app-form-field>
 
-        <app-input
-          type="number"
-          [min]="2010"
-          [max]="2023"
-          [placeholder]="'Select a year' | translate"
-          formControlName="year"
-        >
-        </app-input>
+        <app-form-field name="year" #year>
+          <app-input
+            type="number"
+            [min]="2010"
+            [max]="2023"
+            [placeholder]="'Select a year' | translate"
+            formControlName="year"
+            field
+            [required]="year.required"
+          >
+          </app-input>
+        </app-form-field>
         <button type="button" class="success" (click)="handleFormSubmit()">
           {{ "Apply" | translate }}
         </button>

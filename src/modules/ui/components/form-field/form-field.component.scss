@@ -14,27 +14,23 @@ label {
 
 .validation-error {
   color: red;
-  //display: none;
+  display: none;
 }
 
-//::ng-deep {
-//  .validation-error > * {
-//    display: none;
-//  }
-//
-//  .validation-error.touched {
-//    display: block;
-//  }
-//
-//  .validation-error.required .required {
-//    display: block;
-//  }
-//
-//  .validation-error.server .server {
-//    display: block;
-//  }
-//
-//  .validation-error.email .email {
-//    display: block;
-//  }
-//}
+::ng-deep {
+  .validation-error > * {
+    display: none;
+  }
+
+  .validation-error.touched {
+    display: block;
+  }
+
+  .validation-error.required .required {
+    display: block;
+  }
+
+  .validation-error.email .email {
+    display: block;
+  }
+}

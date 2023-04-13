@@ -5,8 +5,10 @@
   class="validation-error"
   [ngClass]="formControl?.errors ?? {}"
   [class.touched]="formControl?.touched"
-  *ngIf="formControl?.touched && formControl?.invalid"
 >
-  <span class="server" [textContent]="formControl?.errors?.['server']"></span>
-  <ng-content select="[error]"></ng-content>
+  <span
+    class="required"
+    [textContent]="'This field is required' | translate"
+  ></span>
+  <ng-content></ng-content>
 </div>

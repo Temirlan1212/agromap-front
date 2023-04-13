@@ -1,9 +1,0 @@
-@import "constants";
-
-app-form-field {
-  .ng-touched.ng-invalid {
-    ::ng-deep input {
-      border: 1px solid $dangerColor;
-    }
-  }
-}

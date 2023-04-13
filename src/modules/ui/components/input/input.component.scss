@@ -48,11 +48,9 @@ $spaceFromTop: 35%;
     transform: scale(0.9) translateY(-25px);
   }
 
-  //.required::after {
-  //  content: '*';
-  //  margin-left: 4px;
-  //  font-weight: 400;
-  //  font-size: 12px;
-  //  color: $dangerColor;
-  //}
+  &.ng-touched.ng-invalid {
+    input {
+      border: 1px solid $dangerColor;
+    }
+  }
 }
