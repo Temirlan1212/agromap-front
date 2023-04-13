@@ -17,6 +17,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { FormOverlayComponent } from '../../../ui/components/form-overlay/form-overlay.component';
 import { QuestionDialogComponent } from '../../../ui/components/question-dialog/question-dialog.component';
 import { TableComponent } from 'src/modules/ui/components/table/table.component';
+import { FormFieldComponent } from '../../../ui/components/form-field/form-field.component';
 
 @NgModule({
   declarations: [
@@ -40,6 +41,7 @@ import { TableComponent } from 'src/modules/ui/components/table/table.component'
     FormOverlayComponent,
     QuestionDialogComponent,
     TableComponent,
+    FormFieldComponent,
   ],
   providers: [TranslatePipe],
 })

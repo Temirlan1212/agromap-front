@@ -1,0 +1,12 @@
+<label [ngClass]="{ required: required }">
+  <ng-content select="[field]"></ng-content>
+</label>
+<div
+  class="validation-error"
+  [ngClass]="formControl?.errors ?? {}"
+  [class.touched]="formControl?.touched"
+  *ngIf="formControl?.touched && formControl?.invalid"
+>
+  <span class="server" [textContent]="formControl?.errors?.['server']"></span>
+  <ng-content select="[error]"></ng-content>
+</div>

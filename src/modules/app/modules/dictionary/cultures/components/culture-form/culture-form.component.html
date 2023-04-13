@@ -1,29 +1,52 @@
 <form [formGroup]="form">
   <div class="field-group">
-    <app-input
-      type="text"
-      [placeholder]="'Name in russian' | translate"
-      formControlName="name_ru"
-    >
-    </app-input>
-    <app-input
-      type="text"
-      [placeholder]="'Name in kyrgyz' | translate"
-      formControlName="name_ky"
-    >
-    </app-input>
-    <app-input
-      type="text"
-      [placeholder]="'Name in english' | translate"
-      formControlName="name_en"
-    >
-    </app-input>
-    <app-input
-      type="number"
-      [step]="0.1"
-      [placeholder]="'Coefficient' | translate"
-      formControlName="coefficient_crop"
-    >
-    </app-input>
+    <app-form-field name="name_ru" #nameRu>
+      <app-input
+        field
+        type="text"
+        [placeholder]="'Name in russian' | translate"
+        [required]="nameRu.required"
+        formControlName="name_ru"
+      >
+      </app-input>
+      <span error class="required">Поле обязательное</span>
+    </app-form-field>
+
+    <app-form-field name="name_ru" #nameKg>
+      <app-input
+        field
+        type="text"
+        [placeholder]="'Name in kyrgyz' | translate"
+        [required]="nameKg.required"
+        formControlName="name_ky"
+      >
+      </app-input>
+      <span error class="required">Поле обязательное</span>
+    </app-form-field>
+
+    <app-form-field name="name_ru" #nameEn>
+      <app-input
+        field
+        type="text"
+        [placeholder]="'Name in english' | translate"
+        [required]="nameEn.required"
+        formControlName="name_en"
+      >
+      </app-input>
+      <span error class="required">Поле обязательное</span>
+    </app-form-field>
+
+    <app-form-field name="name_ru" #coefficient_crop>
+      <app-input
+        field
+        type="number"
+        [step]="0.1"
+        [required]="coefficient_crop.required"
+        [placeholder]="'Coefficient' | translate"
+        formControlName="coefficient_crop"
+      >
+      </app-input>
+      <span error class="required">Поле обязательное</span>
+    </app-form-field>
   </div>
 </form>
