@@ -2,7 +2,6 @@
   <div class="field-group">
     <app-form-field name="name_ru" #nameRu>
       <app-input
-        field
         type="text"
         [placeholder]="'Name in russian' | translate"
         [required]="nameRu.required"
@@ -13,7 +12,6 @@
 
     <app-form-field name="name_ky" #nameKg>
       <app-input
-        field
         type="text"
         [placeholder]="'Name in kyrgyz' | translate"
         [required]="nameKg.required"
@@ -24,7 +22,6 @@
 
     <app-form-field name="name_en" #nameEn>
       <app-input
-        field
         type="text"
         [placeholder]="'Name in english' | translate"
         [required]="nameEn.required"
@@ -35,7 +32,6 @@
 
     <app-form-field name="coefficient_crop" #coefficient_crop>
       <app-input
-        field
         type="number"
         [step]="0.1"
         [required]="coefficient_crop.required"

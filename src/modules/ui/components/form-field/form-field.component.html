@@ -1,5 +1,5 @@
 <label [ngClass]="{ required: required }">
-  <ng-content select="[field]"></ng-content>
+  <ng-content></ng-content>
 </label>
 <div
   class="validation-error"
@@ -10,5 +10,4 @@
     class="required"
     [textContent]="'This field is required' | translate"
   ></span>
-  <ng-content></ng-content>
 </div>

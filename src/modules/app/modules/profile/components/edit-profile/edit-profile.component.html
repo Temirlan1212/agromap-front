@@ -1,19 +1,25 @@
 <h2>{{ "Edit profile" | translate }}</h2>
 <form [formGroup]="form">
   <div class="field-group">
-    <app-input
-      type="text"
-      [placeholder]="'Fullname' | translate"
-      formControlName="full_name"
-    >
-    </app-input>
+    <app-form-field name="full_name" #full_name>
+      <app-input
+        type="text"
+        [placeholder]="'Fullname' | translate"
+        formControlName="full_name"
+        [required]="full_name.required"
+      >
+      </app-input>
+    </app-form-field>
 
-    <app-input
-      type="text"
-      [placeholder]="'Phone number' | translate"
-      formControlName="phone_number"
-    >
-    </app-input>
+    <app-form-field name="phone_number" #phone_number>
+      <app-input
+        type="text"
+        [placeholder]="'Phone number' | translate"
+        formControlName="phone_number"
+        [required]="phone_number.required"
+      >
+      </app-input>
+    </app-form-field>
 
     <div class="actions">
       <button type="button" class="success" (click)="handleSaveClick()">
