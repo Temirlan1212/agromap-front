@@ -1,17 +1,8 @@
 <div class="option">
-  <ng-container *ngIf="!filterField || option[filterField] === filterValue">
-    <input
-      type="checkbox"
-      [id]="valueField"
-      [name]="name"
-      [value]="valueField"
-      [disabled]="disabled"
-      [checked]="value" />
-    <label
-      [class.active]="value"
-      [for]="option[nameField]"
-      [textContent]="option[nameField]"
-      (click)="handleClick(option[valueField])"
-    ></label
-  ></ng-container>
+  <input type="checkbox" [name]="name" [checked]="selected" />
+  <label
+    [class.active]="selected"
+    [textContent]="name"
+    (click)="handleClick(value)"
+  ></label>
 </div>

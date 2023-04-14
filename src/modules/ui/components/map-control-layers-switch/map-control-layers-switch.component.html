@@ -25,16 +25,10 @@
 
     <app-input-checkbox
       *ngFor="let option of wmsLayers"
-      class="vertical"
-      name="wmsLayers"
-      nameField="title"
-      valueField="name"
-      checkField="checked"
-      [value]="selected[option['name']]"
-      [option]="option"
+      [name]="option['title']"
+      [selected]="selected[option['name']]"
+      [value]="option['name']"
       (changed)="handleWmsCheckboxLayerChange($event)"
-      filterField="type"
-      filterValue="checkbox"
     ></app-input-checkbox>
   </div>
 
