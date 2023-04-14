@@ -1,13 +1,11 @@
 <div class="header">
-  <h1 class="title">{{ "Districts" | translate }}</h1>
+  <h1 class="title">{{ "Notifications" | translate }}</h1>
 </div>
 <div class="list">
   <app-table
+    [actionDelete]="true"
     [items]="list"
-    [fields]="[
-      { title: 'Name' | translate, field: 'name_' + currentLang },
-      { title: 'Code SOATO' | translate, field: 'code_soato' }
-    ]"
+    [fields]="[{ title: 'Name' | translate, field: 'verb' }]"
     *ngIf="list.length > 0; else noItems"
   ></app-table>
   <ng-template #noItems>

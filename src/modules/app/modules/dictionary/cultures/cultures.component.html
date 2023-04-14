@@ -14,7 +14,8 @@
 </div>
 <div class="list">
   <app-table
-    [actions]="true"
+    [actionEdit]="true"
+    [actionDelete]="true"
     [items]="list"
     [fields]="[
       { title: 'Name' | translate, field: 'name_' + currentLang },

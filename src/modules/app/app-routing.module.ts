@@ -52,6 +52,16 @@ const routes: Routes = [
       import('./modules/profile/profile.module').then((m) => m.ProfileModule),
   },
   {
+    title: 'Notifications',
+    path: 'notifications',
+    data: { position: 'bottom', icon: 'notification' },
+    canActivate: [AuthGuard],
+    loadChildren: () =>
+      import('./modules/notifications/notifications.module').then(
+        (m) => m.NotificationsModule
+      ),
+  },
+  {
     title: 'NotFoundPage',
     path: '**',
     component: NotFoundPageComponent,
