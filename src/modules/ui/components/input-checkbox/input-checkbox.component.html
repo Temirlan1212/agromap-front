@@ -1,16 +1,17 @@
-<div class="option" *ngFor="let option of options">
-  <input
-    type="checkbox"
-    [id]="option[valueField]"
-    [name]="name"
-    [value]="option[valueField]"
-    [disabled]="disabled"
-    [checked]="option[checkField]"
-  />
-  <label
-    [class.active]="option[checkField]"
-    [for]="option[valueField]"
-    [textContent]="option[nameField]"
-    (click)="handleClick(option[valueField])"
-  ></label>
+<div class="option">
+  <ng-container *ngIf="!filterField || option[filterField] === filterValue">
+    <input
+      type="checkbox"
+      [id]="valueField"
+      [name]="name"
+      [value]="valueField"
+      [disabled]="disabled"
+      [checked]="value" />
+    <label
+      [class.active]="value"
+      [for]="option[nameField]"
+      [textContent]="option[nameField]"
+      (click)="handleClick(option[valueField])"
+    ></label
+  ></ng-container>
 </div>

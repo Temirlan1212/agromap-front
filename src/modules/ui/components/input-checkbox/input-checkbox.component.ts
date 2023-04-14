@@ -6,7 +6,7 @@ import {
   Output,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
   selector: 'app-input-checkbox',
@@ -23,29 +23,29 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
   standalone: true,
 })
 export class InputCheckboxComponent {
-  @Input() options: Record<string, any>[] = [];
+  @Input() option: Record<string, any> = {};
   @Input() nameField: string = 'name';
   @Input() valueField: string = 'value';
-  @Input() checkField: string = 'checked';
-
+  @Input() filterField: string | null = null;
+  @Input() filterValue: string = 'value';
   @Input() name: string = '';
-  @Input() value: string | number = '';
+  @Input() value: string = '';
   @Input() disabled: boolean = false;
-  @Output() changed = new EventEmitter<string | number>();
+  @Output() changed = new EventEmitter<Record<string, string>>();
 
   onChange: Function = () => null;
   onTouched: Function = () => null;
 
   constructor() {}
 
-  handleClick(value: string | number): void {
-    this.value = value;
-    this.changed.emit(this.value);
+  handleClick(value: string): void {
+    this.value = this.value !== value ? value : '';
+    this.changed.emit({ checked: this.value, name: value });
     this.onChange(this.value);
     this.onTouched();
   }
 
-  writeValue(value: string | number): void {
+  writeValue(value: string): void {
     this.value = value;
   }
 

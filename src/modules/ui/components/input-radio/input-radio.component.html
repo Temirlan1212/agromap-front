@@ -1,16 +1,18 @@
 <div class="option" *ngFor="let option of options">
-  <input
-    type="radio"
-    [id]="option[valueField]"
-    [name]="name"
-    [value]="option[valueField]"
-    [disabled]="disabled"
-    [checked]="value === option[valueField]"
-  />
-  <label
-    [class.active]="value === option[valueField]"
-    [for]="option[valueField]"
-    [textContent]="option[nameField]"
-    (click)="handleClick(option[valueField])"
-  ></label>
+  <ng-container *ngIf="!filterField || option[filterField] === filterValue">
+    <input
+      type="radio"
+      [id]="option[valueField]"
+      [name]="name"
+      [value]="option[valueField]"
+      [disabled]="disabled"
+      [checked]="value === option[valueField]"
+    />
+    <label
+      [class.active]="value === option[valueField]"
+      [for]="option[valueField]"
+      [textContent]="option[nameField]"
+      (click)="handleClick(option[valueField])"
+    ></label>
+  </ng-container>
 </div>

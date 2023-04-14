@@ -40,7 +40,6 @@ import {
 } from 'src/modules/api/models/statistics.model';
 import { ITableItem } from 'src/modules/ui/models/table.model';
 import { DecimalPipe } from '@angular/common';
-import * as L from 'leaflet';
 
 @Component({
   selector: 'app-home',
@@ -105,6 +104,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
         layers: 'agromap:agromap_store',
         ...this.wmsLayersOptions,
       }),
+      type: 'radio',
     },
     {
       title: this.translate.transform('AI'),
@@ -113,10 +113,8 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
         layers: 'agromap:agromap_store_ai',
         ...this.wmsLayersOptions,
       }),
+      type: 'radio',
     },
-  ];
-
-  wmsLayersOverlay: ITileLayer[] = [
     {
       title: this.translate.transform('SoilLayer'),
       name: 'soil_agromap',
@@ -124,7 +122,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
         layers: 'agromap:soil_agromap',
         ...this.wmsLayersOverlayOptions,
       }),
-      checked: false,
+      type: 'checkbox',
     },
     {
       title: this.translate.transform('Productivity layer'),
@@ -133,7 +131,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
         layers: 'my_testing:my_test_store',
         ...this.wmsLayersOverlayOptions,
       }),
-      checked: false,
+      type: 'checkbox',
     },
   ];
 
@@ -288,6 +286,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       polygons = await this.api.dictionary.getRegions({
         polygon: true,
       });
+
       polygons.map((polygon) => {
         if (this.mapData?.map != null) {
           this.mapData.geoJson.options.snapIgnore = true;
@@ -469,7 +468,6 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnInit(): void {
     this.getVegIndexList();
-    this.getRegionsPolygon();
     this.store.watch.subscribe((v: IStore<ContourFiltersQuery | null>) => {
       if (v.value != null && v.name === 'ContourFilterComponent') {
         this.wmsCQLFilter = '';

@@ -1,18 +1,11 @@
 @import "constants";
 
 :host {
-  display: inline-flex;
-  column-gap: 15px;
-  row-gap: 5px;
-
-  &.vertical {
-    flex-direction: column;
-  }
+  display: block;
 }
 
 .option {
-  display: inline-block;
-
+  margin: 5px 0;
   input[type="checkbox"] {
     display: none;
   }
