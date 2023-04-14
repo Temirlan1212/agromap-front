@@ -32,7 +32,6 @@ export class InputCheckboxComponent {
   @Input() value: string | number = '';
   @Input() disabled: boolean = false;
   @Output() changed = new EventEmitter<string | number>();
-  @Input() isResettable: boolean = false;
 
   onChange: Function = () => null;
   onTouched: Function = () => null;
@@ -40,11 +39,7 @@ export class InputCheckboxComponent {
   constructor() {}
 
   handleClick(value: string | number): void {
-    if (this.isResettable) {
-      this.value = value;
-    } else {
-      this.value = value;
-    }
+    this.value = value;
     this.changed.emit(this.value);
     this.onChange(this.value);
     this.onTouched();
