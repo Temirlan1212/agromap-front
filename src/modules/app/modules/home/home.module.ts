@@ -22,7 +22,7 @@ import { DatePickerComponent } from 'src/modules/ui/components/date-picker/date-
 import { MapControlsComponent } from 'src/modules/ui/components/map-controls/map-controls.component';
 import { MapControlLocateComponent } from 'src/modules/ui/components/map-control-locate/map-control-locate.component';
 import { MapControlZoomComponent } from 'src/modules/ui/components/map-control-zoom/map-control-zoom.component';
-import { MapControlLayersSwitchComponent } from 'src/modules/ui/components/map-control-layers-switch/map-control-layers-switch.component';
+import { MapControlLayersSwitchComponentComponent } from 'src/modules/ui/components/map-control-layers-switch/map-control-layers-switch.component';
 import { MapControlVegIndexesComponent } from 'src/modules/ui/components/map-control-veg-indexes/map-control-veg-indexes.component';
 import { ContourEditComponent } from './components/contour-edit/contour-edit.component';
 import { QuestionDialogComponent } from '../../../ui/components/question-dialog/question-dialog.component';
@@ -68,7 +68,7 @@ import { InputCheckboxComponent } from 'src/modules/ui/components/input-checkbox
     MapControlsComponent,
     MapControlLocateComponent,
     MapControlZoomComponent,
-    MapControlLayersSwitchComponent,
+    MapControlLayersSwitchComponentComponent,
     QuestionDialogComponent,
     MapControlSplitMapComponent,
     SplitMapComponent,

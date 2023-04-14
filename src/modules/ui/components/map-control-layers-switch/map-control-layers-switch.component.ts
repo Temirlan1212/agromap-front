@@ -30,13 +30,13 @@ import { InputCheckboxComponent } from '../input-checkbox/input-checkbox.compone
     InputCheckboxComponent,
   ],
 })
-export class MapControlLayersSwitchComponent implements OnChanges {
+export class MapControlLayersSwitchComponentComponent implements OnChanges {
   @Input() map!: Map;
   @Input() mode!: string;
   @Input() baseLayers: ITileLayer[] = [];
   @Input() wmsLayers: ITileLayer[] = [];
   @Input() activeBaseLayer: ITileLayer | null = null;
-  @Input() activeWmsLayers: ITileLayer[] | null[] = [];
+  @Input() activeWmsLayers: ITileLayer[] = [];
   @Output() wmsLayerChanged = new EventEmitter<ITileLayer | null>();
   @Output() baseLayerChanged = new EventEmitter<ITileLayer | null>();
 
@@ -53,30 +53,21 @@ export class MapControlLayersSwitchComponent implements OnChanges {
   ) {}
 
   ngOnChanges(changes: SimpleChanges) {
-    if (!changes['mode'].firstChange) {
-      if (changes['mode'].currentValue == 'agromap_store_ai') {
-        this.selected['filterControlLayerSwitch'] = 'agromap_store_ai';
-        this.handleWmsRadioButtonLayerChange('agromap_store_ai');
-      } else {
-        this.selected['filterControlLayerSwitch'] = 'agromap_store';
-        this.handleWmsRadioButtonLayerChange('agromap_store');
-      }
-    } else {
-      const wmsLayersState = this.store.getItem('mapControlLayersSwitch');
-      if (wmsLayersState) {
-        this.selected['filterControlLayerSwitch'] =
-          wmsLayersState['filterControlLayerSwitch'];
-      }
-      this.handleWmsRadioButtonLayerChange(
-        this.selected['filterControlLayerSwitch']
-      );
+    console.log(changes);
+    const wmsLayersState = this.store.getItem(
+      'MapControlLayersSwitchComponent'
+    );
+    this.selected['filterControlLayerSwitch'] =
+      wmsLayersState?.['filterControlLayerSwitch'];
+    this.handleWmsRadioButtonLayerChange(
+      this.selected['filterControlLayerSwitch']
+    );
 
-      for (let key in wmsLayersState) {
-        this.handleWmsCheckboxLayerChange({
-          checked: wmsLayersState[key],
-          name: key,
-        });
-      }
+    for (let key in wmsLayersState) {
+      this.handleWmsCheckboxLayerChange({
+        checked: wmsLayersState[key],
+        name: key,
+      });
     }
 
     this.wmsBaseLayers = this.wmsLayers.filter((l) => l.type === 'radio');
@@ -105,8 +96,8 @@ export class MapControlLayersSwitchComponent implements OnChanges {
       }
     });
 
-    const data = this.store.getItem('mapControlLayersSwitch');
-    this.store.setItem('mapControlLayersSwitch', {
+    const data = this.store.getItem('MapControlLayersSwitchComponent');
+    this.store.setItem('MapControlLayersSwitchComponent', {
       ...data,
       filterControlLayerSwitch: layerName,
     });
@@ -127,9 +118,9 @@ export class MapControlLayersSwitchComponent implements OnChanges {
           this.map.removeLayer(l.layer);
         }
 
-        const data = this.store.getItem('mapControlLayersSwitch');
+        const data = this.store.getItem('MapControlLayersSwitchComponent');
         this.store.setItem(
-          'mapControlLayersSwitch',
+          'MapControlLayersSwitchComponent',
           Object.assign({}, data, this.selected)
         );
       }

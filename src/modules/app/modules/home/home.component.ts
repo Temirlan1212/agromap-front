@@ -257,6 +257,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     });
     if (this.mapData?.map != null) {
       this.mapData.geoJson.clearLayers();
+      this.getRegionsPolygon();
 
       if (mapMove.zoom >= 12) {
         try {
@@ -357,6 +358,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   handleModeChange(mode: string | null) {
+    console.log(mode);
     this.mode = mode as string;
   }
 
