@@ -40,6 +40,9 @@ export class MapControlLayersSwitchComponent implements OnChanges {
   @Output() wmsLayerChanged = new EventEmitter<ITileLayer | null>();
   @Output() baseLayerChanged = new EventEmitter<ITileLayer | null>();
 
+  wmsBaseLayers: ITileLayer[] = [];
+  wmsOverLayers: ITileLayer[] = [];
+
   selected: Record<string, string> = {};
   isCollapsed = false;
 
@@ -60,9 +63,10 @@ export class MapControlLayersSwitchComponent implements OnChanges {
       }
     } else {
       const wmsLayersState = this.store.getItem('mapControlLayersSwitch');
-      this.selected['filterControlLayerSwitch'] =
-        wmsLayersState['filterControlLayerSwitch'];
-
+      if (wmsLayersState) {
+        this.selected['filterControlLayerSwitch'] =
+          wmsLayersState['filterControlLayerSwitch'];
+      }
       this.handleWmsRadioButtonLayerChange(
         this.selected['filterControlLayerSwitch']
       );
@@ -74,6 +78,9 @@ export class MapControlLayersSwitchComponent implements OnChanges {
         });
       }
     }
+
+    this.wmsBaseLayers = this.wmsLayers.filter((l) => l.type === 'radio');
+    this.wmsOverLayers = this.wmsLayers.filter((l) => l.type === 'checkbox');
   }
 
   @HostListener('document:click', ['$event.target'])

@@ -15,16 +15,14 @@
       nameField="title"
       valueField="name"
       [value]="selected['filterControlLayerSwitch']"
-      [options]="wmsLayers"
+      [options]="wmsBaseLayers"
       (changed)="handleWmsRadioButtonLayerChange($event)"
-      filterField="type"
-      filterValue="radio"
     ></app-input-radio>
 
     <hr />
 
     <app-input-checkbox
-      *ngFor="let option of wmsLayers"
+      *ngFor="let option of wmsOverLayers"
       [name]="option['title']"
       [selected]="selected[option['name']]"
       [value]="option['name']"

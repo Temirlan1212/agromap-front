@@ -97,7 +97,9 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
         this.handleContonChange(value)
       ) as Subscription,
     this.mode?.valueChanges.pipe(filter((res) => !!res)).subscribe((value) => {
-      this.store.setItem('ContourFilterComponentMode', value);
+      this.store.setItem('mapControlLayersSwitch', {
+        filterControlLayerSwitch: value,
+      });
       this.onModeChanged.emit(value);
     }) as Subscription,
     this.translateSvc.onLangChange.subscribe(
@@ -128,7 +130,10 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    if (this.store.getItem('ContourFilterComponentMode') == null) {
+    if (
+      this.store.getItem('mapControlLayersSwitch').filterControlLayerSwitch ==
+      null
+    ) {
       this.mode?.patchValue('agromap_store_ai');
     }
     this.getRegions();

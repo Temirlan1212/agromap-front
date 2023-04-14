@@ -257,7 +257,6 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     });
     if (this.mapData?.map != null) {
       this.mapData.geoJson.clearLayers();
-      this.getRegionsPolygon();
 
       if (mapMove.zoom >= 12) {
         try {
@@ -528,6 +527,8 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
+    this.getRegionsPolygon();
+
     const data = this.store.getItem('HomeComponent');
     if (data !== null) {
       const newBounds = latLngBounds(
