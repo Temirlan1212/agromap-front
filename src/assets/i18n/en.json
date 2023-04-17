@@ -134,5 +134,6 @@
   "Density": "Density",
   "Population": "Population",
   "Description": "Description",
+  "This field is required": "This field is required",
   "Notifications": "Notifications"
 }

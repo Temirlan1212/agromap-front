@@ -23,6 +23,7 @@
   class="placeholder"
   (click)="input.focus()"
   [class.active]="value != null"
+  [class.required]="required"
   [textContent]="placeholder"
   [ngStyle]="{ left: leftIcon == null ? '12px' : '30px' }"
 >

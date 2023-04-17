@@ -37,15 +37,20 @@ $spaceFromTop: 35%;
     color: #65656a;
     background-color: $primaryBackgroundColor;
     padding: 0 5px;
-    transition: all .2s ease;
+    transition: all 0.2s ease;
 
     &.active {
-      transform: scale(.9) translateY(-25px);
+      transform: scale(0.9) translateY(-25px);
     }
   }
 
   input:focus + .placeholder {
-    transform: scale(.9) translateY(-25px);
+    transform: scale(0.9) translateY(-25px);
   }
 
+  &.ng-touched.ng-invalid {
+    input {
+      border: 1px solid $dangerColor;
+    }
+  }
 }

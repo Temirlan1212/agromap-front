@@ -36,6 +36,7 @@ import { InputRadioComponent } from '../../../ui/components/input-radio/input-ra
 import { MapControlStatisticsComponent } from 'src/modules/ui/components/map-control-statistics/map-control-statistics.component';
 import { TableComponent } from 'src/modules/ui/components/table/table.component';
 import { TruncatePipe } from 'src/modules/ui/pipes/truncate.pipe';
+import { FormFieldComponent } from '../../../ui/components/form-field/form-field.component';
 
 @NgModule({
   declarations: [
@@ -78,6 +79,7 @@ import { TruncatePipe } from 'src/modules/ui/pipes/truncate.pipe';
     MapControlStatisticsComponent,
     TableComponent,
     TruncatePipe,
+    FormFieldComponent,
   ],
   providers: [MapService, TranslatePipe],
 })

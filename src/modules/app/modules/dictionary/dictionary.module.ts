@@ -21,6 +21,7 @@ import { RegionsComponent } from './regions/regions.component';
 import { DistrictsComponent } from './districts/districts.component';
 import { ContonsComponent } from './contons/contons.component';
 import { IndexesComponent } from './indexes/indexes.component';
+import { FormFieldComponent } from '../../../ui/components/form-field/form-field.component';
 
 @NgModule({
   declarations: [
@@ -48,6 +49,7 @@ import { IndexesComponent } from './indexes/indexes.component';
     FormOverlayComponent,
     QuestionDialogComponent,
     TableComponent,
+    FormFieldComponent,
   ],
   providers: [TranslatePipe],
 })

@@ -40,6 +40,7 @@ export class InputComponent implements ControlValueAccessor {
   @Input() max: number = 100;
   @Input() step: number = 1;
   @Output() leftIconClick = new EventEmitter<void>();
+  @Input() required: boolean = false;
 
   handleRightIconClick(e: Event) {
     e.preventDefault();

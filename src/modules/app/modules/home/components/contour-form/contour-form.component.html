@@ -1,77 +1,104 @@
 <form class="content" [formGroup]="form">
   <div class="field-group" *ngIf="!loading">
-    <app-input-select
-      [items]="regionList"
-      [placeholder]="'Region' | translate"
-      [nameField]="'name_' + currentLang"
-      formControlName="region"
-    >
-    </app-input-select>
+    <app-form-field name="region" #region>
+      <app-input-select
+        [items]="regionList"
+        [placeholder]="'Region' | translate"
+        [nameField]="'name_' + currentLang"
+        formControlName="region"
+        [required]="region.required"
+      >
+      </app-input-select>
+    </app-form-field>
 
-    <app-input-select
-      [items]="districtList"
-      [placeholder]="'District' | translate"
-      formControlName="district"
-      [nameField]="'name_' + currentLang"
-    >
-    </app-input-select>
+    <app-form-field name="district" #district>
+      <app-input-select
+        [items]="districtList"
+        [placeholder]="'District' | translate"
+        formControlName="district"
+        [nameField]="'name_' + currentLang"
+        [required]="district.required"
+      >
+      </app-input-select>
+    </app-form-field>
 
-    <app-input-select
-      (onSelectItem)="onChange.emit($event)"
-      [placeholder]="'Conton' | translate"
-      [items]="contonList"
-      [nameField]="'name_' + currentLang"
-      formControlName="conton"
-    >
-    </app-input-select>
+    <app-form-field name="conton" #conton>
+      <app-input-select
+        (onSelectItem)="onChange.emit($event)"
+        [placeholder]="'Conton' | translate"
+        [items]="contonList"
+        [nameField]="'name_' + currentLang"
+        [required]="conton.required"
+        formControlName="conton"
+      >
+      </app-input-select>
+    </app-form-field>
 
-    <app-input-select
-      [items]="landTypeList"
-      formControlName="type"
-      [nameField]="'name_' + currentLang"
-      [placeholder]="'Land type' | translate"
-    >
-    </app-input-select>
+    <app-form-field name="type" #type>
+      <app-input-select
+        [items]="landTypeList"
+        formControlName="type"
+        [nameField]="'name_' + currentLang"
+        [placeholder]="'Land type' | translate"
+        [required]="type.required"
+      >
+      </app-input-select>
+    </app-form-field>
 
-    <app-input-select
-      [items]="cultureList"
-      formControlName="culture"
-      [nameField]="'name_' + currentLang"
-      [placeholder]="'Culture' | translate"
-    >
-    </app-input-select>
+    <app-form-field name="culture" #culture>
+      <app-input-select
+        [items]="cultureList"
+        formControlName="culture"
+        [nameField]="'name_' + currentLang"
+        [placeholder]="'Culture' | translate"
+        [required]="culture.required"
+      >
+      </app-input-select>
+    </app-form-field>
 
-    <app-input
-      type="number"
-      [placeholder]="'Productivity' | translate"
-      formControlName="productivity"
-    >
-    </app-input>
+    <app-form-field name="productivity" #productivity>
+      <app-input
+        type="number"
+        [placeholder]="'Productivity' | translate"
+        formControlName="productivity"
+        [required]="productivity.required"
+      >
+      </app-input>
+    </app-form-field>
 
-    <app-input
-      type="number"
-      [min]="2010"
-      [max]="2023"
-      [placeholder]="'Select a year' | translate"
-      formControlName="year"
-    >
-    </app-input>
+    <app-form-field name="year" #year>
+      <app-input
+        type="number"
+        [min]="2010"
+        [max]="2023"
+        [placeholder]="'Select a year' | translate"
+        formControlName="year"
+        [required]="year.required"
+      >
+      </app-input>
+    </app-form-field>
 
-    <app-input
-      *ngIf="mode != 'agromap_store_ai'"
-      type="text"
-      [placeholder]="'Code SOATO' | translate"
-      formControlName="code_soato"
-    >
-    </app-input>
+    <app-form-field name="code_soato" #code_soato>
+      <app-input
+        *ngIf="mode != 'agromap_store_ai'"
+        type="text"
+        [placeholder]="'Code SOATO' | translate"
+        formControlName="code_soato"
+        [required]="code_soato.required"
+      >
+      </app-input>
+    </app-form-field>
 
-    <app-input
-      *ngIf="mode != 'agromap_store_ai'"
-      type="text"
-      [placeholder]="'INK' | translate"
-      formControlName="ink"
-    >
-    </app-input>
+    <app-form-field name="ink" #ink>
+      <app-input
+        *ngIf="mode != 'agromap_store_ai'"
+        type="text"
+        [placeholder]="'INK' | translate"
+        formControlName="ink"
+        [required]="ink.required"
+      >
+      </app-input>
+    </app-form-field>
   </div>
 
   <app-loading [loading]="loading" class="dynamic-color"></app-loading>
