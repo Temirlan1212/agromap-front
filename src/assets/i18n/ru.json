@@ -133,5 +133,6 @@
   "Select a culture": "Выберите культуру",
   "Density": "Плотность",
   "Population": "Население",
-  "Description": "Описание"
+  "Description": "Описание",
+  "This field is required": "Это поле обязательное"
 }

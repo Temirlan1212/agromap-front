@@ -1,0 +1,36 @@
+@import "constants";
+
+label {
+  ::ng-deep .required {
+    &::after {
+      content: "*";
+      margin-left: 4px;
+      font-weight: 400;
+      font-size: 12px;
+      color: $dangerColor;
+    }
+  }
+}
+
+.validation-error {
+  color: red;
+  display: none;
+}
+
+::ng-deep {
+  .validation-error > * {
+    display: none;
+  }
+
+  .validation-error.touched {
+    display: block;
+  }
+
+  .validation-error.required .required {
+    display: block;
+  }
+
+  .validation-error.email .email {
+    display: block;
+  }
+}

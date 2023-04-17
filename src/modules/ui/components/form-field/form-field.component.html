@@ -1,0 +1,13 @@
+<label [ngClass]="{ required: required }">
+  <ng-content></ng-content>
+</label>
+<div
+  class="validation-error"
+  [ngClass]="formControl?.errors ?? {}"
+  [class.touched]="formControl?.touched"
+>
+  <span
+    class="required"
+    [textContent]="'This field is required' | translate"
+  ></span>
+</div>
