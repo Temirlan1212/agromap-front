@@ -134,5 +134,6 @@
   "Density": "Плотность",
   "Population": "Население",
   "Description": "Описание",
-  "Productivity layer": "Слой продуктивности"
+  "Productivity layer": "Слой продуктивности",
+  "This field is required": "Это поле обязательное"
 }

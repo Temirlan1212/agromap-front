@@ -37,6 +37,7 @@ import { MapControlStatisticsComponent } from 'src/modules/ui/components/map-con
 import { TableComponent } from 'src/modules/ui/components/table/table.component';
 import { TruncatePipe } from 'src/modules/ui/pipes/truncate.pipe';
 import { InputCheckboxComponent } from 'src/modules/ui/components/input-checkbox/input-checkbox.component';
+import { FormFieldComponent } from '../../../ui/components/form-field/form-field.component';
 
 @NgModule({
   declarations: [
@@ -80,6 +81,7 @@ import { InputCheckboxComponent } from 'src/modules/ui/components/input-checkbox
     TableComponent,
     TruncatePipe,
     InputCheckboxComponent,
+    FormFieldComponent,
   ],
   providers: [MapService, TranslatePipe],
 })

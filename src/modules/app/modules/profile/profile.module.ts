@@ -9,6 +9,7 @@ import { TranslateModule, TranslatePipe } from '@ngx-translate/core';
 import { SidePanelComponent } from '../../../ui/components/side-panel/side-panel.component';
 import { EditProfileComponent } from './components/edit-profile/edit-profile.component';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
+import { FormFieldComponent } from '../../../ui/components/form-field/form-field.component';
 
 @NgModule({
   declarations: [
@@ -24,6 +25,7 @@ import { ResetPasswordComponent } from './components/reset-password/reset-passwo
     TranslateModule,
     SidePanelComponent,
     FormsModule,
+    FormFieldComponent,
   ],
   providers: [TranslatePipe],
 })

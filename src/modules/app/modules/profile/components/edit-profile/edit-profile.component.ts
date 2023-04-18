@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ApiService } from '../../../../../api/api.service';
 import { MessagesService } from '../../../../../ui/components/services/messages.service';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-edit-profile',
@@ -10,14 +11,23 @@ import { MessagesService } from '../../../../../ui/components/services/messages.
 })
 export class EditProfileComponent implements OnInit {
   form: FormGroup = new FormGroup({
-    full_name: new FormControl<string | null>(null),
-    phone_number: new FormControl<string | null>(null),
+    full_name: new FormControl<string | null>(null, Validators.required),
+    phone_number: new FormControl<string | null>(null, Validators.required),
   });
 
-  constructor(private api: ApiService, private messages: MessagesService) {}
+  constructor(
+    private api: ApiService,
+    private messages: MessagesService,
+    private translate: TranslatePipe
+  ) {}
 
   async ngOnInit() {
     this.getUser();
+  }
+
+  public getState(): { value: any; valid: boolean; touched: boolean } {
+    const state = this.api.form.getState(this.form);
+    return state;
   }
 
   async getUser() {
@@ -33,6 +43,11 @@ export class EditProfileComponent implements OnInit {
   }
 
   async handleSaveClick() {
+    const formState = this.getState();
+    if (!formState.valid) {
+      this.messages.error(this.translate.transform('Form is invalid'));
+      return;
+    }
     try {
       await this.api.user.updateProfile(this.form.value);
       await this.getUser();

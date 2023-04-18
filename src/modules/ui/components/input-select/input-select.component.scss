@@ -131,4 +131,10 @@
       }
     }
   }
+
+  &.ng-touched.ng-invalid {
+    div:first-child {
+      border: 1px solid $dangerColor;
+    }
+  }
 }
