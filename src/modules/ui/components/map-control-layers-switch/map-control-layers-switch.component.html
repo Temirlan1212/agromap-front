@@ -24,9 +24,8 @@
     <app-input-checkbox
       *ngFor="let option of wmsOverLayers"
       [name]="option['title']"
-      [selected]="selected[option['name']]"
-      [value]="option['name']"
-      (changed)="handleWmsCheckboxLayerChange($event)"
+      [checked]="!!selected[option['name']]"
+      (changed)="handleWmsCheckboxLayerChange($event, option['name'])"
     ></app-input-checkbox>
   </div>
 

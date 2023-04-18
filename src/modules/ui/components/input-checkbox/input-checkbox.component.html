@@ -2,12 +2,12 @@
   <input
     type="checkbox"
     [name]="name"
-    [checked]="selected"
+    [checked]="checked"
     [disabled]="disabled"
   />
   <label
-    [class.active]="selected"
+    [class.active]="checked"
     [textContent]="name"
-    (click)="handleClick(value)"
+    (click)="handleClick()"
   ></label>
 </div>

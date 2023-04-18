@@ -65,10 +65,10 @@ export class MapControlLayersSwitchComponentComponent implements OnChanges {
     }
 
     for (let key in this.wmsSelectedStatusLayers) {
-      this.handleWmsCheckboxLayerChange({
-        checked: this.wmsSelectedStatusLayers[key],
-        name: key,
-      });
+      this.handleWmsCheckboxLayerChange(
+        !!this.wmsSelectedStatusLayers[key],
+        key
+      );
     }
 
     if (value) {
@@ -108,15 +108,11 @@ export class MapControlLayersSwitchComponentComponent implements OnChanges {
     });
   }
 
-  handleWmsCheckboxLayerChange({
-    name,
-    checked,
-  }: Record<string, string>): void {
+  handleWmsCheckboxLayerChange(checked: boolean, id: string): void {
     this.wmsLayers.forEach((l) => {
-      const isCurrent = name === l.name;
+      const isCurrent = id === l.name;
       if (isCurrent) {
-        this.selected = { ...this.selected, [name]: checked };
-
+        this.selected = { ...this.selected, [id]: checked ? id : '' };
         if (checked) {
           this.map.addLayer(l.layer);
         } else {
@@ -124,6 +120,7 @@ export class MapControlLayersSwitchComponentComponent implements OnChanges {
         }
 
         const data = this.store.getItem('MapControlLayersSwitchComponent');
+
         this.store.setItem(
           'MapControlLayersSwitchComponent',
           Object.assign({}, data, this.selected)

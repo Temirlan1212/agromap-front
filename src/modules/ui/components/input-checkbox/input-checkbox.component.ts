@@ -7,7 +7,6 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
-
 @Component({
   selector: 'app-input-checkbox',
   templateUrl: './input-checkbox.component.html',
@@ -24,25 +23,24 @@ import { NG_VALUE_ACCESSOR } from '@angular/forms';
 })
 export class InputCheckboxComponent {
   @Input() name: string = '';
-  @Input() value: string = '';
-  @Input() selected: string = '';
+  @Input() checked: boolean = false;
   @Input() disabled: boolean = false;
-  @Output() changed = new EventEmitter<Record<string, string>>();
+  @Output() changed = new EventEmitter<boolean>();
 
   onChange: Function = () => null;
   onTouched: Function = () => null;
 
   constructor() {}
 
-  handleClick(value: string): void {
-    this.selected = this.selected !== value ? value : '';
-    this.changed.emit({ checked: this.selected, name: value });
-    this.onChange(this.selected);
+  handleClick(): void {
+    this.checked = !this.checked;
+    this.changed.emit(this.checked);
+    this.onChange(this.checked);
     this.onTouched();
   }
 
-  writeValue(value: string): void {
-    this.selected = value;
+  writeValue(value: boolean): void {
+    this.checked = value;
   }
 
   registerOnChange(fn: Function): void {
