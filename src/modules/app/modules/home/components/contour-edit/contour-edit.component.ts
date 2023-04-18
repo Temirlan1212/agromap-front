@@ -25,9 +25,7 @@ export class ContourEditComponent implements OnInit, OnDestroy {
   layer: any = null;
   polygon: GeoJSON.Polygon | null = null;
   isPolygonChanged: boolean = false;
-  mode: string | null = this.store.getItem<string>(
-    'ContourFilterComponentMode'
-  );
+  mode: string | null = null;
 
   constructor(
     private api: ApiService,
@@ -40,6 +38,8 @@ export class ContourEditComponent implements OnInit, OnDestroy {
   ) {}
 
   async ngOnInit() {
+    const data = this.store.getItem('MapControlLayersSwitchComponent');
+    this.mode = data?.filterControlLayerSwitch;
     const id = this.route.snapshot.paramMap.get('id');
     try {
       this.loading = true;

@@ -163,12 +163,15 @@ export class SplitMapSidebarComponent implements OnDestroy, OnInit {
       await this.getVegSatelliteDates(this.contourId, 1);
       this.buildSatelliteDatesOptions(this.satelliteDateData, this.currLang);
     }
-    const contourFilterComponentMode = this.store.getItem(
-      'ContourFilterComponentMode'
+    const MapControlLayersSwitchComponent = this.store.getItem(
+      'MapControlLayersSwitchComponent'
     );
 
-    if (contourFilterComponentMode) {
-      if (contourFilterComponentMode === 'agromap_store_ai') {
+    if (MapControlLayersSwitchComponent.filterControlLayerSwitch) {
+      if (
+        MapControlLayersSwitchComponent.filterControlLayerSwitch ===
+        'agromap_store_ai'
+      ) {
         this.isWmsAiActive = true;
       } else {
         this.isWmsAiActive = false;

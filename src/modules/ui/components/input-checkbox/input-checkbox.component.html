@@ -1,0 +1,13 @@
+<div class="option">
+  <input
+    type="checkbox"
+    [name]="name"
+    [checked]="checked"
+    [disabled]="disabled"
+  />
+  <label
+    [class.active]="checked"
+    [textContent]="name"
+    (click)="handleClick()"
+  ></label>
+</div>
