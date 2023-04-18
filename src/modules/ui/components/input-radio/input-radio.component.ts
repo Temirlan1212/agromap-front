@@ -26,6 +26,8 @@ export class InputRadioComponent implements ControlValueAccessor {
   @Input() options: Record<string, any>[] = [];
   @Input() nameField: string = 'name';
   @Input() valueField: string = 'value';
+  @Input() filterField: string | null = null;
+  @Input() filterValue: string = 'value';
   @Input() name: string = '';
   @Input() value: string | number = '';
   @Input() disabled: boolean = false;

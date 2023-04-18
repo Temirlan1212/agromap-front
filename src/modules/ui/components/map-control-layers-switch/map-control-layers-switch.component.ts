@@ -37,6 +37,7 @@ export class MapControlLayersSwitchComponentComponent implements OnChanges {
   @Input() wmsLayers: ITileLayer[] = [];
   @Input() activeBaseLayer: ITileLayer | null = null;
   @Input() activeWmsLayers: ITileLayer[] = [];
+  @Input() wmsSelectedStatusLayers: Record<string, string> | null = null;
   @Output() wmsLayerChanged = new EventEmitter<ITileLayer | null>();
   @Output() baseLayerChanged = new EventEmitter<ITileLayer | null>();
 
@@ -53,23 +54,27 @@ export class MapControlLayersSwitchComponentComponent implements OnChanges {
   ) {}
 
   ngOnChanges(changes: SimpleChanges) {
-    console.log(changes);
-    const wmsLayersState = this.store.getItem(
-      'MapControlLayersSwitchComponent'
-    );
-    this.selected['filterControlLayerSwitch'] =
-      wmsLayersState?.['filterControlLayerSwitch'];
-    this.handleWmsRadioButtonLayerChange(
-      this.selected['filterControlLayerSwitch']
-    );
+    const value = changes['mode'].currentValue;
 
-    for (let key in wmsLayersState) {
+    if (this.wmsSelectedStatusLayers) {
+      this.selected['filterControlLayerSwitch'] =
+        this.wmsSelectedStatusLayers?.['filterControlLayerSwitch'];
+      this.handleWmsRadioButtonLayerChange(
+        this.selected['filterControlLayerSwitch']
+      );
+    }
+
+    for (let key in this.wmsSelectedStatusLayers) {
       this.handleWmsCheckboxLayerChange({
-        checked: wmsLayersState[key],
+        checked: this.wmsSelectedStatusLayers[key],
         name: key,
       });
     }
 
+    if (value) {
+      this.selected['filterControlLayerSwitch'] = value;
+      this.handleWmsRadioButtonLayerChange(value);
+    }
     this.wmsBaseLayers = this.wmsLayers.filter((l) => l.type === 'radio');
     this.wmsOverLayers = this.wmsLayers.filter((l) => l.type === 'checkbox');
   }
