@@ -1,11 +1,4 @@
-import {
-  geoJSON,
-  latLngBounds,
-  LatLngBounds,
-  layerGroup,
-  Map,
-  tileLayer,
-} from 'leaflet';
+import { geoJSON, latLngBounds, LatLngBounds, Map, tileLayer } from 'leaflet';
 import { GeoJSON } from 'geojson';
 import {
   AfterViewInit,
@@ -154,7 +147,6 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   contourStatisticsProductivityTableItems: ITableItem[][] = [];
   contourStatisticsProductivityAreaTitle: string = '';
   wmsSelectedStatusLayers: Record<string, string> | null = null;
-  polygonsLayerGroup: L.LayerGroup | null = null;
 
   constructor(
     private api: ApiService,
@@ -265,7 +257,8 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       mapBounds: mapMove.bounds,
     });
     if (this.mapData?.map != null) {
-      if (this.polygonsLayerGroup) this.polygonsLayerGroup.clearLayers();
+      this.mapData.geoJson.clearLayers();
+      this.getRegionsPolygon();
 
       if (mapMove.zoom >= 12) {
         try {
@@ -280,10 +273,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
           this.mapData.geoJson.options.style = { fillOpacity: 0, weight: 0.4 };
           this.mapData.geoJson.setZIndex(400);
           this.mapData.geoJson.options.interactive = true;
-          this.polygonsLayerGroup = layerGroup().addTo(this.mapData.map);
-          this.polygonsLayerGroup.addLayer(
-            this.mapData.geoJson.addData(polygons)
-          );
+          this.mapData.geoJson.addData(polygons);
         } catch (e: any) {
           console.log(e);
         }
@@ -373,7 +363,8 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   handleWmsLayerChanged(layer: ITileLayer | null): void {
-    if (this.polygonsLayerGroup) this.polygonsLayerGroup.clearLayers();
+    this.mapData?.geoJson.clearLayers();
+    this.getRegionsPolygon();
     if (layer != null) {
       const finded = this.wmsLayers.find((l) => l.name === layer.name);
       if (finded != null && finded.name === 'agromap_store_ai') {
