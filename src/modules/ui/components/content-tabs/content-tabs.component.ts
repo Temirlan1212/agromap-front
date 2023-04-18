@@ -3,7 +3,6 @@ import {
   Component,
   ContentChildren,
   QueryList,
-  ViewEncapsulation,
 } from '@angular/core';
 import { TabComponent } from './tab/tab.component';
 import { CommonModule } from '@angular/common';

@@ -32,10 +32,7 @@ import { ActualVegIndexes } from 'src/modules/api/models/actual-veg-indexes';
 import { ITileLayer } from 'src/modules/ui/models/map.model';
 import { QuestionDialogComponent } from '../../../ui/components/question-dialog/question-dialog.component';
 import { IRegion } from 'src/modules/api/models/region.model';
-import {
-  ContourFiltersQuery,
-  IContour,
-} from 'src/modules/api/models/contour.model';
+import { ContourFiltersQuery } from 'src/modules/api/models/contour.model';
 import { IStore } from 'src/modules/api/models/store.model';
 import {
   IContourStatisticsProductivity,
