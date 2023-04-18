@@ -1,0 +1,26 @@
+<div *ngIf="contour != null; else noItems">
+  <span *ngIf="contour?.region != null"
+    >{{ "Region" | translate }} : {{ contour.region }}</span
+  >
+  <span>{{ "District" | translate }} : {{ contour.district }}</span>
+  <span *ngIf="contour?.conton != null"
+    >{{ "Conton" | translate }} : {{ contour.conton }}</span
+  >
+  <span>{{ "Land type" | translate }} : {{ contour.type }}</span>
+  <span *ngIf="contour?.culture != null"
+    >{{ "Culture" | translate }} : {{ contour.culture }}</span
+  >
+  <span
+    >{{ "Productivity" | translate }} : {{ contour.productivity }}
+    {{ "c. per ha." | translate }}</span
+  >
+  <span
+    >{{ "Area" | translate }} : {{ contour.area_ha }}
+    {{ "ha" | translate }} .</span
+  >
+</div>
+<ng-template #noItems>
+  <app-loading [loading]="loading">
+    <h4>{{ "No data" | translate }}</h4>
+  </app-loading>
+</ng-template>

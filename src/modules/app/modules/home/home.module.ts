@@ -37,6 +37,9 @@ import { MapControlStatisticsComponent } from 'src/modules/ui/components/map-con
 import { TableComponent } from 'src/modules/ui/components/table/table.component';
 import { TruncatePipe } from 'src/modules/ui/pipes/truncate.pipe';
 import { FormFieldComponent } from '../../../ui/components/form-field/form-field.component';
+import { ContentTabsComponent } from '../../../ui/components/content-tabs/content-tabs.component';
+import { TabComponent } from '../../../ui/components/content-tabs/tab/tab.component';
+import { ContourInfoComponent } from './components/contour-info/contour-info.component';
 
 @NgModule({
   declarations: [
@@ -47,6 +50,7 @@ import { FormFieldComponent } from '../../../ui/components/form-field/form-field
     ContourFormComponent,
     SplitMapSidebarComponent,
     ContourEditComponent,
+    ContourInfoComponent,
   ],
   imports: [
     CommonModule,
@@ -80,6 +84,8 @@ import { FormFieldComponent } from '../../../ui/components/form-field/form-field
     TableComponent,
     TruncatePipe,
     FormFieldComponent,
+    ContentTabsComponent,
+    TabComponent,
   ],
   providers: [MapService, TranslatePipe],
 })

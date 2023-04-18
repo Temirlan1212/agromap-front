@@ -21,7 +21,6 @@ import {
   LatLngBounds,
   latLng,
   latLngBounds,
-  map,
   tileLayer,
 } from 'leaflet';
 import { MapData, MapLayerFeature, MapMove } from '../../models/map.model';

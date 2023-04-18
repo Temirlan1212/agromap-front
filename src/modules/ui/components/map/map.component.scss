@@ -19,9 +19,11 @@ $transitionDelay: 0.2s;
       transition: flex $transitionDelay;
       flex: 0;
       padding-bottom: 0;
+
       .body {
         display: none;
       }
+
       .arrow-down {
         transition: all $transitionDelay;
         transform: rotate(180deg);

@@ -17,6 +17,8 @@ export interface IContour {
   type: number;
   culture: number;
   farmer: number;
+  region: number;
+  district: number;
 }
 
 export interface ContourFiltersQuery {

@@ -32,7 +32,10 @@ import { ActualVegIndexes } from 'src/modules/api/models/actual-veg-indexes';
 import { ITileLayer } from 'src/modules/ui/models/map.model';
 import { QuestionDialogComponent } from '../../../ui/components/question-dialog/question-dialog.component';
 import { IRegion } from 'src/modules/api/models/region.model';
-import { ContourFiltersQuery } from 'src/modules/api/models/contour.model';
+import {
+  ContourFiltersQuery,
+  IContour,
+} from 'src/modules/api/models/contour.model';
 import { IStore } from 'src/modules/api/models/store.model';
 import {
   IContourStatisticsProductivity,
@@ -128,6 +131,8 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   productivity: string | null = null;
   contourStatisticsProductivityTableItems: ITableItem[][] = [];
   contourStatisticsProductivityAreaTitle: string = '';
+  selectedContourId!: number;
+  loading: boolean = false;
 
   constructor(
     private api: ApiService,
@@ -179,6 +184,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     this.getOneCulture(
       Number(layerFeature?.feature?.properties?.['culture_id'])
     );
+    this.selectedContourId = Number(cid);
     this.productivity = layerFeature?.feature?.properties?.['productivity'];
     this.getContourData(cid);
     this.layerFeature = layerFeature;
@@ -243,6 +249,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
       if (mapMove.zoom >= 12) {
         try {
+          this.loading = true;
           let polygons: GeoJSON;
           if (this.isWmsAiActive) {
             polygons = await this.api.map.getPolygonsInScreenAi(mapMove.bounds);
@@ -257,6 +264,8 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
           this.mapData.geoJson.addData(polygons);
         } catch (e: any) {
           console.log(e);
+        } finally {
+          this.loading = false;
         }
       }
     }
@@ -292,6 +301,8 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
   handleFilterFormReset(): void {
     this.contourStatisticsProductivityTableItems = [];
+    this.wmsCQLFilter = null;
+    this.setWmsParams();
   }
 
   handleFilterFormSubmit(formValue: Record<string, any>) {
@@ -501,9 +512,6 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
             this.wmsCQLFilter += 'ltype=' + v.value.land_type;
           }
         }
-        this.setWmsParams();
-      } else {
-        this.wmsCQLFilter = null;
         this.setWmsParams();
       }
     });
