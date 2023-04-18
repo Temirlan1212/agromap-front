@@ -87,6 +87,12 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     zIndex: 500,
   };
 
+  wmsLayersOverlayOptions = {
+    format: 'image/png',
+    transparent: true,
+    zIndex: 499,
+  };
+
   wmsLayers: ITileLayer[] = [
     {
       title: `
@@ -98,6 +104,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
         layers: 'agromap:agromap_store',
         ...this.wmsLayersOptions,
       }),
+      type: 'radio',
     },
     {
       title: this.translate.transform('AI'),
@@ -106,14 +113,25 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
         layers: 'agromap:agromap_store_ai',
         ...this.wmsLayersOptions,
       }),
+      type: 'radio',
     },
     {
       title: this.translate.transform('SoilLayer'),
       name: 'soil_agromap',
       layer: tileLayer.wms('https://geoserver.24mycrm.com/agromap/wms', {
         layers: 'agromap:soil_agromap',
-        ...this.wmsLayersOptions,
+        ...this.wmsLayersOverlayOptions,
       }),
+      type: 'checkbox',
+    },
+    {
+      title: this.translate.transform('Productivity layer'),
+      name: 'my_test_store',
+      layer: tileLayer.wms('https://geoserver.24mycrm.com/my_testing/wms', {
+        layers: 'my_testing:my_test_store',
+        ...this.wmsLayersOverlayOptions,
+      }),
+      type: 'checkbox',
     },
   ];
 
@@ -128,6 +146,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   productivity: string | null = null;
   contourStatisticsProductivityTableItems: ITableItem[][] = [];
   contourStatisticsProductivityAreaTitle: string = '';
+  wmsSelectedStatusLayers: Record<string, string> | null = null;
   selectedContourId!: number;
   loading: boolean = false;
 
@@ -272,6 +291,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       polygons = await this.api.dictionary.getRegions({
         polygon: true,
       });
+
       polygons.map((polygon) => {
         if (this.mapData?.map != null) {
           this.mapData.geoJson.options.snapIgnore = true;
@@ -454,8 +474,10 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnInit(): void {
+    this.wmsSelectedStatusLayers = this.store.getItem(
+      'MapControlLayersSwitchComponent'
+    );
     this.getVegIndexList();
-    this.getRegionsPolygon();
     this.store.watch.subscribe((v: IStore<ContourFiltersQuery | null>) => {
       if (v.value != null && v.name === 'ContourFilterComponent') {
         this.wmsCQLFilter = '';
@@ -513,6 +535,8 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
+    this.getRegionsPolygon();
+
     const data = this.store.getItem('HomeComponent');
     if (data !== null) {
       const newBounds = latLngBounds(
