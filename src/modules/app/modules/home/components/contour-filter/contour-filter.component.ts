@@ -106,12 +106,10 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
       this.mapInstance = res?.map as Map;
       this.mapGeo = res?.geoJson as GeoJSON;
     }),
-    this.store.watch.subscribe((v) => {
-      if (v.name === 'MapControlLayersSwitchComponent') {
-        this.mode?.patchValue(v.value.filterControlLayerSwitch, {
-          emitEvent: false,
-        });
-      }
+    this.store.watchItem('MapControlLayersSwitchComponent').subscribe((v) => {
+      this.mode?.patchValue(v.value.filterControlLayerSwitch, {
+        emitEvent: false,
+      });
     }),
   ];
 
