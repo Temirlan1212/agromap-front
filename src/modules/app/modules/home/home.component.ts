@@ -181,9 +181,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     const cid =
       layerFeature?.feature?.properties?.['contour_id'] ??
       layerFeature?.feature?.properties?.['id'];
-    this.getOneCulture(
-      Number(layerFeature?.feature?.properties?.['culture_id'])
-    );
+    this.getOneCulture(Number(cid));
     this.selectedContourId = Number(cid);
     this.productivity = layerFeature?.feature?.properties?.['productivity'];
     this.getContourData(cid);

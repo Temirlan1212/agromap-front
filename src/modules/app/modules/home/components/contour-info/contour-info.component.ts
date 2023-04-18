@@ -1,24 +1,33 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { IContour } from '../../../../../api/models/contour.model';
+import {
+  Component,
+  Input,
+  OnChanges,
+  OnDestroy,
+  SimpleChanges,
+} from '@angular/core';
 import { ApiService } from '../../../../../api/api.service';
-import { IDistrict } from '../../../../../api/models/district.model';
-import { IConton } from '../../../../../api/models/conton.model';
-import { IRegion } from '../../../../../api/models/region.model';
-import { ILandType } from '../../../../../api/models/land-type.model';
-import { ICulture } from '../../../../../api/models/culture.model';
+import { TranslateService } from '@ngx-translate/core';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-contour-info',
   templateUrl: './contour-info.component.html',
   styleUrls: ['./contour-info.component.scss'],
 })
-export class ContourInfoComponent implements OnChanges {
+export class ContourInfoComponent implements OnChanges, OnDestroy {
   @Input() contourId!: number;
   @Input() isWmsAiActive!: boolean;
   loading: boolean = false;
-  contour!: IContour;
+  contour!: any;
+  currentLang: string = this.translateSvc.currentLang;
+  sub: Subscription = this.translateSvc.onLangChange.subscribe(
+    (res) => (this.currentLang = res.lang)
+  );
 
-  constructor(private api: ApiService) {}
+  constructor(
+    private api: ApiService,
+    private translateSvc: TranslateService
+  ) {}
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['contourId']) {
@@ -39,5 +48,9 @@ export class ContourInfoComponent implements OnChanges {
     } finally {
       this.loading = false;
     }
+  }
+
+  ngOnDestroy() {
+    this.sub.unsubscribe();
   }
 }

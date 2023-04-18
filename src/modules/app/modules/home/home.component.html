@@ -14,9 +14,6 @@
   <app-loading *ngIf="loading" [loading]="loading"></app-loading>
   <app-map
     #map
-    [featureTitle]="
-      ('Culture' | translate) + ':' | unit : (culture?.['name_' + currentLang] | checkExist | translate)
-    "
     (mapData)="handleMapData($event)"
     (mapMove)="handleMapMove($event)"
     (featureClick)="handleFeatureClick($event)"

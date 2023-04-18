@@ -1,4 +1,10 @@
 import { Polygon } from 'geojson';
+import { IDistrict } from './district.model';
+import { IRegion } from './region.model';
+import { ICulture } from './culture.model';
+import { ILandType } from './land-type.model';
+import { IConton } from './conton.model';
+import { SoilClass } from './soil.model';
 
 export interface IContour {
   id: number;
@@ -13,12 +19,13 @@ export interface IContour {
   is_deleted: boolean;
   elevation: string;
   is_rounded: boolean;
-  conton: number;
-  type: number;
-  culture: number;
+  conton: IConton;
+  type: ILandType;
+  culture: ICulture;
   farmer: number;
-  region: number;
-  district: number;
+  region: IRegion;
+  district: IDistrict;
+  soil_class: SoilClass;
 }
 
 export interface ContourFiltersQuery {

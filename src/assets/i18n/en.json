@@ -136,5 +136,9 @@
   "Description": "Description",
   "This field is required": "This field is required",
   "Contour details": "Contour details",
-  "Vegetative indexes": "Vegetative indexes"
+  "Vegetative indexes": "Vegetative indexes",
+  "Soil class": "Soil class",
+  "Elevation": "Elevation",
+  "m. above sea level": "m. above sea level",
+  "AI determination error": "AI determination error"
 }
