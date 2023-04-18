@@ -472,63 +472,65 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       'MapControlLayersSwitchComponent'
     );
     this.getVegIndexList();
-    this.store.watch.subscribe((v: IStore<ContourFiltersQuery | null>) => {
-      if (v.value != null && v.name === 'ContourFilterComponent') {
-        this.wmsCQLFilter = '';
-        if (v.value.region) {
-          if (this.wmsCQLFilter.length > 0) {
-            this.wmsCQLFilter += '&&';
+    this.store
+      .watchItem('ContourFilterComponent')
+      .subscribe((v: IStore<ContourFiltersQuery | null>) => {
+        if (v.value != null) {
+          this.wmsCQLFilter = '';
+          if (v.value.region) {
+            if (this.wmsCQLFilter.length > 0) {
+              this.wmsCQLFilter += '&&';
+            }
+            this.wmsCQLFilter += 'rgn=' + v.value.region;
           }
-          this.wmsCQLFilter += 'rgn=' + v.value.region;
+          if (v.value.district) {
+            if (this.wmsCQLFilter.length > 0) {
+              this.wmsCQLFilter += '&&';
+            }
+            this.wmsCQLFilter += 'dst=' + v.value.district;
+          }
+          if (v.value.conton) {
+            if (this.wmsCQLFilter.length > 0) {
+              this.wmsCQLFilter += '&&';
+            }
+            this.wmsCQLFilter += 'cntn=' + v.value.conton;
+          }
+          if (v.value.culture) {
+            const val = v.value.culture;
+            if (this.wmsCQLFilter.length > 0) {
+              this.wmsCQLFilter += '&&';
+            }
+            if (typeof val === 'string' && val.split(',').length > 1) {
+              this.wmsCQLFilter += val
+                .split(',')
+                .reduce((acc, i) => (acc += 'clt=' + i + ' OR '), '')
+                .slice(0, -3)
+                .trim();
+            } else {
+              this.wmsCQLFilter += 'clt=' + v.value.culture;
+            }
+          }
+          if (v.value.land_type) {
+            const val = v.value.land_type;
+            if (this.wmsCQLFilter.length > 0) {
+              this.wmsCQLFilter += '&&';
+            }
+            if (typeof val === 'string' && val.split(',').length > 1) {
+              this.wmsCQLFilter += val
+                .split(',')
+                .reduce((acc, i) => (acc += 'ltype=' + i + ' OR '), '')
+                .slice(0, -3)
+                .trim();
+            } else {
+              this.wmsCQLFilter += 'ltype=' + v.value.land_type;
+            }
+          }
+          this.setWmsParams();
+        } else {
+          this.wmsCQLFilter = null;
+          this.setWmsParams();
         }
-        if (v.value.district) {
-          if (this.wmsCQLFilter.length > 0) {
-            this.wmsCQLFilter += '&&';
-          }
-          this.wmsCQLFilter += 'dst=' + v.value.district;
-        }
-        if (v.value.conton) {
-          if (this.wmsCQLFilter.length > 0) {
-            this.wmsCQLFilter += '&&';
-          }
-          this.wmsCQLFilter += 'cntn=' + v.value.conton;
-        }
-        if (v.value.culture) {
-          const val = v.value.culture;
-          if (this.wmsCQLFilter.length > 0) {
-            this.wmsCQLFilter += '&&';
-          }
-          if (typeof val === 'string' && val.split(',').length > 1) {
-            this.wmsCQLFilter += val
-              .split(',')
-              .reduce((acc, i) => (acc += 'clt=' + i + ' OR '), '')
-              .slice(0, -3)
-              .trim();
-          } else {
-            this.wmsCQLFilter += 'clt=' + v.value.culture;
-          }
-        }
-        if (v.value.land_type) {
-          const val = v.value.land_type;
-          if (this.wmsCQLFilter.length > 0) {
-            this.wmsCQLFilter += '&&';
-          }
-          if (typeof val === 'string' && val.split(',').length > 1) {
-            this.wmsCQLFilter += val
-              .split(',')
-              .reduce((acc, i) => (acc += 'ltype=' + i + ' OR '), '')
-              .slice(0, -3)
-              .trim();
-          } else {
-            this.wmsCQLFilter += 'ltype=' + v.value.land_type;
-          }
-        }
-        this.setWmsParams();
-      } else {
-        this.wmsCQLFilter = null;
-        this.setWmsParams();
-      }
-    });
+      });
   }
 
   ngAfterViewInit(): void {

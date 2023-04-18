@@ -15,10 +15,11 @@ import { Subscription } from 'rxjs';
 })
 export class MapControlStatisticsComponent implements OnInit, OnDestroy {
   isCollapsed: boolean = false;
-  subscription: Subscription = this.store.watch.subscribe((v) => {
-    const createdCondition = v.name === 'isCollapsedMapControlTable';
-    if (createdCondition) this.isCollapsed = v.value;
-  });
+  subscription: Subscription = this.store
+    .watchItem('isCollapsedMapControlTable')
+    .subscribe((v) => {
+      this.isCollapsed = v.value;
+    });
 
   @Input() title = '';
 
