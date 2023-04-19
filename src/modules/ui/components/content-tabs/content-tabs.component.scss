@@ -1,0 +1,35 @@
+.tabs ul {
+  list-style-type: none;
+  overflow: hidden;
+  width: fit-content;
+  margin: 0 auto;
+}
+
+.tabs li {
+  float: left;
+  cursor: pointer;
+  padding: 10px 20px;
+}
+
+.tabs li a {
+  display: block;
+  color: #666;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+.tabs li.active {
+  //background-color: #ccc;
+  border-bottom: 2px solid #1b55eb;
+}
+
+.tabs li:hover:not(.active) {
+  background-color: #ddd;
+}
+
+.tabs div {
+  border-top: 1px solid #e3e3e3;
+  border-bottom: 1px solid #e3e3e3;
+  background-color: #ffffff;
+}

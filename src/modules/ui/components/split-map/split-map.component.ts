@@ -12,7 +12,7 @@ import { latLng, LatLng, Map } from 'leaflet';
 import 'leaflet.sync';
 import { Subscription } from 'rxjs';
 import { IVegIndexOption } from 'src/modules/api/models/veg-indexes.model';
-import { MapService } from 'src/modules/app/modules/home/map.service';
+import { MapService } from 'src/modules/ui/services/map.service';
 import { ILeafletMap } from '../../models/map.model';
 
 @Component({

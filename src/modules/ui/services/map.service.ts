@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
-import { MapData } from '../../../ui/models/map.model';
+import { MapData } from '../models/map.model';
 import {
   tileLayer,
   map,

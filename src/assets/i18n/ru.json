@@ -135,5 +135,11 @@
   "Population": "Население",
   "Description": "Описание",
   "Productivity layer": "Слой продуктивности",
-  "This field is required": "Это поле обязательное"
+  "This field is required": "Это поле обязательное",
+  "Contour details": "Данные контура",
+  "Vegetative indexes": "Вегетативные индексы",
+  "Soil class": "Вид почвы",
+  "Elevation": "Высота",
+  "m. above sea level": "м. над уровнем моря",
+  "AI determination error": "Погрешность определения ИИ"
 }

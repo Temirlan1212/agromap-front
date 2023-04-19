@@ -13,8 +13,8 @@ import {
   ELanguageCode,
   ILanguage,
   ILanguageStore,
-} from 'src/modules/api/models/language.model';
-import { StoreService } from 'src/modules/api/store.service';
+} from 'src/modules/ui/models/language.model';
+import { StoreService } from 'src/modules/ui/services/store.service';
 
 @Component({
   selector: 'app-sidenav',

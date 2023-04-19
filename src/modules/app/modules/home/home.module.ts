@@ -15,7 +15,7 @@ import { SplineAreaChartComponent } from './components/spline-area-chart/spline-
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { ContourFormComponent } from './components/contour-form/contour-form.component';
 import { InputComponent } from '../../../ui/components/input/input.component';
-import { MapService } from './map.service';
+import { MapService } from '../../../ui/services/map.service';
 import { CardAccordionComponent } from '../../../ui/components/card-accordion/card-accordion.component';
 import { TranslateModule, TranslatePipe } from '@ngx-translate/core';
 import { DatePickerComponent } from 'src/modules/ui/components/date-picker/date-picker.component';
@@ -38,6 +38,9 @@ import { TableComponent } from 'src/modules/ui/components/table/table.component'
 import { TruncatePipe } from 'src/modules/ui/pipes/truncate.pipe';
 import { InputCheckboxComponent } from 'src/modules/ui/components/input-checkbox/input-checkbox.component';
 import { FormFieldComponent } from '../../../ui/components/form-field/form-field.component';
+import { ContentTabsComponent } from '../../../ui/components/content-tabs/content-tabs.component';
+import { TabComponent } from '../../../ui/components/content-tabs/tab/tab.component';
+import { ContourInfoComponent } from './components/contour-info/contour-info.component';
 
 @NgModule({
   declarations: [
@@ -48,6 +51,7 @@ import { FormFieldComponent } from '../../../ui/components/form-field/form-field
     ContourFormComponent,
     SplitMapSidebarComponent,
     ContourEditComponent,
+    ContourInfoComponent,
   ],
   imports: [
     CommonModule,
@@ -82,6 +86,8 @@ import { FormFieldComponent } from '../../../ui/components/form-field/form-field
     TruncatePipe,
     InputCheckboxComponent,
     FormFieldComponent,
+    ContentTabsComponent,
+    TabComponent,
   ],
   providers: [MapService, TranslatePipe],
 })
