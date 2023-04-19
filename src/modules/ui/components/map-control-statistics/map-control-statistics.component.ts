@@ -2,8 +2,8 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
-import { StoreService } from 'src/modules/api/store.service';
-import { LanguageService } from 'src/modules/api/language.service';
+import { StoreService } from 'src/modules/ui/services/store.service';
+import { LanguageService } from 'src/modules/ui/services/language.service';
 import { Subscription } from 'rxjs';
 
 @Component({

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, Observer, Subject } from 'rxjs';
-import { IStore } from './models/store.model';
+import { IStore } from '../models/store.model';
 
 @Injectable({ providedIn: 'root' })
 export class StoreService {

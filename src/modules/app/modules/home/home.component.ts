@@ -18,13 +18,13 @@ import {
   MapLayerFeature,
   MapMove,
 } from 'src/modules/ui/models/map.model';
-import { MapService } from './map.service';
+import { MapService } from '../../../ui/services/map.service';
 import { MessagesService } from '../../../ui/components/services/messages.service';
 import { IChartData } from './components/spline-area-chart/spline-area-chart.component';
 import { ActualVegQuery } from '../../../api/classes/veg-indexes';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { Router, NavigationEnd, Event, ActivatedRoute } from '@angular/router';
-import { StoreService } from 'src/modules/api/store.service';
+import { StoreService } from 'src/modules/ui/services/store.service';
 import { Feature } from 'geojson';
 import { MapComponent } from '../../../ui/components/map/map.component';
 import { Subscription } from 'rxjs';
@@ -33,7 +33,7 @@ import { ITileLayer } from 'src/modules/ui/models/map.model';
 import { QuestionDialogComponent } from '../../../ui/components/question-dialog/question-dialog.component';
 import { IRegion } from 'src/modules/api/models/region.model';
 import { ContourFiltersQuery } from 'src/modules/api/models/contour.model';
-import { IStore } from 'src/modules/api/models/store.model';
+import { IStore } from 'src/modules/ui/models/store.model';
 import {
   IContourStatisticsProductivity,
   IContourStatisticsProductivityQuery,

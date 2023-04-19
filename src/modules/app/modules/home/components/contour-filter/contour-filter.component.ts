@@ -15,13 +15,13 @@ import { filter, Subscription } from 'rxjs';
 import { ILandType } from '../../../../../api/models/land-type.model';
 import { ContourFiltersQuery } from '../../../../../api/models/contour.model';
 import { GeoJSON, geoJSON, geoJson, latLng, latLngBounds, Map } from 'leaflet';
-import { MapService } from '../../map.service';
+import { MapService } from '../../../../../ui/services/map.service';
 import { MapData, MapLayerFeature } from '../../../../../ui/models/map.model';
 import { Feature } from 'geojson';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { QuestionDialogComponent } from '../../../../../ui/components/question-dialog/question-dialog.component';
-import { StoreService } from 'src/modules/api/store.service';
+import { StoreService } from 'src/modules/ui/services/store.service';
 import { ICulture } from '../../../../../api/models/culture.model';
 
 @Component({

@@ -4,7 +4,7 @@ import { ApiService } from '../../../../../../api/api.service';
 import { CultureFormComponent } from '../culture-form/culture-form.component';
 import { MessagesService } from '../../../../../../ui/components/services/messages.service';
 import { TranslatePipe } from '@ngx-translate/core';
-import { StoreService } from '../../../../../../api/store.service';
+import { StoreService } from '../../../../../../ui/services/store.service';
 
 @Component({
   selector: 'app-culture-add',
