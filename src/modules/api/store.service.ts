@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Observable, Observer, Subject, Subscription } from 'rxjs';
+import { Observable, Observer, Subject } from 'rxjs';
 import { IStore } from './models/store.model';
-import { SafeSubscriber } from 'rxjs/internal/Subscriber';
 
 @Injectable({ providedIn: 'root' })
 export class StoreService {
