@@ -14,7 +14,7 @@ import { Map } from 'leaflet';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ITileLayer } from '../../models/map.model';
 import { InputRadioComponent } from '../input-radio/input-radio.component';
-import { StoreService } from '../../../api/store.service';
+import { StoreService } from '../../services/store.service';
 import { InputCheckboxComponent } from '../input-checkbox/input-checkbox.component';
 
 @Component({
@@ -105,6 +105,7 @@ export class MapControlLayersSwitchComponentComponent implements OnChanges {
     this.store.setItem('MapControlLayersSwitchComponent', {
       ...data,
       filterControlLayerSwitch: layerName,
+      oldValue: data['filterControlLayerSwitch'],
     });
   }
 

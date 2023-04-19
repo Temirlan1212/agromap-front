@@ -18,13 +18,13 @@ import {
   MapLayerFeature,
   MapMove,
 } from 'src/modules/ui/models/map.model';
-import { MapService } from './map.service';
+import { MapService } from '../../../ui/services/map.service';
 import { MessagesService } from '../../../ui/components/services/messages.service';
 import { IChartData } from './components/spline-area-chart/spline-area-chart.component';
 import { ActualVegQuery } from '../../../api/classes/veg-indexes';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { Router, NavigationEnd, Event, ActivatedRoute } from '@angular/router';
-import { StoreService } from 'src/modules/api/store.service';
+import { StoreService } from 'src/modules/ui/services/store.service';
 import { Feature } from 'geojson';
 import { MapComponent } from '../../../ui/components/map/map.component';
 import { Subscription } from 'rxjs';
@@ -33,7 +33,7 @@ import { ITileLayer } from 'src/modules/ui/models/map.model';
 import { QuestionDialogComponent } from '../../../ui/components/question-dialog/question-dialog.component';
 import { IRegion } from 'src/modules/api/models/region.model';
 import { ContourFiltersQuery } from 'src/modules/api/models/contour.model';
-import { IStore } from 'src/modules/api/models/store.model';
+import { IStore } from 'src/modules/ui/models/store.model';
 import {
   IContourStatisticsProductivity,
   IContourStatisticsProductivityQuery,
@@ -53,28 +53,28 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   mode!: string;
   baseLayers: ITileLayer[] = [
     {
-      title: this.translate.transform('Google Satellite'),
+      title: 'Google Satellite',
       name: 'Google Satellite',
       layer: tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
         subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
       }),
     },
     {
-      title: this.translate.transform('Google Streets'),
+      title: 'Google Streets',
       name: 'Google Streets',
       layer: tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
         subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
       }),
     },
     {
-      title: this.translate.transform('Google Terrain'),
+      title: 'Google Terrain',
       name: 'Google Terrain',
       layer: tileLayer('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}', {
         subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
       }),
     },
     {
-      title: this.translate.transform('Open Street Map'),
+      title: 'Open Street Map',
       name: 'Open Street Map',
       layer: tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png'),
     },
@@ -95,10 +95,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
   wmsLayers: ITileLayer[] = [
     {
-      title: `
-        ${this.translate.transform('Base')}
-        ${this.translate.transform('Layer').toLowerCase()}
-      `,
+      title: 'Base',
       name: 'agromap_store',
       layer: tileLayer.wms('https://geoserver.24mycrm.com/agromap/wms', {
         layers: 'agromap:agromap_store',
@@ -107,7 +104,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       type: 'radio',
     },
     {
-      title: this.translate.transform('AI'),
+      title: 'AI',
       name: 'agromap_store_ai',
       layer: tileLayer.wms('https://geoserver.24mycrm.com/agromap/wms', {
         layers: 'agromap:agromap_store_ai',
@@ -116,7 +113,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       type: 'radio',
     },
     {
-      title: this.translate.transform('SoilLayer'),
+      title: 'SoilLayer',
       name: 'soil_agromap',
       layer: tileLayer.wms('https://geoserver.24mycrm.com/agromap/wms', {
         layers: 'agromap:soil_agromap',
@@ -125,7 +122,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       type: 'checkbox',
     },
     {
-      title: this.translate.transform('Productivity layer'),
+      title: 'Productivity layer',
       name: 'my_test_store',
       layer: tileLayer.wms('https://geoserver.24mycrm.com/my_testing/wms', {
         layers: 'my_testing:my_test_store',

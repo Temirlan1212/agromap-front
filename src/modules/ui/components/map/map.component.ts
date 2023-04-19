@@ -27,7 +27,7 @@ import { MapData, MapLayerFeature, MapMove } from '../../models/map.model';
 import '@geoman-io/leaflet-geoman-free';
 import { debounceTime, fromEvent, Subscription } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
-import { MapService } from 'src/modules/app/modules/home/map.service';
+import { MapService } from 'src/modules/ui/services/map.service';
 
 @Component({
   selector: 'app-map',

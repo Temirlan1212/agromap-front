@@ -5,7 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ICulture } from '../../../../../../api/models/culture.model';
 import { CultureFormComponent } from '../culture-form/culture-form.component';
 import { TranslatePipe } from '@ngx-translate/core';
-import { StoreService } from '../../../../../../api/store.service';
+import { StoreService } from '../../../../../../ui/services/store.service';
 
 @Component({
   selector: 'app-culture-edit',

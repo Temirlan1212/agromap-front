@@ -5,11 +5,11 @@ import { IContour } from '../../../../../api/models/contour.model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ApiService } from '../../../../../api/api.service';
 import { MessagesService } from '../../../../../ui/components/services/messages.service';
-import { MapService } from '../../map.service';
+import { MapService } from '../../../../../ui/services/map.service';
 import { Subscription } from 'rxjs';
 import { MapData } from '../../../../../ui/models/map.model';
 import { TranslatePipe } from '@ngx-translate/core';
-import { StoreService } from '../../../../../api/store.service';
+import { StoreService } from '../../../../../ui/services/store.service';
 
 @Component({
   selector: 'app-contour-edit',
