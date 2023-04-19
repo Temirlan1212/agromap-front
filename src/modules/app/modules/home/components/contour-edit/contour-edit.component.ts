@@ -134,7 +134,10 @@ export class ContourEditComponent implements OnInit, OnDestroy {
       ...rest,
       polygon: this.polygon,
     };
-    if (!formState.touched && !this.isPolygonChanged) {
+    // console.log(!formState.touched && !this.isPolygonChanged);
+    console.log(formState.touched);
+    console.log(this.isPolygonChanged);
+    if (!formState.touched || !this.isPolygonChanged) {
       this.messages.warning(this.translate.transform('No changes in form'));
       return;
     }
