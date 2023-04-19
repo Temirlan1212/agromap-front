@@ -108,9 +108,9 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
     }),
     this.store.watchItem('MapControlLayersSwitchComponent').subscribe((v) => {
       const val =
-        v.value.filterControlLayerSwitch === ''
-          ? v.value.oldValue
-          : v.value.filterControlLayerSwitch;
+        v.filterControlLayerSwitch === ''
+          ? v.oldValue
+          : v.filterControlLayerSwitch;
       this.mode?.patchValue(val, {
         emitEvent: false,
       });
