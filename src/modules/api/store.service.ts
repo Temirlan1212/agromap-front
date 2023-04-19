@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Observable, Observer, Subject } from 'rxjs';
+import { Observable, Observer, Subject, Subscription } from 'rxjs';
 import { IStore } from './models/store.model';
+import { SafeSubscriber } from 'rxjs/internal/Subscriber';
 
 @Injectable({ providedIn: 'root' })
 export class StoreService {
@@ -24,11 +25,11 @@ export class StoreService {
     return true;
   }
 
-  watchItem(name: string): Observable<IStore> {
-    return new Observable((observer: Observer<IStore>) => {
-      const subscription = this.watch.subscribe((item) => {
+  watchItem<T = any>(name: string): Observable<T> {
+    return new Observable((observer: Observer<T>) => {
+      const subscription = this.watch.subscribe((item: IStore<T>) => {
         if (item.name === name) {
-          observer.next(item);
+          observer.next(item.value);
         }
       });
 
