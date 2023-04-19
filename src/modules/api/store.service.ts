@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
+import { Observable, Observer, Subject } from 'rxjs';
 import { IStore } from './models/store.model';
 
 @Injectable({ providedIn: 'root' })
 export class StoreService {
-  public readonly watch: Subject<IStore> = new Subject();
+  public readonly watch: Subject<IStore> = new Subject<IStore>();
 
   constructor() {}
 
@@ -22,5 +22,21 @@ export class StoreService {
     localStorage.removeItem(name);
     this.watch.next({ name, value: null });
     return true;
+  }
+
+  watchItem<T = any>(name: string): Observable<T> {
+    return new Observable((observer: Observer<T>) => {
+      const subscription = this.watch.subscribe((item: IStore<T>) => {
+        if (item.name === name) {
+          observer.next(item.value);
+        }
+      });
+
+      return {
+        unsubscribe() {
+          subscription.unsubscribe();
+        },
+      };
+    });
   }
 }
