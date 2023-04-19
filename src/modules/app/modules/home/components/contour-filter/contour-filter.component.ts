@@ -43,8 +43,8 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
   selectedId: number | null = null;
   filtersQuery!: ContourFiltersQuery;
   radioOptions: any = [
-    { name: this.translate.transform('AI'), value: 'agromap_store_ai' },
-    { name: this.translate.transform('Base'), value: 'agromap_store' },
+    { name: 'AI', value: 'agromap_store_ai' },
+    { name: 'Base', value: 'agromap_store' },
   ];
   @Output() onCardClick = new EventEmitter<MapLayerFeature>();
   @Output() onEditClick = new EventEmitter<void>();
@@ -99,15 +99,27 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
     this.mode?.valueChanges.pipe(filter((res) => !!res)).subscribe((value) => {
       this.onModeChanged.emit(value);
     }) as Subscription,
-    this.translateSvc.onLangChange.subscribe(
-      (res) => (this.currentLang = res.lang)
-    ),
+    this.translateSvc.onLangChange.subscribe((res) => {
+      this.currentLang = res.lang;
+      this.radioOptions.forEach((i: any) => this.translate.transform(i.name));
+      // this.radioOptions = this.radioOptions.map((i: any) => {
+      //   return {
+      //     ...i,
+      //     name: this.translate.transform(i.name)
+      //   };
+      // });
+      console.log(this.radioOptions);
+    }),
     this.mapService.map.subscribe((res: MapData | null) => {
       this.mapInstance = res?.map as Map;
       this.mapGeo = res?.geoJson as GeoJSON;
     }),
     this.store.watchItem('MapControlLayersSwitchComponent').subscribe((v) => {
-      this.mode?.patchValue(v.value.filterControlLayerSwitch, {
+      const val =
+        v.value.filterControlLayerSwitch === ''
+          ? v.value.oldValue
+          : v.value.filterControlLayerSwitch;
+      this.mode?.patchValue(val, {
         emitEvent: false,
       });
     }),
@@ -127,7 +139,7 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     if (
       this.store.getItem('MapControlLayersSwitchComponent')
-        ?.filterControlLayerSwitch == null
+        ?.filterControlLayerSwitch == ''
     ) {
       this.mode?.patchValue('agromap_store_ai');
     }

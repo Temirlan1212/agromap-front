@@ -105,6 +105,7 @@ export class MapControlLayersSwitchComponentComponent implements OnChanges {
     this.store.setItem('MapControlLayersSwitchComponent', {
       ...data,
       filterControlLayerSwitch: layerName,
+      oldValue: data['filterControlLayerSwitch'],
     });
   }
 

@@ -7,6 +7,8 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
+
 @Component({
   selector: 'app-input-checkbox',
   templateUrl: './input-checkbox.component.html',
@@ -18,7 +20,7 @@ import { NG_VALUE_ACCESSOR } from '@angular/forms';
       multi: true,
     },
   ],
-  imports: [CommonModule],
+  imports: [CommonModule, TranslateModule],
   standalone: true,
 })
 export class InputCheckboxComponent {
