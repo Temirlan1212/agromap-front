@@ -14,13 +14,14 @@ import { Map, TileLayer } from 'leaflet';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ITileLayer } from '../../models/map.model';
 import { InputRadioComponent } from '../input-radio/input-radio.component';
-import { StoreService } from '../../../api/store.service';
+import { StoreService } from '../../services/store.service';
 import { InputCheckboxComponent } from '../input-checkbox/input-checkbox.component';
 import { InputRangeComponent } from '../input-range/input-range.component';
 
 interface ISelectedItem {
   name: string;
   opacity: number;
+  oldValue?: string;
 }
 
 @Component({
@@ -125,6 +126,9 @@ export class MapControlLayersSwitchComponentComponent implements OnChanges {
 
     let obj = {} as ISelectedItem;
     obj.name = String(layerName);
+    if (layerName) {
+      obj.oldValue = String(layerName);
+    }
 
     const data = this.store.getItem('MapControlLayersSwitchComponent');
     this.selected = {
