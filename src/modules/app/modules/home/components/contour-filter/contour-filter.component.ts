@@ -99,17 +99,9 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
     this.mode?.valueChanges.pipe(filter((res) => !!res)).subscribe((value) => {
       this.onModeChanged.emit(value);
     }) as Subscription,
-    this.translateSvc.onLangChange.subscribe((res) => {
-      this.currentLang = res.lang;
-      this.radioOptions.forEach((i: any) => this.translate.transform(i.name));
-      // this.radioOptions = this.radioOptions.map((i: any) => {
-      //   return {
-      //     ...i,
-      //     name: this.translate.transform(i.name)
-      //   };
-      // });
-      console.log(this.radioOptions);
-    }),
+    this.translateSvc.onLangChange.subscribe(
+      (res) => (this.currentLang = res.lang)
+    ),
     this.mapService.map.subscribe((res: MapData | null) => {
       this.mapInstance = res?.map as Map;
       this.mapGeo = res?.geoJson as GeoJSON;
