@@ -87,20 +87,24 @@ export class ContourEditComponent implements OnInit, OnDestroy {
   }
 
   handleEditShape() {
-    this.mapInstance.on('pm:globaleditmodetoggled', (event) => {
-      if (this.mapGeo.getLayers().length > 1) {
-        this.mapGeo.clearLayers();
-        this.mapGeo.addData(this.contour.polygon);
-        this.layer = this.mapGeo?.getLayers()[0];
-      }
-      if (event.enabled && this.layer) {
-        this.mapService.contourEditingMode.next(true);
-        this.layer.options.pmIgnore = false;
-        this.layer.options.allowSelfIntersection = true;
-        PM.reInitLayer(this.layer);
-        this.layer.pm.enable();
-      }
+    this.mapService.contourEditingMode.next(true);
+    this.mapInstance.pm.toggleGlobalEditMode();
+    if (this.mapGeo.getLayers().length > 1) {
+      this.mapGeo.clearLayers();
+      this.mapGeo.addData(this.contour.polygon);
+      this.layer = this.mapGeo?.getLayers()[0];
+      this.layer.options.pmIgnore = false;
+      this.layer.options.allowSelfIntersection = true;
+      PM.reInitLayer(this.layer);
+      this.layer.pm.enable();
+    } else {
+      this.mapGeo.addData(this.contour.polygon);
+      this.layer = this.mapGeo?.getLayers()[0];
+      PM.reInitLayer(this.layer);
+      this.layer.pm.enable();
+    }
 
+    this.mapInstance.on('pm:globaleditmodetoggled', (event) => {
       this.layer.on('pm:update', (e: any) => {
         this.layer = e['layer'];
         const geoJson: any = this.mapInstance.pm
