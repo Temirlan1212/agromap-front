@@ -473,30 +473,30 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     );
     this.getVegIndexList();
     this.store
-      .watchItem('ContourFilterComponent')
-      .subscribe((v: IStore<ContourFiltersQuery | null>) => {
-        if (v.value != null) {
+      .watchItem<ContourFiltersQuery | null>('ContourFilterComponent')
+      .subscribe((v) => {
+        if (v != null) {
           this.wmsCQLFilter = '';
-          if (v.value.region) {
+          if (v.region) {
             if (this.wmsCQLFilter.length > 0) {
               this.wmsCQLFilter += '&&';
             }
-            this.wmsCQLFilter += 'rgn=' + v.value.region;
+            this.wmsCQLFilter += 'rgn=' + v.region;
           }
-          if (v.value.district) {
+          if (v.district) {
             if (this.wmsCQLFilter.length > 0) {
               this.wmsCQLFilter += '&&';
             }
-            this.wmsCQLFilter += 'dst=' + v.value.district;
+            this.wmsCQLFilter += 'dst=' + v.district;
           }
-          if (v.value.conton) {
+          if (v.conton) {
             if (this.wmsCQLFilter.length > 0) {
               this.wmsCQLFilter += '&&';
             }
-            this.wmsCQLFilter += 'cntn=' + v.value.conton;
+            this.wmsCQLFilter += 'cntn=' + v.conton;
           }
-          if (v.value.culture) {
-            const val = v.value.culture;
+          if (v.culture) {
+            const val = v.culture;
             if (this.wmsCQLFilter.length > 0) {
               this.wmsCQLFilter += '&&';
             }
@@ -507,11 +507,11 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
                 .slice(0, -3)
                 .trim();
             } else {
-              this.wmsCQLFilter += 'clt=' + v.value.culture;
+              this.wmsCQLFilter += 'clt=' + v.culture;
             }
           }
-          if (v.value.land_type) {
-            const val = v.value.land_type;
+          if (v.land_type) {
+            const val = v.land_type;
             if (this.wmsCQLFilter.length > 0) {
               this.wmsCQLFilter += '&&';
             }
@@ -522,7 +522,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
                 .slice(0, -3)
                 .trim();
             } else {
-              this.wmsCQLFilter += 'ltype=' + v.value.land_type;
+              this.wmsCQLFilter += 'ltype=' + v.land_type;
             }
           }
           this.setWmsParams();

@@ -24,11 +24,11 @@ export class StoreService {
     return true;
   }
 
-  watchItem(name: string): Observable<IStore> {
-    return new Observable((observer: Observer<IStore>) => {
-      const subscription = this.watch.subscribe((item) => {
+  watchItem<T = any>(name: string): Observable<T> {
+    return new Observable((observer: Observer<T>) => {
+      const subscription = this.watch.subscribe((item: IStore<T>) => {
         if (item.name === name) {
-          observer.next(item);
+          observer.next(item.value);
         }
       });
 
