@@ -469,8 +469,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnInit(): void {
     const data = this.store.getItem('MapControlLayersSwitchComponent');
-    if (data) this.wmsSelectedStatusLayers = data;
-    console.log(this.wmsSelectedStatusLayers);
+    this.wmsSelectedStatusLayers = data;
     this.getVegIndexList();
     this.store
       .watchItem<ContourFiltersQuery | null>('ContourFilterComponent')

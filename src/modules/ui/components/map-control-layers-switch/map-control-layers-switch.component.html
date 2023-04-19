@@ -19,14 +19,40 @@
       (changed)="handleWmsRadioButtonLayerChange($event)"
     ></app-input-radio>
 
+    <ng-container *ngFor="let wms of wmsLayers">
+      <app-input-range
+        *ngIf="selected['filterControlLayerSwitch'].name === wms.name"
+        [min]="0"
+        [max]="100"
+        [step]="1"
+        [value]="selected['filterControlLayerSwitch'].opacity"
+        (change)="handleWmsInputRangeChange($event, wms.name, wms.type)"
+      ></app-input-range>
+    </ng-container>
+
     <hr />
 
-    <app-input-checkbox
-      *ngFor="let option of wmsOverLayers"
-      [name]="option['title']"
-      [checked]="!!selected[option['name']]"
-      (changed)="handleWmsCheckboxLayerChange($event, option['name'])"
-    ></app-input-checkbox>
+    <ng-container *ngFor="let option of wmsOverLayers">
+      <app-input-checkbox
+        [name]="option['title']"
+        [checked]="!!selected[option['name']]?.name"
+        (changed)="handleWmsCheckboxLayerChange($event, option['name'])"
+      ></app-input-checkbox>
+
+      <app-input-range
+        [disabled]="!selected[option['name']]?.name"
+        [min]="2"
+        [max]="100"
+        [step]="1"
+        [value]="
+          selected[option['name']]?.opacity &&
+          selected[option['name']].opacity > 1
+            ? selected[option['name']].opacity
+            : 100
+        "
+        (change)="handleWmsInputRangeChange($event, option.name, option.type)"
+      ></app-input-range>
+    </ng-container>
   </div>
 
   <hr />

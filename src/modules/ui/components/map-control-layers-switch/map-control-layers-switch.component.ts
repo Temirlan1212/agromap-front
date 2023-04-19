@@ -10,16 +10,17 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
-import { Map } from 'leaflet';
+import { Map, TileLayer } from 'leaflet';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { ITileLayer } from '../../models/map.model';
 import { InputRadioComponent } from '../input-radio/input-radio.component';
 import { StoreService } from '../../../api/store.service';
 import { InputCheckboxComponent } from '../input-checkbox/input-checkbox.component';
+import { InputRangeComponent } from '../input-range/input-range.component';
 
 interface ISelectedItem {
   name: string;
-  opacity?: number;
+  opacity: number;
 }
 
 @Component({
@@ -33,6 +34,7 @@ interface ISelectedItem {
     TranslateModule,
     InputRadioComponent,
     InputCheckboxComponent,
+    InputRangeComponent,
   ],
 })
 export class MapControlLayersSwitchComponentComponent implements OnChanges {
@@ -60,7 +62,6 @@ export class MapControlLayersSwitchComponentComponent implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges) {
     const value = changes['mode'].currentValue;
-    console.log(value);
 
     if (this.wmsSelectedStatusLayers) {
       const filterControlLayerSwitchStatus: any =
@@ -69,24 +70,32 @@ export class MapControlLayersSwitchComponentComponent implements OnChanges {
       if (filterControlLayerSwitchStatus instanceof Object) {
         this.selected['filterControlLayerSwitch'] = {
           name: filterControlLayerSwitchStatus.name,
+          opacity: filterControlLayerSwitchStatus.opacity,
         };
         this.handleWmsRadioButtonLayerChange(
           filterControlLayerSwitchStatus.name
+        );
+        this.handleWmsInputRangeChange(
+          filterControlLayerSwitchStatus.opacity,
+          filterControlLayerSwitchStatus.name,
+          'radio'
         );
       }
     }
 
     for (let key in this.wmsSelectedStatusLayers) {
       this.handleWmsCheckboxLayerChange(
-        !!this.wmsSelectedStatusLayers[key],
+        !!(this.wmsSelectedStatusLayers[key] as any)?.name,
         key
       );
     }
 
     if (value) {
-      this.selected['filterControlLayerSwitch'] = value;
+      this.selected['filterControlLayerSwitch'] = { name: value, opacity: 100 };
+
       this.handleWmsRadioButtonLayerChange(value);
     }
+
     this.wmsBaseLayers = this.wmsLayers.filter((l) => l.type === 'radio');
     this.wmsOverLayers = this.wmsLayers.filter((l) => l.type === 'checkbox');
   }
@@ -110,35 +119,49 @@ export class MapControlLayersSwitchComponentComponent implements OnChanges {
       if (isCurrent) {
         this.map.addLayer(l?.layer);
         this.wmsLayerChanged.emit(l);
+        this.handleWmsInputRangeChange(100, l.name, 'radio');
       }
     });
 
-    const data = this.store.getItem('MapControlLayersSwitchComponent');
     let obj = {} as ISelectedItem;
     obj.name = String(layerName);
 
-    this.store.setItem('MapControlLayersSwitchComponent', {
+    const data = this.store.getItem('MapControlLayersSwitchComponent');
+    this.selected = {
       ...data,
       filterControlLayerSwitch: Object.assign(
         {},
-        data['filterControlLayerSwitch'],
+        data?.['filterControlLayerSwitch'],
         obj
       ),
-    });
+    };
+
+    this.store.setItem('MapControlLayersSwitchComponent', this.selected);
   }
 
   handleWmsCheckboxLayerChange(checked: boolean, id: string): void {
     this.wmsLayers.forEach((l) => {
       const isCurrent = id === l.name;
       if (isCurrent) {
-        this.selected = { ...this.selected, [id]: { name: checked ? id : '' } };
         if (checked) {
           this.map.addLayer(l.layer);
         } else {
           this.map.removeLayer(l.layer);
         }
 
+        this.selected[l.name] = { name: id, opacity: 100 };
+
         const data = this.store.getItem('MapControlLayersSwitchComponent');
+        const opacity = (this.wmsSelectedStatusLayers?.[id] as any)?.opacity;
+
+        if (data[id]?.opacity) {
+          this.handleWmsInputRangeChange(data[id].opacity, l.name, 'checkbox');
+          this.selected[l.name]['opacity'] = data[id].opacity;
+        } else {
+          this.selected[l.name]['opacity'] = opacity;
+        }
+
+        this.selected[l.name]['name'] = checked ? id : '';
 
         this.store.setItem(
           'MapControlLayersSwitchComponent',
@@ -146,6 +169,24 @@ export class MapControlLayersSwitchComponentComponent implements OnChanges {
         );
       }
     });
+  }
+
+  handleWmsInputRangeChange(value: any, layerName: string, type?: string) {
+    const layer = this.wmsLayers.find((l) => l.name === layerName)?.layer;
+    layer?.setOpacity(value / 100);
+
+    if (type === 'radio') {
+      let obj = {} as ISelectedItem;
+      obj.opacity = value;
+
+      if (!(value instanceof Object))
+        this.selected['filterControlLayerSwitch'].opacity = value;
+    } else {
+      if (!(value instanceof Object))
+        this.selected[layerName] = { opacity: value, name: layerName };
+    }
+
+    this.store.setItem('MapControlLayersSwitchComponent', this.selected);
   }
 
   handleBaseLayerChange(layerName: string | number): void {

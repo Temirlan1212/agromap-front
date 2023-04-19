@@ -107,7 +107,7 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
       this.mapGeo = res?.geoJson as GeoJSON;
     }),
     this.store.watchItem('MapControlLayersSwitchComponent').subscribe((v) => {
-      this.mode?.patchValue(v.filterControlLayerSwitch, {
+      this.mode?.patchValue(v.filterControlLayerSwitch.name, {
         emitEvent: false,
       });
     }),
@@ -127,7 +127,7 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     if (
       this.store.getItem('MapControlLayersSwitchComponent')
-        ?.filterControlLayerSwitch == null
+        ?.filterControlLayerSwitch.name == null
     ) {
       this.mode?.patchValue('agromap_store_ai');
     }
