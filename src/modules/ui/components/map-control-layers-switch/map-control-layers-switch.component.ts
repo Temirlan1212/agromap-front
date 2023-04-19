@@ -162,6 +162,7 @@ export class MapControlLayersSwitchComponentComponent implements OnChanges {
           this.handleWmsInputRangeChange(data[id].opacity, l.name, 'checkbox');
           this.selected[l.name]['opacity'] = data[id].opacity;
         } else {
+          this.handleWmsInputRangeChange(opacity, l.name, 'checkbox');
           this.selected[l.name]['opacity'] = opacity;
         }
 
