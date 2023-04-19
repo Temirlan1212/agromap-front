@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, forwardRef } from '@angular/core';
+import { Component, Input, forwardRef } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
@@ -14,7 +14,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
   ],
   standalone: true,
 })
-export class InputRangeComponent implements ControlValueAccessor, OnInit {
+export class InputRangeComponent implements ControlValueAccessor {
   @Input() value: number = 1;
   @Input() disabled: boolean = false;
   @Input() max: number = 50;
@@ -49,9 +49,5 @@ export class InputRangeComponent implements ControlValueAccessor, OnInit {
 
   setDisabledState(disabled: boolean) {
     this.disabled = disabled;
-  }
-
-  ngOnInit(): void {
-    this.onChange(3);
   }
 }
