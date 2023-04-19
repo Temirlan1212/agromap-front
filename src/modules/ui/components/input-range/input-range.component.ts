@@ -20,7 +20,6 @@ export class InputRangeComponent implements ControlValueAccessor {
   @Input() max: number = 50;
   @Input() min: number = 0;
   @Input() step: number = 1;
-  @Input() id: number | string = 1;
   @Input() name: string = 'name';
   @Input() height: number = 0.1;
 
