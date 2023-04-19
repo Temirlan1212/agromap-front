@@ -11,11 +11,9 @@
 </app-side-panel>
 
 <div class="map-container">
+  <app-loading *ngIf="loading" [loading]="loading"></app-loading>
   <app-map
     #map
-    [featureTitle]="
-      ('Culture' | translate) + ':' | unit : (culture?.['name_' + currentLang] | checkExist | translate)
-    "
     (mapData)="handleMapData($event)"
     (mapMove)="handleMapMove($event)"
     (featureClick)="handleFeatureClick($event)"
@@ -86,25 +84,27 @@
       </ng-container>
     </app-map-controls>
 
-    <h4 featureBody>
-      <span
-        [textContent]="
-          ('Productivity' | translate) + ':'
-            | unit : (productivity | checkExist)
-        "
-      ></span>
-    </h4>
-    <app-spline-area-chart
-      featureBody
-      [chartData]="contourData"
-      *ngIf="layerFeature && contourData.length > 0; else noContourData"
-    >
-    </app-spline-area-chart>
-    <ng-template #noContourData>
-      <h3 class="no-data-text">
-        {{ "No data" | translate }}
-      </h3>
-    </ng-template>
+    <app-content-tabs featureBody *ngIf="selectedContourId">
+      <app-tab [title]="'Contour details' | translate">
+        <app-contour-info
+          [contourId]="selectedContourId"
+          [isWmsAiActive]="isWmsAiActive"
+        >
+        </app-contour-info>
+      </app-tab>
+      <app-tab [title]="'Vegetative indexes' | translate">
+        <app-spline-area-chart
+          [chartData]="contourData"
+          *ngIf="layerFeature && contourData.length > 0; else noContourData"
+        >
+        </app-spline-area-chart>
+        <ng-template #noContourData>
+          <h3 class="no-data-text">
+            {{ "No data" | translate }}
+          </h3>
+        </ng-template>
+      </app-tab>
+    </app-content-tabs>
 
     <button
       actions

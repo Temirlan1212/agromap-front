@@ -154,8 +154,6 @@ export class ContourEditComponent implements OnInit, OnDestroy {
 
   handleCancelClick() {
     this.router.navigate(['../..']);
-    this.mapInstance.fitBounds(this.mapService.maxBounds);
-    this.mapInstance.setMaxBounds(this.mapService.maxBounds);
   }
 
   ngOnDestroy() {
@@ -167,7 +165,5 @@ export class ContourEditComponent implements OnInit, OnDestroy {
       this.layer.pm.disable();
     }
     this.mapService.contourEditingMode.next(false);
-    this.mapInstance.fitBounds(this.mapService.maxBounds);
-    this.mapInstance.setMaxBounds(this.mapService.maxBounds);
   }
 }

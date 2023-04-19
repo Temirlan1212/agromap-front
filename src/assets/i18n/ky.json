@@ -135,5 +135,11 @@
   "Population": "Калкы",
   "Description": "Түшүндүрмө",
   "Productivity layer": "Өндүрүмдүүлүк катмары",
-  "This field is required": "Бул кутучаны толтуруңуз"
+  "This field is required": "Бул кутучаны толтуруңуз",
+  "Contour details": "Контурдун маалыматтары",
+  "Vegetative indexes": "Вегетативдик индекстер",
+  "Soil class": "Топурактын түрү",
+  "Elevation": "Бийиктиги",
+  "m. above sea level": "м. деңиз денгээлинен жогору",
+  "AI determination error": "ЖИ аныктоо катасы"
 }
