@@ -17,6 +17,11 @@ import { InputRadioComponent } from '../input-radio/input-radio.component';
 import { StoreService } from '../../../api/store.service';
 import { InputCheckboxComponent } from '../input-checkbox/input-checkbox.component';
 
+interface ISelectedItem {
+  name: string;
+  opacity?: number;
+}
+
 @Component({
   selector: 'app-map-control-layers-switch',
   standalone: true,
@@ -44,7 +49,7 @@ export class MapControlLayersSwitchComponentComponent implements OnChanges {
   wmsBaseLayers: ITileLayer[] = [];
   wmsOverLayers: ITileLayer[] = [];
 
-  selected: Record<string, string> = {};
+  selected: Record<string, ISelectedItem> = {};
   isCollapsed = false;
 
   constructor(
@@ -55,13 +60,20 @@ export class MapControlLayersSwitchComponentComponent implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges) {
     const value = changes['mode'].currentValue;
+    console.log(value);
 
     if (this.wmsSelectedStatusLayers) {
-      this.selected['filterControlLayerSwitch'] =
-        this.wmsSelectedStatusLayers?.['filterControlLayerSwitch'];
-      this.handleWmsRadioButtonLayerChange(
-        this.selected['filterControlLayerSwitch']
-      );
+      const filterControlLayerSwitchStatus: any =
+        this.wmsSelectedStatusLayers['filterControlLayerSwitch'];
+
+      if (filterControlLayerSwitchStatus instanceof Object) {
+        this.selected['filterControlLayerSwitch'] = {
+          name: filterControlLayerSwitchStatus.name,
+        };
+        this.handleWmsRadioButtonLayerChange(
+          filterControlLayerSwitchStatus.name
+        );
+      }
     }
 
     for (let key in this.wmsSelectedStatusLayers) {
@@ -102,9 +114,16 @@ export class MapControlLayersSwitchComponentComponent implements OnChanges {
     });
 
     const data = this.store.getItem('MapControlLayersSwitchComponent');
+    let obj = {} as ISelectedItem;
+    obj.name = String(layerName);
+
     this.store.setItem('MapControlLayersSwitchComponent', {
       ...data,
-      filterControlLayerSwitch: layerName,
+      filterControlLayerSwitch: Object.assign(
+        {},
+        data['filterControlLayerSwitch'],
+        obj
+      ),
     });
   }
 
@@ -112,7 +131,7 @@ export class MapControlLayersSwitchComponentComponent implements OnChanges {
     this.wmsLayers.forEach((l) => {
       const isCurrent = id === l.name;
       if (isCurrent) {
-        this.selected = { ...this.selected, [id]: checked ? id : '' };
+        this.selected = { ...this.selected, [id]: { name: checked ? id : '' } };
         if (checked) {
           this.map.addLayer(l.layer);
         } else {

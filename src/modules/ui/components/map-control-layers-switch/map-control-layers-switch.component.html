@@ -14,7 +14,7 @@
       name="wmsLayers"
       nameField="title"
       valueField="name"
-      [value]="selected['filterControlLayerSwitch']"
+      [value]="selected['filterControlLayerSwitch'].name"
       [options]="wmsBaseLayers"
       (changed)="handleWmsRadioButtonLayerChange($event)"
     ></app-input-radio>
