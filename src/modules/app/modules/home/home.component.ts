@@ -255,6 +255,18 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
           this.mapData.geoJson.setZIndex(400);
           this.mapData.geoJson.options.interactive = true;
           this.mapData.geoJson.addData(polygons);
+          const aiWms = this.wmsLayers[1].layer as any;
+          console.log(this.mapData.map);
+          aiWms.getFeatureInfo({
+            latlng: [74.961956514, 42.85253067],
+            done: function (featureCollection: any) {
+              console.log(featureCollection);
+            },
+          });
+          // ll.wms('https://geoserver.24mycrm.com/agromap/wms', {
+          //   layers: 'agromap:agromap_store',
+          //   ...this.wmsLayersOptions,
+          // })
         } catch (e: any) {
           console.log(e);
         }
