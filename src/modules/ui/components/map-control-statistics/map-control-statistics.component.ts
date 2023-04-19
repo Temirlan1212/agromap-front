@@ -18,7 +18,7 @@ export class MapControlStatisticsComponent implements OnInit, OnDestroy {
   subscription: Subscription = this.store
     .watchItem('isCollapsedMapControlTable')
     .subscribe((v) => {
-      this.isCollapsed = v.value;
+      this.isCollapsed = v;
     });
 
   @Input() title = '';
