@@ -141,5 +141,8 @@
   "Soil class": "Топурактын түрү",
   "Elevation": "Бийиктиги",
   "m. above sea level": "м. деңиз денгээлинен жогору",
-  "AI determination error": "ЖИ аныктоо катасы"
+  "AI determination error": "ЖИ аныктоо катасы",
+  "Create a dataset": "Датасет түзүү",
+  "Generate": "Түзүү",
+  "Process started": "Процесс башталды"
 }
