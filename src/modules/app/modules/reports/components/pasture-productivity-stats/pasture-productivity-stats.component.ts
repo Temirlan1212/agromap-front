@@ -51,7 +51,7 @@ export class PastureProductivityStatsComponent implements AfterViewInit {
     this.series = [];
     this.loading = true;
     try {
-      const res = await this.api.statistics.getContourStatisticsProductivity(
+      const res = await this.api.statistics.getPastureStatisticsProductivity(
         params
       );
       if (res.Productive?.ha && res.Unproductive?.ha) {

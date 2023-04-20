@@ -127,7 +127,7 @@
   "Pasture productivity area": "Жайыттардын түшүмдүүлүк аянты",
   "Unproductive": "Аз түшүмдүү",
   "Productive": "Түшүмдүү",
-  "Square of cultures": "Өсүмдүктүн түрлөрүнүн аянты",
+  "Square of cultures": "Өсүмдүк түрлөрүнүн аянты",
   "Export": "Экспорт",
   "Territory": "Аймак",
   "Select a culture": "Өсүмдүктүн түрүн тандаңыз",
@@ -141,5 +141,9 @@
   "Soil class": "Топурактын түрү",
   "Elevation": "Бийиктиги",
   "m. above sea level": "м. деңиз денгээлинен жогору",
-  "AI determination error": "ЖИ аныктоо катасы"
+  "AI determination error": "ЖИ аныктоо катасы",
+  "Roll up": "Жабуу",
+  "Country": "Өлкө",
+  "Pasture (productivity area)": "Жайыт (түшүмдүүлүк аянты)",
+  "Land (square of cultures)": "Айдоо жери (өсүмдүк түрлөрүнүн аянты)"
 }

@@ -141,5 +141,9 @@
   "Soil class": "Вид почвы",
   "Elevation": "Высота",
   "m. above sea level": "м. над уровнем моря",
-  "AI determination error": "Погрешность определения ИИ"
+  "AI determination error": "Погрешность определения ИИ",
+  "Roll up": "Свернуть",
+  "Country": "Страна",
+  "Pasture (productivity area)": "Пастбище (площадь продуктивности)",
+  "Land (square of cultures)": "Пашня (площадь культур)"
 }

@@ -60,12 +60,17 @@
 
         <app-map-control-statistics
           *ngIf="!layerFeature"
-          [title]="'Свернуть'"
+          [title]="'Roll up' | translate"
           storageName="isCollapsedMapControlTable"
         >
           <app-content-tabs>
-            <app-tab [title]="'Contour details' | translate">
+            <app-tab
+              [title]="
+                'Pasture (productivity area)' | translate | truncate : 20
+              "
+            >
               <app-table
+                [unit]="'ha' | translate"
                 *ngFor="
                   let item of contourPastureStatisticsProductivityTableItems
                 "
@@ -74,7 +79,7 @@
                 [fields]="[
                   {
                     title: item[0]['areaType'].toString() | translate,
-                    field: 'areaName'
+                    field: 'areaName_' + currentLang
                   },
                   {
                     title: 'Productive' | translate | truncate : 10,
@@ -87,7 +92,26 @@
                 ]"
               ></app-table>
             </app-tab>
-            <app-tab [title]="'Vegetative indexes' | translate"> </app-tab>
+            <app-tab
+              [title]="'Land (square of cultures)' | translate | truncate : 20"
+            >
+              <app-table
+                [unit]="'ha' | translate"
+                [items]="contourCultureStatisticsProductivityTableItems"
+                mode="dark"
+                [fields]="[
+                  {
+                    title: 'Name' | translate,
+                    field: 'culture_name_' + currentLang
+                  },
+                  { title: 'Area' | translate, field: 'area_ha' },
+                  {
+                    title: 'Territory' | translate,
+                    field: 'territory_' + currentLang
+                  }
+                ]"
+              ></app-table>
+            </app-tab>
           </app-content-tabs>
         </app-map-control-statistics>
       </ng-container>

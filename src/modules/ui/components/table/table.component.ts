@@ -18,6 +18,7 @@ import {
   ITableItem,
 } from '../../models/table.model';
 import { CheckExistPipe } from '../../pipes/check-exist.pipe';
+import { UnitPipe } from '../../pipes/unit.pipe';
 
 @Component({
   selector: 'app-table',
@@ -28,6 +29,7 @@ import { CheckExistPipe } from '../../pipes/check-exist.pipe';
     QuestionDialogComponent,
     TranslateModule,
     CheckExistPipe,
+    UnitPipe,
   ],
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.scss'],

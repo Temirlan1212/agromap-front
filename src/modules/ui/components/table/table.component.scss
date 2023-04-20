@@ -3,7 +3,7 @@
 :host {
   display: block;
   overflow: auto;
-  min-height: 100px;
+  min-height: auto;
 
   &::-webkit-scrollbar {
     width: 3px;

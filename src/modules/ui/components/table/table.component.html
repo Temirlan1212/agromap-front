@@ -30,14 +30,18 @@
           [attr.data-label]="field.title"
           *ngFor="let field of fields"
           [title]="item[field.field] | checkExist | translate"
-          [textContent]="item[field.field] | checkExist | translate"
+          [textContent]="
+            item[field.field] | checkExist | translate | unit : unit : 'number'
+          "
         ></td>
       </ng-container>
       <ng-template #byColumns>
         <td
           *ngFor="let column of columns"
           [title]="item[column] | checkExist | translate"
-          [textContent]="item[column] | checkExist | translate"
+          [textContent]="
+            item[column] | checkExist | translate | unit : unit : 'number'
+          "
         ></td>
       </ng-template>
       <td class="actions" *ngIf="actions">

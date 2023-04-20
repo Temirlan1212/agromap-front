@@ -10,7 +10,7 @@ import {
 export class StatisticsApi {
   constructor(private http: HttpClient) {}
 
-  async getContourStatisticsProductivity(
+  async getPastureStatisticsProductivity(
     query: IContourStatisticsProductivityQuery
   ): Promise<IContourStatisticsProductivity> {
     const response = await firstValueFrom(
