@@ -36,7 +36,6 @@ import { ContourFiltersQuery } from 'src/modules/api/models/contour.model';
 import {
   IContourStatisticsProductivity,
   IContourStatisticsProductivityQuery,
-  ICulutreStatistics,
   ICulutreStatisticsQuery,
 } from 'src/modules/api/models/statistics.model';
 import { ITableItem } from 'src/modules/ui/models/table.model';
