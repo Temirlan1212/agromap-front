@@ -43,14 +43,15 @@ export class ContourFormComponent implements OnInit, OnDestroy {
       this.form.reset();
     } else {
       this.form.patchValue({
-        conton: v.conton,
-        type: v.type,
-        culture: v.culture,
+        conton: v.conton?.id,
+        type: v.type?.id,
+        culture: v.culture?.id,
         productivity: v.productivity,
         year: v.year,
         code_soato: v.code_soato,
         ink: v.ink,
-        ...(this.mode == 'agromap_store_ai' && { disctrict: v.disctrict }),
+        ...(this.mode == 'agromap_store_ai' && { district: v.district?.id }),
+        ...(this.mode == 'agromap_store_ai' && { region: v.region?.id }),
       });
     }
   }
