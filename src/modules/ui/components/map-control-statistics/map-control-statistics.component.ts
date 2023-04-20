@@ -15,23 +15,24 @@ import { Subscription } from 'rxjs';
 })
 export class MapControlStatisticsComponent implements OnInit, OnDestroy {
   isCollapsed: boolean = false;
+
+  @Input() storageName: string = 'isCollapsedMapControlTable';
+  @Input() title = '';
+
   subscription: Subscription = this.store
-    .watchItem('isCollapsedMapControlTable')
+    .watchItem(this.storageName)
     .subscribe((v) => {
       this.isCollapsed = v;
     });
 
-  @Input() title = '';
-
   constructor(private store: StoreService, translate: LanguageService) {}
 
   toggle() {
-    this.store.setItem('isCollapsedMapControlTable', !this.isCollapsed);
+    this.store.setItem(this.storageName, !this.isCollapsed);
   }
 
   ngOnInit(): void {
-    this.isCollapsed =
-      this.store.getItem('isCollapsedMapControlTable') || false;
+    this.isCollapsed = this.store.getItem(this.storageName) || false;
   }
 
   ngOnDestroy(): void {

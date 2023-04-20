@@ -57,29 +57,42 @@
           (vegIndexOptionClick)="handleVegIndexOptionClick($event)"
           [loadingSatelliteDates]="loadingSatelliteDates"
         ></app-map-control-veg-indexes>
+
         <app-map-control-statistics
           *ngIf="!layerFeature"
-          title="Pasture productivity area"
+          [title]="'Свернуть'"
+          storageName="isCollapsedMapControlTable"
         >
-          <app-table
-            *ngFor="let item of contourStatisticsProductivityTableItems"
-            [items]="item"
-            mode="dark"
-            [fields]="[
-              {
-                title: contourStatisticsProductivityAreaTitle | translate,
-                field: 'areaType'
-              },
-              {
-                title: 'Productive' | translate | truncate : 10,
-                field: 'productive'
-              },
-              {
-                title: 'Unproductive' | translate | truncate : 10,
-                field: 'unproductive'
-              }
-            ]"
-          ></app-table>
+          <app-content-tabs>
+            <app-tab [title]="'Contour details' | translate">
+              <app-table
+                *ngFor="
+                  let item of contourPastureStatisticsProductivityTableItems
+                "
+                [items]="item"
+                mode="dark"
+                [fields]="[
+                  {
+                    title: item[0]['areaType'].toString() | translate,
+                    field: 'areaName'
+                  },
+                  {
+                    title: 'Productive' | translate | truncate : 10,
+                    field: 'productive'
+                  },
+                  {
+                    title: 'Unproductive' | translate | truncate : 10,
+                    field: 'unproductive'
+                  }
+                ]"
+              ></app-table>
+            </app-tab>
+            <app-tab [title]="'Vegetative indexes' | translate">
+              <h3 class="no-data-text">
+                {{ "No data" | translate }}
+              </h3>
+            </app-tab>
+          </app-content-tabs>
         </app-map-control-statistics>
       </ng-container>
     </app-map-controls>

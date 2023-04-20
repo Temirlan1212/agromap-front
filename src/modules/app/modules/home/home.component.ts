@@ -33,19 +33,16 @@ import { ITileLayer } from 'src/modules/ui/models/map.model';
 import { QuestionDialogComponent } from '../../../ui/components/question-dialog/question-dialog.component';
 import { IRegion } from 'src/modules/api/models/region.model';
 import { ContourFiltersQuery } from 'src/modules/api/models/contour.model';
-import { IStore } from 'src/modules/ui/models/store.model';
 import {
   IContourStatisticsProductivity,
   IContourStatisticsProductivityQuery,
 } from 'src/modules/api/models/statistics.model';
 import { ITableItem } from 'src/modules/ui/models/table.model';
-import { DecimalPipe } from '@angular/common';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
-  providers: [DecimalPipe],
 })
 export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('featurePopup') featurePopup!: ElementRef<HTMLElement>;
@@ -141,8 +138,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   isWmsAiActive: boolean = false;
   culture: any = null;
   productivity: string | null = null;
-  contourStatisticsProductivityTableItems: ITableItem[][] = [];
-  contourStatisticsProductivityAreaTitle: string = '';
+  contourPastureStatisticsProductivityTableItems: ITableItem[][] = [];
   wmsSelectedStatusLayers: Record<string, string> | null = null;
   selectedContourId!: number;
   loading: boolean = false;
@@ -155,8 +151,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     private translateSvc: TranslateService,
     private router: Router,
     private translate: TranslatePipe,
-    private route: ActivatedRoute,
-    private decimalPipe: DecimalPipe
+    private route: ActivatedRoute
   ) {
     this.router.events.subscribe((event: Event) =>
       event instanceof NavigationEnd
@@ -312,7 +307,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   handleFilterFormReset(): void {
-    this.contourStatisticsProductivityTableItems = [];
+    this.contourPastureStatisticsProductivityTableItems = [];
     this.wmsCQLFilter = null;
     this.setWmsParams();
   }
@@ -408,39 +403,35 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   async getContourStatisticsProductivity(
     query: IContourStatisticsProductivityQuery
   ): Promise<IContourStatisticsProductivity | void> {
-    this.contourStatisticsProductivityTableItems = [];
+    this.contourPastureStatisticsProductivityTableItems = [];
     try {
       let res: IContourStatisticsProductivity;
       res = await this.api.statistics.getContourStatisticsProductivity({
         ...query,
         ai: this.isWmsAiActive,
       });
-      this.contourStatisticsProductivityAreaTitle = res.type;
 
-      let tableItem = {
-        areaType: res?.name,
-        productive: `${this.decimalPipe.transform(res.Productive?.ha)} га`,
-        unproductive: `${this.decimalPipe.transform(res.Unproductive?.ha)} га`,
-      };
-
-      this.contourStatisticsProductivityTableItems.push([tableItem]);
+      this.contourPastureStatisticsProductivityTableItems.push([
+        {
+          areaType: res?.type,
+          areaName: res?.name,
+          productive: `${res?.Productive.ha.toLocaleString()} га`,
+          unproductive: `${res?.Unproductive.ha.toLocaleString()} га`,
+        },
+      ]);
 
       if (res.Children && res.Children.length !== 0) {
-        this.contourStatisticsProductivityTableItems.push(
-          res.Children?.map((elem) => {
-            let tableItem = {
-              areaType: elem.name,
-              productive: `${this.decimalPipe.transform(
-                elem.Productive.ha
-              )} га`,
-              unproductive: `${this.decimalPipe.transform(
-                elem.Unproductive.ha
-              )} га`,
-            };
-            return tableItem;
-          })
+        this.contourPastureStatisticsProductivityTableItems.push(
+          res.Children.map((child) => ({
+            areaType: child.type,
+            areaName: child.name,
+            productive: `${child.Productive.ha.toLocaleString()} га`,
+            unproductive: `${child.Unproductive.ha.toLocaleString()} га`,
+          }))
         );
       }
+
+      console.log(this.contourPastureStatisticsProductivityTableItems);
     } catch (e: any) {
       console.log(e);
     }
