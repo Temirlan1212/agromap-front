@@ -12,10 +12,7 @@ import {
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
 import { Map } from 'leaflet';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import {
-  ISwitchControlSelectedLayer,
-  ITileLayer,
-} from '../../models/map.model';
+import { ISelectedControlLayer, ITileLayer } from '../../models/map.model';
 import { InputRadioComponent } from '../input-radio/input-radio.component';
 import { StoreService } from '../../services/store.service';
 import { InputCheckboxComponent } from '../input-checkbox/input-checkbox.component';
@@ -49,7 +46,7 @@ export class MapControlLayersSwitchComponent implements OnChanges {
   wmsBaseLayers: ITileLayer[] = [];
   wmsOverLayers: ITileLayer[] = [];
 
-  selected: Record<string, ISwitchControlSelectedLayer> = {};
+  selected: Record<string, ISelectedControlLayer> = {};
   isCollapsed = false;
 
   constructor(
@@ -122,7 +119,7 @@ export class MapControlLayersSwitchComponent implements OnChanges {
       }
     });
 
-    let obj = {} as ISwitchControlSelectedLayer;
+    let obj = {} as ISelectedControlLayer;
     obj.name = String(layerName);
     if (layerName) {
       obj.oldValue = String(layerName);
@@ -179,7 +176,7 @@ export class MapControlLayersSwitchComponent implements OnChanges {
     const layer = this.wmsLayers.find((l) => l.name === layerName)?.layer;
     layer?.setOpacity(value / 100);
 
-    let obj = {} as ISwitchControlSelectedLayer;
+    let obj = {} as ISelectedControlLayer;
     obj.opacity = value;
     obj.name = this.selected[key ? key : layerName]?.name;
     obj.oldValue = this.selected[key ? key : layerName]?.oldValue;
