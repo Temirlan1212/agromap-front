@@ -27,7 +27,7 @@ export interface ILeafletMap extends Map {
   sync: (map: Map, options: Record<string, any>) => any;
 }
 
-export interface ISelectedInputControlLayer {
+export interface ISwitchControlSelectedLayer {
   name: string;
   opacity: number;
   oldValue?: string;

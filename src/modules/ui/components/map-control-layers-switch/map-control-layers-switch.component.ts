@@ -12,7 +12,10 @@ import {
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
 import { Map } from 'leaflet';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { ISelectedInputControlLayer, ITileLayer } from '../../models/map.model';
+import {
+  ISwitchControlSelectedLayer,
+  ITileLayer,
+} from '../../models/map.model';
 import { InputRadioComponent } from '../input-radio/input-radio.component';
 import { StoreService } from '../../services/store.service';
 import { InputCheckboxComponent } from '../input-checkbox/input-checkbox.component';
@@ -32,7 +35,7 @@ import { InputRangeComponent } from '../input-range/input-range.component';
     InputRangeComponent,
   ],
 })
-export class MapControlLayersSwitchComponentComponent implements OnChanges {
+export class MapControlLayersSwitchComponent implements OnChanges {
   @Input() map!: Map;
   @Input() mode!: string;
   @Input() baseLayers: ITileLayer[] = [];
@@ -46,7 +49,7 @@ export class MapControlLayersSwitchComponentComponent implements OnChanges {
   wmsBaseLayers: ITileLayer[] = [];
   wmsOverLayers: ITileLayer[] = [];
 
-  selected: Record<string, ISelectedInputControlLayer> = {};
+  selected: Record<string, ISwitchControlSelectedLayer> = {};
   isCollapsed = false;
 
   constructor(
@@ -119,7 +122,7 @@ export class MapControlLayersSwitchComponentComponent implements OnChanges {
       }
     });
 
-    let obj = {} as ISelectedInputControlLayer;
+    let obj = {} as ISwitchControlSelectedLayer;
     obj.name = String(layerName);
     if (layerName) {
       obj.oldValue = String(layerName);
@@ -176,7 +179,7 @@ export class MapControlLayersSwitchComponentComponent implements OnChanges {
     const layer = this.wmsLayers.find((l) => l.name === layerName)?.layer;
     layer?.setOpacity(value / 100);
 
-    let obj = {} as ISelectedInputControlLayer;
+    let obj = {} as ISwitchControlSelectedLayer;
     obj.opacity = value;
     obj.name = this.selected[key ? key : layerName]?.name;
     obj.oldValue = this.selected[key ? key : layerName]?.oldValue;
