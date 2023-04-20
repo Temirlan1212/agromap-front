@@ -1,4 +1,12 @@
-import { Component, Input, forwardRef } from '@angular/core';
+import {
+  Component,
+  Input,
+  forwardRef,
+  Output,
+  EventEmitter,
+  ViewChild,
+  ElementRef,
+} from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
@@ -15,6 +23,8 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
   standalone: true,
 })
 export class InputRangeComponent implements ControlValueAccessor {
+  @ViewChild('input') inputElement!: ElementRef<HTMLInputElement>;
+
   @Input() value: number = 1;
   @Input() disabled: boolean = false;
   @Input() max: number = 50;
@@ -23,12 +33,14 @@ export class InputRangeComponent implements ControlValueAccessor {
   @Input() name: string = 'name';
   @Input() height: number = 0.1;
 
+  @Output() change = new EventEmitter<number>();
+
   onChange: Function = () => null;
   onTouched: Function = () => null;
 
   handleChange(e: Event): void {
-    const value = (e.target as any).value;
-    this.value = value;
+    const value = Number(this.inputElement.nativeElement.value);
+    this.change.emit(value);
     this.onChange(value);
     this.onTouched();
   }
