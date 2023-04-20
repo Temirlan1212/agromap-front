@@ -26,3 +26,9 @@ export interface ITileLayer {
 export interface ILeafletMap extends Map {
   sync: (map: Map, options: Record<string, any>) => any;
 }
+
+export interface ISelectedItem {
+  name: string;
+  opacity: number;
+  oldValue?: string;
+}

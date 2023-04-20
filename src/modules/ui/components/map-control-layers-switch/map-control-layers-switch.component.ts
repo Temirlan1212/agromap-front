@@ -10,19 +10,13 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
-import { Map, TileLayer } from 'leaflet';
+import { Map } from 'leaflet';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
-import { ITileLayer } from '../../models/map.model';
+import { ISelectedItem, ITileLayer } from '../../models/map.model';
 import { InputRadioComponent } from '../input-radio/input-radio.component';
 import { StoreService } from '../../services/store.service';
 import { InputCheckboxComponent } from '../input-checkbox/input-checkbox.component';
 import { InputRangeComponent } from '../input-range/input-range.component';
-
-interface ISelectedItem {
-  name: string;
-  opacity: number;
-  oldValue?: string;
-}
 
 @Component({
   selector: 'app-map-control-layers-switch',
