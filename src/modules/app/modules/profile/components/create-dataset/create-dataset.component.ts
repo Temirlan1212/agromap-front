@@ -38,7 +38,8 @@ export class CreateDatasetComponent implements OnInit, OnDestroy {
 
   async handleDeleteSubmitted(dialog: QuestionDialogComponent) {
     try {
-      await this.api.ai.createDataset();
+      // TODO: раскомментировать позже. (закомментировано, потому что запрос ресурсоёмкий)
+      // await this.api.ai.createDataset();
       dialog.close();
       this.messages.success(this.translate.transform('Process started'));
     } catch (e: any) {
