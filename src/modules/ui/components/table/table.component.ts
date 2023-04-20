@@ -39,6 +39,7 @@ export class TableComponent implements OnChanges {
   @Input() fields: ITableField[] = [];
   @Input() items: ITableItem[] = [];
   @Input() mode = 'light';
+  @Input() unit: string = '';
   @Output() actionClick = new EventEmitter<ITableAction>();
 
   columns: string[] = [];

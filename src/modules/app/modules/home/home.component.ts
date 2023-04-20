@@ -161,9 +161,9 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   subscriptions: Subscription[] = [
-    this.translateSvc.onLangChange.subscribe(
-      (res) => (this.currentLang = res.lang)
-    ),
+    this.translateSvc.onLangChange.subscribe((res) => {
+      this.currentLang = res.lang;
+    }),
     this.mapService.contourEditingMode.subscribe((res) => {
       if (res) {
         this.mapComponent.removeSubscriptions();
@@ -410,6 +410,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
         ...query,
         ai: this.isWmsAiActive,
       });
+      console.log(res);
 
       this.contourPastureStatisticsProductivityTableItems.push([
         {
