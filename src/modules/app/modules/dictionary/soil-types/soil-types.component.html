@@ -1,0 +1,10 @@
+<div class="soil-classes">
+  <div class="soil" *ngFor="let i of list">
+    <div class="color" [ngStyle]="{ 'background-color': i.color }">
+      <span>ID: {{ i.ID }}</span>
+    </div>
+    <div class="soil-info">
+      <span [textContent]="i.name_ru"></span>
+    </div>
+  </div>
+</div>

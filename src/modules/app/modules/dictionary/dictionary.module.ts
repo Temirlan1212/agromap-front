@@ -24,6 +24,7 @@ import { IndexesComponent } from './indexes/indexes.component';
 import { FormFieldComponent } from '../../../ui/components/form-field/form-field.component';
 import { ContentTabsComponent } from '../../../ui/components/content-tabs/content-tabs.component';
 import { TabComponent } from '../../../ui/components/content-tabs/tab/tab.component';
+import { SoilTypesComponent } from './soil-types/soil-types.component';
 
 @NgModule({
   declarations: [
@@ -36,6 +37,7 @@ import { TabComponent } from '../../../ui/components/content-tabs/tab/tab.compon
     DistrictsComponent,
     ContonsComponent,
     IndexesComponent,
+    SoilTypesComponent,
   ],
   imports: [
     CommonModule,
