@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { ApiService } from 'src/modules/api/api.service';
-import { MessagesService } from '../../../ui/components/services/messages.service';
+import { IUser } from '../../../api/models/user.model';
 
 @Component({
   selector: 'app-profile',
@@ -9,11 +9,11 @@ import { MessagesService } from '../../../ui/components/services/messages.servic
   styleUrls: ['./profile.component.scss'],
 })
 export class ProfileComponent {
-  constructor(
-    private api: ApiService,
-    private router: Router,
-    private messages: MessagesService
-  ) {}
+  currentUser!: IUser | null;
+
+  constructor(private api: ApiService, private router: Router) {
+    this.currentUser = this.api.user.getLoggedInUser();
+  }
 
   async handleLogoutClick(): Promise<void> {
     await this.api.user.logOut();

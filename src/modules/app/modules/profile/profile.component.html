@@ -9,6 +9,12 @@
         <a routerLink="reset-password" routerLinkActive="active">{{
           "Reset password" | translate
         }}</a>
+        <a
+          *ngIf="currentUser?.is_superuser"
+          routerLink="create-dataset"
+          routerLinkActive="active"
+          >{{ "Create a dataset" | translate }}</a
+        >
       </nav>
     </div>
     <button type="submit" class="danger" (click)="handleLogoutClick()">

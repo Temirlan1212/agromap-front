@@ -3,6 +3,8 @@ import { RouterModule, Routes } from '@angular/router';
 import { ProfileComponent } from './profile.component';
 import { EditProfileComponent } from './components/edit-profile/edit-profile.component';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
+import { CreateDatasetComponent } from './components/create-dataset/create-dataset.component';
+import { IsSuperAdminGuard } from '../../is-super-admin.guard';
 
 const routes: Routes = [
   {
@@ -21,6 +23,11 @@ const routes: Routes = [
       {
         path: 'reset-password',
         component: ResetPasswordComponent,
+      },
+      {
+        path: 'create-dataset',
+        component: CreateDatasetComponent,
+        canActivate: [IsSuperAdminGuard],
       },
     ],
   },

@@ -145,5 +145,8 @@
   "Roll up": "Свернуть",
   "Country": "Страна",
   "Pasture (productivity area)": "Пастбище (площадь продуктивности)",
-  "Land (square of cultures)": "Пашня (площадь культур)"
+  "Land (square of cultures)": "Пашня (площадь культур)",
+  "Create a dataset": "Создать датасет",
+  "Generate": "Сгенерировать",
+  "Process started": "Процесс запущен"
 }

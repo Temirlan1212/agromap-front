@@ -518,6 +518,8 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     this.wmsSelectedStatusLayers = this.store.getItem(
       'MapControlLayersSwitchComponent'
     );
+    const data = this.store.getItem('MapControlLayersSwitchComponent');
+    this.wmsSelectedStatusLayers = data;
     this.getVegIndexList();
     this.store
       .watchItem<ContourFiltersQuery | null>('ContourFilterComponent')

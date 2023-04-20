@@ -10,12 +10,17 @@ import { SidePanelComponent } from '../../../ui/components/side-panel/side-panel
 import { EditProfileComponent } from './components/edit-profile/edit-profile.component';
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 import { FormFieldComponent } from '../../../ui/components/form-field/form-field.component';
+import { CreateDatasetComponent } from './components/create-dataset/create-dataset.component';
+import { QuestionDialogComponent } from '../../../ui/components/question-dialog/question-dialog.component';
+import { SvgIconComponent } from '../../../ui/components/svg-icon/svg-icon.component';
+import { IsSuperAdminGuard } from '../../is-super-admin.guard';
 
 @NgModule({
   declarations: [
     ProfileComponent,
     EditProfileComponent,
     ResetPasswordComponent,
+    CreateDatasetComponent,
   ],
   imports: [
     CommonModule,
@@ -26,7 +31,9 @@ import { FormFieldComponent } from '../../../ui/components/form-field/form-field
     SidePanelComponent,
     FormsModule,
     FormFieldComponent,
+    QuestionDialogComponent,
+    SvgIconComponent,
   ],
-  providers: [TranslatePipe],
+  providers: [TranslatePipe, IsSuperAdminGuard],
 })
 export class ProfileModule {}

@@ -31,6 +31,19 @@ app-input-radio {
   transition: all $baseTransitionDelay;
   pointer-events: none;
   min-width: 250px;
+  overflow-y: auto;
+  max-height: 300px;
+
+  &::-webkit-scrollbar {
+    width: 5px;
+    border-radius: 8px;
+    background-color: $darkColor;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: $lightColor;
+    border-radius: 5px;
+  }
 
   h5 {
     margin: 0 0 10px;
@@ -40,7 +53,6 @@ app-input-radio {
   .over-layers-group,
   .base-layers-group {
     max-height: $layersGroupMaxHeight;
-    overflow-y: auto;
   }
 
   &.collapsed {
