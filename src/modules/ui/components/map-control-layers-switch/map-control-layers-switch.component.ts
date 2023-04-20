@@ -125,9 +125,6 @@ export class MapControlLayersSwitchComponentComponent implements OnChanges {
       }
     });
 
-    const c = this.wmsLayers.find((l) => l.name === layerName);
-    console.log(c?.layer);
-
     let obj = {} as ISelectedItem;
     obj.name = String(layerName);
     if (layerName) {
