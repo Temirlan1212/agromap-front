@@ -141,5 +141,8 @@
   "Soil class": "Вид почвы",
   "Elevation": "Высота",
   "m. above sea level": "м. над уровнем моря",
-  "AI determination error": "Погрешность определения ИИ"
+  "AI determination error": "Погрешность определения ИИ",
+  "Create a dataset": "Создать датасет",
+  "Generate": "Сгенерировать",
+  "Process started": "Процесс запущен"
 }
