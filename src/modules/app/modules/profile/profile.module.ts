@@ -13,6 +13,7 @@ import { FormFieldComponent } from '../../../ui/components/form-field/form-field
 import { CreateDatasetComponent } from './components/create-dataset/create-dataset.component';
 import { QuestionDialogComponent } from '../../../ui/components/question-dialog/question-dialog.component';
 import { SvgIconComponent } from '../../../ui/components/svg-icon/svg-icon.component';
+import { IsSuperAdminGuard } from '../../is-super-admin.guard';
 
 @NgModule({
   declarations: [
@@ -33,6 +34,6 @@ import { SvgIconComponent } from '../../../ui/components/svg-icon/svg-icon.compo
     QuestionDialogComponent,
     SvgIconComponent,
   ],
-  providers: [TranslatePipe],
+  providers: [TranslatePipe, IsSuperAdminGuard],
 })
 export class ProfileModule {}

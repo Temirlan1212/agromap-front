@@ -9,9 +9,7 @@ import {
 import { Observable } from 'rxjs';
 import { ApiService } from '../api/api.service';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class IsSuperAdminGuard implements CanActivate {
   constructor(private api: ApiService, private router: Router) {}
 
