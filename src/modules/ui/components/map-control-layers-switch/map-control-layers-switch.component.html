@@ -26,7 +26,13 @@
         [max]="100"
         [step]="1"
         [value]="selected['filterControlLayerSwitch'].opacity"
-        (change)="handleWmsInputRangeChange($event, 'filterControlLayerSwitch')"
+        (change)="
+          handleWmsInputRangeChange(
+            $event,
+            wms.name,
+            'filterControlLayerSwitch'
+          )
+        "
       ></app-input-range>
     </ng-container>
 

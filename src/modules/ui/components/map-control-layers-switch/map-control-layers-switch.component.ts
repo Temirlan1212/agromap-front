@@ -71,6 +71,12 @@ export class MapControlLayersSwitchComponentComponent implements OnChanges {
     }
 
     if (!value) {
+      for (let key in this.wmsSelectedStatusLayers) {
+        this.handleWmsCheckboxLayerChange(
+          !!(this.wmsSelectedStatusLayers[key] as any)?.name,
+          key
+        );
+      }
       if (this.wmsSelectedStatusLayers) {
         const filterControlLayerSwitchStatus: any =
           this.wmsSelectedStatusLayers['filterControlLayerSwitch'];
@@ -85,15 +91,10 @@ export class MapControlLayersSwitchComponentComponent implements OnChanges {
           );
           this.handleWmsInputRangeChange(
             filterControlLayerSwitchStatus.opacity,
+            filterControlLayerSwitchStatus.name,
             'filterControlLayerSwitch'
           );
         }
-      }
-      for (let key in this.wmsSelectedStatusLayers) {
-        this.handleWmsCheckboxLayerChange(
-          !!(this.wmsSelectedStatusLayers[key] as any)?.name,
-          key
-        );
       }
     }
 
@@ -120,9 +121,12 @@ export class MapControlLayersSwitchComponentComponent implements OnChanges {
       if (isCurrent) {
         this.map.addLayer(l?.layer);
         this.wmsLayerChanged.emit(l);
-        this.handleWmsInputRangeChange(100, 'filterControlLayerSwitch');
+        this.handleWmsInputRangeChange(100, l.name, 'filterControlLayerSwitch');
       }
     });
+
+    const c = this.wmsLayers.find((l) => l.name === layerName);
+    console.log(c?.layer);
 
     let obj = {} as ISelectedItem;
     obj.name = String(layerName);
@@ -143,9 +147,9 @@ export class MapControlLayersSwitchComponentComponent implements OnChanges {
     this.store.setItem('MapControlLayersSwitchComponent', this.selected);
   }
 
-  handleWmsCheckboxLayerChange(checked: boolean, id: string): void {
+  handleWmsCheckboxLayerChange(checked: boolean, layerName: string): void {
     this.wmsLayers.forEach((l) => {
-      const isCurrent = id === l.name;
+      const isCurrent = layerName === l.name;
       if (isCurrent) {
         if (checked) {
           this.map.addLayer(l.layer);
@@ -153,20 +157,21 @@ export class MapControlLayersSwitchComponentComponent implements OnChanges {
           this.map.removeLayer(l.layer);
         }
 
-        this.selected[l.name] = { name: id, opacity: 100 };
+        this.selected[l.name] = { name: layerName, opacity: 100 };
 
         const data = this.store.getItem('MapControlLayersSwitchComponent');
-        const opacity = (this.wmsSelectedStatusLayers?.[id] as any)?.opacity;
+        const opacity = (this.wmsSelectedStatusLayers?.[layerName] as any)
+          ?.opacity;
 
-        if (data[id]?.opacity) {
-          this.handleWmsInputRangeChange(data[id].opacity, l.name);
-          this.selected[l.name]['opacity'] = data[id].opacity;
+        if (data[layerName]?.opacity) {
+          this.handleWmsInputRangeChange(data[layerName].opacity, l.name);
+          this.selected[l.name]['opacity'] = data[layerName].opacity;
         } else {
           this.handleWmsInputRangeChange(opacity, l.name);
           this.selected[l.name]['opacity'] = opacity;
         }
 
-        this.selected[l.name]['name'] = checked ? id : '';
+        this.selected[l.name]['name'] = checked ? layerName : '';
 
         this.store.setItem(
           'MapControlLayersSwitchComponent',
@@ -176,16 +181,16 @@ export class MapControlLayersSwitchComponentComponent implements OnChanges {
     });
   }
 
-  handleWmsInputRangeChange(value: any, layerName: string) {
+  handleWmsInputRangeChange(value: any, layerName: string, key?: string) {
     const layer = this.wmsLayers.find((l) => l.name === layerName)?.layer;
     layer?.setOpacity(value / 100);
 
     let obj = {} as ISelectedItem;
     obj.opacity = value;
-    obj.name = this.selected[layerName]?.name;
-    obj.oldValue = this.selected[layerName]?.oldValue;
+    obj.name = this.selected[key ? key : layerName]?.name;
+    obj.oldValue = this.selected[key ? key : layerName]?.oldValue;
 
-    if (!(value instanceof Object)) this.selected[layerName] = obj;
+    if (!(value instanceof Object)) this.selected[key ? key : layerName] = obj;
 
     this.store.setItem('MapControlLayersSwitchComponent', this.selected);
   }
