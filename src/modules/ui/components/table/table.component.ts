@@ -18,7 +18,6 @@ import {
   ITableItem,
 } from '../../models/table.model';
 import { CheckExistPipe } from '../../pipes/check-exist.pipe';
-import { UnitPipe } from '../../pipes/unit.pipe';
 
 @Component({
   selector: 'app-table',
@@ -29,7 +28,6 @@ import { UnitPipe } from '../../pipes/unit.pipe';
     QuestionDialogComponent,
     TranslateModule,
     CheckExistPipe,
-    UnitPipe,
   ],
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.scss'],
@@ -41,7 +39,6 @@ export class TableComponent implements OnChanges {
   @Input() fields: ITableField[] = [];
   @Input() items: ITableItem[] = [];
   @Input() mode = 'light';
-  @Input() unit: string = '';
   @Output() actionClick = new EventEmitter<ITableAction>();
 
   columns: string[] = [];

@@ -163,9 +163,38 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   subscriptions: Subscription[] = [
-    this.translateSvc.onLangChange.subscribe(
-      (res) => (this.currentLang = res.lang)
-    ),
+    this.translateSvc.onLangChange.subscribe((res) => {
+      this.currentLang = res.lang;
+      const translateHa =
+        this.translateSvc.translations[this.currentLang]['ha'];
+
+      this.contourPastureStatisticsProductivityTableItems =
+        this.contourPastureStatisticsProductivityTableItems.map((arr) =>
+          arr.map((element) => ({
+            ...element,
+            productive: `${String(element?.['productive']).replace(
+              /га|ha/gi,
+              translateHa
+            )}`,
+            unproductive: `${String(element?.['unproductive']).replace(
+              /га|ha/gi,
+              translateHa
+            )}`,
+          }))
+        );
+
+      this.contourCultureStatisticsProductivityTableItems =
+        this.contourCultureStatisticsProductivityTableItems.map((element) => {
+          return {
+            ...element,
+            area_ha: `${String(element?.['area_ha']).replace(
+              /га|ha/gi,
+              translateHa
+            )}`,
+          };
+        });
+    }),
+
     this.mapService.contourEditingMode.subscribe((res) => {
       if (res) {
         this.mapComponent.removeSubscriptions();
@@ -437,8 +466,12 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
           areaName_en: res?.[`name_en`],
           areaName_ky: res?.[`name_ky`],
           areaName_ru: res?.[`name_ru`],
-          productive: res?.Productive?.ha,
-          unproductive: res?.Unproductive?.ha,
+          productive: `${res?.Productive?.ha} ${this.translate.transform(
+            'ha'
+          )}`,
+          unproductive: `${res?.Unproductive?.ha} ${this.translate.transform(
+            'ha'
+          )}`,
         },
       ]);
 
@@ -449,8 +482,12 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
             areaName_en: child?.[`name_en`],
             areaName_ky: child?.[`name_ky`],
             areaName_ru: child?.[`name_ru`],
-            productive: child?.Productive?.ha,
-            unproductive: child?.Unproductive?.ha,
+            productive: `${child?.Productive?.ha} ${this.translate.transform(
+              'ha'
+            )}`,
+            unproductive: `${
+              child?.Unproductive?.ha
+            } ${this.translate.transform('ha')}`,
           }))
         );
       }
@@ -472,8 +509,12 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
         land_type: '1',
       });
 
-      this.contourCultureStatisticsProductivityTableItems =
-        res as unknown as ITableItem[];
+      this.contourCultureStatisticsProductivityTableItems = res.map(
+        (element) => ({
+          ...element,
+          area_ha: `${element?.area_ha} ${this.translate.transform('ha')}`,
+        })
+      ) as unknown as ITableItem[];
     } catch (e: any) {
       this.messages.error(e.message);
     }

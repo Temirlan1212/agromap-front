@@ -70,7 +70,6 @@
               "
             >
               <app-table
-                [unit]="'ha' | translate"
                 *ngFor="
                   let item of contourPastureStatisticsProductivityTableItems
                 "
@@ -96,7 +95,6 @@
               [title]="'Land (square of cultures)' | translate | truncate : 20"
             >
               <app-table
-                [unit]="'ha' | translate"
                 [items]="contourCultureStatisticsProductivityTableItems"
                 mode="dark"
                 [fields]="[
