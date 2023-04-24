@@ -21,7 +21,7 @@ export interface IContonWithPagination {
 export interface IContonListQuery {
   polygon?: boolean;
   district_id?: number;
-  ids?: string;
+  id?: string;
   page_size?: number;
   next?: null;
   previous?: null;

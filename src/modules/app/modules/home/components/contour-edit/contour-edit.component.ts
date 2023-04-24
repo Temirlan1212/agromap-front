@@ -39,7 +39,7 @@ export class ContourEditComponent implements OnInit, OnDestroy {
 
   async ngOnInit() {
     const data = this.store.getItem('MapControlLayersSwitchComponent');
-    this.mode = data?.filterControlLayerSwitch;
+    this.mode = data?.filterControlLayerSwitch.name;
     const id = this.route.snapshot.paramMap.get('id');
     try {
       this.loading = true;

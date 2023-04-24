@@ -257,7 +257,7 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
     const contonVal = this.form.get('conton');
     if (value != null) {
       const district = (await this.api.dictionary.getDistricts({
-        ids: value,
+        id: value,
         polygon: true,
       })) as IDistrict[];
       this.mapInstance.fitBounds(geoJson(district[0]?.polygon).getBounds());
@@ -274,7 +274,7 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
   async handleContonChange(value: string | null) {
     if (value != null) {
       const res = (await this.api.dictionary.getContons({
-        ids: value,
+        id: value,
         polygon: true,
       })) as IConton[];
       this.mapInstance.fitBounds(geoJson(res[0]?.polygon).getBounds(), {
