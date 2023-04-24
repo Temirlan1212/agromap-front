@@ -421,7 +421,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
     try {
       let res: IContourStatisticsProductivity;
-      res = await this.api.statistics.getPastureStatisticsProductivity({
+      res = await this.api.statistics.getContourStatisticsProductivity({
         ...query,
         land_type: '2',
       });
