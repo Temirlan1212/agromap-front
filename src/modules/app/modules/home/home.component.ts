@@ -33,19 +33,17 @@ import { ITileLayer } from 'src/modules/ui/models/map.model';
 import { QuestionDialogComponent } from '../../../ui/components/question-dialog/question-dialog.component';
 import { IRegion } from 'src/modules/api/models/region.model';
 import { ContourFiltersQuery } from 'src/modules/api/models/contour.model';
-import { IStore } from 'src/modules/ui/models/store.model';
 import {
   IContourStatisticsProductivity,
   IContourStatisticsProductivityQuery,
+  ICulutreStatisticsQuery,
 } from 'src/modules/api/models/statistics.model';
 import { ITableItem } from 'src/modules/ui/models/table.model';
-import { DecimalPipe } from '@angular/common';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
-  providers: [DecimalPipe],
 })
 export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('featurePopup') featurePopup!: ElementRef<HTMLElement>;
@@ -141,8 +139,8 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   isWmsAiActive: boolean = false;
   culture: any = null;
   productivity: string | null = null;
-  contourStatisticsProductivityTableItems: ITableItem[][] = [];
-  contourStatisticsProductivityAreaTitle: string = '';
+  contourPastureStatisticsProductivityTableItems: ITableItem[][] = [];
+  contourCultureStatisticsProductivityTableItems: ITableItem[] = [];
   wmsSelectedStatusLayers: Record<string, string> | null = null;
   selectedContourId!: number;
   loading: boolean = false;
@@ -155,8 +153,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     private translateSvc: TranslateService,
     private router: Router,
     private translate: TranslatePipe,
-    private route: ActivatedRoute,
-    private decimalPipe: DecimalPipe
+    private route: ActivatedRoute
   ) {
     this.router.events.subscribe((event: Event) =>
       event instanceof NavigationEnd
@@ -166,9 +163,38 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   subscriptions: Subscription[] = [
-    this.translateSvc.onLangChange.subscribe(
-      (res) => (this.currentLang = res.lang)
-    ),
+    this.translateSvc.onLangChange.subscribe((res) => {
+      this.currentLang = res.lang;
+      const translateHa =
+        this.translateSvc.translations[this.currentLang]['ha'];
+
+      this.contourPastureStatisticsProductivityTableItems =
+        this.contourPastureStatisticsProductivityTableItems.map((arr) =>
+          arr.map((element) => ({
+            ...element,
+            productive: `${String(element?.['productive']).replace(
+              /га|ha/gi,
+              translateHa
+            )}`,
+            unproductive: `${String(element?.['unproductive']).replace(
+              /га|ha/gi,
+              translateHa
+            )}`,
+          }))
+        );
+
+      this.contourCultureStatisticsProductivityTableItems =
+        this.contourCultureStatisticsProductivityTableItems.map((element) => {
+          return {
+            ...element,
+            area_ha: `${String(element?.['area_ha']).replace(
+              /га|ha/gi,
+              translateHa
+            )}`,
+          };
+        });
+    }),
+
     this.mapService.contourEditingMode.subscribe((res) => {
       if (res) {
         this.mapComponent.removeSubscriptions();
@@ -312,13 +338,23 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   handleFilterFormReset(): void {
-    this.contourStatisticsProductivityTableItems = [];
+    this.getPastureStatisticsProductivity({
+      land_type: '2',
+      year: 2022,
+    });
+
+    this.getCultureStatisticsProductivity({
+      land_type: '1',
+      year: 2022,
+    });
+
     this.wmsCQLFilter = null;
     this.setWmsParams();
   }
 
   handleFilterFormSubmit(formValue: Record<string, any>) {
-    this.getContourStatisticsProductivity(formValue['value']);
+    this.getPastureStatisticsProductivity(formValue['value']);
+    this.getCultureStatisticsProductivity(formValue['value']);
   }
 
   async getVegSatelliteDates(
@@ -405,44 +441,82 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  async getContourStatisticsProductivity(
+  async getPastureStatisticsProductivity(
     query: IContourStatisticsProductivityQuery
-  ): Promise<IContourStatisticsProductivity | void> {
-    this.contourStatisticsProductivityTableItems = [];
+  ): Promise<void> {
+    this.contourPastureStatisticsProductivityTableItems = [];
+    if (!query.land_type.split(',').includes('2')) return;
+    if (this.isWmsAiActive) query.ai = this.isWmsAiActive;
+
     try {
       let res: IContourStatisticsProductivity;
       res = await this.api.statistics.getContourStatisticsProductivity({
         ...query,
-        ai: this.isWmsAiActive,
+        land_type: '2',
       });
-      this.contourStatisticsProductivityAreaTitle = res.type;
 
-      let tableItem = {
-        areaType: res?.name,
-        productive: `${this.decimalPipe.transform(res.Productive?.ha)} га`,
-        unproductive: `${this.decimalPipe.transform(res.Unproductive?.ha)} га`,
-      };
+      if (!res.type) {
+        this.contourPastureStatisticsProductivityTableItems = [];
+        return;
+      }
 
-      this.contourStatisticsProductivityTableItems.push([tableItem]);
+      this.contourPastureStatisticsProductivityTableItems.push([
+        {
+          areaType: res?.type,
+          areaName_en: res?.[`name_en`],
+          areaName_ky: res?.[`name_ky`],
+          areaName_ru: res?.[`name_ru`],
+          productive: `${res?.Productive?.ha} ${this.translate.transform(
+            'ha'
+          )}`,
+          unproductive: `${res?.Unproductive?.ha} ${this.translate.transform(
+            'ha'
+          )}`,
+        },
+      ]);
 
-      if (res.Children && res.Children.length !== 0) {
-        this.contourStatisticsProductivityTableItems.push(
-          res.Children?.map((elem) => {
-            let tableItem = {
-              areaType: elem.name,
-              productive: `${this.decimalPipe.transform(
-                elem.Productive.ha
-              )} га`,
-              unproductive: `${this.decimalPipe.transform(
-                elem.Unproductive.ha
-              )} га`,
-            };
-            return tableItem;
-          })
+      if (Array.isArray(res?.Children) && res?.Children?.length > 0) {
+        this.contourPastureStatisticsProductivityTableItems.push(
+          res?.Children.map((child) => ({
+            areaType: child?.type,
+            areaName_en: child?.[`name_en`],
+            areaName_ky: child?.[`name_ky`],
+            areaName_ru: child?.[`name_ru`],
+            productive: `${child?.Productive?.ha} ${this.translate.transform(
+              'ha'
+            )}`,
+            unproductive: `${
+              child?.Unproductive?.ha
+            } ${this.translate.transform('ha')}`,
+          }))
         );
       }
     } catch (e: any) {
-      console.log(e);
+      this.messages.error(e.message);
+    }
+  }
+
+  async getCultureStatisticsProductivity(
+    query: ICulutreStatisticsQuery
+  ): Promise<void> {
+    this.contourCultureStatisticsProductivityTableItems = [];
+    if (!query.land_type.split(',').includes('1')) return;
+    if (this.isWmsAiActive) query.ai = this.isWmsAiActive;
+
+    try {
+      const res = await this.api.statistics.getCultureStatistics({
+        ...query,
+        land_type: '1',
+      });
+
+      this.contourCultureStatisticsProductivityTableItems = res.map(
+        (element) => ({
+          ...element,
+          area_ha: `${element?.area_ha} ${this.translate.transform('ha')}`,
+        })
+      ) as unknown as ITableItem[];
+    } catch (e: any) {
+      this.messages.error(e.message);
     }
   }
 
@@ -471,6 +545,19 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnInit(): void {
+    this.getPastureStatisticsProductivity({
+      land_type: '2',
+      year: 2022,
+    });
+
+    this.getCultureStatisticsProductivity({
+      land_type: '1',
+      year: 2022,
+    });
+
+    this.wmsSelectedStatusLayers = this.store.getItem(
+      'MapControlLayersSwitchComponent'
+    );
     const data = this.store.getItem('MapControlLayersSwitchComponent');
     this.wmsSelectedStatusLayers = data;
     this.getVegIndexList();

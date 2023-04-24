@@ -1,8 +1,11 @@
+@import "./constants";
+
 .tabs ul {
   list-style-type: none;
   overflow: hidden;
   width: fit-content;
   margin: 0 auto;
+  padding: 0;
 }
 
 .tabs li {
@@ -20,8 +23,7 @@
 }
 
 .tabs li.active {
-  //background-color: #ccc;
-  border-bottom: 2px solid #1b55eb;
+  box-shadow: inset 0 -2px 0 $successColor;
 }
 
 .tabs li:hover:not(.active) {
