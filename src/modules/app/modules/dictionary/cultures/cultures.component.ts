@@ -3,8 +3,8 @@ import { ApiService } from '../../../../api/api.service';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
-import { MessagesService } from '../../../../ui/components/services/messages.service';
-import { StoreService } from '../../../../api/store.service';
+import { MessagesService } from '../../../../ui/services/messages.service';
+import { StoreService } from '../../../../ui/services/store.service';
 import { ITableAction } from 'src/modules/ui/models/table.model';
 
 @Component({

@@ -1,0 +1,37 @@
+@import "./constants";
+
+.tabs ul {
+  list-style-type: none;
+  overflow: hidden;
+  width: fit-content;
+  margin: 0 auto;
+  padding: 0;
+}
+
+.tabs li {
+  float: left;
+  cursor: pointer;
+  padding: 10px 20px;
+}
+
+.tabs li a {
+  display: block;
+  color: #666;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+.tabs li.active {
+  box-shadow: inset 0 -2px 0 $successColor;
+}
+
+.tabs li:hover:not(.active) {
+  background-color: #ddd;
+}
+
+.tabs div {
+  border-top: 1px solid #e3e3e3;
+  border-bottom: 1px solid #e3e3e3;
+  background-color: #ffffff;
+}

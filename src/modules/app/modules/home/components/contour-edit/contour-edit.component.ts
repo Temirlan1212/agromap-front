@@ -4,12 +4,12 @@ import { ContourFormComponent } from '../contour-form/contour-form.component';
 import { IContour } from '../../../../../api/models/contour.model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ApiService } from '../../../../../api/api.service';
-import { MessagesService } from '../../../../../ui/components/services/messages.service';
-import { MapService } from '../../map.service';
+import { MessagesService } from '../../../../../ui/services/messages.service';
+import { MapService } from '../../../../../ui/services/map.service';
 import { Subscription } from 'rxjs';
 import { MapData } from '../../../../../ui/models/map.model';
 import { TranslatePipe } from '@ngx-translate/core';
-import { StoreService } from '../../../../../api/store.service';
+import { StoreService } from '../../../../../ui/services/store.service';
 
 @Component({
   selector: 'app-contour-edit',
@@ -25,9 +25,7 @@ export class ContourEditComponent implements OnInit, OnDestroy {
   layer: any = null;
   polygon: GeoJSON.Polygon | null = null;
   isPolygonChanged: boolean = false;
-  mode: string | null = this.store.getItem<string>(
-    'ContourFilterComponentMode'
-  );
+  mode: string | null = null;
 
   constructor(
     private api: ApiService,
@@ -40,6 +38,8 @@ export class ContourEditComponent implements OnInit, OnDestroy {
   ) {}
 
   async ngOnInit() {
+    const data = this.store.getItem('MapControlLayersSwitchComponent');
+    this.mode = data?.filterControlLayerSwitch.name;
     const id = this.route.snapshot.paramMap.get('id');
     try {
       this.loading = true;
@@ -87,29 +87,25 @@ export class ContourEditComponent implements OnInit, OnDestroy {
   }
 
   handleEditShape() {
-    this.mapInstance.on('pm:globaleditmodetoggled', (event) => {
-      if (this.mapGeo.getLayers().length > 1) {
-        this.mapGeo.clearLayers();
-        this.mapGeo.addData(this.contour.polygon);
-        this.layer = this.mapGeo?.getLayers()[0];
-      }
-      if (event.enabled && this.layer) {
-        this.mapService.contourEditingMode.next(true);
-        this.layer.options.pmIgnore = false;
-        this.layer.options.allowSelfIntersection = true;
-        PM.reInitLayer(this.layer);
-        this.layer.pm.enable();
-      }
+    this.mapService.contourEditingMode.next(true);
+    this.mapInstance.pm.toggleGlobalEditMode({ allowSelfIntersection: false });
+    if (this.mapGeo.getLayers().length > 1) {
+      this.mapGeo.clearLayers();
+    }
+    this.mapGeo.addData(this.contour.polygon);
+    this.layer = this.mapGeo?.getLayers()[0];
+    this.layer.options.pmIgnore = false;
+    PM.reInitLayer(this.layer);
+    this.layer.pm.enable();
 
-      this.layer.on('pm:update', (e: any) => {
-        this.layer = e['layer'];
-        const geoJson: any = this.mapInstance.pm
-          .getGeomanLayers(true)
-          .toGeoJSON();
-        this.polygon = geoJson['features'][0]['geometry'];
-        this.layer.pm.disable();
-        this.isPolygonChanged = true;
-      });
+    this.layer.on('pm:update', (e: any) => {
+      this.layer = e['layer'];
+      const geoJson: any = this.mapInstance.pm
+        .getGeomanLayers(true)
+        .toGeoJSON();
+      this.polygon = geoJson['features'][0]['geometry'];
+      this.layer.pm.disable();
+      this.isPolygonChanged = true;
     });
   }
 
@@ -154,8 +150,6 @@ export class ContourEditComponent implements OnInit, OnDestroy {
 
   handleCancelClick() {
     this.router.navigate(['../..']);
-    this.mapInstance.fitBounds(this.mapService.maxBounds);
-    this.mapInstance.setMaxBounds(this.mapService.maxBounds);
   }
 
   ngOnDestroy() {
@@ -167,7 +161,5 @@ export class ContourEditComponent implements OnInit, OnDestroy {
       this.layer.pm.disable();
     }
     this.mapService.contourEditingMode.next(false);
-    this.mapInstance.fitBounds(this.mapService.maxBounds);
-    this.mapInstance.setMaxBounds(this.mapService.maxBounds);
   }
 }

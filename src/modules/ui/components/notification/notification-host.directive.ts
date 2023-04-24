@@ -1,5 +1,5 @@
 import { Directive, ViewContainerRef } from '@angular/core';
-import { MessagesService } from '../services/messages.service';
+import { MessagesService } from '../../services/messages.service';
 
 @Directive({
   selector: '[appNotificationHost]',
@@ -8,9 +8,8 @@ import { MessagesService } from '../services/messages.service';
 export class NotificationHostDirective {
   constructor(
     private viewContainerRef: ViewContainerRef,
-    private messages: MessagesService,
+    private messages: MessagesService
   ) {
     this.messages.setViewContainerRef(this.viewContainerRef);
   }
-
 }

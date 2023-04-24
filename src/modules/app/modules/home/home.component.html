@@ -11,11 +11,9 @@
 </app-side-panel>
 
 <div class="map-container">
+  <app-loading *ngIf="loading" [loading]="loading"></app-loading>
   <app-map
     #map
-    [featureTitle]="
-      ('Culture' | translate) + ':' | unit : (culture?.['name_' + currentLang] | checkExist | translate)
-    "
     (mapData)="handleMapData($event)"
     (mapMove)="handleMapMove($event)"
     (featureClick)="handleFeatureClick($event)"
@@ -40,6 +38,7 @@
             [map]="mapData.map"
             [baseLayers]="baseLayers"
             [wmsLayers]="wmsLayers"
+            [wmsSelectedStatusLayers]="wmsSelectedStatusLayers"
             (wmsLayerChanged)="handleWmsLayerChanged($event)"
           ></app-map-control-layers-switch>
           <app-map-control-locate
@@ -58,52 +57,85 @@
           (vegIndexOptionClick)="handleVegIndexOptionClick($event)"
           [loadingSatelliteDates]="loadingSatelliteDates"
         ></app-map-control-veg-indexes>
+
         <app-map-control-statistics
           *ngIf="!layerFeature"
-          title="Pasture productivity area"
+          [title]="'Roll up' | translate"
+          storageName="isCollapsedMapControlTable"
         >
-          <app-table
-            *ngFor="let item of contourStatisticsProductivityTableItems"
-            [items]="item"
-            mode="dark"
-            [fields]="[
-              {
-                title: contourStatisticsProductivityAreaTitle | translate,
-                field: 'areaType'
-              },
-              {
-                title: 'Productive' | translate | truncate : 10,
-                field: 'productive'
-              },
-              {
-                title: 'Unproductive' | translate | truncate : 10,
-                field: 'unproductive'
-              }
-            ]"
-          ></app-table>
+          <app-content-tabs>
+            <app-tab
+              [title]="
+                'Pasture (productivity area)' | translate | truncate : 20
+              "
+            >
+              <app-table
+                *ngFor="
+                  let item of contourPastureStatisticsProductivityTableItems
+                "
+                [items]="item"
+                mode="dark"
+                [fields]="[
+                  {
+                    title: item[0]['areaType'].toString() | translate,
+                    field: 'areaName_' + currentLang
+                  },
+                  {
+                    title: 'Productive' | translate | truncate : 10,
+                    field: 'productive'
+                  },
+                  {
+                    title: 'Unproductive' | translate | truncate : 10,
+                    field: 'unproductive'
+                  }
+                ]"
+              ></app-table>
+            </app-tab>
+            <app-tab
+              [title]="'Land (square of cultures)' | translate | truncate : 20"
+            >
+              <app-table
+                [items]="contourCultureStatisticsProductivityTableItems"
+                mode="dark"
+                [fields]="[
+                  {
+                    title: 'Name' | translate,
+                    field: 'culture_name_' + currentLang
+                  },
+                  { title: 'Area' | translate, field: 'area_ha' },
+                  {
+                    title: 'Territory' | translate,
+                    field: 'territory_' + currentLang
+                  }
+                ]"
+              ></app-table>
+            </app-tab>
+          </app-content-tabs>
         </app-map-control-statistics>
       </ng-container>
     </app-map-controls>
 
-    <h4 featureBody>
-      <span
-        [textContent]="
-          ('Productivity' | translate) + ':'
-            | unit : (productivity | checkExist)
-        "
-      ></span>
-    </h4>
-    <app-spline-area-chart
-      featureBody
-      [chartData]="contourData"
-      *ngIf="layerFeature && contourData.length > 0; else noContourData"
-    >
-    </app-spline-area-chart>
-    <ng-template #noContourData>
-      <h3 class="no-data-text">
-        {{ "No data" | translate }}
-      </h3>
-    </ng-template>
+    <app-content-tabs featureBody *ngIf="selectedContourId">
+      <app-tab [title]="'Contour details' | translate">
+        <app-contour-info
+          [contourId]="selectedContourId"
+          [isWmsAiActive]="isWmsAiActive"
+        >
+        </app-contour-info>
+      </app-tab>
+      <app-tab [title]="'Vegetative indexes' | translate">
+        <app-spline-area-chart
+          [chartData]="contourData"
+          *ngIf="layerFeature && contourData.length > 0; else noContourData"
+        >
+        </app-spline-area-chart>
+        <ng-template #noContourData>
+          <h3 class="no-data-text">
+            {{ "No data" | translate }}
+          </h3>
+        </ng-template>
+      </app-tab>
+    </app-content-tabs>
 
     <button
       actions

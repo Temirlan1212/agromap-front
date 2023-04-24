@@ -1,4 +1,11 @@
-import { geoJSON, latLngBounds, LatLngBounds, Map, tileLayer } from 'leaflet';
+import {
+  featureGroup,
+  geoJSON,
+  latLngBounds,
+  LatLngBounds,
+  Map,
+  tileLayer,
+} from 'leaflet';
 import { GeoJSON } from 'geojson';
 import {
   AfterViewInit,
@@ -18,13 +25,13 @@ import {
   MapLayerFeature,
   MapMove,
 } from 'src/modules/ui/models/map.model';
-import { MapService } from './map.service';
-import { MessagesService } from '../../../ui/components/services/messages.service';
+import { MapService } from '../../../ui/services/map.service';
+import { MessagesService } from '../../../ui/services/messages.service';
 import { IChartData } from './components/spline-area-chart/spline-area-chart.component';
 import { ActualVegQuery } from '../../../api/classes/veg-indexes';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { Router, NavigationEnd, Event, ActivatedRoute } from '@angular/router';
-import { StoreService } from 'src/modules/api/store.service';
+import { StoreService } from 'src/modules/ui/services/store.service';
 import { Feature } from 'geojson';
 import { MapComponent } from '../../../ui/components/map/map.component';
 import { Subscription } from 'rxjs';
@@ -33,19 +40,17 @@ import { ITileLayer } from 'src/modules/ui/models/map.model';
 import { QuestionDialogComponent } from '../../../ui/components/question-dialog/question-dialog.component';
 import { IRegion } from 'src/modules/api/models/region.model';
 import { ContourFiltersQuery } from 'src/modules/api/models/contour.model';
-import { IStore } from 'src/modules/api/models/store.model';
 import {
   IContourStatisticsProductivity,
   IContourStatisticsProductivityQuery,
+  ICulutreStatisticsQuery,
 } from 'src/modules/api/models/statistics.model';
 import { ITableItem } from 'src/modules/ui/models/table.model';
-import { DecimalPipe } from '@angular/common';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
-  providers: [DecimalPipe],
 })
 export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('featurePopup') featurePopup!: ElementRef<HTMLElement>;
@@ -53,28 +58,28 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   mode!: string;
   baseLayers: ITileLayer[] = [
     {
-      title: this.translate.transform('Google Satellite'),
+      title: 'Google Satellite',
       name: 'Google Satellite',
       layer: tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
         subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
       }),
     },
     {
-      title: this.translate.transform('Google Streets'),
+      title: 'Google Streets',
       name: 'Google Streets',
       layer: tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
         subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
       }),
     },
     {
-      title: this.translate.transform('Google Terrain'),
+      title: 'Google Terrain',
       name: 'Google Terrain',
       layer: tileLayer('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}', {
         subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
       }),
     },
     {
-      title: this.translate.transform('Open Street Map'),
+      title: 'Open Street Map',
       name: 'Open Street Map',
       layer: tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png'),
     },
@@ -87,33 +92,48 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     zIndex: 500,
   };
 
+  wmsLayersOverlayOptions = {
+    format: 'image/png',
+    transparent: true,
+    zIndex: 499,
+  };
+
   wmsLayers: ITileLayer[] = [
     {
-      title: `
-        ${this.translate.transform('Base')}
-        ${this.translate.transform('Layer').toLowerCase()}
-      `,
+      title: 'Base',
       name: 'agromap_store',
       layer: tileLayer.wms('https://geoserver.24mycrm.com/agromap/wms', {
         layers: 'agromap:agromap_store',
         ...this.wmsLayersOptions,
       }),
+      type: 'radio',
     },
     {
-      title: this.translate.transform('AI'),
+      title: 'AI',
       name: 'agromap_store_ai',
       layer: tileLayer.wms('https://geoserver.24mycrm.com/agromap/wms', {
         layers: 'agromap:agromap_store_ai',
         ...this.wmsLayersOptions,
       }),
+      type: 'radio',
     },
     {
-      title: this.translate.transform('SoilLayer'),
+      title: 'SoilLayer',
       name: 'soil_agromap',
       layer: tileLayer.wms('https://geoserver.24mycrm.com/agromap/wms', {
         layers: 'agromap:soil_agromap',
-        ...this.wmsLayersOptions,
+        ...this.wmsLayersOverlayOptions,
       }),
+      type: 'checkbox',
+    },
+    {
+      title: 'Productivity layer',
+      name: 'my_test_store',
+      layer: tileLayer.wms('https://geoserver.24mycrm.com/my_testing/wms', {
+        layers: 'my_testing:my_test_store',
+        ...this.wmsLayersOverlayOptions,
+      }),
+      type: 'checkbox',
     },
   ];
 
@@ -126,8 +146,11 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   isWmsAiActive: boolean = false;
   culture: any = null;
   productivity: string | null = null;
-  contourStatisticsProductivityTableItems: ITableItem[][] = [];
-  contourStatisticsProductivityAreaTitle: string = '';
+  contourPastureStatisticsProductivityTableItems: ITableItem[][] = [];
+  contourCultureStatisticsProductivityTableItems: ITableItem[] = [];
+  wmsSelectedStatusLayers: Record<string, string> | null = null;
+  selectedContourId!: number;
+  loading: boolean = false;
 
   constructor(
     private api: ApiService,
@@ -137,8 +160,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     private translateSvc: TranslateService,
     private router: Router,
     private translate: TranslatePipe,
-    private route: ActivatedRoute,
-    private decimalPipe: DecimalPipe
+    private route: ActivatedRoute
   ) {
     this.router.events.subscribe((event: Event) =>
       event instanceof NavigationEnd
@@ -148,9 +170,38 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   subscriptions: Subscription[] = [
-    this.translateSvc.onLangChange.subscribe(
-      (res) => (this.currentLang = res.lang)
-    ),
+    this.translateSvc.onLangChange.subscribe((res) => {
+      this.currentLang = res.lang;
+      const translateHa =
+        this.translateSvc.translations[this.currentLang]['ha'];
+
+      this.contourPastureStatisticsProductivityTableItems =
+        this.contourPastureStatisticsProductivityTableItems.map((arr) =>
+          arr.map((element) => ({
+            ...element,
+            productive: `${String(element?.['productive']).replace(
+              /га|ha/gi,
+              translateHa
+            )}`,
+            unproductive: `${String(element?.['unproductive']).replace(
+              /га|ha/gi,
+              translateHa
+            )}`,
+          }))
+        );
+
+      this.contourCultureStatisticsProductivityTableItems =
+        this.contourCultureStatisticsProductivityTableItems.map((element) => {
+          return {
+            ...element,
+            area_ha: `${String(element?.['area_ha']).replace(
+              /га|ha/gi,
+              translateHa
+            )}`,
+          };
+        });
+    }),
+
     this.mapService.contourEditingMode.subscribe((res) => {
       if (res) {
         this.mapComponent.removeSubscriptions();
@@ -169,16 +220,15 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     this.mapService.map.next(mapData);
   }
 
-  handleFeatureClick(layerFeature: MapLayerFeature): void {
+  async handleFeatureClick(layerFeature: MapLayerFeature) {
     if (this.layerFeature) {
       this.selectedLayer.remove();
     }
     const cid =
       layerFeature?.feature?.properties?.['contour_id'] ??
       layerFeature?.feature?.properties?.['id'];
-    this.getOneCulture(
-      Number(layerFeature?.feature?.properties?.['culture_id'])
-    );
+    this.getOneCulture(Number(cid));
+    this.selectedContourId = Number(cid);
     this.productivity = layerFeature?.feature?.properties?.['productivity'];
     this.getContourData(cid);
     this.layerFeature = layerFeature;
@@ -192,6 +242,33 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.getVegSatelliteDates(cid);
     this.store.setItem<Feature>('selectedLayerFeature', layerFeature.feature);
+
+    const fg = featureGroup();
+    layerFeature.layer.addTo(fg);
+    const fgBBox = fg.getBounds()?.toBBoxString();
+    const mapSize = this.mapData?.map.getSize();
+    // const mapPoint = this.mapData?.map.latLngToContainerPoint(fg.la);
+
+    if (mapSize && fgBBox) {
+      const wmsFeatureInfo = await this.api.map.getFeatureInfo({
+        service: 'WMS',
+        request: 'GetFeatureInfo',
+        srs: 'EPSG:4326',
+        styles: '',
+        format: 'image/png',
+        bbox: fgBBox,
+        layers: 'agromap:agromap_store_ai',
+        query_layers: 'agromap:agromap_store_ai',
+        transparent: true,
+        width: mapSize.x,
+        height: mapSize.y,
+        x: 200,
+        y: 200,
+        version: '1.1.1',
+        info_format: 'application/json',
+      });
+      console.log(wmsFeatureInfo);
+    }
   }
 
   handleFeatureClose(): void {
@@ -243,6 +320,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
       if (mapMove.zoom >= 12) {
         try {
+          this.loading = true;
           let polygons: GeoJSON;
           if (this.isWmsAiActive) {
             polygons = await this.api.map.getPolygonsInScreenAi(mapMove.bounds);
@@ -256,19 +334,21 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
           this.mapData.geoJson.options.interactive = true;
           this.mapData.geoJson.addData(polygons);
           const aiWms = this.wmsLayers[1].layer as any;
-          console.log(this.mapData.map);
-          aiWms.getFeatureInfo({
-            latlng: [74.961956514, 42.85253067],
-            done: function (featureCollection: any) {
-              console.log(featureCollection);
-            },
-          });
+          // console.log(this.mapData.map);
+          // aiWms.getFeatureInfo({
+          //   latlng: [74.961956514, 42.85253067],
+          //   done: function (featureCollection: any) {
+          //     console.log(featureCollection);
+          //   },
+          // });
           // ll.wms('https://geoserver.24mycrm.com/agromap/wms', {
           //   layers: 'agromap:agromap_store',
           //   ...this.wmsLayersOptions,
           // })
         } catch (e: any) {
           console.log(e);
+        } finally {
+          this.loading = false;
         }
       }
     }
@@ -280,6 +360,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       polygons = await this.api.dictionary.getRegions({
         polygon: true,
       });
+
       polygons.map((polygon) => {
         if (this.mapData?.map != null) {
           this.mapData.geoJson.options.snapIgnore = true;
@@ -303,11 +384,23 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   handleFilterFormReset(): void {
-    this.contourStatisticsProductivityTableItems = [];
+    this.getPastureStatisticsProductivity({
+      land_type: '2',
+      year: 2022,
+    });
+
+    this.getCultureStatisticsProductivity({
+      land_type: '1',
+      year: 2022,
+    });
+
+    this.wmsCQLFilter = null;
+    this.setWmsParams();
   }
 
   handleFilterFormSubmit(formValue: Record<string, any>) {
-    this.getContourStatisticsProductivity(formValue['value']);
+    this.getPastureStatisticsProductivity(formValue['value']);
+    this.getCultureStatisticsProductivity(formValue['value']);
   }
 
   async getVegSatelliteDates(
@@ -394,44 +487,82 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  async getContourStatisticsProductivity(
+  async getPastureStatisticsProductivity(
     query: IContourStatisticsProductivityQuery
-  ): Promise<IContourStatisticsProductivity | void> {
-    this.contourStatisticsProductivityTableItems = [];
+  ): Promise<void> {
+    this.contourPastureStatisticsProductivityTableItems = [];
+    if (!query.land_type.split(',').includes('2')) return;
+    if (this.isWmsAiActive) query.ai = this.isWmsAiActive;
+
     try {
       let res: IContourStatisticsProductivity;
       res = await this.api.statistics.getContourStatisticsProductivity({
         ...query,
-        ai: this.isWmsAiActive,
+        land_type: '2',
       });
-      this.contourStatisticsProductivityAreaTitle = res.type;
 
-      let tableItem = {
-        areaType: res?.name,
-        productive: `${this.decimalPipe.transform(res.Productive?.ha)} га`,
-        unproductive: `${this.decimalPipe.transform(res.Unproductive?.ha)} га`,
-      };
+      if (!res.type) {
+        this.contourPastureStatisticsProductivityTableItems = [];
+        return;
+      }
 
-      this.contourStatisticsProductivityTableItems.push([tableItem]);
+      this.contourPastureStatisticsProductivityTableItems.push([
+        {
+          areaType: res?.type,
+          areaName_en: res?.[`name_en`],
+          areaName_ky: res?.[`name_ky`],
+          areaName_ru: res?.[`name_ru`],
+          productive: `${res?.Productive?.ha} ${this.translate.transform(
+            'ha'
+          )}`,
+          unproductive: `${res?.Unproductive?.ha} ${this.translate.transform(
+            'ha'
+          )}`,
+        },
+      ]);
 
-      if (res.Children && res.Children.length !== 0) {
-        this.contourStatisticsProductivityTableItems.push(
-          res.Children?.map((elem) => {
-            let tableItem = {
-              areaType: elem.name,
-              productive: `${this.decimalPipe.transform(
-                elem.Productive.ha
-              )} га`,
-              unproductive: `${this.decimalPipe.transform(
-                elem.Unproductive.ha
-              )} га`,
-            };
-            return tableItem;
-          })
+      if (Array.isArray(res?.Children) && res?.Children?.length > 0) {
+        this.contourPastureStatisticsProductivityTableItems.push(
+          res?.Children.map((child) => ({
+            areaType: child?.type,
+            areaName_en: child?.[`name_en`],
+            areaName_ky: child?.[`name_ky`],
+            areaName_ru: child?.[`name_ru`],
+            productive: `${child?.Productive?.ha} ${this.translate.transform(
+              'ha'
+            )}`,
+            unproductive: `${
+              child?.Unproductive?.ha
+            } ${this.translate.transform('ha')}`,
+          }))
         );
       }
     } catch (e: any) {
-      console.log(e);
+      this.messages.error(e.message);
+    }
+  }
+
+  async getCultureStatisticsProductivity(
+    query: ICulutreStatisticsQuery
+  ): Promise<void> {
+    this.contourCultureStatisticsProductivityTableItems = [];
+    if (!query.land_type.split(',').includes('1')) return;
+    if (this.isWmsAiActive) query.ai = this.isWmsAiActive;
+
+    try {
+      const res = await this.api.statistics.getCultureStatistics({
+        ...query,
+        land_type: '1',
+      });
+
+      this.contourCultureStatisticsProductivityTableItems = res.map(
+        (element) => ({
+          ...element,
+          area_ha: `${element?.area_ha} ${this.translate.transform('ha')}`,
+        })
+      ) as unknown as ITableItem[];
+    } catch (e: any) {
+      this.messages.error(e.message);
     }
   }
 
@@ -460,68 +591,83 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnInit(): void {
-    this.getVegIndexList();
-    this.getRegionsPolygon();
-    this.store.watch.subscribe((v: IStore<ContourFiltersQuery | null>) => {
-      if (v.value != null && v.name === 'ContourFilterComponent') {
-        this.wmsCQLFilter = '';
-        if (v.value.region) {
-          if (this.wmsCQLFilter.length > 0) {
-            this.wmsCQLFilter += '&&';
-          }
-          this.wmsCQLFilter += 'rgn=' + v.value.region;
-        }
-        if (v.value.district) {
-          if (this.wmsCQLFilter.length > 0) {
-            this.wmsCQLFilter += '&&';
-          }
-          this.wmsCQLFilter += 'dst=' + v.value.district;
-        }
-        if (v.value.conton) {
-          if (this.wmsCQLFilter.length > 0) {
-            this.wmsCQLFilter += '&&';
-          }
-          this.wmsCQLFilter += 'cntn=' + v.value.conton;
-        }
-        if (v.value.culture) {
-          const val = v.value.culture;
-          if (this.wmsCQLFilter.length > 0) {
-            this.wmsCQLFilter += '&&';
-          }
-          if (typeof val === 'string' && val.split(',').length > 1) {
-            this.wmsCQLFilter += val
-              .split(',')
-              .reduce((acc, i) => (acc += 'clt=' + i + ' OR '), '')
-              .slice(0, -3)
-              .trim();
-          } else {
-            this.wmsCQLFilter += 'clt=' + v.value.culture;
-          }
-        }
-        if (v.value.land_type) {
-          const val = v.value.land_type;
-          if (this.wmsCQLFilter.length > 0) {
-            this.wmsCQLFilter += '&&';
-          }
-          if (typeof val === 'string' && val.split(',').length > 1) {
-            this.wmsCQLFilter += val
-              .split(',')
-              .reduce((acc, i) => (acc += 'ltype=' + i + ' OR '), '')
-              .slice(0, -3)
-              .trim();
-          } else {
-            this.wmsCQLFilter += 'ltype=' + v.value.land_type;
-          }
-        }
-        this.setWmsParams();
-      } else {
-        this.wmsCQLFilter = null;
-        this.setWmsParams();
-      }
+    this.getPastureStatisticsProductivity({
+      land_type: '2',
+      year: 2022,
     });
+
+    this.getCultureStatisticsProductivity({
+      land_type: '1',
+      year: 2022,
+    });
+
+    this.wmsSelectedStatusLayers = this.store.getItem(
+      'MapControlLayersSwitchComponent'
+    );
+    const data = this.store.getItem('MapControlLayersSwitchComponent');
+    this.wmsSelectedStatusLayers = data;
+    this.getVegIndexList();
+    this.store
+      .watchItem<ContourFiltersQuery | null>('ContourFilterComponent')
+      .subscribe((v) => {
+        if (v != null) {
+          this.wmsCQLFilter = '';
+          if (v.region) {
+            if (this.wmsCQLFilter.length > 0) {
+              this.wmsCQLFilter += '&&';
+            }
+            this.wmsCQLFilter += 'rgn=' + v.region;
+          }
+          if (v.district) {
+            if (this.wmsCQLFilter.length > 0) {
+              this.wmsCQLFilter += '&&';
+            }
+            this.wmsCQLFilter += 'dst=' + v.district;
+          }
+          if (v.conton) {
+            if (this.wmsCQLFilter.length > 0) {
+              this.wmsCQLFilter += '&&';
+            }
+            this.wmsCQLFilter += 'cntn=' + v.conton;
+          }
+          if (v.culture) {
+            const val = v.culture;
+            if (this.wmsCQLFilter.length > 0) {
+              this.wmsCQLFilter += '&&';
+            }
+            if (typeof val === 'string' && val.split(',').length > 1) {
+              this.wmsCQLFilter += val
+                .split(',')
+                .reduce((acc, i) => (acc += 'clt=' + i + ' OR '), '')
+                .slice(0, -3)
+                .trim();
+            } else {
+              this.wmsCQLFilter += 'clt=' + v.culture;
+            }
+          }
+          if (v.land_type) {
+            const val = v.land_type;
+            if (this.wmsCQLFilter.length > 0) {
+              this.wmsCQLFilter += '&&';
+            }
+            if (typeof val === 'string' && val.split(',').length > 1) {
+              this.wmsCQLFilter += val
+                .split(',')
+                .reduce((acc, i) => (acc += 'ltype=' + i + ' OR '), '')
+                .slice(0, -3)
+                .trim();
+            } else {
+              this.wmsCQLFilter += 'ltype=' + v.land_type;
+            }
+          }
+          this.setWmsParams();
+        }
+      });
   }
 
   ngAfterViewInit(): void {
+    this.getRegionsPolygon();
+
     const data = this.store.getItem('HomeComponent');
     if (data !== null) {
       const newBounds = latLngBounds(

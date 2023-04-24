@@ -1,0 +1,31 @@
+@import "constants";
+
+:host {
+  display: flex;
+  flex-direction: column;
+  padding: 40px;
+
+  .message-box {
+    display: flex;
+    border: 1px solid $warningColor;
+    align-items: center;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    padding: 10px;
+    gap: 20px;
+
+    p {
+      font-size: 18px;
+      line-height: 150%;
+    }
+  }
+
+  button {
+    align-self: flex-end;
+    padding: 12px 50px;
+  }
+}
+
+app-svg-icon {
+  color: $warningColor;
+}

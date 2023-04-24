@@ -10,6 +10,7 @@ export class UnitPipe implements PipeTransform {
     if (!value) {
       return '';
     }
+
     return `${value} ${label}`;
   }
 }

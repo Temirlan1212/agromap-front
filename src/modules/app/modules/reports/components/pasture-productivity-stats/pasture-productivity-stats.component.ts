@@ -6,7 +6,7 @@ import {
 } from '@angular/core';
 import { ApiService } from 'src/modules/api/api.service';
 import { LandTypeFormComponent } from '../report-form/report-form.component';
-import { MessagesService } from 'src/modules/ui/components/services/messages.service';
+import { MessagesService } from 'src/modules/ui/services/messages.service';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
@@ -54,7 +54,9 @@ export class PastureProductivityStatsComponent implements AfterViewInit {
       const res = await this.api.statistics.getContourStatisticsProductivity(
         params
       );
-      this.series = [...this.series, res.Productive.ha, res.Unproductive.ha];
+      if (res.Productive?.ha && res.Unproductive?.ha) {
+        this.series = [...this.series, res.Productive.ha, res.Unproductive.ha];
+      }
     } catch (error: any) {
       this.messages.error(this.translate.transform(error.message));
     }

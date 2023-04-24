@@ -8,20 +8,20 @@ import {
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ApiService } from 'src/modules/api/api.service';
 import { IRegion } from 'src/modules/api/models/region.model';
-import { MessagesService } from '../../../../../ui/components/services/messages.service';
+import { MessagesService } from '../../../../../ui/services/messages.service';
 import { IConton } from '../../../../../api/models/conton.model';
 import { IDistrict } from '../../../../../api/models/district.model';
 import { filter, Subscription } from 'rxjs';
 import { ILandType } from '../../../../../api/models/land-type.model';
 import { ContourFiltersQuery } from '../../../../../api/models/contour.model';
 import { GeoJSON, geoJSON, geoJson, latLng, latLngBounds, Map } from 'leaflet';
-import { MapService } from '../../map.service';
+import { MapService } from '../../../../../ui/services/map.service';
 import { MapData, MapLayerFeature } from '../../../../../ui/models/map.model';
 import { Feature } from 'geojson';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { QuestionDialogComponent } from '../../../../../ui/components/question-dialog/question-dialog.component';
-import { StoreService } from 'src/modules/api/store.service';
+import { StoreService } from 'src/modules/ui/services/store.service';
 import { ICulture } from '../../../../../api/models/culture.model';
 
 @Component({
@@ -43,8 +43,8 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
   selectedId: number | null = null;
   filtersQuery!: ContourFiltersQuery;
   radioOptions: any = [
-    { name: this.translate.transform('AI'), value: 'agromap_store_ai' },
-    { name: this.translate.transform('Base'), value: 'agromap_store' },
+    { name: 'AI', value: 'agromap_store_ai' },
+    { name: 'Base', value: 'agromap_store' },
   ];
   @Output() onCardClick = new EventEmitter<MapLayerFeature>();
   @Output() onEditClick = new EventEmitter<void>();
@@ -97,7 +97,6 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
         this.handleContonChange(value)
       ) as Subscription,
     this.mode?.valueChanges.pipe(filter((res) => !!res)).subscribe((value) => {
-      this.store.setItem('ContourFilterComponentMode', value);
       this.onModeChanged.emit(value);
     }) as Subscription,
     this.translateSvc.onLangChange.subscribe(
@@ -107,10 +106,10 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
       this.mapInstance = res?.map as Map;
       this.mapGeo = res?.geoJson as GeoJSON;
     }),
-    this.store.watch.subscribe((v) => {
-      if (v.name === 'ContourFilterComponentMode') {
-        this.mode?.patchValue(v.value, { emitEvent: false });
-      }
+    this.store.watchItem('MapControlLayersSwitchComponent').subscribe((v) => {
+      this.mode?.patchValue(v.filterControlLayerSwitch?.oldValue, {
+        emitEvent: false,
+      });
     }),
   ];
 
@@ -126,7 +125,10 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    if (this.store.getItem('ContourFilterComponentMode') == null) {
+    if (
+      this.store.getItem('MapControlLayersSwitchComponent')
+        ?.filterControlLayerSwitch.name == null
+    ) {
       this.mode?.patchValue('agromap_store_ai');
     }
     this.getRegions();
@@ -255,7 +257,7 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
     const contonVal = this.form.get('conton');
     if (value != null) {
       const district = (await this.api.dictionary.getDistricts({
-        ids: value,
+        id: value,
         polygon: true,
       })) as IDistrict[];
       this.mapInstance.fitBounds(geoJson(district[0]?.polygon).getBounds());
@@ -272,7 +274,7 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
   async handleContonChange(value: string | null) {
     if (value != null) {
       const res = (await this.api.dictionary.getContons({
-        ids: value,
+        id: value,
         polygon: true,
       })) as IConton[];
       this.mapInstance.fitBounds(geoJson(res[0]?.polygon).getBounds(), {

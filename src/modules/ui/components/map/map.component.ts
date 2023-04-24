@@ -21,14 +21,19 @@ import {
   LatLngBounds,
   latLng,
   latLngBounds,
-  map,
   tileLayer,
 } from 'leaflet';
 import { MapData, MapLayerFeature, MapMove } from '../../models/map.model';
 import '@geoman-io/leaflet-geoman-free';
-import { debounceTime, fromEvent, Subscription } from 'rxjs';
+import {
+  debounce,
+  debounceTime,
+  fromEvent,
+  interval,
+  Subscription,
+} from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
-import { MapService } from 'src/modules/app/modules/home/map.service';
+import { MapService } from 'src/modules/ui/services/map.service';
 
 @Component({
   selector: 'app-map',
@@ -98,7 +103,12 @@ export class MapComponent implements OnInit, OnDestroy {
 
   handleMapEventSubscription() {
     const s = fromEvent(this.map as Map, 'moveend')
-      .pipe(debounceTime(1000))
+      .pipe(
+        debounce((i) => {
+          this.geoJson.clearLayers();
+          return interval(1000);
+        })
+      )
       .subscribe(() => this.handleMapMove());
     this.subscriptions.push(s);
   }

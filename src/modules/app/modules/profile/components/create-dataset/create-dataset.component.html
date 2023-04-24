@@ -1,0 +1,16 @@
+<h2>{{ "Create a dataset" | translate }}</h2>
+
+<div class="message-box">
+  <app-svg-icon name="rounded-info" size="50px"> </app-svg-icon>
+  <p [textContent]="instruction?.['description_'+currentLang]"></p>
+</div>
+<button type="button" class="btn success" (click)="handleGenerate(dialog)">
+  {{ "Generate" | translate }}
+</button>
+
+<app-question-dialog
+  #dialog
+  [isWarning]="true"
+  (submitted)="handleDeleteSubmitted(dialog)"
+>
+</app-question-dialog>
