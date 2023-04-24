@@ -22,7 +22,7 @@ export type IDistrictWithPagination = {
 export interface IDistrictListQuery {
   polygon?: boolean;
   region_id?: number | boolean;
-  ids?: string;
+  id?: string;
   page_size?: number;
   next?: null;
   previous?: null;

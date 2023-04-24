@@ -14,6 +14,7 @@
     <div class="item" *ngIf="selectedItems && selectedItems.length > 0">
       <span [textContent]="selectedItems && selectedItems[0][nameField]"></span>
       <app-svg-icon
+        *ngIf="!isDisabled"
         name="clear"
         size="10"
         (click)="handleRemoveItem($event, selectedItems[0])"
