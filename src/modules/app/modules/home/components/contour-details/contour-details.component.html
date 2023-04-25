@@ -1,0 +1,80 @@
+<div
+  class="dark-info-dialog"
+  *ngIf="activeContour != null || activeContourSmall != null"
+>
+  <div
+    *ngIf="activeContour != null && activeContourSmall == null; else partial"
+  >
+    <h1
+      [ngClass]="activeContour?.culture?.name_en"
+      [textContent]="activeContour?.culture?.name_ru"
+    ></h1>
+    <div class="contour-info">
+      <div>
+        {{ "Area" | translate }}
+        <span>{{ activeContour.area_ha }} {{ "ha" | translate }}</span>
+      </div>
+      <div>
+        {{ "Region" | translate }}
+        <span
+          [textContent]="activeContour.region?.['name_' + currentLang]"
+        ></span>
+      </div>
+      <div>
+        {{ "District" | translate }}
+        <span
+          [textContent]="activeContour.district?.['name_' + currentLang]"
+        ></span>
+      </div>
+      <div>
+        {{ "Conton" | translate }}
+        <span
+          [textContent]="activeContour.conton?.['name_' + currentLang]"
+        ></span>
+      </div>
+      <div>
+        {{ "Land type" | translate }}
+        <span
+          [textContent]="activeContour.type?.['name_' + currentLang]"
+        ></span>
+      </div>
+      <div>
+        {{ "Productivity" | translate }}
+        <span
+          >{{ activeContour?.productivity }}
+          {{ "c. per ha." | translate }}</span
+        >
+      </div>
+      <div>
+        {{ "Elevation" | translate }}
+        <span
+          >{{ activeContour?.elevation }}
+          {{ "m. above sea level" | translate }}</span
+        >
+      </div>
+      <div>
+        {{ "AI determination error" | translate
+        }}<span>{{ activeContour.percent * 100 }} %</span>
+      </div>
+      <div>
+        {{ "Soil class" | translate }}
+        <span
+          >ID {{ activeContour.soil_class?.ID }} -
+          {{ activeContour.soil_class?.['name_' + currentLang] }}</span
+        >
+      </div>
+    </div>
+  </div>
+  <ng-template #partial>
+    <div class="contour-info-partial">
+      <h1
+        [ngClass]="activeContourSmall?.culture?.name_en"
+        [textContent]="activeContourSmall?.culture?.name_ru"
+      ></h1>
+      <div>
+        {{ "Area" | translate }}
+        <span>{{ activeContourSmall?.area_ha }} {{ "ha" | translate }}</span>
+      </div>
+    </div>
+  </ng-template>
+</div>

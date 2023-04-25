@@ -18,6 +18,9 @@
     (mapMove)="handleMapMove($event)"
     (featureClick)="handleFeatureClick($event)"
     (featureClose)="handleFeatureClose()"
+    (featureHover)="handleFeatureMouseOver($event)"
+    (featureUnhover)="handleFeatureMouseLeave($event)"
+    [featureTitle]="'Vegetative indexes' | translate"
   >
     <app-map-controls controls>
       <div rightPanel>
@@ -59,7 +62,7 @@
         ></app-map-control-veg-indexes>
 
         <app-map-control-statistics
-          *ngIf="!layerFeature"
+          *ngIf="!layerFeature && !activeContour && !activeContourSmall"
           [title]="'Roll up' | translate"
           storageName="isCollapsedMapControlTable"
         >
@@ -115,27 +118,17 @@
       </ng-container>
     </app-map-controls>
 
-    <app-content-tabs featureBody *ngIf="selectedContourId">
-      <app-tab [title]="'Contour details' | translate">
-        <app-contour-info
-          [contourId]="selectedContourId"
-          [isWmsAiActive]="isWmsAiActive"
-        >
-        </app-contour-info>
-      </app-tab>
-      <app-tab [title]="'Vegetative indexes' | translate">
-        <app-spline-area-chart
-          [chartData]="contourData"
-          *ngIf="layerFeature && contourData.length > 0; else noContourData"
-        >
-        </app-spline-area-chart>
-        <ng-template #noContourData>
-          <h3 class="no-data-text">
-            {{ "No data" | translate }}
-          </h3>
-        </ng-template>
-      </app-tab>
-    </app-content-tabs>
+    <app-spline-area-chart
+      featureBody
+      [chartData]="contourData"
+      *ngIf="layerFeature && contourData.length > 0; else noContourData"
+    >
+    </app-spline-area-chart>
+    <ng-template #noContourData>
+      <h3 class="no-data-text">
+        {{ "No data" | translate }}
+      </h3>
+    </ng-template>
 
     <button
       actions
@@ -158,6 +151,13 @@
   <app-split-map
     *ngIf="currentRouterPathname === '/home/split-map'"
   ></app-split-map>
+  <app-contour-details
+    #contourDetails
+    [mapData]="mapData"
+    [activeContour]="activeContour"
+    [activeContourSmall]="activeContourSmall"
+  >
+  </app-contour-details>
 </div>
 
 <app-question-dialog

@@ -39,6 +39,7 @@ import {
   ICulutreStatisticsQuery,
 } from 'src/modules/api/models/statistics.model';
 import { ITableItem } from 'src/modules/ui/models/table.model';
+import { ContourDetailsComponent } from './components/contour-details/contour-details.component';
 
 @Component({
   selector: 'app-home',
@@ -48,6 +49,7 @@ import { ITableItem } from 'src/modules/ui/models/table.model';
 export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('featurePopup') featurePopup!: ElementRef<HTMLElement>;
   @ViewChild('map') mapComponent!: MapComponent;
+  @ViewChild('contourDetails') contourDetails!: ContourDetailsComponent;
   mode!: string;
   baseLayers: ITileLayer[] = [
     {
@@ -75,6 +77,13 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       title: 'Open Street Map',
       name: 'Open Street Map',
       layer: tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png'),
+    },
+    {
+      title: this.translate.transform('Dark Map'),
+      name: 'Dark Map',
+      layer: tileLayer(
+        'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
+      ),
     },
   ];
 
@@ -137,13 +146,14 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   currentLang: string = this.translateSvc.currentLang;
   currentRouterPathname: string = '';
   isWmsAiActive: boolean = false;
-  culture: any = null;
   productivity: string | null = null;
   contourPastureStatisticsProductivityTableItems: ITableItem[][] = [];
   contourCultureStatisticsProductivityTableItems: ITableItem[] = [];
   wmsSelectedStatusLayers: Record<string, string> | null = null;
   selectedContourId!: number;
   loading: boolean = false;
+  activeContour!: any;
+  activeContourSmall: any;
 
   constructor(
     private api: ApiService,
@@ -213,14 +223,35 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     this.mapService.map.next(mapData);
   }
 
-  handleFeatureClick(layerFeature: MapLayerFeature): void {
+  async handleFeatureMouseOver(layerFeature: MapLayerFeature) {
+    const l = layerFeature.layer as any;
+    l.setStyle({
+      color: '#fff',
+      weight: 3,
+    });
+    this.activeContourSmall = {
+      culture: layerFeature?.feature?.properties?.['culture'],
+      area_ha: layerFeature?.feature?.properties?.['area_ha'],
+    };
+  }
+
+  handleFeatureMouseLeave(layerFeature: MapLayerFeature) {
+    const l = layerFeature.layer as any;
+    l.setStyle({
+      color: 'rgba(51,136,255,0.5)',
+      weight: 1,
+    });
+    this.activeContourSmall = null;
+  }
+
+  async handleFeatureClick(layerFeature: MapLayerFeature): Promise<void> {
+    this.contourDetails.createOverlay();
     if (this.layerFeature) {
       this.selectedLayer.remove();
     }
     const cid =
       layerFeature?.feature?.properties?.['contour_id'] ??
       layerFeature?.feature?.properties?.['id'];
-    this.getOneCulture(Number(cid));
     this.selectedContourId = Number(cid);
     this.productivity = layerFeature?.feature?.properties?.['productivity'];
     this.getContourData(cid);
@@ -232,6 +263,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
         weight: 5,
         color: '#f6ab39',
       });
+    await this.getContour(Number(cid));
 
     this.getVegSatelliteDates(cid);
     this.store.setItem<Feature>('selectedLayerFeature', layerFeature.feature);
@@ -242,6 +274,20 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     this.store.removeItem('selectedLayerFeature');
     if (this.selectedLayer) {
       this.selectedLayer.remove();
+    }
+    this.activeContour = null;
+    this.contourDetails.ngOnDestroy();
+  }
+
+  async getContour(id: number): Promise<void> {
+    try {
+      if (this.isWmsAiActive) {
+        this.activeContour = await this.api.aiContour.getOne(id);
+      } else {
+        this.activeContour = await this.api.contour.getOne(id);
+      }
+    } catch (e) {
+      console.log(e);
     }
   }
 
@@ -304,6 +350,8 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
         } finally {
           this.loading = false;
         }
+      } else {
+        this.activeContourSmall = null;
       }
     }
   }
@@ -325,14 +373,6 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
         }
       });
     } catch (e: any) {
-      console.log(e);
-    }
-  }
-
-  async getOneCulture(id: number) {
-    try {
-      this.culture = await this.api.culture.getOne(id);
-    } catch (e) {
       console.log(e);
     }
   }
