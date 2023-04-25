@@ -26,6 +26,13 @@ const routes: Routes = [
       import('./modules/home/home.module').then((m) => m.HomeModule),
   },
   {
+    title: 'Home',
+    path: 'home',
+    data: { icon: 'home', class: 'homepage-mobile' },
+    loadChildren: () =>
+      import('./modules/home/home.module').then((m) => m.HomeModule),
+  },
+  {
     title: 'Reports',
     path: 'reports',
     data: { position: 'top', icon: 'reports', authenticated: true },

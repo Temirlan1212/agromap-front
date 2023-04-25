@@ -1,3 +1,38 @@
+<div class="mobile-menu">
+  <nav>
+    <a
+      *ngFor="let r of mobileRoutes"
+      [routerLink]="r.path"
+      routerLinkActive="active"
+    >
+      <app-svg-icon
+        class="icon"
+        size="24px"
+        [name]="r.data?.['icon']"
+        *ngIf="r.data?.['icon'] != null"
+      ></app-svg-icon>
+      <span [textContent]="r.title | translate"></span>
+    </a>
+    <a class="language-switcher" (click)="handleLangClick($event)">
+      <app-svg-icon class="icon" size="24px" name="lang"></app-svg-icon>
+      <span [textContent]="'Language' | translate"></span>
+      <div class="languages" [class.languages-opened]="langsOpened">
+        <span
+          *ngFor="let lang of allLangs"
+          (click)="handleLangChange($event, lang.code)"
+        >
+          {{ lang.name | translate }}
+          <app-svg-icon
+            *ngIf="currentLang === lang.code"
+            size="14px"
+            name="check"
+          ></app-svg-icon>
+        </span>
+      </div>
+    </a>
+  </nav>
+</div>
+
 <ng-template #navItem let-path="path" let-title="title" let-data="data">
   <a routerLinkActive="active" [routerLink]="path" [ngClass]="data.class">
     <app-svg-icon
