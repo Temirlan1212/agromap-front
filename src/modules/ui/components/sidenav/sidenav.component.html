@@ -1,18 +1,16 @@
+<ng-template #navMobItem let-path="path" let-title="title" let-data="data">
+  <a routerLinkActive="active" [routerLink]="path" [ngClass]="data.class">
+    <app-svg-icon class="icon" size="24px" [name]="data.icon"></app-svg-icon>
+    <span class="title" [textContent]="title | translate"></span>
+  </a>
+</ng-template>
 <div class="mobile-menu">
   <nav>
-    <a
-      *ngFor="let r of mobileRoutes"
-      [routerLink]="r.path"
-      routerLinkActive="active"
-    >
-      <app-svg-icon
-        class="icon"
-        size="24px"
-        [name]="r.data?.['icon']"
-        *ngIf="r.data?.['icon'] != null"
-      ></app-svg-icon>
-      <span [textContent]="r.title | translate"></span>
-    </a>
+    <ng-container
+      *ngFor="let route of mobileRoutes"
+      [ngTemplateOutlet]="navMobItem"
+      [ngTemplateOutletContext]="route"
+    ></ng-container>
     <a class="language-switcher" (click)="handleLangClick($event)">
       <app-svg-icon class="icon" size="24px" name="lang"></app-svg-icon>
       <span [textContent]="'Language' | translate"></span>

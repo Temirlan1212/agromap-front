@@ -39,7 +39,7 @@ export class SidenavComponent implements OnChanges {
   langsOpened: boolean = false;
   currentLang: ELanguageCode = ELanguageCode.ru;
   allLangs: ILanguage[] = [];
-  mobileRoutes: any = [];
+  mobileRoutes: Routes = [];
 
   constructor(
     private translate: TranslateService,
