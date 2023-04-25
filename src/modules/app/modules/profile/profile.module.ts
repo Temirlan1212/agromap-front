@@ -14,6 +14,7 @@ import { CreateDatasetComponent } from './components/create-dataset/create-datas
 import { QuestionDialogComponent } from '../../../ui/components/question-dialog/question-dialog.component';
 import { SvgIconComponent } from '../../../ui/components/svg-icon/svg-icon.component';
 import { IsSuperAdminGuard } from '../../is-super-admin.guard';
+import { LoadingComponent } from 'src/modules/ui/components/loading/loading.component';
 
 @NgModule({
   declarations: [
@@ -33,6 +34,7 @@ import { IsSuperAdminGuard } from '../../is-super-admin.guard';
     FormFieldComponent,
     QuestionDialogComponent,
     SvgIconComponent,
+    LoadingComponent,
   ],
   providers: [TranslatePipe, IsSuperAdminGuard],
 })

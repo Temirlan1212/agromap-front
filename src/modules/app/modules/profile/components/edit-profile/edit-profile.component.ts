@@ -10,6 +10,7 @@ import { TranslatePipe } from '@ngx-translate/core';
   styleUrls: ['./edit-profile.component.scss'],
 })
 export class EditProfileComponent implements OnInit {
+  loading: boolean = false;
   form: FormGroup = new FormGroup({
     full_name: new FormControl<string | null>(null, [Validators.required]),
     phone_number: new FormControl<string | null>(null, Validators.required),
@@ -43,6 +44,8 @@ export class EditProfileComponent implements OnInit {
   }
 
   async handleSaveClick() {
+    this.loading = true;
+
     const formState = this.getState();
     if (!formState.valid) {
       this.messages.error(this.translate.transform('Form is invalid'));
@@ -54,13 +57,15 @@ export class EditProfileComponent implements OnInit {
     } catch (e: any) {
       this.messages.error(e.message);
     }
+
+    this.loading = false;
   }
 
   inputOnKeydown(event: KeyboardEvent) {
     const { type } = event.target as HTMLInputElement;
     const pattern = type === 'text' ? /^[a-zA-Z]*$/ : /^[0-9]*$/;
 
-    if (!pattern.test(event.key)) {
+    if (event.key !== 'Backspace' && !pattern.test(event.key)) {
       event.preventDefault();
     }
   }
