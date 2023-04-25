@@ -44,8 +44,10 @@ export class ContourDetailsComponent implements OnDestroy {
   }
 
   ngOnDestroy() {
-    this.rgbaOverlay.remove();
-    this.mapData?.map.removeLayer(this.overlayPane);
+    this.rgbaOverlay?.remove();
+    if (this.overlayPane) {
+      this.mapData?.map?.removeLayer(this.overlayPane);
+    }
     this.hasOverlay = false;
     this.sub.unsubscribe();
   }
