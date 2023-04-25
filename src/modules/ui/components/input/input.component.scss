@@ -21,6 +21,9 @@ $spaceFromTop: 35%;
     top: $spaceFromTop;
     right: 16px;
     cursor: pointer;
+    &.disabled {
+      display: none;
+    }
   }
 
   .left {

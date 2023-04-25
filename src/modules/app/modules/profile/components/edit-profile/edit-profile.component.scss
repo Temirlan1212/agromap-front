@@ -5,4 +5,13 @@
   .actions {
     align-self: flex-end;
   }
+  .phone_number {
+    display: flex;
+    justify-content: space-between;
+    gap: 0 10px;
+
+    [name="phone_number"] {
+      width: 100%;
+    }
+  }
 }

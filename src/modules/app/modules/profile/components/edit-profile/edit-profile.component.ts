@@ -11,7 +11,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 })
 export class EditProfileComponent implements OnInit {
   form: FormGroup = new FormGroup({
-    full_name: new FormControl<string | null>(null, Validators.required),
+    full_name: new FormControl<string | null>(null, [Validators.required]),
     phone_number: new FormControl<string | null>(null, Validators.required),
   });
 
@@ -53,6 +53,15 @@ export class EditProfileComponent implements OnInit {
       await this.getUser();
     } catch (e: any) {
       this.messages.error(e.message);
+    }
+  }
+
+  inputOnKeydown(event: KeyboardEvent) {
+    const { type } = event.target as HTMLInputElement;
+    const pattern = type === 'text' ? /^[a-zA-Z]*$/ : /^[0-9]*$/;
+
+    if (!pattern.test(event.key)) {
+      event.preventDefault();
     }
   }
 }

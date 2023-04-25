@@ -7,19 +7,30 @@
         [placeholder]="'Fullname' | translate"
         formControlName="full_name"
         [required]="full_name.required"
+        (keydown)="inputOnKeydown($event)"
       >
       </app-input>
     </app-form-field>
 
-    <app-form-field name="phone_number" #phone_number>
+    <div class="phone_number">
       <app-input
         type="text"
-        [placeholder]="'Phone number' | translate"
-        formControlName="phone_number"
-        [required]="phone_number.required"
-      >
-      </app-input>
-    </app-form-field>
+        [placeholder]="''"
+        [value]="'+996'"
+        [disabled]="true"
+      ></app-input>
+
+      <app-form-field name="phone_number" #phone_number>
+        <app-input
+          type="tel"
+          (keydown)="inputOnKeydown($event)"
+          [placeholder]="'Phone number' | translate"
+          formControlName="phone_number"
+          [required]="phone_number.required"
+        >
+        </app-input>
+      </app-form-field>
+    </div>
 
     <div class="actions">
       <button type="button" class="success" (click)="handleSaveClick()">
