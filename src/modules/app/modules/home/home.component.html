@@ -156,6 +156,7 @@
     [mapData]="mapData"
     [activeContour]="activeContour"
     [activeContourSmall]="activeContourSmall"
+    (onCancelClick)="map.handleFeatureClose()"
   >
   </app-contour-details>
 </div>

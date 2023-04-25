@@ -5,10 +5,17 @@
   <div
     *ngIf="activeContour != null && activeContourSmall == null; else partial"
   >
-    <h1
-      [ngClass]="activeContour?.culture?.name_en"
-      [textContent]="activeContour?.culture?.name_ru"
-    ></h1>
+    <div class="header">
+      <h1
+        [ngClass]="activeContour?.culture?.name_en"
+        [textContent]="activeContour?.culture?.name_ru"
+      ></h1>
+      <app-svg-icon
+        name="clear"
+        size="16"
+        (click)="onCancelClick.emit()"
+      ></app-svg-icon>
+    </div>
     <div class="contour-info">
       <div>
         {{ "Area" | translate }}
