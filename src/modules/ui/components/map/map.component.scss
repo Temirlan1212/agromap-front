@@ -80,8 +80,16 @@ $transitionDelay: 0.2s;
 }
 
 @media only screen and (max-width: 576px) {
-  .header {
-    margin-bottom: 20%;
+  :host {
+    border-top-right-radius: 20px;
+    border-top-left-radius: 20px;
+  }
+
+  .feature-content {
+    z-index: 1000;
+    margin-bottom: 15%;
+    border-top-right-radius: 20px;
+    border-top-left-radius: 20px;
   }
 
   .actions-block {
