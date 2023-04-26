@@ -1,17 +1,19 @@
-<app-side-panel>
+<app-side-panel #sidePanel>
   <div class="profile-options">
     <div>
       <h4>{{ "Profile" | translate }}</h4>
       <nav>
-        <a routerLink="edit" routerLinkActive="active">{{
+        <a (click)="handleLinkClick('edit')" routerLinkActive="active">{{
           "Edit profile" | translate
         }}</a>
-        <a routerLink="reset-password" routerLinkActive="active">{{
-          "Reset password" | translate
-        }}</a>
+        <a
+          (click)="handleLinkClick('reset-password')"
+          routerLinkActive="active"
+          >{{ "Reset password" | translate }}</a
+        >
         <a
           *ngIf="currentUser?.is_superuser"
-          routerLink="create-dataset"
+          (click)="handleLinkClick('create-dataset')"
           routerLinkActive="active"
           >{{ "Create a dataset" | translate }}</a
         >
@@ -25,3 +27,8 @@
 <div class="content">
   <router-outlet></router-outlet>
 </div>
+<app-toggle-button
+  #toggleBtn
+  iconName="hamburger"
+  (onClick)="sidePanel.handlePanelToggle()"
+></app-toggle-button>

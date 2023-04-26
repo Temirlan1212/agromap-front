@@ -1,20 +1,20 @@
-<app-side-panel>
+<app-side-panel #sidePanel>
   <div class="dictionary-list">
     <h4>{{ "Dictionary" | translate }}</h4>
     <nav>
-      <a routerLink="regions" routerLinkActive="active">{{
+      <a (click)="handleLinkClick('regions')" routerLinkActive="active">{{
         "Regions" | translate
       }}</a>
-      <a routerLink="districts" routerLinkActive="active">{{
+      <a (click)="handleLinkClick('districts')" routerLinkActive="active">{{
         "Districts" | translate
       }}</a>
-      <a routerLink="contons" routerLinkActive="active">{{
+      <a (click)="handleLinkClick('contons')" routerLinkActive="active">{{
         "Contons" | translate
       }}</a>
-      <a routerLink="cultures" routerLinkActive="active">{{
+      <a (click)="handleLinkClick('cultures')" routerLinkActive="active">{{
         "Cultures" | translate
       }}</a>
-      <a routerLink="indexes" routerLinkActive="active">{{
+      <a (click)="handleLinkClick('indexes')" routerLinkActive="active">{{
         "Indexes" | translate
       }}</a>
     </nav>
@@ -23,3 +23,8 @@
 <div class="content">
   <router-outlet></router-outlet>
 </div>
+<app-toggle-button
+  #toggleBtn
+  iconName="hamburger"
+  (onClick)="sidePanel.handlePanelToggle()"
+></app-toggle-button>
