@@ -127,7 +127,7 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     if (
       this.store.getItem('MapControlLayersSwitchComponent')
-        ?.filterControlLayerSwitch.name == null
+        ?.filterControlLayerSwitch?.name == null
     ) {
       this.mode?.patchValue('agromap_store_ai');
     }
