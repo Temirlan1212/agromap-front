@@ -40,8 +40,9 @@
           [textContent]="item[column] | checkExist | translate"
         ></td>
       </ng-template>
-      <td class="actions" *ngIf="actions">
+      <td class="actions" *ngIf="actions || actionEdit || actionDelete">
         <button
+          *ngIf="actions || actionEdit"
           type="button"
           class="transparent"
           (click)="handleActionClick('edit', item)"
@@ -53,6 +54,7 @@
           ></app-svg-icon>
         </button>
         <button
+          *ngIf="actions || actionDelete"
           type="button"
           class="transparent"
           (click)="handleActionClick('delete', item)"

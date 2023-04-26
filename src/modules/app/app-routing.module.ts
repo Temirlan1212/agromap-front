@@ -35,20 +35,25 @@ const routes: Routes = [
   {
     title: 'Reports',
     path: 'reports',
-    data: { position: 'top', icon: 'reports', authenticated: true },
-    canActivate: [AuthGuard],
+    data: { position: 'top', icon: 'reports' },
     loadChildren: () =>
       import('./modules/reports/reports.module').then((m) => m.ReportsModule),
   },
   {
     title: 'Dictionary',
     path: 'dictionary',
-    data: { position: 'top', icon: 'dictionary', authenticated: true },
-    canActivate: [AuthGuard],
+    data: { position: 'top', icon: 'dictionary' },
     loadChildren: () =>
       import('./modules/dictionary/dictionary.module').then(
         (m) => m.DictionaryModule
       ),
+  },
+  {
+    title: 'About system',
+    path: 'about',
+    data: { position: 'top', icon: 'info' },
+    loadChildren: () =>
+      import('./modules/about/about.module').then((m) => m.AboutModule),
   },
   {
     title: 'Profile',
