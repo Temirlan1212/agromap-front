@@ -7,8 +7,8 @@
   >
     <div class="header">
       <h1
-        [ngClass]="activeContour?.culture?.name_en"
-        [textContent]="activeContour?.culture?.name_ru"
+        [ngClass]="activeContour?.culture?.['name_'+currentLang]"
+        [textContent]="activeContour?.culture?.['name_'+currentLang]"
       ></h1>
       <app-svg-icon
         name="clear"
@@ -75,8 +75,8 @@
   <ng-template #partial>
     <div class="contour-info-partial">
       <h1
-        [ngClass]="activeContourSmall?.culture?.name_en"
-        [textContent]="activeContourSmall?.culture?.name_ru"
+        [ngClass]="activeContourSmall?.culture?.['name_'+currentLang]"
+        [textContent]="activeContourSmall?.culture?.['name_'+currentLang]"
       ></h1>
       <div>
         {{ "Area" | translate }}

@@ -22,6 +22,7 @@ import {
   latLng,
   latLngBounds,
   tileLayer,
+  Browser,
 } from 'leaflet';
 import { MapData, MapLayerFeature, MapMove } from '../../models/map.model';
 import '@geoman-io/leaflet-geoman-free';
@@ -134,6 +135,7 @@ export class MapComponent implements OnInit, OnDestroy {
   }
 
   handleFeatureHover(layer: Layer, feature: Feature) {
+    console.log(Browser.touch);
     this.featureHover.emit({ layer, feature });
   }
 
