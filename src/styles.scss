@@ -1,5 +1,5 @@
 @import "constants";
-@import '../node_modules/@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.css';
+@import "../node_modules/@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.css";
 
 *,
 *::before,
@@ -211,6 +211,12 @@ hr {
 
 .leaflet-interactive:hover {
   fill: $primaryColor;
+}
+
+.leaflet-top,
+.leaflet-bottom {
+  margin-top: 10%;
+  z-index: 400;
 }
 
 /*
