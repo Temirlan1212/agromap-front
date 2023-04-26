@@ -49,6 +49,13 @@ const routes: Routes = [
       ),
   },
   {
+    title: 'About system',
+    path: 'about',
+    data: { position: 'top', icon: 'info' },
+    loadChildren: () =>
+      import('./modules/about/about.module').then((m) => m.AboutModule),
+  },
+  {
     title: 'Profile',
     path: 'profile',
     data: { position: 'bottom', icon: 'user' },
