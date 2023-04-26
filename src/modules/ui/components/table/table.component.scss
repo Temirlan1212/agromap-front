@@ -87,16 +87,20 @@ table {
     thead {
       background-color: $darkColor;
     }
+
     tbody {
       background-color: transparent;
       color: $lightColor;
     }
+
     tr {
       border-bottom: none !important;
+
       &:hover {
         background-color: transparent !important;
       }
     }
+
     th {
       color: $lightColor;
     }
@@ -104,6 +108,9 @@ table {
 }
 
 @media (max-width: 992px) {
+  table {
+    margin-bottom: $mobileBottomNavHeight;
+  }
   table thead {
     display: none;
   }
@@ -125,6 +132,11 @@ table {
     padding-left: 50%;
     text-align: left;
     position: relative;
+
+    &.actions {
+      justify-content: flex-start;
+      visibility: visible;
+    }
   }
   table td::before {
     content: attr(data-label);

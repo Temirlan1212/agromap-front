@@ -6,3 +6,9 @@
     align-self: flex-end;
   }
 }
+
+@media only screen and (max-width: 992px) {
+  :host {
+    padding: 20px;
+  }
+}

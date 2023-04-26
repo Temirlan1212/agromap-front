@@ -30,3 +30,18 @@
     }
   }
 }
+
+@media only screen and (max-width: 992px) {
+  :host {
+    position: fixed;
+    padding: 20px 20px 0 20px;
+    margin-bottom: $mobileBottomNavHeight;
+  }
+  .actions {
+    justify-content: center !important;
+
+    button {
+      width: 100% !important;
+    }
+  }
+}
