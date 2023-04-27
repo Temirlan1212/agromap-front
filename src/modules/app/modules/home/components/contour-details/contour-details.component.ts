@@ -1,4 +1,10 @@
-import { Component, Input, OnDestroy } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  Output,
+} from '@angular/core';
 import { MapData } from '../../../../../ui/models/map.model';
 import { tileLayer } from 'leaflet';
 import { TranslateService } from '@ngx-translate/core';
@@ -13,6 +19,7 @@ export class ContourDetailsComponent implements OnDestroy {
   @Input() mapData!: MapData | null;
   @Input() activeContour: any;
   @Input() activeContourSmall: any;
+  @Output() onCancelClick = new EventEmitter<void>();
   hasOverlay: boolean = false;
   overlayPane: any;
   rgbaOverlay: any;
@@ -44,8 +51,10 @@ export class ContourDetailsComponent implements OnDestroy {
   }
 
   ngOnDestroy() {
-    this.rgbaOverlay.remove();
-    this.mapData?.map.removeLayer(this.overlayPane);
+    this.rgbaOverlay?.remove();
+    if (this.overlayPane) {
+      this.mapData?.map?.removeLayer(this.overlayPane);
+    }
     this.hasOverlay = false;
     this.sub.unsubscribe();
   }

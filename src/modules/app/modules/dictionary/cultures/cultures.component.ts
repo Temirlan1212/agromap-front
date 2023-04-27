@@ -6,6 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MessagesService } from '../../../../ui/components/services/messages.service';
 import { StoreService } from '../../../../ui/services/store.service';
 import { ITableAction } from 'src/modules/ui/models/table.model';
+import { IUser } from 'src/modules/api/models/user.model';
 
 @Component({
   selector: 'app-cultures',
@@ -15,6 +16,7 @@ import { ITableAction } from 'src/modules/ui/models/table.model';
 export class CulturesComponent implements OnInit, OnDestroy {
   loading: boolean = false;
   list: any[] = [];
+  user: IUser | null = this.api.user.getLoggedInUser();
   currentLang: string = this.translateSvc.currentLang;
   selectedId: number | null = null;
   subscriptions: Subscription[] = [

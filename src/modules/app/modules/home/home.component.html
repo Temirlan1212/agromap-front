@@ -1,4 +1,4 @@
-<app-side-panel>
+<app-side-panel #sidePanel>
   <app-contour-filter
     (onCardClick)="map.handleFeatureClick($event.layer, $event.feature)"
     (onEditClick)="map.handleFeatureClose()"
@@ -156,6 +156,7 @@
     [mapData]="mapData"
     [activeContour]="activeContour"
     [activeContourSmall]="activeContourSmall"
+    (onCancelClick)="map.handleFeatureClose()"
   >
   </app-contour-details>
 </div>
@@ -168,3 +169,15 @@
 >
   {{ "Contour will be deleted, continue?" | translate }}
 </app-question-dialog>
+<app-toggle-button
+  #toggleBtn
+  (onClick)="sidePanel.handlePanelToggle()"
+  *ngIf="activeContour == null || currentRouterPathname === '/home/split-map'"
+  [iconName]="
+    currentRouterPathname === '/home/contour-add'
+      ? 'contour-path'
+      : currentRouterPathname === '/home/split-map'
+      ? 'hamburger'
+      : 'filter'
+  "
+></app-toggle-button>

@@ -10,3 +10,9 @@ $indent: 30px;
   flex-direction: column;
   gap: $indent;
 }
+
+@media only screen and (max-width: 992px) {
+  :host {
+    padding: 10px;
+  }
+}

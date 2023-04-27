@@ -15,6 +15,7 @@ import { QuestionDialogComponent } from '../../../ui/components/question-dialog/
 import { SvgIconComponent } from '../../../ui/components/svg-icon/svg-icon.component';
 import { IsSuperAdminGuard } from '../../is-super-admin.guard';
 import { LoadingComponent } from 'src/modules/ui/components/loading/loading.component';
+import { ToggleButtonComponent } from '../../../ui/components/toggle-button/toggle-button.component';
 
 @NgModule({
   declarations: [
@@ -35,6 +36,7 @@ import { LoadingComponent } from 'src/modules/ui/components/loading/loading.comp
     QuestionDialogComponent,
     SvgIconComponent,
     LoadingComponent,
+    ToggleButtonComponent,
   ],
   providers: [TranslatePipe, IsSuperAdminGuard],
 })

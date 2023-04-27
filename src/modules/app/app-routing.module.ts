@@ -26,22 +26,34 @@ const routes: Routes = [
       import('./modules/home/home.module').then((m) => m.HomeModule),
   },
   {
+    title: 'Home',
+    path: 'home',
+    data: { icon: 'home', class: 'homepage-mobile' },
+    loadChildren: () =>
+      import('./modules/home/home.module').then((m) => m.HomeModule),
+  },
+  {
     title: 'Reports',
     path: 'reports',
-    data: { position: 'top', icon: 'reports', authenticated: true },
-    canActivate: [AuthGuard],
+    data: { position: 'top', icon: 'reports' },
     loadChildren: () =>
       import('./modules/reports/reports.module').then((m) => m.ReportsModule),
   },
   {
     title: 'Dictionary',
     path: 'dictionary',
-    data: { position: 'top', icon: 'dictionary', authenticated: true },
-    canActivate: [AuthGuard],
+    data: { position: 'top', icon: 'dictionary' },
     loadChildren: () =>
       import('./modules/dictionary/dictionary.module').then(
         (m) => m.DictionaryModule
       ),
+  },
+  {
+    title: 'About system',
+    path: 'about',
+    data: { position: 'top', icon: 'info' },
+    loadChildren: () =>
+      import('./modules/about/about.module').then((m) => m.AboutModule),
   },
   {
     title: 'Profile',

@@ -29,3 +29,9 @@
 app-svg-icon {
   color: $warningColor;
 }
+
+@media only screen and (max-width: 992px) {
+  :host {
+    padding: 20px;
+  }
+}
