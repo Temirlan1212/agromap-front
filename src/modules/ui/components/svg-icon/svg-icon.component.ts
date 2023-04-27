@@ -1,10 +1,16 @@
-import { Component, ElementRef, Input, KeyValueDiffer, KeyValueDiffers } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  Input,
+  KeyValueDiffer,
+  KeyValueDiffers,
+} from '@angular/core';
 
 @Component({
   selector: 'app-svg-icon',
   templateUrl: './svg-icon.component.html',
   styleUrls: ['./svg-icon.component.scss'],
-  standalone: true
+  standalone: true,
 })
 export class SvgIconComponent {
   @Input() name: string = '';
@@ -14,7 +20,7 @@ export class SvgIconComponent {
 
   constructor(
     private elementRef: ElementRef,
-    private differs: KeyValueDiffers,
+    private differs: KeyValueDiffers
   ) {
     this.setElementSizes();
     this.differ = this.differs.find({ size: this.size }).create();
@@ -31,5 +37,4 @@ export class SvgIconComponent {
     this.elementRef.nativeElement.style.width = this.size;
     this.elementRef.nativeElement.style.height = this.size;
   }
-
 }
