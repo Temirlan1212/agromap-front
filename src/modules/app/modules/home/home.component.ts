@@ -85,8 +85,8 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       layer: tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png'),
     },
     {
-      title: this.translate.transform('Dark Map'),
-      name: 'Dark Map',
+      title: this.translate.transform('Base Map'),
+      name: 'Base Map',
       layer: tileLayer(
         'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
       ),
@@ -669,7 +669,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.mapControls.handleBaseLayerChange('Dark Map');
+    this.mapControls.handleBaseLayerChange('Base Map');
 
     this.getRegionsPolygon();
 
