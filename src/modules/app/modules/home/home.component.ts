@@ -40,6 +40,8 @@ import {
 } from 'src/modules/api/models/statistics.model';
 import { ITableItem } from 'src/modules/ui/models/table.model';
 import { ContourDetailsComponent } from './components/contour-details/contour-details.component';
+import { SidePanelComponent } from '../../../ui/components/side-panel/side-panel.component';
+import { ToggleButtonComponent } from '../../../ui/components/toggle-button/toggle-button.component';
 
 @Component({
   selector: 'app-home',
@@ -50,6 +52,8 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('featurePopup') featurePopup!: ElementRef<HTMLElement>;
   @ViewChild('map') mapComponent!: MapComponent;
   @ViewChild('contourDetails') contourDetails!: ContourDetailsComponent;
+  @ViewChild('sidePanel') sidePanel!: SidePanelComponent;
+  @ViewChild('toggleBtn') toggleBtn!: ToggleButtonComponent;
   mode!: string;
   baseLayers: ITileLayer[] = [
     {
@@ -395,6 +399,8 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   handleFilterFormSubmit(formValue: Record<string, any>) {
     this.getPastureStatisticsProductivity(formValue['value']);
     this.getCultureStatisticsProductivity(formValue['value']);
+    this.sidePanel.handlePanelToggle();
+    this.toggleBtn.isContentToggled = false;
   }
 
   async getVegSatelliteDates(

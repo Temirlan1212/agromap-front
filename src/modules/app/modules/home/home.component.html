@@ -1,4 +1,4 @@
-<app-side-panel>
+<app-side-panel #sidePanel>
   <app-contour-filter
     (onCardClick)="map.handleFeatureClick($event.layer, $event.feature)"
     (onEditClick)="map.handleFeatureClose()"
@@ -168,3 +168,8 @@
 >
   {{ "Contour will be deleted, continue?" | translate }}
 </app-question-dialog>
+<app-toggle-button
+  #toggleBtn
+  (onClick)="sidePanel.handlePanelToggle()"
+  iconName="filter"
+></app-toggle-button>

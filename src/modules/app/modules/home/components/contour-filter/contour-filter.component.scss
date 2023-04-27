@@ -58,3 +58,15 @@ h5 {
   text-align: center;
   width: 100%;
 }
+
+@media only screen and (max-width: 992px) {
+  :host {
+    width: 100%;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+}
