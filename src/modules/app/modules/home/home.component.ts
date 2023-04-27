@@ -42,6 +42,7 @@ import { ITableItem } from 'src/modules/ui/models/table.model';
 import { ContourDetailsComponent } from './components/contour-details/contour-details.component';
 import { SidePanelComponent } from '../../../ui/components/side-panel/side-panel.component';
 import { ToggleButtonComponent } from '../../../ui/components/toggle-button/toggle-button.component';
+import { MapControlLayersSwitchComponent } from '../../../ui/components/map-control-layers-switch/map-control-layers-switch.component';
 
 @Component({
   selector: 'app-home',
@@ -52,6 +53,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('featurePopup') featurePopup!: ElementRef<HTMLElement>;
   @ViewChild('map') mapComponent!: MapComponent;
   @ViewChild('contourDetails') contourDetails!: ContourDetailsComponent;
+  @ViewChild('mapControls') mapControls!: MapControlLayersSwitchComponent;
   @ViewChild('sidePanel') sidePanel!: SidePanelComponent;
   @ViewChild('toggleBtn') toggleBtn!: ToggleButtonComponent;
   mode!: string;
@@ -666,6 +668,8 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
+    this.mapControls.handleBaseLayerChange('Dark Map');
+
     this.getRegionsPolygon();
 
     const data = this.store.getItem('HomeComponent');

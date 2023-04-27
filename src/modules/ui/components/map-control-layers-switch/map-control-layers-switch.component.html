@@ -70,6 +70,7 @@
       name="baseLayers"
       nameField="title"
       valueField="name"
+      [value]="baseLayers[4].name"
       [options]="baseLayers"
       (changed)="handleBaseLayerChange($event)"
     ></app-input-radio>

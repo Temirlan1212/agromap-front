@@ -69,7 +69,9 @@ export class MapComponent implements OnInit, OnDestroy {
     onEachFeature: (feature: Feature, layer: Layer) => {
       layer.on({
         click: () => this.handleFeatureClick(layer, feature),
-        mouseover: () => this.handleFeatureHover(layer, feature),
+        ...(!Browser.mobile && {
+          mouseover: () => this.handleFeatureHover(layer, feature),
+        }),
         mouseout: () => this.featureUnhover.emit({ layer, feature }),
       });
     },
@@ -135,8 +137,9 @@ export class MapComponent implements OnInit, OnDestroy {
   }
 
   handleFeatureHover(layer: Layer, feature: Feature) {
-    console.log(Browser.touch);
+    // if (!Browser.mobile) {
     this.featureHover.emit({ layer, feature });
+    // }
   }
 
   handleFeatureClose(): void {

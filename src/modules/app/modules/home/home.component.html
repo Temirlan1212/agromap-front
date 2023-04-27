@@ -36,6 +36,7 @@
             [map]="mapData.map"
           ></app-map-control-zoom>
           <app-map-control-layers-switch
+            #mapControls
             [mode]="mode"
             *ngIf="mapData"
             [map]="mapData.map"
