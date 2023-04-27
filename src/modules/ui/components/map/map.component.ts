@@ -137,9 +137,7 @@ export class MapComponent implements OnInit, OnDestroy {
   }
 
   handleFeatureHover(layer: Layer, feature: Feature) {
-    // if (!Browser.mobile) {
     this.featureHover.emit({ layer, feature });
-    // }
   }
 
   handleFeatureClose(): void {
