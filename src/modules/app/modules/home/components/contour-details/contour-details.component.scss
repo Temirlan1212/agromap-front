@@ -26,6 +26,17 @@
     }
   }
 
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #fff;
+
+    app-svg-icon {
+      cursor: pointer;
+    }
+  }
+
   .contour-info-partial {
     span {
       font-size: 30px;

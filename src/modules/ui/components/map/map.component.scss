@@ -61,7 +61,6 @@ $transitionDelay: 0.2s;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 16px;
     overflow: hidden auto;
 
     h4 {
@@ -77,5 +76,23 @@ $transitionDelay: 0.2s;
   .arrow-down {
     transform: rotate(0deg);
     transition: all $transitionDelay;
+  }
+}
+
+@media only screen and (max-width: 576px) {
+  :host {
+    border-top-right-radius: 20px;
+    border-top-left-radius: 20px;
+  }
+
+  .feature-content {
+    z-index: 1000;
+    margin-bottom: 15%;
+    border-top-right-radius: 20px;
+    border-top-left-radius: 20px;
+  }
+
+  .actions-block {
+    overflow: hidden;
   }
 }
