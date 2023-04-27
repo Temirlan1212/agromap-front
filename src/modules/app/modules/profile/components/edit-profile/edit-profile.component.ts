@@ -62,7 +62,7 @@ export class EditProfileComponent implements OnInit {
     this.loading = false;
   }
 
-  inputOnKeydown(event: KeyboardEvent) {
+  handleKeydown(event: KeyboardEvent) {
     let { type, value } = event.target as HTMLInputElement;
     const pattern = type === 'text' ? /^[a-zA-Z]*$/ : /^[0-9]{0,8}$/;
 

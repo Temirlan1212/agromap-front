@@ -7,7 +7,7 @@
         [placeholder]="'Fullname' | translate"
         formControlName="full_name"
         [required]="full_name.required"
-        (keydown)="inputOnKeydown($event)"
+        (keydown)="handleKeydown($event)"
       >
       </app-input>
     </app-form-field>
@@ -23,7 +23,7 @@
       <app-form-field name="phone_number" #phone_number>
         <app-input
           type="tel"
-          (keydown)="inputOnKeydown($event)"
+          (keydown)="handleKeydown($event)"
           [placeholder]="'Phone number' | translate"
           formControlName="phone_number"
           [required]="phone_number.required"

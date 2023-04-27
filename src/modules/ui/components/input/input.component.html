@@ -34,8 +34,7 @@
   size="14px"
   class="right"
   [name]="rightIcon"
-  [class.disabled]="disabled"
-  *ngIf="rightIcon != null && value != null"
+  *ngIf="rightIcon != null && value != null && !disabled"
   (click)="handleRightIconClick($event)"
 >
 </app-svg-icon>
