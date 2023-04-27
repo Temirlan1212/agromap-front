@@ -1,5 +1,6 @@
 <div
   class="dark-info-dialog"
+  [class.hidden]="isHidden"
   *ngIf="activeContour != null || activeContourSmall != null"
 >
   <div
@@ -7,9 +8,15 @@
   >
     <div class="header">
       <h1
-        [ngClass]="activeContour?.culture?.name_en"
-        [textContent]="activeContour?.culture?.name_ru"
+        [ngClass]="activeContour?.culture?.['name_'+currentLang]"
+        [textContent]="activeContour?.culture?.['name_'+currentLang]"
       ></h1>
+      <app-svg-icon
+        (click)="isHidden = !isHidden"
+        [class.hidden]="isHidden"
+        name="arrow-down"
+        size="16"
+      ></app-svg-icon>
       <app-svg-icon
         name="clear"
         size="16"
@@ -75,8 +82,8 @@
   <ng-template #partial>
     <div class="contour-info-partial">
       <h1
-        [ngClass]="activeContourSmall?.culture?.name_en"
-        [textContent]="activeContourSmall?.culture?.name_ru"
+        [ngClass]="activeContourSmall?.culture?.['name_'+currentLang]"
+        [textContent]="activeContourSmall?.culture?.['name_'+currentLang]"
       ></h1>
       <div>
         {{ "Area" | translate }}

@@ -22,6 +22,7 @@ import {
   latLng,
   latLngBounds,
   tileLayer,
+  Browser,
 } from 'leaflet';
 import { MapData, MapLayerFeature, MapMove } from '../../models/map.model';
 import '@geoman-io/leaflet-geoman-free';
@@ -68,7 +69,9 @@ export class MapComponent implements OnInit, OnDestroy {
     onEachFeature: (feature: Feature, layer: Layer) => {
       layer.on({
         click: () => this.handleFeatureClick(layer, feature),
-        mouseover: () => this.handleFeatureHover(layer, feature),
+        ...(!Browser.mobile && {
+          mouseover: () => this.handleFeatureHover(layer, feature),
+        }),
         mouseout: () => this.featureUnhover.emit({ layer, feature }),
       });
     },
