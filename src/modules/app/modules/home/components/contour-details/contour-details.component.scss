@@ -8,6 +8,14 @@
   font-size: 20px;
   box-shadow: 0px 0 50px 70px rgba(0, 0, 0, 0.7);
   background-color: rgba(0, 0, 0, 0.7);
+  transform: translateX(0);
+  transition: transform 0.5s ease;
+
+  &.hidden {
+    transform: translateX(-380px);
+    box-shadow: none;
+    background-color: transparent;
+  }
 
   .contour-info,
   .contour-info-partial {
@@ -28,9 +36,31 @@
 
   .header {
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    justify-content: center;
     color: #fff;
+    text-align: center;
+    position: relative;
+
+    app-svg-icon {
+      position: absolute;
+      top: 40%;
+
+      &[name="arrow-down"] {
+        transform: rotate(90deg);
+        left: 0;
+        transition: transform 0.5s ease;
+
+        &.hidden {
+          left: 370px;
+          transform: rotate(270deg);
+        }
+      }
+
+      &[name="clear"] {
+        right: 0;
+      }
+    }
 
     app-svg-icon {
       cursor: pointer;
@@ -53,5 +83,16 @@
 @media only screen and (max-width: 576px) {
   .dark-info-dialog {
     max-width: 90vw;
+    transform: translateX(0);
+
+    &.hidden {
+      transform: translateX(-85vw);
+    }
+
+    app-svg-icon[name="arrow-down"] {
+      &.hidden {
+        left: 85vw !important;
+      }
+    }
   }
 }

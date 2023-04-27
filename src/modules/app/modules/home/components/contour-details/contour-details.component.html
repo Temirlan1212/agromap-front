@@ -1,5 +1,6 @@
 <div
   class="dark-info-dialog"
+  [class.hidden]="isHidden"
   *ngIf="activeContour != null || activeContourSmall != null"
 >
   <div
@@ -10,6 +11,12 @@
         [ngClass]="activeContour?.culture?.['name_'+currentLang]"
         [textContent]="activeContour?.culture?.['name_'+currentLang]"
       ></h1>
+      <app-svg-icon
+        (click)="isHidden = !isHidden"
+        [class.hidden]="isHidden"
+        name="arrow-down"
+        size="16"
+      ></app-svg-icon>
       <app-svg-icon
         name="clear"
         size="16"
