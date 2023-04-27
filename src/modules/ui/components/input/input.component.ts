@@ -11,7 +11,7 @@ import { SvgIconComponent } from '../svg-icon/svg-icon.component';
 import { NgIf, NgStyle } from '@angular/common';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
-export type InputType = 'text' | 'number' | 'password' | 'email';
+export type InputType = 'text' | 'number' | 'password' | 'email' | 'tel';
 
 @Component({
   selector: 'app-input',
@@ -41,6 +41,7 @@ export class InputComponent implements ControlValueAccessor {
   @Input() step: number = 1;
   @Output() leftIconClick = new EventEmitter<void>();
   @Input() required: boolean = false;
+  @Input() disabled: boolean = false;
 
   handleRightIconClick(e: Event) {
     e.preventDefault();
@@ -81,5 +82,9 @@ export class InputComponent implements ControlValueAccessor {
 
   registerOnTouched(fn: Function): void {
     this.onTouched = fn;
+  }
+
+  setDisabledState(disabled: boolean) {
+    this.disabled = disabled;
   }
 }
