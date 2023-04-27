@@ -45,3 +45,11 @@
     }
   }
 }
+
+@media only screen and (max-width: 992px) and (min-width: 576px) {
+  :host {
+    left: $sideNavMenuWidth;
+    width: calc(100% - $sideNavMenuWidth);
+    margin-bottom: 0;
+  }
+}
