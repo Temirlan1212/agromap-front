@@ -185,10 +185,11 @@ export class SplitMapSidebarComponent implements OnDestroy, OnInit {
           this.maps['map-0'].fitBounds(this.bounds, { maxZoom: 15 });
 
         for (const [key, map] of Object.entries(this.maps)) {
-          if (map)
+          if (map) {
             L.geoJSON(this.layerFeature as GeoJSON, {
               style: { fillOpacity: 0 },
             }).addTo(map);
+          }
         }
       }) as Subscription,
 
