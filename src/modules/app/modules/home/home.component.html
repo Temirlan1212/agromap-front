@@ -172,7 +172,12 @@
 <app-toggle-button
   #toggleBtn
   (onClick)="sidePanel.handlePanelToggle()"
+  *ngIf="activeContour == null || currentRouterPathname === '/home/split-map'"
   [iconName]="
-    currentRouterPathname === '/home/contour-add' ? 'contour-path' : 'filter'
+    currentRouterPathname === '/home/contour-add'
+      ? 'contour-path'
+      : currentRouterPathname === '/home/split-map'
+      ? 'hamburger'
+      : 'filter'
   "
 ></app-toggle-button>

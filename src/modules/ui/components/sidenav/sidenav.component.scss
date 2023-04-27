@@ -140,7 +140,8 @@
   }
   .mobile-menu {
     position: fixed;
-    display: block;
+    display: flex;
+    align-items: center;
     right: 0;
     left: 0;
     margin: 0 auto;
@@ -148,11 +149,12 @@
     z-index: 9999;
     width: 97%;
     background-color: #ececec;
-    padding: 10px 5px;
     border-radius: 50px;
+    height: $mobileBottomNavHeight;
 
     nav {
       display: flex;
+      width: 100%;
       padding: 0 10px;
       justify-content: space-between;
 
