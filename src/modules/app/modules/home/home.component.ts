@@ -252,6 +252,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
   async handleFeatureClick(layerFeature: MapLayerFeature): Promise<void> {
     this.contourDetails.createOverlay();
+    this.contourDetails.isHidden = false;
     if (this.layerFeature) {
       this.selectedLayer.remove();
     }
