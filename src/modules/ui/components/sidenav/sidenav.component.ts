@@ -93,11 +93,17 @@ export class SidenavComponent implements OnChanges {
   }
 
   handleArrowLeftClick(menuContainer: HTMLDivElement) {
-    menuContainer.scrollLeft -= 100;
+    menuContainer.scrollTo({
+      left: menuContainer.scrollLeft - 100,
+      behavior: 'smooth',
+    });
   }
 
   handleArrowRightClick(menuContainer: HTMLDivElement) {
-    menuContainer.scrollLeft += 100;
+    menuContainer.scrollTo({
+      left: menuContainer.scrollLeft + 100,
+      behavior: 'smooth',
+    });
   }
 
   protected readonly top = top;
