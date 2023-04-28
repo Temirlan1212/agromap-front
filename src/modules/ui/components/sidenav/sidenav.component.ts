@@ -84,6 +84,7 @@ export class SidenavComponent implements OnChanges {
     this.mobileRoutes = this.routes.filter(
       (f) => f.data != null && f.data['class'] != 'homepage'
     );
+    // this.mobileRoutes.push(...this.mobileRoutes);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
