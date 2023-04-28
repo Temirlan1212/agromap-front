@@ -1,0 +1,21 @@
+<div class="gallery" [class.vertical]="vertical">
+  <img
+    [src]="'/assets/images/' + activeImage.name + '.' + activeImage.format"
+  />
+
+  <ul class="carousel">
+    <li
+      class="carousel-item"
+      *ngFor="let image of images"
+      (click)="handleSelect(image)"
+    >
+      <img
+        *ngIf="image.name"
+        [src]="'/assets/images/' + image.name + '.' + image.format"
+        [alt]="image.alt"
+      />
+
+      <p [textContent]="image.alt" *ngIf="!image.name"></p>
+    </li>
+  </ul>
+</div>

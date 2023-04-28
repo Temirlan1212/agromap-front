@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-about',
@@ -6,9 +7,11 @@ import { Component } from '@angular/core';
   styleUrls: ['./about.component.scss'],
 })
 export class AboutComponent {
-  imgName: string = 'plants_humidity';
+  moTechnologiesActiveImgName: string = 'plants_humidity';
+
+  constructor(private translate: TranslatePipe) {}
 
   handleMousemove(imgName: string) {
-    this.imgName = imgName;
+    this.moTechnologiesActiveImgName = imgName;
   }
 }
