@@ -215,7 +215,7 @@
   .languages-mobile {
     right: 10px;
     position: fixed;
-    bottom: $sideNavMenuWidth;
+    bottom: $mobileBottomNavHeight + $mobileNavMarginBottom;
     z-index: 500;
   }
 
