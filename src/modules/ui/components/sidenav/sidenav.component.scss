@@ -71,6 +71,20 @@
   }
 }
 
+.icon-wrapper {
+  position: relative;
+}
+
+.notifications-indicator {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 10px;
+  height: 10px;
+  background-color: $dangerColor;
+  border-radius: 50%;
+}
+
 .content {
   position: fixed;
   top: 0;
