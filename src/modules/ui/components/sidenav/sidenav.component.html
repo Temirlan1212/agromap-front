@@ -4,7 +4,15 @@
     <span class="title" [textContent]="title | translate"></span>
   </a>
 </ng-template>
-<div class="mobile-menu">
+<div class="mobile-menu" #menuContainer>
+  <button class="btn-left" (click)="handleArrowLeftClick(menuContainer)">
+    <app-svg-icon class="icon arrow-left" size="16px" name="arrow-down">
+    </app-svg-icon>
+  </button>
+  <button class="btn-right" (click)="handleArrowRightClick(menuContainer)">
+    <app-svg-icon class="icon arrow-right" size="16px" name="arrow-down">
+    </app-svg-icon>
+  </button>
   <nav>
     <ng-container
       *ngFor="let route of mobileRoutes"

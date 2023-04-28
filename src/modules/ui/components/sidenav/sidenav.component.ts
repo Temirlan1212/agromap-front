@@ -84,13 +84,20 @@ export class SidenavComponent implements OnChanges {
     this.mobileRoutes = this.routes.filter(
       (f) => f.data != null && f.data['class'] != 'homepage'
     );
-    // this.mobileRoutes.push(...this.mobileRoutes);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['routes'] != null && !changes['routes'].isFirstChange()) {
       this.chunkRoutes(this.routes);
     }
+  }
+
+  handleArrowLeftClick(menuContainer: HTMLDivElement) {
+    menuContainer.scrollLeft -= 100;
+  }
+
+  handleArrowRightClick(menuContainer: HTMLDivElement) {
+    menuContainer.scrollLeft += 100;
   }
 
   protected readonly top = top;

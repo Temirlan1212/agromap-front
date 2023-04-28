@@ -157,7 +157,6 @@
     nav {
       display: flex;
       width: fit-content;
-      padding: 0 10px;
       justify-content: space-between;
 
       a {
@@ -167,13 +166,48 @@
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        width: 120px;
+        width: 100px;
         color: #656b7b;
 
         &.active {
           color: #333333;
         }
       }
+    }
+
+    .btn-left,
+    .btn-right {
+      color: #959595;
+      font-size: 50px;
+      height: inherit;
+      opacity: 1;
+      width: 10px;
+      background-color: #ececec;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: fixed;
+      z-index: 99999;
+
+      .arrow-left {
+        transform: rotate(90deg);
+      }
+
+      .arrow-right {
+        transform: rotate(270deg);
+      }
+    }
+
+    .btn-left {
+      left: 1.5%;
+      border-top-left-radius: 50px;
+      border-bottom-left-radius: 50px;
+    }
+
+    .btn-right {
+      right: 1.5%;
+      border-top-right-radius: 50px;
+      border-bottom-right-radius: 50px;
     }
   }
 
