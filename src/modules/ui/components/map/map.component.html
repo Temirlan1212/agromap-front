@@ -4,11 +4,11 @@
 </div>
 <div class="feature-content">
   <div class="header">
-    <h4>
+    <h4 (click)="handleFeatureCollapseToggle()">
       <span [textContent]="featureTitle"></span>
     </h4>
     <div class="actions-block">
-      <ng-content select="[actions]"> </ng-content>
+      <ng-content select="[actions]"></ng-content>
 
       <button
         type="button"

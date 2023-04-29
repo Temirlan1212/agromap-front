@@ -1,0 +1,11 @@
+<dialog
+  #dialog
+  class="shadow"
+  [style.width]="width + 'px'"
+  [style.height]="height + 'px'"
+  [style.left]="coords.x + 'px'"
+  [style.top]="coords.y + 'px'"
+  [open]="open"
+>
+  <ng-content></ng-content>
+</dialog>

@@ -25,7 +25,7 @@ import * as L from 'leaflet';
 import { environment } from 'src/environments/environment';
 import { Feature } from 'geojson';
 import { TranslateService } from '@ngx-translate/core';
-import { MapService } from 'src/modules/app/modules/home/map.service';
+import { MapService } from 'src/modules/ui/services/map.service';
 
 @Component({
   selector: 'app-map-control-veg-indexes',
@@ -60,6 +60,7 @@ export class MapControlVegIndexesComponent
   @Input() loadingSatelliteDates: boolean = false;
 
   @Output() vegIndexOptionClick = new EventEmitter<IVegIndexOption>();
+  @Output() onDateSelect = new EventEmitter<void>();
 
   @Input('layer') set layer(value: MapLayerFeature | null) {
     if (value?.feature.properties?.['id']) {
@@ -129,6 +130,7 @@ export class MapControlVegIndexesComponent
       this.isCollapsedDateDialog = false;
       this.removeImageOverlay();
       this.setImageOverlay(date);
+      this.onDateSelect.emit();
     }
   }
 

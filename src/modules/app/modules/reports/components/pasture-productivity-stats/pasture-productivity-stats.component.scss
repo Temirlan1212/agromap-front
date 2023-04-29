@@ -9,10 +9,18 @@
     display: flex;
     justify-content: space-between;
     margin-bottom: 10px;
+    align-items: center;
   }
+
   p {
     text-align: center;
     font-size: 17px;
     font-weight: 600;
+  }
+}
+
+@media only screen and (max-width: 992px) {
+  :host {
+    padding: 20px;
   }
 }

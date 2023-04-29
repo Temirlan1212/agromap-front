@@ -11,7 +11,7 @@ import { AppComponent } from './app.component';
 import { NotificationHostDirective } from '../ui/components/notification/notification-host.directive';
 import { SidenavComponent } from '../ui/components/sidenav/sidenav.component';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
-import { LanguageService } from '../api/language.service';
+import { LanguageService } from '../ui/services/language.service';
 
 @NgModule({
   declarations: [AppComponent],

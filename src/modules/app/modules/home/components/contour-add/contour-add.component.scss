@@ -37,3 +37,20 @@ $indent: 0 20px;
     width: 100%;
   }
 }
+
+@media only screen and (max-width: 992px) {
+  :host {
+    justify-content: flex-start;
+    height: 100%;
+    width: 100%;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+    overflow-y: auto;
+    gap: 20px;
+    z-index: 500;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+}

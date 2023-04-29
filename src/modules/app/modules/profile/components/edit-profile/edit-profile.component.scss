@@ -5,4 +5,19 @@
   .actions {
     align-self: flex-end;
   }
+  .phone_number {
+    display: flex;
+    justify-content: space-between;
+    gap: 0 10px;
+
+    [name="phone_number"] {
+      width: 100%;
+    }
+  }
+}
+
+@media only screen and (max-width: 992px) {
+  :host {
+    padding: 20px;
+  }
 }

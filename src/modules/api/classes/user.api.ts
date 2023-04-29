@@ -11,8 +11,14 @@ export class UserApi {
     );
 
     if (document != null && response != null) {
-      const ms = new Date().getTime() + 86400000;
-      document.cookie = `user=${JSON.stringify(response)}; expires=${ms}`;
+      const nowDate = new Date();
+      nowDate.setTime(nowDate.getTime() + 86400000);
+
+      let userCookie = `user=${JSON.stringify(response)};`;
+      userCookie += `expires=${nowDate.toUTCString()};`;
+      userCookie += 'path=/';
+
+      document.cookie = userCookie;
     }
 
     return response;
@@ -35,7 +41,7 @@ export class UserApi {
 
     if (document != null) {
       const cookies = document.cookie
-        .split('; ')
+        .split(';')
         .reduce((prev: Record<string, string>, current: string) => {
           const [name, ...value] = current.split('=');
           prev[name] = value.join('=');

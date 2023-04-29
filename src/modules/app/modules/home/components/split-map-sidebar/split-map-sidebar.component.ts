@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { StoreService } from 'src/modules/api/store.service';
+import { StoreService } from 'src/modules/ui/services/store.service';
 import { Feature, GeoJSON } from 'geojson';
 import * as L from 'leaflet';
 import {
@@ -12,7 +12,7 @@ import { FormatDatePipe } from 'src/modules/ui/pipes/formatDate.pipe';
 import { environment } from 'src/environments/environment';
 import { Subscription } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
-import { MapService } from '../../map.service';
+import { MapService } from '../../../../../ui/services/map.service';
 
 @Component({
   selector: 'app-split-map-sidebar',
@@ -163,12 +163,14 @@ export class SplitMapSidebarComponent implements OnDestroy, OnInit {
       await this.getVegSatelliteDates(this.contourId, 1);
       this.buildSatelliteDatesOptions(this.satelliteDateData, this.currLang);
     }
-    const contourFilterComponentMode = this.store.getItem(
-      'ContourFilterComponentMode'
+    const MapControlLayersSwitchComponent = this.store.getItem(
+      'MapControlLayersSwitchComponent'
     );
 
-    if (contourFilterComponentMode) {
-      if (contourFilterComponentMode === 'agromap_store_ai') {
+    const name = MapControlLayersSwitchComponent.filterControlLayerSwitch.name;
+
+    if (name) {
+      if (name === 'agromap_store_ai') {
         this.isWmsAiActive = true;
       } else {
         this.isWmsAiActive = false;
@@ -182,7 +184,11 @@ export class SplitMapSidebarComponent implements OnDestroy, OnInit {
           this.maps['map-0'].fitBounds(this.bounds, { maxZoom: 15 });
 
         for (const [key, map] of Object.entries(this.maps)) {
-          if (map) L.geoJSON(this.layerFeature as GeoJSON).addTo(map);
+          if (map) {
+            L.geoJSON(this.layerFeature as GeoJSON, {
+              style: { fillOpacity: 0 },
+            }).addTo(map);
+          }
         }
       }) as Subscription,
 

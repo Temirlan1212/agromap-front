@@ -20,8 +20,15 @@ export interface ITileLayer {
   title: string;
   name: string;
   layer: TileLayer;
+  type?: string;
 }
 
 export interface ILeafletMap extends Map {
   sync: (map: Map, options: Record<string, any>) => any;
+}
+
+export interface ISelectedControlLayer {
+  name: string;
+  opacity: number;
+  oldValue?: string;
 }

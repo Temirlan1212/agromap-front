@@ -10,7 +10,7 @@
   <label
     [class.active]="value === option[valueField]"
     [for]="option[valueField]"
-    [textContent]="option[nameField]"
+    [textContent]="option[nameField] | translate"
     (click)="handleClick(option[valueField])"
   ></label>
 </div>

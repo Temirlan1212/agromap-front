@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
-import { MapData } from '../../../ui/models/map.model';
+import { MapData } from '../models/map.model';
 import {
   tileLayer,
   map,
@@ -18,7 +18,7 @@ import { ImageOverlay } from 'leaflet';
 export class MapService {
   map = new BehaviorSubject<MapData | null>(null);
   contourEditingMode = new Subject<boolean>();
-  splitMapQuantity = new BehaviorSubject<number>(4);
+  splitMapQuantity = new BehaviorSubject<number>(2);
   maps = new BehaviorSubject<Record<string, L.Map | null>>({});
 
   center: LatLng = latLng(41.84, 75.06);

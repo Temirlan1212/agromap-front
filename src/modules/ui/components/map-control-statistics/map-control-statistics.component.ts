@@ -2,8 +2,8 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
-import { StoreService } from 'src/modules/api/store.service';
-import { LanguageService } from 'src/modules/api/language.service';
+import { StoreService } from 'src/modules/ui/services/store.service';
+import { LanguageService } from 'src/modules/ui/services/language.service';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -15,22 +15,24 @@ import { Subscription } from 'rxjs';
 })
 export class MapControlStatisticsComponent implements OnInit, OnDestroy {
   isCollapsed: boolean = false;
-  subscription: Subscription = this.store.watch.subscribe((v) => {
-    const createdCondition = v.name === 'isCollapsedMapControlTable';
-    if (createdCondition) this.isCollapsed = v.value;
-  });
 
+  @Input() storageName: string = 'isCollapsedMapControlTable';
   @Input() title = '';
+
+  subscription: Subscription = this.store
+    .watchItem(this.storageName)
+    .subscribe((v) => {
+      this.isCollapsed = v;
+    });
 
   constructor(private store: StoreService, translate: LanguageService) {}
 
   toggle() {
-    this.store.setItem('isCollapsedMapControlTable', !this.isCollapsed);
+    this.store.setItem(this.storageName, !this.isCollapsed);
   }
 
   ngOnInit(): void {
-    this.isCollapsed =
-      this.store.getItem('isCollapsedMapControlTable') || false;
+    this.isCollapsed = this.store.getItem(this.storageName) || false;
   }
 
   ngOnDestroy(): void {

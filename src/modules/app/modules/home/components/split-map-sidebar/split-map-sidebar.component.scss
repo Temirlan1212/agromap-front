@@ -24,6 +24,7 @@ $transitionDelay: 0.2s;
   display: flex;
   align-items: center;
   padding: $indent;
+
   button {
     padding: 0 10px 0 0;
   }
@@ -62,9 +63,11 @@ $transitionDelay: 0.2s;
         color: $darkColor;
         cursor: pointer;
         transition: all $transitionDelay;
+
         &.selected {
           color: $successColor;
         }
+
         &:hover {
           color: $successColor;
         }
@@ -77,6 +80,29 @@ $transitionDelay: 0.2s;
       padding: $indent;
       font-size: 13px;
       font-weight: 600;
+    }
+  }
+}
+
+@media only screen and (max-width: 576px) {
+  app-svg-icon[name="split-3"],
+  app-svg-icon[name="split-4"] {
+    display: none;
+  }
+}
+
+@media only screen and (max-width: 992px) {
+  :host {
+    justify-content: flex-start;
+    height: 100%;
+    width: 100%;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+    overflow-y: auto;
+    gap: 20px;
+
+    &::-webkit-scrollbar {
+      display: none;
     }
   }
 }

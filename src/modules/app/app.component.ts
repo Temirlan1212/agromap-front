@@ -5,9 +5,9 @@ import { ApiService } from '../api/api.service';
 import { IUser } from '../api/models/user.model';
 import { LangChangeEvent, TranslateService } from '@ngx-translate/core';
 import { Title } from '@angular/platform-browser';
-import { StoreService } from '../api/store.service';
-import { ELanguageCode, ILanguageStore } from '../api/models/language.model';
-import { LanguageService } from '../api/language.service';
+import { StoreService } from '../ui/services/store.service';
+import { ELanguageCode, ILanguageStore } from '../ui/models/language.model';
+import { LanguageService } from '../ui/services/language.service';
 
 @Component({
   selector: 'app-root',

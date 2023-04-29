@@ -22,6 +22,9 @@ import { DistrictsComponent } from './districts/districts.component';
 import { ContonsComponent } from './contons/contons.component';
 import { IndexesComponent } from './indexes/indexes.component';
 import { FormFieldComponent } from '../../../ui/components/form-field/form-field.component';
+import { ContentTabsComponent } from '../../../ui/components/content-tabs/content-tabs.component';
+import { TabComponent } from '../../../ui/components/content-tabs/tab/tab.component';
+import { ToggleButtonComponent } from '../../../ui/components/toggle-button/toggle-button.component';
 
 @NgModule({
   declarations: [
@@ -50,6 +53,9 @@ import { FormFieldComponent } from '../../../ui/components/form-field/form-field
     QuestionDialogComponent,
     TableComponent,
     FormFieldComponent,
+    ContentTabsComponent,
+    TabComponent,
+    ToggleButtonComponent,
   ],
   providers: [TranslatePipe],
 })
