@@ -2,6 +2,7 @@
   <h1 class="title">{{ "Cultures" | translate }}</h1>
   <div class="actions">
     <button
+      *ngIf="user != null"
       type="button"
       [title]="'Create' | translate"
       class="success"
@@ -14,7 +15,7 @@
 </div>
 <div class="list">
   <app-table
-    [actions]="true"
+    [actions]="user != null"
     [items]="list"
     [fields]="[
       { title: 'Name' | translate, field: 'name_' + currentLang },

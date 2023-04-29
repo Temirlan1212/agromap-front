@@ -39,6 +39,7 @@ export class SidenavComponent implements OnChanges {
   langsOpened: boolean = false;
   currentLang: ELanguageCode = ELanguageCode.ru;
   allLangs: ILanguage[] = [];
+  mobileRoutes: Routes = [];
 
   constructor(
     private translate: TranslateService,
@@ -80,11 +81,30 @@ export class SidenavComponent implements OnChanges {
     this.bottomRoutes = routes.filter(
       (f) => f.data != null && f.data['position'] === 'bottom'
     );
+    this.mobileRoutes = this.routes.filter(
+      (f) => f.data != null && f.data['class'] != 'homepage'
+    );
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['routes'] != null) {
+    if (changes['routes'] != null && !changes['routes'].isFirstChange()) {
       this.chunkRoutes(this.routes);
     }
   }
+
+  handleArrowLeftClick(menuContainer: HTMLDivElement) {
+    menuContainer.scrollTo({
+      left: menuContainer.scrollLeft - 100,
+      behavior: 'smooth',
+    });
+  }
+
+  handleArrowRightClick(menuContainer: HTMLDivElement) {
+    menuContainer.scrollTo({
+      left: menuContainer.scrollLeft + 100,
+      behavior: 'smooth',
+    });
+  }
+
+  protected readonly top = top;
 }

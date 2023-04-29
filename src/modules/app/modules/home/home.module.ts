@@ -41,6 +41,8 @@ import { FormFieldComponent } from '../../../ui/components/form-field/form-field
 import { ContentTabsComponent } from '../../../ui/components/content-tabs/content-tabs.component';
 import { TabComponent } from '../../../ui/components/content-tabs/tab/tab.component';
 import { ContourInfoComponent } from './components/contour-info/contour-info.component';
+import { ContourDetailsComponent } from './components/contour-details/contour-details.component';
+import { ToggleButtonComponent } from '../../../ui/components/toggle-button/toggle-button.component';
 
 @NgModule({
   declarations: [
@@ -52,6 +54,7 @@ import { ContourInfoComponent } from './components/contour-info/contour-info.com
     SplitMapSidebarComponent,
     ContourEditComponent,
     ContourInfoComponent,
+    ContourDetailsComponent,
   ],
   imports: [
     CommonModule,
@@ -88,6 +91,7 @@ import { ContourInfoComponent } from './components/contour-info/contour-info.com
     FormFieldComponent,
     ContentTabsComponent,
     TabComponent,
+    ToggleButtonComponent,
   ],
   providers: [MapService, TranslatePipe],
 })

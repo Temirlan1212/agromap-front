@@ -8,6 +8,7 @@ import { RegionsComponent } from './regions/regions.component';
 import { DistrictsComponent } from './districts/districts.component';
 import { ContonsComponent } from './contons/contons.component';
 import { IndexesComponent } from './indexes/indexes.component';
+import { AuthGuard } from '../../auth.guard';
 import { SoilTypesComponent } from './soil-types/soil-types.component';
 
 const routes: Routes = [
@@ -27,10 +28,12 @@ const routes: Routes = [
           {
             path: 'add',
             component: CultureAddComponent,
+            canActivate: [AuthGuard],
           },
           {
             path: ':id',
             component: CultureEditComponent,
+            canActivate: [AuthGuard],
           },
         ],
       },

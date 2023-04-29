@@ -33,23 +33,29 @@ import { ITileLayer } from 'src/modules/ui/models/map.model';
 import { QuestionDialogComponent } from '../../../ui/components/question-dialog/question-dialog.component';
 import { IRegion } from 'src/modules/api/models/region.model';
 import { ContourFiltersQuery } from 'src/modules/api/models/contour.model';
-import { IStore } from 'src/modules/ui/models/store.model';
 import {
   IContourStatisticsProductivity,
   IContourStatisticsProductivityQuery,
+  ICulutreStatisticsQuery,
 } from 'src/modules/api/models/statistics.model';
 import { ITableItem } from 'src/modules/ui/models/table.model';
-import { DecimalPipe } from '@angular/common';
+import { ContourDetailsComponent } from './components/contour-details/contour-details.component';
+import { SidePanelComponent } from '../../../ui/components/side-panel/side-panel.component';
+import { ToggleButtonComponent } from '../../../ui/components/toggle-button/toggle-button.component';
+import { MapControlLayersSwitchComponent } from '../../../ui/components/map-control-layers-switch/map-control-layers-switch.component';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
-  providers: [DecimalPipe],
 })
 export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('featurePopup') featurePopup!: ElementRef<HTMLElement>;
   @ViewChild('map') mapComponent!: MapComponent;
+  @ViewChild('contourDetails') contourDetails!: ContourDetailsComponent;
+  @ViewChild('mapControls') mapControls!: MapControlLayersSwitchComponent;
+  @ViewChild('sidePanel') sidePanel!: SidePanelComponent;
+  @ViewChild('toggleBtn') toggleBtn!: ToggleButtonComponent;
   mode!: string;
   baseLayers: ITileLayer[] = [
     {
@@ -77,6 +83,13 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       title: 'Open Street Map',
       name: 'Open Street Map',
       layer: tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png'),
+    },
+    {
+      title: this.translate.transform('Base Map'),
+      name: 'Base Map',
+      layer: tileLayer(
+        'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
+      ),
     },
   ];
 
@@ -139,13 +152,14 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   currentLang: string = this.translateSvc.currentLang;
   currentRouterPathname: string = '';
   isWmsAiActive: boolean = false;
-  culture: any = null;
   productivity: string | null = null;
-  contourStatisticsProductivityTableItems: ITableItem[][] = [];
-  contourStatisticsProductivityAreaTitle: string = '';
+  contourPastureStatisticsProductivityTableItems: ITableItem[][] = [];
+  contourCultureStatisticsProductivityTableItems: ITableItem[] = [];
   wmsSelectedStatusLayers: Record<string, string> | null = null;
   selectedContourId!: number;
   loading: boolean = false;
+  activeContour!: any;
+  activeContourSmall: any;
 
   constructor(
     private api: ApiService,
@@ -155,8 +169,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     private translateSvc: TranslateService,
     private router: Router,
     private translate: TranslatePipe,
-    private route: ActivatedRoute,
-    private decimalPipe: DecimalPipe
+    private route: ActivatedRoute
   ) {
     this.router.events.subscribe((event: Event) =>
       event instanceof NavigationEnd
@@ -166,9 +179,38 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   subscriptions: Subscription[] = [
-    this.translateSvc.onLangChange.subscribe(
-      (res) => (this.currentLang = res.lang)
-    ),
+    this.translateSvc.onLangChange.subscribe((res) => {
+      this.currentLang = res.lang;
+      const translateHa =
+        this.translateSvc.translations[this.currentLang]['ha'];
+
+      this.contourPastureStatisticsProductivityTableItems =
+        this.contourPastureStatisticsProductivityTableItems.map((arr) =>
+          arr.map((element) => ({
+            ...element,
+            productive: `${String(element?.['productive']).replace(
+              /га|ha/gi,
+              translateHa
+            )}`,
+            unproductive: `${String(element?.['unproductive']).replace(
+              /га|ha/gi,
+              translateHa
+            )}`,
+          }))
+        );
+
+      this.contourCultureStatisticsProductivityTableItems =
+        this.contourCultureStatisticsProductivityTableItems.map((element) => {
+          return {
+            ...element,
+            area_ha: `${String(element?.['area_ha']).replace(
+              /га|ha/gi,
+              translateHa
+            )}`,
+          };
+        });
+    }),
+
     this.mapService.contourEditingMode.subscribe((res) => {
       if (res) {
         this.mapComponent.removeSubscriptions();
@@ -187,14 +229,36 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     this.mapService.map.next(mapData);
   }
 
-  handleFeatureClick(layerFeature: MapLayerFeature): void {
+  async handleFeatureMouseOver(layerFeature: MapLayerFeature) {
+    const l = layerFeature.layer as any;
+    l.setStyle({
+      color: '#fff',
+      weight: 3,
+    });
+    this.activeContourSmall = {
+      culture: layerFeature?.feature?.properties?.['culture'],
+      area_ha: layerFeature?.feature?.properties?.['area_ha'],
+    };
+  }
+
+  handleFeatureMouseLeave(layerFeature: MapLayerFeature) {
+    const l = layerFeature.layer as any;
+    l.setStyle({
+      color: 'rgba(51,136,255,0.5)',
+      weight: 1,
+    });
+    this.activeContourSmall = null;
+  }
+
+  async handleFeatureClick(layerFeature: MapLayerFeature): Promise<void> {
+    this.contourDetails.createOverlay();
+    this.contourDetails.isHidden = false;
     if (this.layerFeature) {
       this.selectedLayer.remove();
     }
     const cid =
       layerFeature?.feature?.properties?.['contour_id'] ??
       layerFeature?.feature?.properties?.['id'];
-    this.getOneCulture(Number(cid));
     this.selectedContourId = Number(cid);
     this.productivity = layerFeature?.feature?.properties?.['productivity'];
     this.getContourData(cid);
@@ -206,6 +270,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
         weight: 5,
         color: '#f6ab39',
       });
+    await this.getContour(Number(cid));
 
     this.getVegSatelliteDates(cid);
     this.store.setItem<Feature>('selectedLayerFeature', layerFeature.feature);
@@ -216,6 +281,20 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     this.store.removeItem('selectedLayerFeature');
     if (this.selectedLayer) {
       this.selectedLayer.remove();
+    }
+    this.activeContour = null;
+    this.contourDetails.ngOnDestroy();
+  }
+
+  async getContour(id: number): Promise<void> {
+    try {
+      if (this.isWmsAiActive) {
+        this.activeContour = await this.api.aiContour.getOne(id);
+      } else {
+        this.activeContour = await this.api.contour.getOne(id);
+      }
+    } catch (e) {
+      console.log(e);
     }
   }
 
@@ -278,6 +357,8 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
         } finally {
           this.loading = false;
         }
+      } else {
+        this.activeContourSmall = null;
       }
     }
   }
@@ -303,22 +384,26 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  async getOneCulture(id: number) {
-    try {
-      this.culture = await this.api.culture.getOne(id);
-    } catch (e) {
-      console.log(e);
-    }
-  }
-
   handleFilterFormReset(): void {
-    this.contourStatisticsProductivityTableItems = [];
+    this.getPastureStatisticsProductivity({
+      land_type: '2',
+      year: 2022,
+    });
+
+    this.getCultureStatisticsProductivity({
+      land_type: '1',
+      year: 2022,
+    });
+
     this.wmsCQLFilter = null;
     this.setWmsParams();
   }
 
   handleFilterFormSubmit(formValue: Record<string, any>) {
-    this.getContourStatisticsProductivity(formValue['value']);
+    this.getPastureStatisticsProductivity(formValue['value']);
+    this.getCultureStatisticsProductivity(formValue['value']);
+    this.sidePanel.handlePanelToggle();
+    this.toggleBtn.isContentToggled = false;
   }
 
   async getVegSatelliteDates(
@@ -405,44 +490,82 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  async getContourStatisticsProductivity(
+  async getPastureStatisticsProductivity(
     query: IContourStatisticsProductivityQuery
-  ): Promise<IContourStatisticsProductivity | void> {
-    this.contourStatisticsProductivityTableItems = [];
+  ): Promise<void> {
+    this.contourPastureStatisticsProductivityTableItems = [];
+    if (!query.land_type.split(',').includes('2')) return;
+    if (this.isWmsAiActive) query.ai = this.isWmsAiActive;
+
     try {
       let res: IContourStatisticsProductivity;
       res = await this.api.statistics.getContourStatisticsProductivity({
         ...query,
-        ai: this.isWmsAiActive,
+        land_type: '2',
       });
-      this.contourStatisticsProductivityAreaTitle = res.type;
 
-      let tableItem = {
-        areaType: res?.name,
-        productive: `${this.decimalPipe.transform(res.Productive?.ha)} га`,
-        unproductive: `${this.decimalPipe.transform(res.Unproductive?.ha)} га`,
-      };
+      if (!res.type) {
+        this.contourPastureStatisticsProductivityTableItems = [];
+        return;
+      }
 
-      this.contourStatisticsProductivityTableItems.push([tableItem]);
+      this.contourPastureStatisticsProductivityTableItems.push([
+        {
+          areaType: res?.type,
+          areaName_en: res?.[`name_en`],
+          areaName_ky: res?.[`name_ky`],
+          areaName_ru: res?.[`name_ru`],
+          productive: `${res?.Productive?.ha} ${this.translate.transform(
+            'ha'
+          )}`,
+          unproductive: `${res?.Unproductive?.ha} ${this.translate.transform(
+            'ha'
+          )}`,
+        },
+      ]);
 
-      if (res.Children && res.Children.length !== 0) {
-        this.contourStatisticsProductivityTableItems.push(
-          res.Children?.map((elem) => {
-            let tableItem = {
-              areaType: elem.name,
-              productive: `${this.decimalPipe.transform(
-                elem.Productive.ha
-              )} га`,
-              unproductive: `${this.decimalPipe.transform(
-                elem.Unproductive.ha
-              )} га`,
-            };
-            return tableItem;
-          })
+      if (Array.isArray(res?.Children) && res?.Children?.length > 0) {
+        this.contourPastureStatisticsProductivityTableItems.push(
+          res?.Children.map((child) => ({
+            areaType: child?.type,
+            areaName_en: child?.[`name_en`],
+            areaName_ky: child?.[`name_ky`],
+            areaName_ru: child?.[`name_ru`],
+            productive: `${child?.Productive?.ha} ${this.translate.transform(
+              'ha'
+            )}`,
+            unproductive: `${
+              child?.Unproductive?.ha
+            } ${this.translate.transform('ha')}`,
+          }))
         );
       }
     } catch (e: any) {
-      console.log(e);
+      this.messages.error(e.message);
+    }
+  }
+
+  async getCultureStatisticsProductivity(
+    query: ICulutreStatisticsQuery
+  ): Promise<void> {
+    this.contourCultureStatisticsProductivityTableItems = [];
+    if (!query.land_type.split(',').includes('1')) return;
+    if (this.isWmsAiActive) query.ai = this.isWmsAiActive;
+
+    try {
+      const res = await this.api.statistics.getCultureStatistics({
+        ...query,
+        land_type: '1',
+      });
+
+      this.contourCultureStatisticsProductivityTableItems = res.map(
+        (element) => ({
+          ...element,
+          area_ha: `${element?.area_ha} ${this.translate.transform('ha')}`,
+        })
+      ) as unknown as ITableItem[];
+    } catch (e: any) {
+      this.messages.error(e.message);
     }
   }
 
@@ -471,6 +594,19 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnInit(): void {
+    this.getPastureStatisticsProductivity({
+      land_type: '2',
+      year: 2022,
+    });
+
+    this.getCultureStatisticsProductivity({
+      land_type: '1',
+      year: 2022,
+    });
+
+    this.wmsSelectedStatusLayers = this.store.getItem(
+      'MapControlLayersSwitchComponent'
+    );
     const data = this.store.getItem('MapControlLayersSwitchComponent');
     this.wmsSelectedStatusLayers = data;
     this.getVegIndexList();
@@ -533,6 +669,8 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
+    this.mapControls.handleBaseLayerChange('Base Map');
+
     this.getRegionsPolygon();
 
     const data = this.store.getItem('HomeComponent');

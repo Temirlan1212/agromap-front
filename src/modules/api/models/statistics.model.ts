@@ -1,11 +1,11 @@
 export interface IContourStatisticsProductivityQuery {
-  region: string;
-  district: string;
-  culture: string;
-  conton: string;
+  region?: string;
+  district?: string;
+  culture?: string;
+  conton?: string;
   year: number;
   land_type: string;
-  ai: boolean;
+  ai?: boolean;
 }
 
 export interface IProductive {
@@ -19,14 +19,18 @@ export interface IUnproductive {
 }
 
 export interface IContourStatisticsChildren {
-  name: string;
+  name_ky: string;
+  name_ru: string;
+  name_en: string;
   type: string;
   Productive: IProductive;
   Unproductive: IUnproductive;
 }
 
 export interface IContourStatisticsProductivity {
-  name: string;
+  name_ky: string;
+  name_ru: string;
+  name_en: string;
   type: string;
   Productive: IProductive;
   Unproductive: IUnproductive;
@@ -34,12 +38,13 @@ export interface IContourStatisticsProductivity {
 }
 
 export interface ICulutreStatisticsQuery {
-  region: string;
-  district: string;
-  culture: string;
-  conton: string;
+  region?: string;
+  district?: string;
+  culture?: string;
+  conton?: string;
   year: number;
   land_type: string;
+  ai?: boolean;
 }
 
 export interface ICulutreStatistics {

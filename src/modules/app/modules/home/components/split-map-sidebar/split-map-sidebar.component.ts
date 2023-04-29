@@ -167,11 +167,10 @@ export class SplitMapSidebarComponent implements OnDestroy, OnInit {
       'MapControlLayersSwitchComponent'
     );
 
-    if (MapControlLayersSwitchComponent.filterControlLayerSwitch) {
-      if (
-        MapControlLayersSwitchComponent.filterControlLayerSwitch ===
-        'agromap_store_ai'
-      ) {
+    const name = MapControlLayersSwitchComponent.filterControlLayerSwitch.name;
+
+    if (name) {
+      if (name === 'agromap_store_ai') {
         this.isWmsAiActive = true;
       } else {
         this.isWmsAiActive = false;
@@ -185,7 +184,11 @@ export class SplitMapSidebarComponent implements OnDestroy, OnInit {
           this.maps['map-0'].fitBounds(this.bounds, { maxZoom: 15 });
 
         for (const [key, map] of Object.entries(this.maps)) {
-          if (map) L.geoJSON(this.layerFeature as GeoJSON).addTo(map);
+          if (map) {
+            L.geoJSON(this.layerFeature as GeoJSON, {
+              style: { fillOpacity: 0 },
+            }).addTo(map);
+          }
         }
       }) as Subscription,
 

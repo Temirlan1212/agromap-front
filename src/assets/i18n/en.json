@@ -142,7 +142,15 @@
   "Elevation": "Elevation",
   "m. above sea level": "m. above sea level",
   "AI determination error": "AI determination error",
+  "Roll up": "Roll up",
+  "Country": "Country",
+  "Pasture (productivity area)": "Pasture (productivity area)",
+  "Land (square of cultures)": "Land (square of cultures)",
   "Create a dataset": "Create a dataset",
   "Generate": "Generate",
-  "Process started": "Process started"
+  "Process started": "Process started",
+  "Successfully updated": "Successfully updated",
+  "About system": "About system",
+  "Beta version": "Beta version",
+  "Base Map": "Base Map"
 }

@@ -22,6 +22,7 @@ import {
   latLng,
   latLngBounds,
   tileLayer,
+  Browser,
 } from 'leaflet';
 import { MapData, MapLayerFeature, MapMove } from '../../models/map.model';
 import '@geoman-io/leaflet-geoman-free';
@@ -55,7 +56,8 @@ export class MapComponent implements OnInit, OnDestroy {
   @Output() mapMove = new EventEmitter<MapMove>();
   @Output() featureClick = new EventEmitter<MapLayerFeature>();
   @Output() featureClose = new EventEmitter<void>();
-
+  @Output() featureHover = new EventEmitter<MapLayerFeature>();
+  @Output() featureUnhover = new EventEmitter<MapLayerFeature>();
   @HostBinding('class.open')
   featureOpen: boolean = false;
 
@@ -67,6 +69,10 @@ export class MapComponent implements OnInit, OnDestroy {
     onEachFeature: (feature: Feature, layer: Layer) => {
       layer.on({
         click: () => this.handleFeatureClick(layer, feature),
+        ...(!Browser.mobile && {
+          mouseover: () => this.handleFeatureHover(layer, feature),
+        }),
+        mouseout: () => this.featureUnhover.emit({ layer, feature }),
       });
     },
   });
@@ -128,6 +134,10 @@ export class MapComponent implements OnInit, OnDestroy {
   handleFeatureClick(layer: Layer, feature: Feature): void {
     this.featureOpen = true;
     this.featureClick.emit({ layer, feature });
+  }
+
+  handleFeatureHover(layer: Layer, feature: Feature) {
+    this.featureHover.emit({ layer, feature });
   }
 
   handleFeatureClose(): void {

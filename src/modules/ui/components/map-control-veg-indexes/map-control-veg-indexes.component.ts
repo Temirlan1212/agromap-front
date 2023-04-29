@@ -60,6 +60,7 @@ export class MapControlVegIndexesComponent
   @Input() loadingSatelliteDates: boolean = false;
 
   @Output() vegIndexOptionClick = new EventEmitter<IVegIndexOption>();
+  @Output() onDateSelect = new EventEmitter<void>();
 
   @Input('layer') set layer(value: MapLayerFeature | null) {
     if (value?.feature.properties?.['id']) {
@@ -129,6 +130,7 @@ export class MapControlVegIndexesComponent
       this.isCollapsedDateDialog = false;
       this.removeImageOverlay();
       this.setImageOverlay(date);
+      this.onDateSelect.emit();
     }
   }
 
