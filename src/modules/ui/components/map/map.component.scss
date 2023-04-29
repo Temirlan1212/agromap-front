@@ -65,6 +65,7 @@ $transitionDelay: 0.2s;
 
     h4 {
       margin: 0;
+      cursor: pointer;
     }
   }
 
@@ -86,7 +87,6 @@ $transitionDelay: 0.2s;
   }
 
   .feature-content {
-    z-index: 1000;
     margin-bottom: 15%;
     border-top-right-radius: 20px;
     border-top-left-radius: 20px;

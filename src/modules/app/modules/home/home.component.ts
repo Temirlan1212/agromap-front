@@ -42,6 +42,7 @@ import { ITableItem } from 'src/modules/ui/models/table.model';
 import { ContourDetailsComponent } from './components/contour-details/contour-details.component';
 import { SidePanelComponent } from '../../../ui/components/side-panel/side-panel.component';
 import { ToggleButtonComponent } from '../../../ui/components/toggle-button/toggle-button.component';
+import { MapControlLayersSwitchComponent } from '../../../ui/components/map-control-layers-switch/map-control-layers-switch.component';
 
 @Component({
   selector: 'app-home',
@@ -52,6 +53,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('featurePopup') featurePopup!: ElementRef<HTMLElement>;
   @ViewChild('map') mapComponent!: MapComponent;
   @ViewChild('contourDetails') contourDetails!: ContourDetailsComponent;
+  @ViewChild('mapControls') mapControls!: MapControlLayersSwitchComponent;
   @ViewChild('sidePanel') sidePanel!: SidePanelComponent;
   @ViewChild('toggleBtn') toggleBtn!: ToggleButtonComponent;
   mode!: string;
@@ -83,8 +85,8 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       layer: tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png'),
     },
     {
-      title: this.translate.transform('Dark Map'),
-      name: 'Dark Map',
+      title: this.translate.transform('Base Map'),
+      name: 'Base Map',
       layer: tileLayer(
         'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
       ),
@@ -250,6 +252,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
   async handleFeatureClick(layerFeature: MapLayerFeature): Promise<void> {
     this.contourDetails.createOverlay();
+    this.contourDetails.isHidden = false;
     if (this.layerFeature) {
       this.selectedLayer.remove();
     }
@@ -666,6 +669,8 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
+    this.mapControls.handleBaseLayerChange('Base Map');
+
     this.getRegionsPolygon();
 
     const data = this.store.getItem('HomeComponent');

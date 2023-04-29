@@ -42,7 +42,7 @@ export class MapControlLayersSwitchComponent implements OnChanges {
   @Input() wmsSelectedStatusLayers: Record<string, string> | null = null;
   @Output() wmsLayerChanged = new EventEmitter<ITileLayer | null>();
   @Output() baseLayerChanged = new EventEmitter<ITileLayer | null>();
-
+  initialBaseLayer!: ITileLayer;
   wmsBaseLayers: ITileLayer[] = [];
   wmsOverLayers: ITileLayer[] = [];
 
@@ -94,6 +94,12 @@ export class MapControlLayersSwitchComponent implements OnChanges {
 
     this.wmsBaseLayers = this.wmsLayers.filter((l) => l.type === 'radio');
     this.wmsOverLayers = this.wmsLayers.filter((l) => l.type === 'checkbox');
+
+    if (changes['baseLayers'].currentValue) {
+      this.initialBaseLayer = this.baseLayers.find(
+        (l) => l.name === 'Base Map'
+      ) as ITileLayer;
+    }
   }
 
   @HostListener('document:click', ['$event.target'])

@@ -36,6 +36,7 @@
             [map]="mapData.map"
           ></app-map-control-zoom>
           <app-map-control-layers-switch
+            #mapControls
             [mode]="mode"
             *ngIf="mapData"
             [map]="mapData.map"
@@ -59,6 +60,7 @@
           [vegIndexOptionsList]="vegIndexOptionsList"
           (vegIndexOptionClick)="handleVegIndexOptionClick($event)"
           [loadingSatelliteDates]="loadingSatelliteDates"
+          (onDateSelect)="contourDetails.isHidden = true"
         ></app-map-control-veg-indexes>
 
         <app-map-control-statistics

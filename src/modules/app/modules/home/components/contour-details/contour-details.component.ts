@@ -20,6 +20,7 @@ export class ContourDetailsComponent implements OnDestroy {
   @Input() activeContour: any;
   @Input() activeContourSmall: any;
   @Output() onCancelClick = new EventEmitter<void>();
+  isHidden: boolean = false;
   hasOverlay: boolean = false;
   overlayPane: any;
   rgbaOverlay: any;
