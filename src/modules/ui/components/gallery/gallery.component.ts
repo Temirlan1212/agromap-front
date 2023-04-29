@@ -1,79 +1,44 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
-
-interface IGalleryImage {
-  alt: string;
-  name: string;
-  format: string;
-}
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  Input,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
+import { GalleryData } from '../../models/gallery.model';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-gallery',
   templateUrl: './gallery.component.html',
   styleUrls: ['./gallery.component.scss'],
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TranslateModule],
 })
-export class GalleryComponent {
-  @Input() vertical: boolean = true;
-  @Input() images: IGalleryImage[] = [
-    {
-      alt: 'dd',
-      name: 'agromap-team-1',
-      format: 'jpg',
-    },
+export class GalleryComponent implements OnInit {
+  @ViewChild('mainImage') mainImage!: ElementRef;
+  @Input() vertical: boolean = false;
+  @Input() data: GalleryData[] = [];
+  @Input() height: string = '';
 
-    {
-      alt: 'dd',
-      name: '',
-      format: 'jpg',
-    },
-    {
-      alt: 'dd',
-      name: 'agromap-team-2',
-      format: 'jpg',
-    },
-    {
-      alt: 'dd',
-      name: 'agromap-team-3',
-      format: 'jpg',
-    },
-    {
-      alt: 'dd',
-      name: 'agromap-team-1',
-      format: 'jpg',
-    },
-    {
-      alt: 'dd',
-      name: 'agromap-team-1',
-      format: 'jpg',
-    },
-    {
-      alt: 'dd',
-      name: 'agromap-team-1',
-      format: 'jpg',
-    },
+  mainImageHeight: number = 0;
 
-    {
-      alt: 'dd',
-      name: 'agromap-team-1',
-      format: 'jpg',
-    },
-    {
-      alt: 'dd',
-      name: 'agromap-team-1',
-      format: 'jpg',
-    },
-    {
-      alt: 'dd',
-      name: 'agromap-team-1',
-      format: 'jpg',
-    },
-  ];
+  activeData: GalleryData | null = null;
 
-  activeImage: IGalleryImage = this.images[0];
+  constructor(translate: TranslateService) {}
 
-  handleSelect(image: IGalleryImage) {
-    this.activeImage = image;
+  handleSelect(image: GalleryData) {
+    this.activeData = image;
+  }
+
+  onMainImageLoad() {
+    const mainImageHeight = this.mainImage.nativeElement.clientHeight;
+    this.mainImageHeight = mainImageHeight;
+  }
+
+  ngOnInit(): void {
+    this.activeData = this.data[0];
   }
 }

@@ -18,7 +18,11 @@
         <p [innerHTML]="'informational-system__text-1' | translate"></p>
         <p [innerText]="'informational-system__text-2' | translate"></p>
       </div>
-      <app-gallery></app-gallery>
+      <app-gallery
+        [vertical]="false"
+        [data]="informationalSystemGalleryItems"
+        height="80vh"
+      ></app-gallery>
     </section>
 
     <section id="neural-networks">
@@ -77,39 +81,11 @@
         <p [innerText]="'mo-technologies__text-2' | translate"></p>
 
         <div class="subcontent">
-          <img
-            [src]="
-              '../../../../assets/images/' +
-              moTechnologiesActiveImgName +
-              '.png'
-            "
-          />
-
-          <ul>
-            <li
-              (mousemove)="handleMousemove('plants_humidity')"
-              [class.active]="moTechnologiesActiveImgName === 'plants_humidity'"
-              [innerText]="'mo-technologies__list-item-1' | translate"
-            ></li>
-            <li
-              (mousemove)="handleMousemove('agromap_fields')"
-              [class.active]="moTechnologiesActiveImgName === 'agromap_fields'"
-              [innerText]="'mo-technologies__list-item-2' | translate"
-            ></li>
-            <li
-              (mousemove)="handleMousemove('cultures')"
-              [class.active]="moTechnologiesActiveImgName === 'cultures'"
-              [innerText]="'mo-technologies__list-item-3' | translate"
-            ></li>
-
-            <li
-              (mousemove)="handleMousemove('prediction_productivity')"
-              [class.active]="
-                moTechnologiesActiveImgName === 'prediction_productivity'
-              "
-              [innerText]="'mo-technologies__list-item-4' | translate"
-            ></li>
-          </ul>
+          <app-gallery
+            [vertical]="true"
+            [data]="moTechnologiesGalleryItems"
+            height="50vh"
+          ></app-gallery>
         </div>
       </div>
     </section>

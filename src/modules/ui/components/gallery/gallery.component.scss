@@ -1,52 +1,102 @@
 ul,
-ol {
+ol,
+p {
   padding: 0;
   margin: 0;
 }
+
 li {
   list-style-type: none;
 }
 
-.gallery {
-  display: flex;
-  flex-direction: column;
-  gap: 30px;
+:host {
+  width: 100%;
 
-  img {
-    max-width: 100%;
-  }
+  .gallery {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    justify-content: space-between;
 
-  .carousel-item img {
-    width: 300px;
-  }
-
-  .carousel {
-    display: -webkit-box;
-    gap: 30px;
-    overflow-x: auto;
-  }
-
-  &.vertical {
-    flex-direction: row;
-    max-height: 60vh;
-
-    img {
-      max-width: 80%;
-    }
-
-    .carousel-item img {
+    .main-image {
+      max-height: 500px;
+      height: 100%;
       width: 100%;
+      object-fit: cover;
+      border-radius: 8px;
     }
 
     .carousel {
-      flex-direction: column;
-      display: flex;
+      display: -webkit-box;
+      gap: 20px;
+      overflow: hidden;
+      overflow-x: auto;
+      height: 200px;
 
-      li {
-        display: flex;
-        justify-content: flex-end;
+      @media only screen and (max-width: 992px) {
+        height: 100% !important;
       }
-      overflow-y: scroll;
+
+      .carousel-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: antiquewhite;
+        padding: 10px;
+        border-radius: 10px;
+        justify-content: space-around;
+
+        p {
+          max-width: 100%;
+          overflow-wrap: break-word;
+        }
+
+        @media only screen and (max-width: 992px) {
+          p {
+            font-size: 14px;
+          }
+        }
+
+        img {
+          cursor: pointer;
+          height: 100%;
+          width: 100%;
+          object-fit: cover;
+
+          @media only screen and (max-width: 992px) {
+            height: 100px;
+          }
+        }
+
+        &.active {
+          background: rgb(247, 204, 148);
+        }
+      }
+    }
+
+    &.vertical {
+      @media only screen and (min-width: 992px) {
+        flex-direction: row;
+
+        .main-image {
+          max-width: 80%;
+        }
+
+        .carousel {
+          width: 20%;
+          flex-direction: column;
+          display: flex;
+          overflow-y: auto;
+          height: 100%;
+
+          .carousel-item {
+            justify-content: flex-end;
+            height: 100%;
+            width: 100%;
+          }
+        }
+      }
     }
   }
 }

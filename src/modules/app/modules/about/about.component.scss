@@ -60,7 +60,6 @@ nav {
 section {
   display: flex;
   margin-bottom: 20px;
-  align-items: center;
   gap: $intend;
   background: $bgColor;
 
@@ -127,36 +126,7 @@ section {
 
 #mo-technologies {
   .content div {
-    display: flex;
-    justify-content: space-between;
     margin-top: 50px;
-    gap: 30px;
-
-    ul {
-      li {
-        padding: 30px;
-        border-radius: $borderRadius;
-        margin-bottom: 10px;
-        transition: all 0.5s ease;
-        cursor: pointer;
-
-        &:hover,
-        &.active {
-          background-color: rgba(233, 233, 179, 0.473);
-        }
-      }
-    }
-    img {
-      max-width: 70%;
-      transition: all 1s ease;
-    }
-
-    @media only screen and (max-width: 992px) {
-      flex-direction: column-reverse;
-      img {
-        max-width: 100%;
-      }
-    }
   }
 }
 
