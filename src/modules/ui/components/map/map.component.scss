@@ -87,7 +87,7 @@ $transitionDelay: 0.2s;
   }
 
   .feature-content {
-    margin-bottom: 15%;
+    margin-bottom: $mobileBottomNavHeight;
     border-top-right-radius: 20px;
     border-top-left-radius: 20px;
   }
