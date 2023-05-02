@@ -1,0 +1,51 @@
+<div class="wrapper" [style.justifyContent]="position">
+  <div class="paginator">
+    <button
+      *ngIf="showPrevNextButtons"
+      [disabled]="currentPage === 1"
+      (click)="goToPage(currentPage - 1)"
+    >
+      <app-svg-icon class="icon arrow-left" size="16px" name="arrow-down">
+      </app-svg-icon>
+    </button>
+
+    <div class="list">
+      <button [class.active]="currentPage === 1" (click)="goToPage(1)">
+        {{ 1 }}
+      </button>
+
+      <button *ngIf="currentPage >= 4" [disabled]="true">...</button>
+
+      <ng-container *ngFor="let page of pages">
+        <button
+          [disabled]="page === currentPage"
+          (click)="goToPage(page)"
+          [class.active]="currentPage === page"
+        >
+          {{ page }}
+        </button>
+      </ng-container>
+
+      <button *ngIf="currentPage <= totalPages - 4" [disabled]="true">
+        ...
+      </button>
+
+      <button
+        [class.active]="currentPage === totalPages"
+        *ngIf="totalPages"
+        (click)="goToPage(totalPages)"
+      >
+        {{ totalPages }}
+      </button>
+    </div>
+
+    <button
+      *ngIf="showPrevNextButtons"
+      [disabled]="currentPage === totalPages"
+      (click)="goToPage(currentPage + 1)"
+    >
+      <app-svg-icon class="icon arrow-right" size="16px" name="arrow-down">
+      </app-svg-icon>
+    </button>
+  </div>
+</div>
