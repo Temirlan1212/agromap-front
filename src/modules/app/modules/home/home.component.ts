@@ -143,6 +143,15 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       }),
       type: 'checkbox',
     },
+    {
+      title: 'TCI layer',
+      name: '	FULL_KR_TCI',
+      layer: tileLayer.wms('https://geoserver.24mycrm.com/agromap/wms', {
+        layers: 'magromap:FULL_KR_TCI',
+        ...this.wmsLayersOverlayOptions,
+      }),
+      type: 'checkbox',
+    },
   ];
 
   mapData: MapData | null = null;
