@@ -33,10 +33,6 @@ li {
       overflow-x: auto;
       height: 200px;
 
-      @media only screen and (max-width: 992px) {
-        height: 100% !important;
-      }
-
       .carousel-item {
         display: flex;
         flex-direction: column;
@@ -52,21 +48,11 @@ li {
           overflow-wrap: break-word;
         }
 
-        @media only screen and (max-width: 992px) {
-          p {
-            font-size: 14px;
-          }
-        }
-
         img {
           cursor: pointer;
           height: 100%;
           width: 100%;
           object-fit: cover;
-
-          @media only screen and (max-width: 992px) {
-            height: 100px;
-          }
         }
 
         &.active {
@@ -74,27 +60,50 @@ li {
         }
       }
     }
+  }
+}
 
+@media only screen and (max-width: 992px) {
+  .main-image {
+    height: 250px !important;
+    object-fit: cover;
+  }
+
+  .carousel {
+    height: 100% !important;
+
+    .carousel-item {
+      p {
+        font-size: 14px;
+      }
+
+      img {
+        height: 100px;
+      }
+    }
+  }
+}
+
+@media only screen and (min-width: 992px) {
+  .gallery {
     &.vertical {
-      @media only screen and (min-width: 992px) {
-        flex-direction: row;
+      flex-direction: row;
 
-        .main-image {
-          max-width: 80%;
-        }
+      .main-image {
+        max-width: 80%;
+      }
 
-        .carousel {
-          width: 20%;
-          flex-direction: column;
-          display: flex;
-          overflow-y: auto;
+      .carousel {
+        width: 20%;
+        flex-direction: column;
+        display: flex;
+        overflow-y: auto;
+        height: 100%;
+
+        .carousel-item {
+          justify-content: flex-end;
           height: 100%;
-
-          .carousel-item {
-            justify-content: flex-end;
-            height: 100%;
-            width: 100%;
-          }
+          width: 100%;
         }
       }
     }
