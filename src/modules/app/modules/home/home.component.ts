@@ -126,6 +126,15 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       type: 'radio',
     },
     {
+      title: 'Base layer',
+      name: '	FULL_KR_TCI',
+      layer: tileLayer.wms('https://geoserver.24mycrm.com/agromap/wms', {
+        layers: 'magromap:FULL_KR_TCI',
+        ...this.wmsLayersOverlayOptions,
+      }),
+      type: 'checkbox',
+    },
+    {
       title: 'SoilLayer',
       name: 'soil_agromap',
       layer: tileLayer.wms('https://geoserver.24mycrm.com/agromap/wms', {
@@ -139,15 +148,6 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       name: 'my_test_store',
       layer: tileLayer.wms('https://geoserver.24mycrm.com/my_testing/wms', {
         layers: 'my_testing:my_test_store',
-        ...this.wmsLayersOverlayOptions,
-      }),
-      type: 'checkbox',
-    },
-    {
-      title: 'TCI layer',
-      name: '	FULL_KR_TCI',
-      layer: tileLayer.wms('https://geoserver.24mycrm.com/agromap/wms', {
-        layers: 'magromap:FULL_KR_TCI',
         ...this.wmsLayersOverlayOptions,
       }),
       type: 'checkbox',
