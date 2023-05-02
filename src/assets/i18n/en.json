@@ -134,8 +134,9 @@
   "Density": "Density",
   "Population": "Population",
   "Description": "Description",
-  "Productivity layer": "Productivity layer",
   "This field is required": "This field is required",
+  "Notifications": "Notifications",
+  "Productivity layer": "Productivity layer",
   "Contour details": "Contour details",
   "Vegetative indexes": "Vegetative indexes",
   "Soil class": "Soil class",
@@ -152,5 +153,6 @@
   "Successfully updated": "Successfully updated",
   "About system": "About system",
   "Beta version": "Beta version",
-  "Base Map": "Base Map"
+  "Base Map": "Base Map",
+  "You don't have notifications": "You don't have notifications"
 }

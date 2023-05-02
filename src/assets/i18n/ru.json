@@ -134,6 +134,7 @@
   "Density": "Плотность",
   "Population": "Население",
   "Description": "Описание",
+  "Notifications": "Уведомления",
   "Productivity layer": "Слой продуктивности",
   "This field is required": "Это поле обязательное",
   "Contour details": "Данные контура",
@@ -152,5 +153,6 @@
   "Successfully updated": "Успешно обновлено",
   "About system": "О системе",
   "Beta version": "Бета версия",
-  "Base Map": "Основная карта"
+  "Base Map": "Основная карта",
+  "You don't have notifications": "У вас уведомлений нет"
 }

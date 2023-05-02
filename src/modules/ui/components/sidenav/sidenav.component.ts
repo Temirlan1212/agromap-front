@@ -15,6 +15,7 @@ import {
   ILanguageStore,
 } from 'src/modules/ui/models/language.model';
 import { StoreService } from 'src/modules/ui/services/store.service';
+import { INotification } from '../../../api/models/notification.model';
 
 @Component({
   selector: 'app-sidenav',
@@ -32,14 +33,15 @@ import { StoreService } from 'src/modules/ui/services/store.service';
 })
 export class SidenavComponent implements OnChanges {
   @Input() routes: Routes = [];
-
+  @Input() notifications!: INotification[];
   topRoutes: Routes = [];
   bottomRoutes: Routes = [];
+  mobileRoutes: Routes = [];
   opened: boolean = false;
   langsOpened: boolean = false;
   currentLang: ELanguageCode = ELanguageCode.ru;
   allLangs: ILanguage[] = [];
-  mobileRoutes: Routes = [];
+  indicator: boolean = false;
 
   constructor(
     private translate: TranslateService,
@@ -89,6 +91,9 @@ export class SidenavComponent implements OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['routes'] != null && !changes['routes'].isFirstChange()) {
       this.chunkRoutes(this.routes);
+    }
+    if (changes['notifications']) {
+      this.indicator = this.notifications?.length > 0;
     }
   }
 

@@ -1,6 +1,7 @@
-import { HttpClient, HttpResponse } from '@angular/common/http';
-import { firstValueFrom } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { firstValueFrom, interval, Observable, switchMap } from 'rxjs';
 import { IPassword, IProfile, IUser } from '../models/user.model';
+import { INotification } from '../models/notification.model';
 
 export class UserApi {
   constructor(private http: HttpClient) {}
@@ -71,4 +72,24 @@ export class UserApi {
       this.http.patch<IProfile>(`account/edit_profile`, data)
     );
   }
+
+  async getNotifications(): Promise<INotification[]> {
+    return await firstValueFrom(
+      this.http.get<INotification[]>(`account/notifications`)
+    );
+  }
+
+  async removeNotification(id: number): Promise<Record<string, any>> {
+    return await firstValueFrom(
+      this.http.delete<Record<string, any>>(
+        `account/delete_notifications/${id}`
+      )
+    );
+  }
+
+  notifications: Observable<INotification[]> = interval(1000 * 3600 * 4).pipe(
+    switchMap(() => {
+      return this.getNotifications();
+    })
+  );
 }

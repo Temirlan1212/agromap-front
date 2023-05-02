@@ -1,6 +1,12 @@
 <ng-template #navMobItem let-path="path" let-title="title" let-data="data">
   <a routerLinkActive="active" [routerLink]="path" [ngClass]="data.class">
-    <app-svg-icon class="icon" size="24px" [name]="data.icon"></app-svg-icon>
+    <div class="icon-wrapper">
+      <app-svg-icon class="icon" size="24px" [name]="data.icon"></app-svg-icon>
+      <span
+        class="notifications-indicator"
+        *ngIf="data.class === 'notification' && indicator"
+      ></span>
+    </div>
     <span class="title" [textContent]="title | translate"></span>
   </a>
 </ng-template>
@@ -42,12 +48,18 @@
 
 <ng-template #navItem let-path="path" let-title="title" let-data="data">
   <a routerLinkActive="active" [routerLink]="path" [ngClass]="data.class">
-    <app-svg-icon
-      class="icon"
-      size="24px"
-      [name]="data.icon"
-      *ngIf="data.icon != null"
-    ></app-svg-icon>
+    <div class="icon-wrapper">
+      <app-svg-icon
+        class="icon"
+        size="24px"
+        [name]="data.icon"
+        *ngIf="data.icon != null"
+      ></app-svg-icon>
+      <span
+        class="notifications-indicator"
+        *ngIf="data.class === 'notification' && indicator"
+      ></span>
+    </div>
     <img
       class="image"
       [src]="'assets/images/' + data.image"
@@ -65,7 +77,6 @@
       [ngTemplateOutletContext]="route"
     ></ng-container>
   </nav>
-
   <nav class="bottom">
     <ng-container
       *ngFor="let route of bottomRoutes"

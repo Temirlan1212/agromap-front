@@ -1,0 +1,18 @@
+<div class="header">
+  <h1 class="title">{{ "Notifications" | translate }}</h1>
+</div>
+<div class="list">
+  <app-table
+    [actionDelete]="true"
+    [items]="list"
+    [fields]="[{ title: 'Name' | translate, field: 'text_' + currentLang }]"
+    *ngIf="list?.length > 0; else noItems"
+    (actionClick)="handleTableActionClick($event)"
+  ></app-table>
+  <ng-template #noItems>
+    <app-loading [loading]="loading">
+      <h4>{{ "You don't have notifications" | translate }}</h4>
+    </app-loading>
+  </ng-template>
+</div>
+<router-outlet></router-outlet>
