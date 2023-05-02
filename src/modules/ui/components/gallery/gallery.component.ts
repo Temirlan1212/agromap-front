@@ -24,7 +24,6 @@ export class GalleryComponent implements OnInit {
   @Input() height: string = '';
 
   mainImageHeight: number = 0;
-
   activeData: GalleryData | null = null;
 
   constructor(translate: TranslateService) {}
