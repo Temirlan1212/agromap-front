@@ -134,20 +134,11 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       }),
       type: 'checkbox',
     },
-    // {
-    //   title: 'Productivity layer',
-    //   name: 'my_test_store',
-    //   layer: tileLayer.wms('https://geoserver.24mycrm.com/my_testing/wms', {
-    //     layers: 'my_testing:my_test_store',
-    //     ...this.wmsLayersOverlayOptions,
-    //   }),
-    //   type: 'checkbox',
-    // },
     {
       title: 'Productivity layer',
       name: 'my_test_store',
-      layer: tileLayer.wms('https://geoserver.24mycrm.com/agromap/wms', {
-        layers: 'agromap:FULL_KR_TCI',
+      layer: tileLayer.wms('https://geoserver.24mycrm.com/my_testing/wms', {
+        layers: 'my_testing:my_test_store',
         ...this.wmsLayersOverlayOptions,
       }),
       type: 'checkbox',

@@ -100,3 +100,41 @@ li {
     }
   }
 }
+
+@media only screen and (max-width: 992px) {
+  .carousel {
+    height: 100% !important;
+
+    .carousel-item {
+      p {
+        font-size: 14px;
+      }
+
+      img {
+        height: 100px;
+      }
+    }
+  }
+
+  &.vertical {
+    flex-direction: row;
+
+    .main-image {
+      max-width: 80%;
+    }
+
+    .carousel {
+      width: 20%;
+      flex-direction: column;
+      display: flex;
+      overflow-y: auto;
+      height: 100%;
+
+      .carousel-item {
+        justify-content: flex-end;
+        height: 100%;
+        width: 100%;
+      }
+    }
+  }
+}
