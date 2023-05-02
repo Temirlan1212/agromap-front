@@ -25,6 +25,7 @@ import { FormFieldComponent } from '../../../ui/components/form-field/form-field
 import { ContentTabsComponent } from '../../../ui/components/content-tabs/content-tabs.component';
 import { TabComponent } from '../../../ui/components/content-tabs/tab/tab.component';
 import { ToggleButtonComponent } from '../../../ui/components/toggle-button/toggle-button.component';
+import { PaginatorComponent } from 'src/modules/ui/components/paginator/paginator.component';
 
 @NgModule({
   declarations: [
@@ -56,6 +57,7 @@ import { ToggleButtonComponent } from '../../../ui/components/toggle-button/togg
     ContentTabsComponent,
     TabComponent,
     ToggleButtonComponent,
+    PaginatorComponent,
   ],
   providers: [TranslatePipe],
 })

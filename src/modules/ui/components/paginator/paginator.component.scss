@@ -1,0 +1,58 @@
+@import "./constants";
+
+.wrapper {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+button {
+  background-color: transparent;
+  transition: all 0.2s ease;
+  border-radius: 100%;
+  padding: 8px;
+
+  &:hover {
+    background-color: $darkColor;
+    color: $lightColor;
+  }
+}
+
+.arrow-left {
+  transform: rotate(90deg);
+}
+
+.arrow-right {
+  transform: rotate(-90deg);
+}
+
+.paginator {
+  display: flex;
+  align-items: center;
+}
+
+.list {
+  display: flex;
+  align-items: center;
+  margin: 0 8px;
+  gap: 10px;
+}
+
+.list button {
+  padding: 4px 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background: #fff;
+  color: $darkColor;
+  &.active {
+    background: $darkColor;
+    color: #fff;
+  }
+}
+
+.list button:hover:not([disabled]) {
+  background: $darkColor;
+  color: #fff;
+  cursor: pointer;
+}
