@@ -95,26 +95,6 @@ section {
     line-height: 1.2;
     font-weight: 400;
   }
-
-  @media only screen and (max-width: 992px) {
-    flex-direction: column;
-    img {
-      max-width: 100%;
-    }
-
-    h5 {
-      font-size: 18px;
-      color: $successColor;
-    }
-
-    h4 {
-      font-size: 25px;
-    }
-
-    p {
-      font-size: 17px;
-    }
-  }
 }
 
 #informational-system {
@@ -141,11 +121,6 @@ section {
       margin: 10px;
       display: flex;
       gap: 30px;
-
-      @media only screen and (max-width: 992px) {
-        flex-direction: column;
-        gap: 10px;
-      }
     }
   }
 
@@ -153,5 +128,34 @@ section {
     max-width: 300px;
     max-height: 200px;
     border-radius: $borderRadius;
+  }
+}
+
+@media only screen and (max-width: 992px) {
+  section {
+    flex-direction: column;
+    img {
+      max-width: 100%;
+    }
+
+    h5 {
+      font-size: 18px;
+      color: $successColor;
+    }
+
+    h4 {
+      font-size: 20px;
+    }
+
+    p {
+      font-size: 17px;
+    }
+  }
+
+  #neural-network-models {
+    ol li {
+      flex-direction: column;
+      gap: 10px;
+    }
   }
 }
