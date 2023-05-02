@@ -21,9 +21,9 @@ export class GalleryComponent implements OnInit {
   @ViewChild('mainImage') mainImage!: ElementRef;
   @Input() vertical: boolean = false;
   @Input() data: GalleryData[] = [];
-  @Input() height: string = '';
 
   mainImageHeight: number = 0;
+
   activeData: GalleryData | null = null;
 
   constructor(translate: TranslateService) {}
