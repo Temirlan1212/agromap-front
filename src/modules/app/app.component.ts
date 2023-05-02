@@ -8,6 +8,7 @@ import { Title } from '@angular/platform-browser';
 import { StoreService } from '../ui/services/store.service';
 import { ELanguageCode, ILanguageStore } from '../ui/models/language.model';
 import { LanguageService } from '../ui/services/language.service';
+import { INotification } from '../api/models/notification.model';
 
 @Component({
   selector: 'app-root',
@@ -20,6 +21,7 @@ export class AppComponent implements OnInit, OnDestroy {
   routes: Routes = this.router.config;
   currentPageTitle: string = this.titleService.getTitle();
   pageTitle$ = new Subject<void>();
+  notifications: INotification[] = [];
   subscriptions: Subscription[] = [
     this.router.events.subscribe((e) => this.handleRouterEvent(e)),
     this.translate.onLangChange.subscribe((langObj) =>
@@ -31,6 +33,13 @@ export class AppComponent implements OnInit, OnDestroy {
         delay(1)
       )
       .subscribe((tr: string) => this.titleService.setTitle(tr)),
+    this.api.user.notifications.subscribe((res) => {
+      this.notifications = res;
+      this.store.setItem<INotification[] | null>(
+        'AppComponent',
+        this.notifications
+      );
+    }),
   ];
 
   constructor(
@@ -70,6 +79,19 @@ export class AppComponent implements OnInit, OnDestroy {
     this.initLang();
     this.currentUser = this.api.user.getLoggedInUser();
     this.routes = this.createRoutes(this.router.config);
+    this.getNotifications();
+  }
+
+  async getNotifications() {
+    try {
+      this.notifications = await this.api.user.getNotifications();
+      this.store.setItem<INotification[] | null>(
+        'AppComponent',
+        this.notifications
+      );
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   ngOnDestroy(): void {
