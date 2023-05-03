@@ -357,7 +357,11 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
           }
           this.mapData.geoJson.options.snapIgnore = true;
           this.mapData.geoJson.options.pmIgnore = true;
-          this.mapData.geoJson.options.style = { fillOpacity: 0, weight: 0.4 };
+          this.mapData.geoJson.options.style = {
+            fillOpacity: 0.4,
+            weight: 0.4,
+          };
+
           this.mapData.geoJson.setZIndex(400);
           this.mapData.geoJson.options.interactive = true;
           this.mapData.geoJson.addData(polygons);
@@ -679,8 +683,6 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.mapControls.handleBaseLayerChange('Base Map');
-
-    this.getRegionsPolygon();
 
     const data = this.store.getItem('HomeComponent');
     if (data !== null) {
