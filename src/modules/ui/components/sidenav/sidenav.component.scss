@@ -44,7 +44,6 @@
     a {
       display: flex;
       align-items: center;
-      gap: $sideNavMenuItemGap;
       padding: $sideNavMenuItemPadding;
       text-decoration: none;
       cursor: pointer;
@@ -69,6 +68,20 @@
       }
     }
   }
+}
+
+.icon-wrapper {
+  position: relative;
+}
+
+.notifications-indicator {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 10px;
+  height: 10px;
+  background-color: $dangerColor;
+  border-radius: 50%;
 }
 
 .content {

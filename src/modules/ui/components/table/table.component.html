@@ -19,7 +19,10 @@
           [textContent]="column"
         ></th>
       </ng-template>
-      <th [title]="'Actions' | translate" *ngIf="actions"></th>
+      <th
+        [title]="'Actions' | translate"
+        *ngIf="actionDelete || actionEdit"
+      ></th>
     </tr>
   </thead>
 

@@ -1,0 +1,26 @@
+<div class="gallery" [class.vertical]="vertical">
+  <img
+    class="main-image"
+    *ngIf="activeData"
+    #mainImage
+    (load)="onMainImageLoad()"
+    [src]="'/assets/images/' + activeData?.name + '.' + activeData?.format"
+  />
+
+  <ul class="carousel" [style.height]="vertical ? mainImageHeight + 'px' : ''">
+    <li
+      class="carousel-item"
+      *ngFor="let image of data"
+      (click)="handleSelect(image)"
+      [class.active]="activeData?.name === image?.name"
+    >
+      <img
+        *ngIf="image.name"
+        [src]="'/assets/images/' + image?.name + '.' + image?.format"
+        [alt]="image.alt"
+      />
+
+      <p *ngIf="image.text" [textContent]="image.text | translate"></p>
+    </li>
+  </ul>
+</div>
