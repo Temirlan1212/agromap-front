@@ -26,4 +26,5 @@ export interface IDistrictListQuery {
   page_size?: number;
   next?: null;
   previous?: null;
+  page?: number;
 }

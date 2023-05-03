@@ -17,3 +17,11 @@
   </ng-template>
 </div>
 <router-outlet></router-outlet>
+<app-paginator
+  [currentPage]="1"
+  *ngIf="list.length > 0"
+  [totalItems]="totalCount"
+  [itemsPerPage]="pageSize"
+  (onPageChange)="getList($event)"
+  [hidden]="loading"
+></app-paginator>
