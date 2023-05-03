@@ -31,26 +31,6 @@ export class ContourDetailsComponent implements OnDestroy {
 
   constructor(private translateSvc: TranslateService) {}
 
-  createOverlay() {
-    if (!this.hasOverlay) {
-      const tileUrl = 'assets/images/dark_overlay.png';
-
-      this.overlayPane = this.mapData?.map?.createPane('overlayPane');
-      this.overlayPane!.style.zIndex = '200';
-
-      this.rgbaOverlay = tileLayer(tileUrl, {
-        opacity: 0.7,
-        attribution: 'Overlay © OpenStreetMap contributors',
-      });
-
-      this.rgbaOverlay.addTo(this.mapData?.map);
-      this.mapData?.map
-        ?.getPane('overlayPane')!
-        .appendChild(this.rgbaOverlay.getContainer() as any);
-      this.hasOverlay = true;
-    }
-  }
-
   ngOnDestroy() {
     this.rgbaOverlay?.remove();
     if (this.overlayPane) {
