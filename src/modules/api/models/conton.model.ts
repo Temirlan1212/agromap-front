@@ -13,8 +13,8 @@ export interface IConton {
 
 export interface IContonWithPagination {
   count: number;
-  next: null;
-  previous: null;
+  next: number;
+  previous: number;
   results: IConton[];
 }
 
@@ -23,6 +23,7 @@ export interface IContonListQuery {
   district_id?: number;
   id?: string;
   page_size?: number;
-  next?: null;
-  previous?: null;
+  next?: number;
+  previous?: number;
+  page?: number;
 }

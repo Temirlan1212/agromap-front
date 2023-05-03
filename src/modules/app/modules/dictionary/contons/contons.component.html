@@ -2,18 +2,31 @@
   <h1 class="title">{{ "Contons" | translate }}</h1>
 </div>
 <div class="list">
-  <app-table
-    [items]="list"
-    [fields]="[
-      { title: 'Name' | translate, field: 'name_' + currentLang | translate },
-      { title: 'Code SOATO' | translate, field: 'code_soato' }
-    ]"
-    *ngIf="list.length > 0; else noItems"
-  ></app-table>
+  <ng-container *ngIf="!loading">
+    <app-table
+      [items]="list"
+      [fields]="[
+        { title: 'Name' | translate, field: 'name_' + currentLang | translate },
+        { title: 'Code SOATO' | translate, field: 'code_soato' }
+      ]"
+      *ngIf="list.length > 0; else noItems"
+    ></app-table>
+  </ng-container>
+
   <ng-template #noItems>
-    <app-loading [loading]="loading">
-      <h4>{{ "No data" | translate }}</h4>
-    </app-loading>
+    <h4>{{ "No data" | translate }}</h4>
   </ng-template>
+
+  <app-loading [loading]="loading"> </app-loading>
 </div>
+
+<app-paginator
+  [currentPage]="1"
+  *ngIf="list.length > 0"
+  [totalItems]="totalCount"
+  [itemsPerPage]="pageSize"
+  (onPageChange)="getList($event)"
+  [hidden]="loading"
+></app-paginator>
+
 <router-outlet></router-outlet>
