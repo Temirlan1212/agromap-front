@@ -16,7 +16,7 @@
     </app-loading>
   </ng-template>
 </div>
-<router-outlet></router-outlet>
+
 <app-paginator
   [currentPage]="1"
   *ngIf="list.length > 0"
@@ -25,3 +25,5 @@
   (onPageChange)="getList($event)"
   [hidden]="loading"
 ></app-paginator>
+
+<router-outlet></router-outlet>

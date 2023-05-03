@@ -19,7 +19,6 @@
 
   <app-loading [loading]="loading"> </app-loading>
 </div>
-<router-outlet></router-outlet>
 
 <app-paginator
   [currentPage]="1"
@@ -29,3 +28,5 @@
   (onPageChange)="getList($event)"
   [hidden]="loading"
 ></app-paginator>
+
+<router-outlet></router-outlet>
