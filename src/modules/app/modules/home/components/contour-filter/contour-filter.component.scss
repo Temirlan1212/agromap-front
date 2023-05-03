@@ -62,9 +62,6 @@ h5 {
 @media only screen and (max-width: 992px) {
   :host {
     width: 100%;
-    border-bottom-left-radius: 20px;
-    border-bottom-right-radius: 20px;
-    border-bottom: 1px solid #7f7f7f;
 
     &::-webkit-scrollbar {
       display: none;

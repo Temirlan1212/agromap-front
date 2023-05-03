@@ -3,9 +3,6 @@
   display: flex;
   flex-wrap: wrap;
   gap: 20px;
-  overflow: auto;
-  max-height: 100vh;
-  padding: 30px;
 
   .soil {
     box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
@@ -42,10 +39,7 @@
 }
 
 @media only screen and (max-width: 576px) {
-  .soil-classes {
-    padding-bottom: 100px;
-    .soil {
-      inline-size: 80% !important;
-    }
+  .soil {
+    inline-size: 80% !important;
   }
 }

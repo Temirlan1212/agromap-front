@@ -4,7 +4,7 @@
       <span>ID: {{ i.ID }}</span>
     </div>
     <div class="soil-info">
-      <span [textContent]="i.name_ru"></span>
+      <span [textContent]="i['name_' + currentLang]"></span>
     </div>
   </div>
 </div>

@@ -9,4 +9,5 @@ export interface SoilClass {
   description_ky: string;
   description_en: string;
   color: string;
+  [key: string]: string | number;
 }

@@ -108,9 +108,6 @@ table {
 }
 
 @media (max-width: 992px) {
-  table {
-    margin-bottom: $mobileBottomNavHeight;
-  }
   table thead {
     display: none;
   }
