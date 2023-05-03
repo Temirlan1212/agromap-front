@@ -71,10 +71,18 @@ export class CultureStatsComponent implements AfterViewInit, OnDestroy {
     const formState = this.form.getState();
     const { value } = formState;
 
+    const land_type = this.form.form.get('land_type');
+
+    if (!land_type?.value) {
+      land_type?.setValue(1);
+      value.land_type = land_type?.value;
+    }
+
     if (!value.land_type) {
       this.messages.error(this.translate.transform('Form is invalid'));
       return;
     }
+
     this.loading = true;
     try {
       const res = await this.api.statistics.getCultureStatistics(value);
@@ -135,6 +143,7 @@ export class CultureStatsComponent implements AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
+    this.handleButtonClick();
     this.cd.detectChanges();
   }
 
