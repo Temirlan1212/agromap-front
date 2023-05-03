@@ -16,8 +16,7 @@ export class DictionaryComponent implements OnInit {
 
   ngOnInit() {}
 
-  handleLinkClick(url: string) {
-    this.router.navigate([url], { relativeTo: this.route });
+  handleLinkClick() {
     this.sidePanel.handlePanelToggle();
     this.toggleBtn.isContentToggled = false;
   }

@@ -2,24 +2,42 @@
   <div class="dictionary-list">
     <h4>{{ "Dictionary" | translate }}</h4>
     <nav>
-      <a (click)="handleLinkClick('regions')" routerLinkActive="active">{{
-        "Regions" | translate
-      }}</a>
-      <a (click)="handleLinkClick('districts')" routerLinkActive="active">{{
-        "Districts" | translate
-      }}</a>
-      <a (click)="handleLinkClick('contons')" routerLinkActive="active">{{
-        "Contons" | translate
-      }}</a>
-      <a (click)="handleLinkClick('cultures')" routerLinkActive="active">{{
-        "Cultures" | translate
-      }}</a>
-      <a (click)="handleLinkClick('indexes')" routerLinkActive="active">{{
-        "Indexes" | translate
-      }}</a>
-      <a routerLink="soil-types" routerLinkActive="active">{{
-        "Soil types" | translate
-      }}</a>
+      <a
+        (click)="handleLinkClick()"
+        routerLink="/dictionary/regions"
+        routerLinkActive="active"
+        >{{ "Regions" | translate }}</a
+      >
+      <a
+        (click)="handleLinkClick()"
+        routerLink="/dictionary/districts"
+        routerLinkActive="active"
+        >{{ "Districts" | translate }}</a
+      >
+      <a
+        (click)="handleLinkClick()"
+        routerLink="/dictionary/contons"
+        routerLinkActive="active"
+        >{{ "Contons" | translate }}</a
+      >
+      <a
+        (click)="handleLinkClick()"
+        routerLink="/dictionary/cultures"
+        routerLinkActive="active"
+        >{{ "Cultures" | translate }}</a
+      >
+      <a
+        (click)="handleLinkClick()"
+        routerLink="/dictionary/indexes"
+        routerLinkActive="active"
+        >{{ "Indexes" | translate }}</a
+      >
+      <a
+        (click)="handleLinkClick()"
+        routerLink="/dictionary/soil-types"
+        routerLinkActive="active"
+        >{{ "Soil types" | translate }}</a
+      >
     </nav>
   </div>
 </app-side-panel>
