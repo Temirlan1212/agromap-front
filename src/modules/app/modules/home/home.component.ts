@@ -110,7 +110,8 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       name: 'FULL_KR_TCI',
       layer: tileLayer.wms('https://geoserver.24mycrm.com/agromap/wms', {
         layers: 'magromap:FULL_KR_TCI',
-        ...this.wmsLayersOptions,
+        ...this.wmsLayersOverlayOptions,
+        zIndex: 400,
       }),
     },
   ];
