@@ -69,11 +69,7 @@
           storageName="isCollapsedMapControlTable"
         >
           <app-content-tabs>
-            <app-tab
-              [title]="
-                'Pasture (productivity area)' | translate | truncate : 20
-              "
-            >
+            <app-tab [title]="'Pasture (productivity area)' | translate">
               <app-table
                 *ngFor="
                   let item of contourPastureStatisticsProductivityTableItems
@@ -96,9 +92,7 @@
                 ]"
               ></app-table>
             </app-tab>
-            <app-tab
-              [title]="'Land (square of cultures)' | translate | truncate : 20"
-            >
+            <app-tab [title]="'Land (square of cultures)' | translate">
               <app-table
                 [items]="contourCultureStatisticsProductivityTableItems"
                 mode="dark"
