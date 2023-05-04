@@ -9,6 +9,7 @@ import { DistrictsComponent } from './districts/districts.component';
 import { ContonsComponent } from './contons/contons.component';
 import { IndexesComponent } from './indexes/indexes.component';
 import { AuthGuard } from '../../auth.guard';
+import { SoilTypesComponent } from './soil-types/soil-types.component';
 
 const routes: Routes = [
   {
@@ -51,6 +52,10 @@ const routes: Routes = [
       {
         path: 'indexes',
         component: IndexesComponent,
+      },
+      {
+        path: 'soil-types',
+        component: SoilTypesComponent,
       },
     ],
   },

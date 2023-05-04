@@ -25,6 +25,7 @@ import { FormFieldComponent } from '../../../ui/components/form-field/form-field
 import { ContentTabsComponent } from '../../../ui/components/content-tabs/content-tabs.component';
 import { TabComponent } from '../../../ui/components/content-tabs/tab/tab.component';
 import { ToggleButtonComponent } from '../../../ui/components/toggle-button/toggle-button.component';
+import { SoilTypesComponent } from './soil-types/soil-types.component';
 import { PaginatorComponent } from 'src/modules/ui/components/paginator/paginator.component';
 
 @NgModule({
@@ -38,6 +39,7 @@ import { PaginatorComponent } from 'src/modules/ui/components/paginator/paginato
     DistrictsComponent,
     ContonsComponent,
     IndexesComponent,
+    SoilTypesComponent,
   ],
   imports: [
     CommonModule,

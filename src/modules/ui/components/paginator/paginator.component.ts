@@ -13,7 +13,7 @@ export class PaginatorComponent {
   @Input() totalItems: number = 0;
   @Input() itemsPerPage: number = 10;
   @Input() currentPage: number = 1;
-  @Input() pageLinksQuantity: number = 6;
+  @Input() pageLinksQuantity: number = 4;
   @Input() showPrevNextButtons: boolean = true;
   @Input() position: string = 'start' || 'center' || 'end';
 
