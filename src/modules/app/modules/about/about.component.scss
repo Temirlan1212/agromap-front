@@ -72,12 +72,7 @@ section {
   }
 
   h5 {
-    background-image: $gradient-2;
-    background-size: 100%;
-    background-repeat: repeat;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-
+    color: $successColor;
     font-size: 25px;
     line-height: 1.2;
     margin: 30px 0;

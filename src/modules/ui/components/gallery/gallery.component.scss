@@ -1,3 +1,5 @@
+@import "./constants";
+
 ul,
 ol,
 p {
@@ -38,7 +40,7 @@ li {
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        background: #dbdbdb;
+        background: $sideNavMenuBgColor;
         padding: 5px;
         border-radius: 4px;
         justify-content: space-around;
@@ -56,7 +58,7 @@ li {
         }
 
         &.active {
-          background: rgb(247, 204, 148);
+          background: $sideNavMenuItemHoverBgColor;
         }
       }
     }
