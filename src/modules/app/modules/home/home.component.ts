@@ -72,13 +72,13 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   };
 
   baseLayers: ITileLayer[] = [
-    {
-      title: 'Google Satellite',
-      name: 'Google Satellite',
-      layer: tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
-        subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
-      }),
-    },
+    // {
+    //   title: 'Google Satellite',
+    //   name: 'Google Satellite',
+    //   layer: tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+    //     subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+    //   }),
+    // },
     {
       title: 'Google Streets',
       name: 'Google Streets',
