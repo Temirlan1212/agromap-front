@@ -4,6 +4,7 @@
   display: block;
   overflow: auto;
   min-height: auto;
+  margin: 10px 0;
 
   &::-webkit-scrollbar {
     width: 3px;
@@ -145,4 +146,8 @@ table {
     font-weight: bold;
     text-align: left;
   }
+}
+th,
+td {
+  border: 1px solid $tableBodyRowBorderColor;
 }
