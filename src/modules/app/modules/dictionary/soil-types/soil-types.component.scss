@@ -1,0 +1,45 @@
+.soil-classes {
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+
+  .soil {
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    border-radius: 5px;
+    overflow-wrap: break-word;
+    inline-size: 200px;
+  }
+
+  .soil-info {
+    padding: 10px;
+    color: #525354;
+  }
+
+  .color {
+    height: 100px;
+    border-top-left-radius: inherit;
+    border-top-right-radius: inherit;
+    text-align: right;
+    padding: 10px;
+
+    span {
+      background: #f0f8ff;
+      padding: 2px 5px;
+      border-radius: 5px;
+      color: #525354;
+    }
+  }
+}
+
+@media only screen and (max-width: 992px) {
+  .soil-classes {
+    justify-content: center;
+  }
+}
+
+@media only screen and (max-width: 576px) {
+  .soil {
+    inline-size: 80% !important;
+  }
+}

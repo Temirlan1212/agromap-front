@@ -1,17 +1,23 @@
 @import "./constants";
 
+$borderRadius: 4px;
+
 .tabs ul {
   list-style-type: none;
   overflow: hidden;
   width: fit-content;
   margin: 0 auto;
-  padding: 0;
+  padding: 3px;
+  border-radius: $borderRadius;
+  background-color: $lightColor;
+  display: flex;
 }
 
 .tabs li {
   float: left;
   cursor: pointer;
   padding: 10px 20px;
+  overflow-wrap: break-word;
 }
 
 .tabs li a {
@@ -23,7 +29,9 @@
 }
 
 .tabs li.active {
-  box-shadow: inset 0 -2px 0 $successColor;
+  background-color: $successColor;
+  color: $lightColor;
+  border-radius: $borderRadius;
 }
 
 .tabs li:hover:not(.active) {

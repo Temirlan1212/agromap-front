@@ -8,4 +8,5 @@ export interface SoilClass {
   description_ru: string;
   description_ky: string;
   description_en: string;
+  color: string;
 }

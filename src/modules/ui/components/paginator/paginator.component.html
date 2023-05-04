@@ -14,7 +14,9 @@
         {{ 1 }}
       </button>
 
-      <button *ngIf="currentPage >= 4" [disabled]="true">...</button>
+      <button *ngIf="currentPage >= pageLinksQuantity" [disabled]="true">
+        ...
+      </button>
 
       <ng-container *ngFor="let page of pages">
         <button
@@ -26,7 +28,10 @@
         </button>
       </ng-container>
 
-      <button *ngIf="currentPage <= totalPages - 4" [disabled]="true">
+      <button
+        *ngIf="currentPage <= totalPages - pageLinksQuantity"
+        [disabled]="true"
+      >
         ...
       </button>
 
