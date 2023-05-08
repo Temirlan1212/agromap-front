@@ -14,6 +14,7 @@ import { ITableItem } from 'src/modules/ui/models/table.model';
 import { Subscription } from 'rxjs';
 import html2canvas from 'html2canvas';
 import { TableComponent } from 'src/modules/ui/components/table/table.component';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-culture-stats',
@@ -30,6 +31,13 @@ export class CultureStatsComponent implements AfterViewInit, OnDestroy {
   data: ITableItem[] = [];
 
   currLang: string = this.translateSvc.currentLang;
+
+  mode: FormControl = new FormControl<string | null>(null);
+
+  aiBaseRadioOptions: any = [
+    { name: 'AI', value: 'agromap_store_ai' },
+    { name: 'Base', value: 'agromap_store' },
+  ];
 
   columns = [
     {
@@ -82,6 +90,8 @@ export class CultureStatsComponent implements AfterViewInit, OnDestroy {
       this.messages.error(this.translate.transform('Form is invalid'));
       return;
     }
+
+    if (this.mode.value === 'agromap_store_ai') value.ai = true;
 
     this.loading = true;
     try {
@@ -143,6 +153,7 @@ export class CultureStatsComponent implements AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
+    this.mode.setValue('agromap_store_ai');
     this.handleButtonClick();
     this.cd.detectChanges();
   }
