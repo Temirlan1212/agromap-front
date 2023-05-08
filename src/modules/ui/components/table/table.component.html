@@ -2,12 +2,15 @@
   #table
   *ngIf="items.length > 0"
   [ngClass]="[mode === 'light' ? 'light' : 'dark']"
+  [class.border]="border"
 >
   <thead>
     <tr>
       <ng-container *ngIf="fields.length > 0; else byColumns">
         <th
           *ngFor="let field of fields"
+          [attr.rowspan]="field.rowspan"
+          [attr.colspan]="field.colspan"
           [title]="field.title"
           [textContent]="field.title"
         ></th>
@@ -24,6 +27,21 @@
         *ngIf="actionDelete || actionEdit"
       ></th>
     </tr>
+
+    <tr *ngIf="nestedFields.length > 0">
+      <ng-container>
+        <th
+          *ngFor="let field of nestedFields.slice(1, nestedFields.length)"
+          [title]="field.title"
+          [textContent]="field.title"
+        ></th>
+      </ng-container>
+
+      <th
+        [title]="'Actions' | translate"
+        *ngIf="actionDelete || actionEdit"
+      ></th>
+    </tr>
   </thead>
 
   <tbody>
@@ -31,7 +49,7 @@
       <ng-container *ngIf="fields.length > 0; else byColumns">
         <td
           [attr.data-label]="field.title"
-          *ngFor="let field of fields"
+          *ngFor="let field of nestedFields.length > 0 ? nestedFields : fields"
           [title]="item[field.field] | checkExist | translate"
           [textContent]="item[field.field] | checkExist | translate"
         ></td>
