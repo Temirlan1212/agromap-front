@@ -33,8 +33,8 @@ export class CroplandComponent implements OnInit, OnDestroy {
 
   async ngOnInit() {
     await this.getCulture();
-    this.cultureFormControl.setValue(3);
-    this.handleSelectCulture({ id: 3 });
+    this.cultureFormControl.setValue(this.cultures[0].id);
+    this.handleSelectCulture({ id: this.cultures[0].id });
   }
 
   async getCulture() {
