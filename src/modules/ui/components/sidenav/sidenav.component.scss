@@ -65,6 +65,7 @@
 
       .title {
         display: none;
+        margin-left: $sideNavMenuItemGap;
       }
     }
   }
@@ -151,6 +152,7 @@
   .menu {
     display: none;
   }
+
   .mobile-menu {
     position: fixed;
     display: flex;
@@ -158,11 +160,9 @@
     right: 0;
     left: 0;
     margin: 0 auto;
-    bottom: $mobileNavMarginBottom;
+    bottom: 0;
     z-index: 9999;
-    width: 97%;
     background-color: #ececec;
-    border-radius: 50px;
     height: $mobileBottomNavHeight;
     overflow-x: auto;
     overflow-y: hidden;
@@ -202,6 +202,11 @@
       align-items: center;
       position: fixed;
       z-index: 500;
+      border-radius: 0px;
+
+      &:hover {
+        background-color: $sideNavMenuItemHoverBgColor;
+      }
 
       .arrow-left {
         transform: rotate(90deg);
@@ -213,15 +218,11 @@
     }
 
     .btn-left {
-      left: 1.5%;
-      border-top-left-radius: 50px;
-      border-bottom-left-radius: 50px;
+      left: 0;
     }
 
     .btn-right {
-      right: 1.5%;
-      border-top-right-radius: 50px;
-      border-bottom-right-radius: 50px;
+      right: 0;
     }
   }
 

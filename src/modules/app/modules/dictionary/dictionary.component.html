@@ -38,6 +38,18 @@
         routerLinkActive="active"
         >{{ "Soil types" | translate }}</a
       >
+      <a
+        (click)="handleLinkClick()"
+        routerLink="/dictionary/cropland"
+        routerLinkActive="active"
+        >{{ "Cropland" | translate }}</a
+      >
+      <a
+        (click)="handleLinkClick()"
+        routerLink="/dictionary/pasture"
+        routerLinkActive="active"
+        >{{ "Pasture" | translate }}</a
+      >
     </nav>
   </div>
 </app-side-panel>

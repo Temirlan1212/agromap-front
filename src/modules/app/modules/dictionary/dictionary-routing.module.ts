@@ -1,15 +1,17 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { DictionaryComponent } from './dictionary.component';
-import { CulturesComponent } from './cultures/cultures.component';
-import { CultureAddComponent } from './cultures/components/culture-add/culture-add.component';
-import { CultureEditComponent } from './cultures/components/culture-edit/culture-edit.component';
 import { RegionsComponent } from './regions/regions.component';
 import { DistrictsComponent } from './districts/districts.component';
 import { ContonsComponent } from './contons/contons.component';
 import { IndexesComponent } from './indexes/indexes.component';
 import { AuthGuard } from '../../auth.guard';
 import { SoilTypesComponent } from './soil-types/soil-types.component';
+import { CroplandComponent } from './cropland/cropland.component';
+import { CulturesComponent } from './cultures/cultures.component';
+import { CultureAddComponent } from './cultures/components/culture-add/culture-add.component';
+import { CultureEditComponent } from './cultures/components/culture-edit/culture-edit.component';
+import { PastureComponent } from './pasture/pasture.component';
 
 const routes: Routes = [
   {
@@ -56,6 +58,14 @@ const routes: Routes = [
       {
         path: 'soil-types',
         component: SoilTypesComponent,
+      },
+      {
+        path: 'cropland',
+        component: CroplandComponent,
+      },
+      {
+        path: 'pasture',
+        component: PastureComponent,
       },
     ],
   },
