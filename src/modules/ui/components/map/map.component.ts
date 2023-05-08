@@ -111,7 +111,6 @@ export class MapComponent implements OnInit, OnDestroy {
     const s = fromEvent(this.map as Map, 'moveend')
       .pipe(
         debounce((i) => {
-          this.geoJson.clearLayers();
           return interval(1000);
         })
       )

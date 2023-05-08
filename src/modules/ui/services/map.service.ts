@@ -26,7 +26,6 @@ export class MapService {
     latLng(44.0, 68.0),
     latLng(39.0, 81.0)
   );
-
   initMap = (mapId: string, options?: MapOptions): Map => {
     return map(mapId, {
       ...Object.assign(
@@ -39,9 +38,12 @@ export class MapService {
           attributionControl: false,
           zoomControl: false,
           layers: [
-            tileLayer('http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}', {
-              subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
-            }),
+            tileLayer(
+              'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
+              {
+                subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+              }
+            ),
           ],
         },
         options

@@ -70,6 +70,7 @@
       name="baseLayers"
       nameField="title"
       valueField="name"
+      *ngIf="initialBaseLayer"
       [value]="initialBaseLayer.name"
       [options]="baseLayers"
       (changed)="handleBaseLayerChange($event)"
