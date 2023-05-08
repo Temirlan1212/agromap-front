@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { ICulture } from '../models/culture.model';
+import { ICultureIndicators, ICulture } from '../models/culture.model';
 import { firstValueFrom } from 'rxjs';
 
 export class CultureApi {
@@ -26,6 +26,14 @@ export class CultureApi {
   async delete(id: number): Promise<ICulture> {
     return await firstValueFrom(
       this.http.delete<ICulture>(`gip/culture/${id}`)
+    );
+  }
+
+  async getCultureIndicators(id: number): Promise<ICultureIndicators[]> {
+    return await firstValueFrom(
+      this.http.get<ICultureIndicators[]>(`ai/pivot_table_culture`, {
+        params: { culture: id },
+      })
     );
   }
 }

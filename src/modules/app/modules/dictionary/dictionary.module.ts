@@ -7,9 +7,7 @@ import { TranslateModule, TranslatePipe } from '@ngx-translate/core';
 import { CulturesComponent } from './cultures/cultures.component';
 import { CheckExistPipe } from '../../../ui/pipes/check-exist.pipe';
 import { SvgIconComponent } from '../../../ui/components/svg-icon/svg-icon.component';
-import { CultureAddComponent } from './cultures/components/culture-add/culture-add.component';
-import { CultureEditComponent } from './cultures/components/culture-edit/culture-edit.component';
-import { CultureFormComponent } from './cultures/components/culture-form/culture-form.component';
+
 import { LoadingComponent } from '../../../ui/components/loading/loading.component';
 import { FieldsGroupComponent } from '../../../ui/components/fields-group/fields-group.component';
 import { InputComponent } from '../../../ui/components/input/input.component';
@@ -27,6 +25,12 @@ import { TabComponent } from '../../../ui/components/content-tabs/tab/tab.compon
 import { ToggleButtonComponent } from '../../../ui/components/toggle-button/toggle-button.component';
 import { SoilTypesComponent } from './soil-types/soil-types.component';
 import { PaginatorComponent } from 'src/modules/ui/components/paginator/paginator.component';
+import { CroplandComponent } from './cropland/cropland.component';
+import { InputSelectComponent } from 'src/modules/ui/components/input-select/input-select.component';
+import { CultureAddComponent } from './cultures/components/culture-add/culture-add.component';
+import { CultureEditComponent } from './cultures/components/culture-edit/culture-edit.component';
+import { CultureFormComponent } from './cultures/components/culture-form/culture-form.component';
+import { PastureComponent } from './pasture/pasture.component';
 
 @NgModule({
   declarations: [
@@ -40,6 +44,8 @@ import { PaginatorComponent } from 'src/modules/ui/components/paginator/paginato
     ContonsComponent,
     IndexesComponent,
     SoilTypesComponent,
+    CroplandComponent,
+    PastureComponent,
   ],
   imports: [
     CommonModule,
@@ -60,6 +66,7 @@ import { PaginatorComponent } from 'src/modules/ui/components/paginator/paginato
     TabComponent,
     ToggleButtonComponent,
     PaginatorComponent,
+    InputSelectComponent,
   ],
   providers: [TranslatePipe],
 })

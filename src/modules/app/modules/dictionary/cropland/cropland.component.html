@@ -1,0 +1,62 @@
+<div class="header">
+  <h1 class="title">
+    {{ "Pivot table of cultures indicators" | translate }}
+  </h1>
+</div>
+<app-input-select
+  [placeholder]="'Select a culture' | translate"
+  [items]="cultures"
+  [nameField]="'name_ru'"
+  (onSelectItem)="handleSelectCulture($event)"
+  [formControl]="cultureFormControl"
+></app-input-select>
+
+<div class="list">
+  <app-table
+    *ngIf="culturalHealthIndicators.length > 0; else noItems"
+    [items]="culturalHealthIndicators"
+    [fields]="[
+      {
+        title: 'Districts' | translate,
+        field: 'name_' + currentLang,
+        rowspan: 2
+      },
+      {
+        title: 'NDVI' | translate,
+        field: 'name_' + currentLang,
+        colspan: 2
+      },
+      { title: 'NDMI' | translate, field: 'code_soato', colspan: 2 },
+      { title: 'NDRE' | translate, field: 'population', colspan: 2 },
+      { title: 'VARI' | translate, field: 'density', colspan: 2 },
+      { title: 'SAVI' | translate, field: 'area', colspan: 2 },
+      { title: 'Высота' | translate, field: 'area', colspan: 2 }
+    ]"
+    [nestedFields]="[
+      { title: 'min' | translate, field: 'district_name_' + currentLang },
+
+      { title: 'min' | translate, field: 'ndvi_min' },
+      { title: 'max' | translate, field: 'ndvi_max' },
+
+      { title: 'min' | translate, field: 'ndmi_min' },
+      { title: 'max' | translate, field: 'ndmi_max' },
+
+      { title: 'min' | translate, field: 'ndre_min' },
+      { title: 'max' | translate, field: 'ndre_max' },
+
+      { title: 'min' | translate, field: 'vari_min' },
+      { title: 'max' | translate, field: 'vari_max' },
+
+      { title: 'min' | translate, field: 'savi_min' },
+      { title: 'max' | translate, field: 'savi_max' },
+
+      { title: 'min' | translate, field: 'min_elevation' },
+      { title: 'max' | translate, field: 'max_elevation' }
+    ]"
+  ></app-table>
+  <ng-template #noItems>
+    <app-loading [loading]="loading">
+      <h4>{{ "No data" | translate }}</h4>
+    </app-loading>
+  </ng-template>
+</div>
