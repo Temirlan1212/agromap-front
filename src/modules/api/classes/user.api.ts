@@ -27,7 +27,6 @@ export class UserApi {
 
   async logOut(): Promise<boolean> {
     let result = false;
-    await firstValueFrom(this.http.get<any>(`account/logout_agromap`));
 
     if (document != null) {
       document.cookie = 'user=;';
