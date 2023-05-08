@@ -39,7 +39,7 @@ table {
 
   th,
   td {
-    border: 1px solid $tableBodyRowBorderColor;
+    border: none;
     padding: 10px 5px;
 
     &.actions {
@@ -52,6 +52,13 @@ table {
       button {
         padding: 0;
       }
+    }
+  }
+
+  &.border {
+    th,
+    td {
+      border: 1px solid $tableBodyRowBorderColor;
     }
   }
 
@@ -105,11 +112,6 @@ table {
 
     th {
       color: $lightColor;
-    }
-
-    th,
-    td {
-      border: none;
     }
   }
 }

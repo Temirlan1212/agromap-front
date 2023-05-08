@@ -42,6 +42,7 @@ export class TableComponent implements OnChanges {
   @Input() nestedFields: ITableField[] = [];
   @Input() items: ITableItem[] = [];
   @Input() mode = 'light';
+  @Input() border: boolean = true;
   @Output() actionClick = new EventEmitter<ITableAction>();
 
   columns: string[] = [];
@@ -51,7 +52,6 @@ export class TableComponent implements OnChanges {
   constructor() {}
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log(changes['fields']);
     if (changes['items'] != null && this.items.length > 0) {
       this.columns = Object.keys(this.items[0]);
     }

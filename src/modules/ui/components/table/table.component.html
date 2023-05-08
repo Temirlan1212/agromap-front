@@ -2,6 +2,7 @@
   #table
   *ngIf="items.length > 0"
   [ngClass]="[mode === 'light' ? 'light' : 'dark']"
+  [class.border]="border"
 >
   <thead>
     <tr>
