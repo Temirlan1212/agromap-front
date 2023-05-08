@@ -42,7 +42,7 @@ export class TableComponent implements OnChanges {
   @Input() nestedFields: ITableField[] = [];
   @Input() items: ITableItem[] = [];
   @Input() mode = 'light';
-  @Input() border: boolean = true;
+  @Input() border: boolean = false;
   @Output() actionClick = new EventEmitter<ITableAction>();
 
   columns: string[] = [];

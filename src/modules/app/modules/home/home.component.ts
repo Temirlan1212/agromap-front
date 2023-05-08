@@ -73,6 +73,15 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
   baseLayers: ITileLayer[] = [
     {
+      title: 'Satellite map',
+      name: 'FULL_KR_TCI',
+      layer: tileLayer.wms('https://geoserver.24mycrm.com/agromap/wms', {
+        layers: 'agromap:FULL_KR_TCI',
+        ...this.wmsLayersOverlayOptions,
+        zIndex: 400,
+      }),
+    },
+    {
       title: 'Google Streets',
       name: 'Google Streets',
       layer: tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
@@ -97,15 +106,6 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       layer: tileLayer(
         'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
       ),
-    },
-    {
-      title: 'Base layer',
-      name: 'FULL_KR_TCI',
-      layer: tileLayer.wms('https://geoserver.24mycrm.com/agromap/wms', {
-        layers: 'agromap:FULL_KR_TCI',
-        ...this.wmsLayersOverlayOptions,
-        zIndex: 400,
-      }),
     },
   ];
 
