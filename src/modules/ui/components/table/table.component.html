@@ -24,6 +24,7 @@
       </ng-template>
       <th
         [title]="'Actions' | translate"
+        [textContent]="'Actions' | translate"
         *ngIf="actionDelete || actionEdit"
       ></th>
     </tr>
@@ -39,6 +40,7 @@
 
       <th
         [title]="'Actions' | translate"
+        [textContent]="'Actions' | translate"
         *ngIf="actionDelete || actionEdit"
       ></th>
     </tr>
@@ -61,31 +63,37 @@
           [textContent]="item[column] | checkExist | translate"
         ></td>
       </ng-template>
-      <td class="actions" *ngIf="actions || actionEdit || actionDelete">
-        <button
-          *ngIf="actions || actionEdit"
-          type="button"
-          class="transparent"
-          (click)="handleActionClick('edit', item)"
-        >
-          <app-svg-icon
-            name="edit"
-            size="18"
-            [title]="'Edit' | translate"
-          ></app-svg-icon>
-        </button>
-        <button
-          *ngIf="actions || actionDelete"
-          type="button"
-          class="transparent"
-          (click)="handleActionClick('delete', item)"
-        >
-          <app-svg-icon
-            name="delete"
-            size="18"
-            [title]="'Delete' | translate"
-          ></app-svg-icon>
-        </button>
+
+      <td
+        *ngIf="actions || actionEdit || actionDelete"
+        [attr.data-label]="'Actions' | translate"
+      >
+        <div class="actions">
+          <button
+            *ngIf="actions || actionEdit"
+            type="button"
+            class="transparent"
+            (click)="handleActionClick('edit', item)"
+          >
+            <app-svg-icon
+              name="edit"
+              size="18"
+              [title]="'Edit' | translate"
+            ></app-svg-icon>
+          </button>
+          <button
+            *ngIf="actions || actionDelete"
+            type="button"
+            class="transparent"
+            (click)="handleActionClick('delete', item)"
+          >
+            <app-svg-icon
+              name="delete"
+              size="18"
+              [title]="'Delete' | translate"
+            ></app-svg-icon>
+          </button>
+        </div>
       </td>
     </tr>
   </tbody>
