@@ -23,8 +23,8 @@ export interface ICulture {
 }
 
 export interface ICultureIndicators {
-  district_id: 7;
-  culture_id: 2;
+  district_id: number;
+  culture_id: number;
   max_elevation: string;
   min_elevation: string;
   ndvi_max: null;
