@@ -61,6 +61,7 @@
           *ngFor="let column of columns"
           [title]="item[column] | checkExist | translate"
           [textContent]="item[column] | checkExist | translate"
+          [attr.data-label]="item[column] | checkExist | translate"
         ></td>
       </ng-template>
 
@@ -74,24 +75,18 @@
             type="button"
             class="transparent"
             (click)="handleActionClick('edit', item)"
+            [title]="'Edit' | translate"
           >
-            <app-svg-icon
-              name="edit"
-              size="18"
-              [title]="'Edit' | translate"
-            ></app-svg-icon>
+            <app-svg-icon name="edit" size="18"></app-svg-icon>
           </button>
           <button
             *ngIf="actions || actionDelete"
             type="button"
             class="transparent"
             (click)="handleActionClick('delete', item)"
+            [title]="'Delete' | translate"
           >
-            <app-svg-icon
-              name="delete"
-              size="18"
-              [title]="'Delete' | translate"
-            ></app-svg-icon>
+            <app-svg-icon name="delete" size="18"></app-svg-icon>
           </button>
         </div>
       </td>
