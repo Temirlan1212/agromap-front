@@ -4,6 +4,14 @@
     {{ "Apply" | translate }}
   </button>
 </div>
+
+<app-input-radio
+  [isResettable]="true"
+  [options]="radioOptions"
+  [formControl]="mode"
+>
+</app-input-radio>
+
 <app-report-form #form [culture]="true"></app-report-form>
 
 <app-table
