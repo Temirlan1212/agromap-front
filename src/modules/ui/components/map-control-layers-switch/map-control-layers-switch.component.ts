@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import {
+  ChangeDetectorRef,
   Component,
   ElementRef,
   EventEmitter,
@@ -42,17 +43,17 @@ export class MapControlLayersSwitchComponent implements OnChanges {
   @Input() wmsSelectedStatusLayers: Record<string, string> | null = null;
   @Output() wmsLayerChanged = new EventEmitter<ITileLayer | null>();
   @Output() baseLayerChanged = new EventEmitter<ITileLayer | null>();
-  initialBaseLayer!: ITileLayer;
   wmsBaseLayers: ITileLayer[] = [];
   wmsOverLayers: ITileLayer[] = [];
-
   selected: Record<string, ISelectedControlLayer> = {};
   isCollapsed = false;
+  initialBaseLayer!: ITileLayer;
 
   constructor(
     private elementRef: ElementRef,
     public translate: TranslateService,
-    private store: StoreService
+    private store: StoreService,
+    private cd: ChangeDetectorRef
   ) {}
 
   ngOnChanges(changes: SimpleChanges) {
@@ -94,12 +95,6 @@ export class MapControlLayersSwitchComponent implements OnChanges {
 
     this.wmsBaseLayers = this.wmsLayers.filter((l) => l.type === 'radio');
     this.wmsOverLayers = this.wmsLayers.filter((l) => l.type === 'checkbox');
-
-    if (changes['baseLayers'].currentValue) {
-      this.initialBaseLayer = this.baseLayers.find(
-        (l) => l.name === 'Base Map'
-      ) as ITileLayer;
-    }
   }
 
   @HostListener('document:click', ['$event.target'])
@@ -201,9 +196,11 @@ export class MapControlLayersSwitchComponent implements OnChanges {
     const current = this.baseLayers.find((l) => l.name === layerName);
     if (current != null) {
       this.activeBaseLayer = current;
+      this.initialBaseLayer = current;
       this.map.addLayer(this.activeBaseLayer.layer);
     }
 
+    this.cd.detectChanges();
     this.baseLayerChanged.emit(this.activeBaseLayer);
   }
 }

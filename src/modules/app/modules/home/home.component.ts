@@ -57,14 +57,21 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('sidePanel') sidePanel!: SidePanelComponent;
   @ViewChild('toggleBtn') toggleBtn!: ToggleButtonComponent;
   mode!: string;
+
+  wmsCQLFilter: string | null = null;
+  wmsLayersOptions = {
+    format: 'image/png',
+    transparent: true,
+    zIndex: 500,
+  };
+
+  wmsLayersOverlayOptions = {
+    format: 'image/png',
+    transparent: true,
+    zIndex: 499,
+  };
+
   baseLayers: ITileLayer[] = [
-    {
-      title: 'Google Satellite',
-      name: 'Google Satellite',
-      layer: tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
-        subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
-      }),
-    },
     {
       title: 'Google Streets',
       name: 'Google Streets',
@@ -91,20 +98,16 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
         'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
       ),
     },
+    {
+      title: 'Base layer',
+      name: 'FULL_KR_TCI',
+      layer: tileLayer.wms('https://geoserver.24mycrm.com/agromap/wms', {
+        layers: 'agromap:FULL_KR_TCI',
+        ...this.wmsLayersOverlayOptions,
+        zIndex: 400,
+      }),
+    },
   ];
-
-  wmsCQLFilter: string | null = null;
-  wmsLayersOptions = {
-    format: 'image/png',
-    transparent: true,
-    zIndex: 500,
-  };
-
-  wmsLayersOverlayOptions = {
-    format: 'image/png',
-    transparent: true,
-    zIndex: 499,
-  };
 
   wmsLayers: ITileLayer[] = [
     {
@@ -124,15 +127,6 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
         ...this.wmsLayersOptions,
       }),
       type: 'radio',
-    },
-    {
-      title: 'Base layer',
-      name: '	FULL_KR_TCI',
-      layer: tileLayer.wms('https://geoserver.24mycrm.com/agromap/wms', {
-        layers: 'magromap:FULL_KR_TCI',
-        ...this.wmsLayersOverlayOptions,
-      }),
-      type: 'checkbox',
     },
     {
       title: 'SoilLayer',
@@ -260,7 +254,6 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   async handleFeatureClick(layerFeature: MapLayerFeature): Promise<void> {
-    this.contourDetails.createOverlay();
     this.contourDetails.isHidden = false;
     if (this.layerFeature) {
       this.selectedLayer.remove();
@@ -678,7 +671,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.mapControls.handleBaseLayerChange('Base Map');
+    this.mapControls.handleBaseLayerChange('FULL_KR_TCI');
 
     this.getRegionsPolygon();
 
