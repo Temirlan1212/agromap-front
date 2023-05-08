@@ -29,7 +29,7 @@
       </ng-container>
 
       <button
-        *ngIf="currentPage <= totalPages - pageLinksQuantity"
+        *ngIf="currentPage <= totalPages - pageLinksQuantity + 1"
         [disabled]="true"
       >
         ...
