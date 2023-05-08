@@ -29,7 +29,10 @@ export class UserApi {
     let result = false;
 
     if (document != null) {
-      document.cookie = 'user=;';
+      let userCookie = 'user=;';
+      userCookie += 'path=/';
+
+      document.cookie = userCookie;
       result = true;
     }
 

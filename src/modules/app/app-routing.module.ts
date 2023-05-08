@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './auth.guard';
+import { IsAuthenticatedGuard } from './is-authenticated.guard';
 import { NotFoundPageComponent } from '../ui/components/not-found-page/not-found-page.component';
 
 const routes: Routes = [
@@ -13,6 +14,7 @@ const routes: Routes = [
   {
     title: 'Login',
     path: 'login',
+    canActivate: [IsAuthenticatedGuard],
     loadChildren: () =>
       import('src/modules/app/modules/login/login.module').then(
         (m) => m.LoginModule
