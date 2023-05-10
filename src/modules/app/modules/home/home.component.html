@@ -117,11 +117,7 @@
           </app-content-tabs>
         </app-map-control-statistics>
 
-        <div
-          *ngIf="layerFeature && activeContour"
-          class="tab"
-          style="background-color: transparent; margin-top: 20px"
-        >
+        <div *ngIf="layerFeature && activeContour" class="tab transparent">
           <app-contour-details
             #contourDetails
             [mapData]="mapData"
@@ -133,8 +129,7 @@
 
         <div
           *ngIf="activeContourSmall && !(layerFeature && activeContour)"
-          class="tab"
-          style="background-color: transparent; margin-top: 20px"
+          class="tab transparent"
         >
           <app-contour-details
             #contourDetails
