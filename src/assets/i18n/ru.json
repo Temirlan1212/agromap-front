@@ -193,5 +193,7 @@
   "Pivot table of cultures indicators": "Сводная таблица показателей по культурам",
   "min": "мин",
   "max": "макс",
-  "Pasture": "Пастбище"
+  "Pasture": "Пастбище",
+  "Contour id": "Идентификатор контура",
+  "Culture is not defined": "Культура не определена"
 }

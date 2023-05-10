@@ -56,35 +56,45 @@
         {{ "Productivity" | translate }}
         <span
           >{{ activeContour?.productivity }}
-          {{ "c. per ha." | translate }}</span
-        >
+          {{ "c. per ha." | translate }}
+        </span>
       </div>
       <div>
         {{ "Elevation" | translate }}
         <span
           >{{ activeContour?.elevation }}
-          {{ "m. above sea level" | translate }}</span
-        >
+          {{ "m. above sea level" | translate }}
+        </span>
       </div>
-      <div>
+      <div *ngIf="activeContour.percent">
         {{ "AI determination error" | translate
-        }}<span>{{ activeContour.percent * 100 }} %</span>
+        }}<span>{{ activeContour.percent * 100 }} % </span>
       </div>
       <div>
         {{ "Soil class" | translate }}
         <span
           >ID {{ activeContour.soil_class?.ID }} -
-          {{ activeContour.soil_class?.['name_' + currentLang] }}</span
+          {{ activeContour.soil_class?.['name_' + currentLang] }}
+        </span>
+      </div>
+      <div>
+        {{ "Culture" | translate }}
+        <span
+          *ngIf="activeContour.culture?.['name_' + currentLang]; else noCulture"
+          >{{ activeContour.culture?.['name_' + currentLang] }}</span
         >
+        <ng-template #noCulture>
+          <span>{{ "Culture is not defined" | translate }}</span>
+        </ng-template>
       </div>
     </div>
   </div>
   <ng-template #partial>
     <div class="contour-info-partial">
-      <h1
-        [ngClass]="activeContourSmall?.culture?.['name_'+currentLang]"
-        [textContent]="activeContourSmall?.culture?.['name_'+currentLang]"
-      ></h1>
+      <h1 [ngClass]="activeContourSmall?.contour_id">
+        {{ "Contour id" | translate }}
+        <p>{{ activeContourSmall?.contour_id }}</p>
+      </h1>
       <div>
         {{ "Area" | translate }}
         <span>{{ activeContourSmall?.area_ha }} {{ "ha" | translate }}</span>

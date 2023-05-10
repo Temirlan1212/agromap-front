@@ -2,8 +2,10 @@ import {
   Component,
   EventEmitter,
   Input,
+  OnChanges,
   OnDestroy,
   Output,
+  SimpleChanges,
 } from '@angular/core';
 import { MapData } from '../../../../../ui/models/map.model';
 import { tileLayer } from 'leaflet';
@@ -15,7 +17,7 @@ import { Subscription } from 'rxjs';
   templateUrl: './contour-details.component.html',
   styleUrls: ['./contour-details.component.scss'],
 })
-export class ContourDetailsComponent implements OnDestroy {
+export class ContourDetailsComponent implements OnDestroy, OnChanges {
   @Input() mapData!: MapData | null;
   @Input() activeContour: any;
   @Input() activeContourSmall: any;
@@ -30,6 +32,11 @@ export class ContourDetailsComponent implements OnDestroy {
   );
 
   constructor(private translateSvc: TranslateService) {}
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['activeContour']) {
+      console.log(changes);
+    }
+  }
 
   ngOnDestroy() {
     this.rgbaOverlay?.remove();
