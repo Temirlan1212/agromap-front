@@ -193,5 +193,7 @@
   "Pivot table of cultures indicators": "Өсүмдүк түрлөрүнүн көрсөткүчтөрүнүн жыйынтыктоочу таблицасы",
   "min": "мин",
   "max": "макс",
-  "Pasture": "Жайыт"
+  "Pasture": "Жайыт",
+  "Contour id": "Контурдун идентификатору",
+  "Culture is not defined": "Өсүмдүк түрү аныктала элек"
 }

@@ -241,6 +241,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     this.activeContourSmall = {
       culture: layerFeature?.feature?.properties?.['culture'],
       area_ha: layerFeature?.feature?.properties?.['area_ha'],
+      contour_id: layerFeature?.feature?.properties?.['id'],
     };
   }
 

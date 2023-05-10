@@ -193,5 +193,7 @@
   "Pivot table of cultures indicators": "Pivot table of cultures indicators",
   "min": "min",
   "max": "max",
-  "Pasture": "Pasture"
+  "Pasture": "Pasture",
+  "Contour id": "Contour id",
+  "Culture is not defined": "Culture is not defined"
 }

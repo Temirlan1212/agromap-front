@@ -1,3 +1,5 @@
+@import "./constants";
+
 .dark-info-dialog {
   max-width: 400px;
   max-height: 300px;
@@ -69,14 +71,18 @@
 
   .contour-info-partial {
     span {
-      font-size: 30px;
+      font-size: 20px;
       font-weight: 600;
     }
   }
 
   h1 {
-    font-size: 30px;
-    color: #fff;
+    font-size: 15px;
+    color: $lightColor;
+    p {
+      font-size: 30px;
+      margin: 10px 0 0 0;
+    }
   }
 }
 
