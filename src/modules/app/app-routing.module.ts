@@ -35,6 +35,15 @@ const routes: Routes = [
       import('./modules/home/home.module').then((m) => m.HomeModule),
   },
   {
+    title: 'Cropland',
+    path: 'cropland-map',
+    data: { position: 'top', icon: 'agriculture' },
+    loadChildren: () =>
+      import('./modules/cropland-map/cropland-map.module').then(
+        (m) => m.CroplandMapModule
+      ),
+  },
+  {
     title: 'Reports',
     path: 'reports',
     data: { position: 'top', icon: 'reports' },

@@ -2,13 +2,13 @@
   <button type="button" class="transparent" routerLink="..">
     <app-svg-icon name="arrow-down" size="14"></app-svg-icon>
   </button>
-  <h4>{{'Comparison of images' | translate}}</h4>
+  <h4>{{ "Comparison of images" | translate }}</h4>
 </div>
 
 <div class="content">
   <div class="base-filter">
     <div class="select-screen-split">
-      <h5>{{'Select the map split view' | translate}}</h5>
+      <h5>{{ "Select the map split view" | translate }}</h5>
       <div class="select-split">
         <app-svg-icon
           name="split-2"
@@ -55,7 +55,8 @@
         *ngFor="let quantity of [].constructor(splitMapQuantity); let i = index"
       >
         <p>
-         {{ i + 1 }}. Индекс вегетации {{ selectedVegIndex['name_'+currLang] }}
+          {{ i + 1 }}. Индекс вегетации
+          {{ selectedVegIndex["name_" + currLang] }}
         </p>
 
         <app-input-select
@@ -78,6 +79,8 @@
     </li>
   </ul>
   <ul class="analyses-list" *ngIf="!selectedVegIndex">
-    <li><p>{{'Choose a vegetative index' | translate}}</p></li>
+    <li>
+      <p>{{ "Choose a vegetative index" | translate }}</p>
+    </li>
   </ul>
 </div>

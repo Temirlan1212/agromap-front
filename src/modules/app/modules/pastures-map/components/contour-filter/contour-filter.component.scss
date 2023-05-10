@@ -1,0 +1,70 @@
+@import "constants";
+
+$indent: 0 20px;
+
+:host {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  overflow: hidden auto;
+  width: $sidePanelContentWidth;
+  background-color: $lightColor;
+}
+
+.filters > button {
+  width: 100%;
+  border-bottom: 1px solid $secondaryColor;
+
+  & > h5 {
+    margin: 0;
+  }
+}
+
+h4 {
+  text-align: center;
+}
+
+h5 {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $indent;
+}
+
+.content {
+  height: 100%;
+  padding: $indent;
+
+  &.closed {
+    height: 0;
+  }
+}
+
+.contours-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1;
+
+  .card {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+}
+
+.no-data-text {
+  text-align: center;
+  width: 100%;
+}
+
+@media only screen and (max-width: 992px) {
+  :host {
+    width: 100%;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+}

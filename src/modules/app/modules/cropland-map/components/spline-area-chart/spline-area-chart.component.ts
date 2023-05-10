@@ -1,4 +1,10 @@
-import { Component, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnChanges,
+  SimpleChanges,
+  ViewChild,
+} from '@angular/core';
 import {
   ChartComponent,
   ApexAxisChartSeries,
@@ -40,15 +46,26 @@ export class SplineAreaChartComponent implements OnChanges {
   chartOptions: ChartOptions = {
     chart: {
       height: 380,
-      type: "area",
+      type: 'area',
     },
     dataLabels: {
       enabled: false,
     },
     stroke: {
       width: 3,
-      colors: ['#39afd1', '#ffbc00', '#e3eaef', '#CAC13B', '#A580A1', '#0B9B7A', '#85046B', '#807F82', '#63FF0F', '#FF800F'],
-      curve: "smooth",
+      colors: [
+        '#39afd1',
+        '#ffbc00',
+        '#e3eaef',
+        '#CAC13B',
+        '#A580A1',
+        '#0B9B7A',
+        '#85046B',
+        '#807F82',
+        '#63FF0F',
+        '#FF800F',
+      ],
+      curve: 'smooth',
     },
     series: [],
     legend: {
@@ -60,16 +77,15 @@ export class SplineAreaChartComponent implements OnChanges {
     tooltip: {
       fixed: {
         enabled: false,
-        position: "topRight",
+        position: 'topRight',
       },
     },
     grid: {
-      borderColor: "#f1f3fa",
+      borderColor: '#f1f3fa',
     },
   };
 
-  constructor() {
-  }
+  constructor() {}
 
   ngOnChanges(changes: SimpleChanges) {
     this.chartOptions.series = this.chartData;

@@ -1,0 +1,86 @@
+<div class="back">
+  <button type="button" class="transparent" routerLink="..">
+    <app-svg-icon name="arrow-down" size="14"></app-svg-icon>
+  </button>
+  <h4>{{ "Comparison of images" | translate }}</h4>
+</div>
+
+<div class="content">
+  <div class="base-filter">
+    <div class="select-screen-split">
+      <h5>{{ "Select the map split view" | translate }}</h5>
+      <div class="select-split">
+        <app-svg-icon
+          name="split-2"
+          size="16"
+          class="icon"
+          [class.selected]="splitMapQuantity === 2"
+          (click)="handleSplitMapClick(2)"
+        ></app-svg-icon>
+
+        <div class="select-split">
+          <app-svg-icon
+            name="split-3"
+            size="16"
+            class="icon"
+            [class.selected]="splitMapQuantity === 3"
+            (click)="handleSplitMapClick(3)"
+          ></app-svg-icon>
+
+          <app-svg-icon
+            name="split-4"
+            size="16"
+            class="icon"
+            [class.selected]="splitMapQuantity === 4"
+            (click)="handleSplitMapClick(4)"
+          ></app-svg-icon>
+        </div>
+      </div>
+    </div>
+
+    <app-input-select
+      [placeholder]="'Choose a vegetative index' | translate"
+      [formControl]="vegIndexesOptionsForm"
+      [items]="vegIndexesOptions"
+      [multi]="false"
+      (onSelectItem)="handleVegIndexOnChange($event)"
+      [nameField]="'name_ru'"
+      idField="id"
+    ></app-input-select>
+  </div>
+
+  <ul class="analyses-list" *ngIf="selectedVegIndex">
+    <ng-container *ngIf="!loadingSatelliteDates">
+      <li
+        *ngFor="let quantity of [].constructor(splitMapQuantity); let i = index"
+      >
+        <p>
+          {{ i + 1 }}. Индекс вегетации
+          {{ selectedVegIndex["name_" + currLang] }}
+        </p>
+
+        <app-input-select
+          [placeholder]="'Choose date' | translate"
+          [items]="satelliteDateOptions"
+          [formControl]="satelliteDateOptionsForm"
+          [multi]="false"
+          (onSelectItem)="handleSatelliteDateChange($event, 'map-' + i)"
+          nameField="date"
+          idField="id"
+          groupField="group"
+        ></app-input-select>
+      </li>
+    </ng-container>
+    <li>
+      <app-loading
+        [loading]="loadingSatelliteDates"
+        class="dynamic-color"
+      ></app-loading>
+    </li>
+  </ul>
+  <ul class="analyses-list" *ngIf="!selectedVegIndex">
+    <li>
+      <p>{{ "Choose a vegetative index" | translate }}</p>
+    </li>
+  </ul>
+</div>
