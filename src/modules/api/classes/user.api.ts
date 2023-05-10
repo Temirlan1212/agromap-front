@@ -47,7 +47,7 @@ export class UserApi {
         .split(';')
         .reduce((prev: Record<string, string>, current: string) => {
           const [name, ...value] = current.split('=');
-          prev[name] = value.join('=');
+          prev[name.trim()] = value.join('=');
           return prev;
         }, {});
 
