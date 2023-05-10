@@ -1,0 +1,9 @@
+<div class="color-legend" [style.maxHeight]="maxHeight">
+  <div class="color-legend-item" *ngFor="let item of items">
+    <div
+      class="color-legend-color"
+      [style.background-color]="item[colorField]"
+    ></div>
+    <div class="color-legend-label">{{ item[labelField] }}</div>
+  </div>
+</div>
