@@ -81,12 +81,6 @@
       font-size: 30px;
       margin: 10px 0 0 0;
     }
-  }
-}
-
-@media only screen and (max-width: 576px) {
-  .dark-info-dialog {
-    max-width: 90vw;
     transform: translateX(0);
 
     &.hidden {

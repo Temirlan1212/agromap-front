@@ -2,6 +2,7 @@ import { geoJSON, latLngBounds, LatLngBounds, Map, tileLayer } from 'leaflet';
 import { GeoJSON } from 'geojson';
 import {
   AfterViewInit,
+  ChangeDetectorRef,
   Component,
   ElementRef,
   OnDestroy,
@@ -57,6 +58,14 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('sidePanel') sidePanel!: SidePanelComponent;
   @ViewChild('toggleBtn') toggleBtn!: ToggleButtonComponent;
   mode!: string;
+
+  productivityLayerColorLegend: Record<string, any>[] = [
+    { label: '-1', color: '#ffffe5' },
+    { label: '0.025', color: '#ffea00' },
+    { label: '0.4', color: '#1f991f' },
+    { label: '0.8', color: '#359b52' },
+    { label: '1', color: '#004529' },
+  ];
 
   wmsCQLFilter: string | null = null;
   wmsLayersOptions = {
@@ -163,6 +172,7 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
   loading: boolean = false;
   activeContour!: any;
   activeContourSmall: any;
+  mapControlLayersSwitch: Record<string, any> = {};
 
   constructor(
     private api: ApiService,
@@ -172,7 +182,8 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
     private translateSvc: TranslateService,
     private router: Router,
     private translate: TranslatePipe,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private cd: ChangeDetectorRef
   ) {
     this.router.events.subscribe((event: Event) =>
       event instanceof NavigationEnd
@@ -220,6 +231,10 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
       } else {
         this.mapComponent.handleMapEventSubscription();
       }
+    }),
+
+    this.store.watchItem('MapControlLayersSwitchComponent').subscribe((v) => {
+      this.mapControlLayersSwitch = v;
     }),
   ];
 
@@ -691,6 +706,8 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
         });
       }
     }
+
+    this.cd.detectChanges();
   }
 
   ngOnDestroy() {

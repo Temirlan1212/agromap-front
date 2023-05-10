@@ -23,7 +23,8 @@
         (click)="onCancelClick.emit()"
       ></app-svg-icon>
     </div>
-    <div class="contour-info">
+
+    <div class="contour-info" *ngIf="!isHidden">
       <div>
         {{ "Area" | translate }}
         <span>{{ activeContour.area_ha }} {{ "ha" | translate }}</span>
@@ -90,7 +91,7 @@
     </div>
   </div>
   <ng-template #partial>
-    <div class="contour-info-partial">
+    <div class="contour-info-partial" *ngIf="!isHidden">
       <h1 [ngClass]="activeContourSmall?.contour_id">
         {{ "Contour id" | translate }}
         <p>{{ activeContourSmall?.contour_id }}</p>
