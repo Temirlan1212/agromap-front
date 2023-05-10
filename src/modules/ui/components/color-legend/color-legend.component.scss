@@ -1,0 +1,40 @@
+@import "./constants";
+
+.color-legend {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  overflow: auto;
+  height: 100%;
+
+  &::-webkit-scrollbar {
+    width: 3px;
+    height: 3px;
+    border-radius: 8px;
+    background-color: $lightColor;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: $darkColor;
+    border-radius: 5px;
+  }
+}
+
+.color-legend-item {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 5px;
+}
+
+.color-legend-color {
+  width: 1.4rem;
+  height: 1.4rem;
+}
+
+.color-legend-label {
+  font-size: 0.9rem;
+  max-width: 100px;
+  overflow-wrap: break-word;
+}
