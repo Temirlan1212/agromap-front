@@ -52,6 +52,10 @@ $tabDisabledColor: rgba(165, 178, 188, 0.7);
       background-color: $tabActiveBgHoverColor;
     }
   }
+
+  &.transparent {
+    background-color: transparent;
+  }
 }
 
 .rightPanel {

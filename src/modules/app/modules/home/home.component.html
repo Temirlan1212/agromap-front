@@ -64,9 +64,12 @@
         ></app-map-control-veg-indexes>
 
         <app-map-control-statistics
-          *ngIf="!layerFeature && !activeContour && !activeContourSmall"
+          *ngIf="!activeContour"
+          [collapseOnChanges]="
+            contourPastureStatisticsProductivityTableItems ||
+            contourCultureStatisticsProductivityTableItems
+          "
           [title]="'Roll up' | translate"
-          storageName="isCollapsedMapControlTable"
         >
           <app-content-tabs>
             <app-tab [title]="'Pasture (productivity area)' | translate">
@@ -113,6 +116,29 @@
             </app-tab>
           </app-content-tabs>
         </app-map-control-statistics>
+
+        <div *ngIf="layerFeature && activeContour" class="tab transparent">
+          <app-contour-details
+            #contourDetails
+            [mapData]="mapData"
+            [activeContour]="activeContour"
+            (onCancelClick)="map.handleFeatureClose()"
+          >
+          </app-contour-details>
+        </div>
+
+        <div
+          *ngIf="activeContourSmall && !(layerFeature && activeContour)"
+          class="tab transparent"
+        >
+          <app-contour-details
+            #contourDetails
+            [mapData]="mapData"
+            [activeContourSmall]="activeContourSmall"
+            (onCancelClick)="map.handleFeatureClose()"
+          >
+          </app-contour-details>
+        </div>
       </ng-container>
     </app-map-controls>
 
@@ -149,14 +175,6 @@
   <app-split-map
     *ngIf="currentRouterPathname === '/home/split-map'"
   ></app-split-map>
-  <app-contour-details
-    #contourDetails
-    [mapData]="mapData"
-    [activeContour]="activeContour"
-    [activeContourSmall]="activeContourSmall"
-    (onCancelClick)="map.handleFeatureClose()"
-  >
-  </app-contour-details>
 </div>
 
 <app-question-dialog
