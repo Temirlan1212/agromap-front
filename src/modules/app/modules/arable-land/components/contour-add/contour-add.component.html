@@ -1,0 +1,18 @@
+<div>
+  <div class="back">
+    <button type="button" class="transparent" routerLink="..">
+      <app-svg-icon name="arrow-down" size="14"></app-svg-icon>
+    </button>
+    <h4>{{ "Add contour" | translate }}</h4>
+  </div>
+  <app-contour-form #form (onChange)="handleValueChange($event)">
+  </app-contour-form>
+</div>
+<div class="actions">
+  <button type="button" class="success" (click)="handleSaveClick(form)">
+    {{ "Save" | translate }}
+  </button>
+  <button type="button" class="danger" routerLink="..">
+    {{ "Cancel" | translate }}
+  </button>
+</div>

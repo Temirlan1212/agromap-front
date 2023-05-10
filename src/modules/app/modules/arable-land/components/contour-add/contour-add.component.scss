@@ -1,0 +1,56 @@
+@import "constants";
+
+$indent: 0 20px;
+
+:host {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 16px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: $sidePanelContentWidth;
+  background-color: $lightColor;
+}
+
+.back {
+  display: flex;
+  align-items: center;
+  gap: $indent;
+
+  app-svg-icon {
+    transform: rotate(90deg);
+  }
+}
+
+.content {
+  padding: $indent;
+}
+
+.actions {
+  display: flex;
+  gap: 32px;
+
+  button {
+    width: 100%;
+  }
+}
+
+@media only screen and (max-width: 992px) {
+  :host {
+    justify-content: flex-start;
+    height: 100%;
+    width: 100%;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+    overflow-y: auto;
+    gap: 20px;
+    z-index: 500;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+}

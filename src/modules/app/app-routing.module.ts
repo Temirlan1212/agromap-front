@@ -8,7 +8,7 @@ const routes: Routes = [
   {
     title: 'App',
     path: '',
-    redirectTo: 'home',
+    redirectTo: 'arable-land',
     pathMatch: 'full',
   },
   {
@@ -33,6 +33,15 @@ const routes: Routes = [
     data: { icon: 'home', class: 'homepage-mobile' },
     loadChildren: () =>
       import('./modules/home/home.module').then((m) => m.HomeModule),
+  },
+  {
+    title: 'Arable land',
+    path: 'arable-land',
+    data: { position: 'top', icon: 'reports' },
+    loadChildren: () =>
+      import('./modules/arable-land/arable-land.module').then(
+        (m) => m.ArableLandModule
+      ),
   },
   {
     title: 'Reports',

@@ -1,0 +1,14 @@
+:host {
+  display: block;
+  padding: 40px;
+
+  & > div {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    span {
+      font-size: 18px;
+    }
+  }
+}

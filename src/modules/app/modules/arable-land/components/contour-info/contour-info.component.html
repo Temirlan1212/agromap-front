@@ -1,0 +1,47 @@
+<div *ngIf="contour != null; else noItems">
+  <span *ngIf="contour?.region != null"
+    >{{ "Region" | translate }} :
+    {{ contour.region["name_" + currentLang] }}</span
+  >
+  <span
+    >{{ "District" | translate }} :
+    {{ contour.district["name_" + currentLang] }}</span
+  >
+  <span *ngIf="contour?.conton != null"
+    >{{ "Conton" | translate }} :
+    {{ contour.conton["name_" + currentLang] }}</span
+  >
+  <span
+    >{{ "Land type" | translate }} :
+    {{ contour.type["name_" + currentLang] }}</span
+  >
+  <span *ngIf="contour?.culture != null"
+    >{{ "Culture" | translate }} :
+    {{ contour.culture["name_" + currentLang] }}</span
+  >
+  <span
+    >{{ "Productivity" | translate }} : {{ contour.productivity }}
+    {{ "c. per ha." | translate }}</span
+  >
+  <span
+    >{{ "Area" | translate }} : {{ contour.area_ha }}
+    {{ "ha" | translate }} .</span
+  >
+  <span
+    >{{ "Elevation" | translate }} : {{ contour.elevation }}
+    {{ "m. above sea level" | translate }}</span
+  >
+  <span *ngIf="contour?.percent != null"
+    >{{ "AI determination error" | translate }} :
+    {{ contour.percent * 100 }} %</span
+  >
+  <span *ngIf="contour?.soil_class != null"
+    >{{ "Soil class" | translate }} : ID {{ contour.soil_class?.ID }} -
+    {{ contour.soil_class?.['name_' + currentLang] }}</span
+  >
+</div>
+<ng-template #noItems>
+  <app-loading [loading]="loading">
+    <h4>{{ "No data" | translate }}</h4>
+  </app-loading>
+</ng-template>
