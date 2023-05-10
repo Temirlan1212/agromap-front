@@ -1,10 +1,15 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnDestroy,
+  OnInit,
+  OnChanges,
+  SimpleChanges,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
-import { StoreService } from 'src/modules/ui/services/store.service';
 import { LanguageService } from 'src/modules/ui/services/language.service';
-import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-map-control-statistics',
@@ -13,29 +18,23 @@ import { Subscription } from 'rxjs';
   standalone: true,
   imports: [CommonModule, TranslateModule, SvgIconComponent],
 })
-export class MapControlStatisticsComponent implements OnInit, OnDestroy {
-  isCollapsed: boolean = false;
+export class MapControlStatisticsComponent implements OnChanges {
+  isCollapsed: boolean = true;
 
-  @Input() storageName: string = 'isCollapsedMapControlTable';
   @Input() title = '';
+  @Input() collapseOnChanges: any;
 
-  subscription: Subscription = this.store
-    .watchItem(this.storageName)
-    .subscribe((v) => {
-      this.isCollapsed = v;
-    });
-
-  constructor(private store: StoreService, translate: LanguageService) {}
+  constructor(translate: LanguageService) {}
 
   toggle() {
-    this.store.setItem(this.storageName, !this.isCollapsed);
+    this.isCollapsed = !this.isCollapsed;
   }
 
-  ngOnInit(): void {
-    this.isCollapsed = this.store.getItem(this.storageName) || false;
-  }
+  ngOnInit(): void {}
 
-  ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['collapseOnChanges']) {
+      this.isCollapsed = true;
+    }
   }
 }
