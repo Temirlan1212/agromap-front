@@ -56,26 +56,26 @@
         {{ "Productivity" | translate }}
         <span
           >{{ activeContour?.productivity }}
-          {{ "c. per ha." | translate }}</span
-        >
+          {{ "c. per ha." | translate }}
+        </span>
       </div>
       <div>
         {{ "Elevation" | translate }}
         <span
           >{{ activeContour?.elevation }}
-          {{ "m. above sea level" | translate }}</span
-        >
+          {{ "m. above sea level" | translate }}
+        </span>
       </div>
       <div *ngIf="activeContour.percent">
         {{ "AI determination error" | translate
-        }}<span>{{ activeContour.percent * 100 }} %</span>
+        }}<span>{{ activeContour.percent * 100 }} % </span>
       </div>
       <div>
         {{ "Soil class" | translate }}
         <span
           >ID {{ activeContour.soil_class?.ID }} -
-          {{ activeContour.soil_class?.['name_' + currentLang] }}</span
-        >
+          {{ activeContour.soil_class?.['name_' + currentLang] }}
+        </span>
       </div>
       <div>
         {{ "Culture" | translate }}
