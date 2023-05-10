@@ -45,11 +45,11 @@ import { ToggleButtonComponent } from '../../../ui/components/toggle-button/togg
 import { MapControlLayersSwitchComponent } from '../../../ui/components/map-control-layers-switch/map-control-layers-switch.component';
 
 @Component({
-  selector: 'app-arable-land',
-  templateUrl: './arable-land.component.html',
-  styleUrls: ['./arable-land.component.scss'],
+  selector: 'app-cropland-map',
+  templateUrl: './cropland-map.component.html',
+  styleUrls: ['./cropland-map.component.scss'],
 })
-export class ArableLandComponent implements OnInit, OnDestroy, AfterViewInit {
+export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('featurePopup') featurePopup!: ElementRef<HTMLElement>;
   @ViewChild('map') mapComponent!: MapComponent;
   @ViewChild('contourDetails') contourDetails!: ContourDetailsComponent;

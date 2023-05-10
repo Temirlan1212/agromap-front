@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { ContourAddComponent } from './components/contour-add/contour-add.component';
-import { ArableLandComponent } from './arable-land.component';
+import { CroplandMapComponent } from './cropland-map.component';
 import { AuthGuard } from '../../auth.guard';
 import { SplitMapSidebarComponent } from './components/split-map-sidebar/split-map-sidebar.component';
 import { ContourEditComponent } from './components/contour-edit/contour-edit.component';
@@ -9,7 +9,7 @@ import { ContourEditComponent } from './components/contour-edit/contour-edit.com
 const routes: Routes = [
   {
     path: '',
-    component: ArableLandComponent,
+    component: CroplandMapComponent,
     children: [
       {
         path: 'contour-add',
@@ -30,4 +30,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class ArableLandRoutingModule {}
+export class CroplandMapRoutingModule {}

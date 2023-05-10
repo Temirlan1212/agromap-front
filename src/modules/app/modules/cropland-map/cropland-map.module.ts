@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { ArableLandRoutingModule } from './arable-land-routing.module';
+import { CroplandMapRoutingModule } from './cropland-map-routing.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ArableLandComponent } from './arable-land.component';
+import { CroplandMapComponent } from './cropland-map.component';
 import { MapComponent } from 'src/modules/ui/components/map/map.component';
 import { SidePanelComponent } from 'src/modules/ui/components/side-panel/side-panel.component';
 import { ContourFilterComponent } from './components/contour-filter/contour-filter.component';
@@ -46,7 +46,7 @@ import { ToggleButtonComponent } from '../../../ui/components/toggle-button/togg
 
 @NgModule({
   declarations: [
-    ArableLandComponent,
+    CroplandMapComponent,
     ContourFilterComponent,
     ContourAddComponent,
     SplineAreaChartComponent,
@@ -58,7 +58,7 @@ import { ToggleButtonComponent } from '../../../ui/components/toggle-button/togg
   ],
   imports: [
     CommonModule,
-    ArableLandRoutingModule,
+    CroplandMapRoutingModule,
     ReactiveFormsModule,
     FormsModule,
     MapComponent,
@@ -95,4 +95,4 @@ import { ToggleButtonComponent } from '../../../ui/components/toggle-button/togg
   ],
   providers: [MapService, TranslatePipe],
 })
-export class ArableLandModule {}
+export class CroplandMapModule {}

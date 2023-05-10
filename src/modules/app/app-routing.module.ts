@@ -8,7 +8,7 @@ const routes: Routes = [
   {
     title: 'App',
     path: '',
-    redirectTo: 'arable-land',
+    redirectTo: 'home',
     pathMatch: 'full',
   },
   {
@@ -35,12 +35,12 @@ const routes: Routes = [
       import('./modules/home/home.module').then((m) => m.HomeModule),
   },
   {
-    title: 'Arable land',
-    path: 'arable-land',
-    data: { position: 'top', icon: 'reports' },
+    title: 'Cropland',
+    path: 'cropland-map',
+    data: { position: 'top', icon: 'agriculture' },
     loadChildren: () =>
-      import('./modules/arable-land/arable-land.module').then(
-        (m) => m.ArableLandModule
+      import('./modules/cropland-map/cropland-map.module').then(
+        (m) => m.CroplandMapModule
       ),
   },
   {
