@@ -7,6 +7,9 @@
   gap: 5px;
   overflow: auto;
   height: 100%;
+  background-color: $darkColor;
+  padding: 5px;
+  border-radius: 4px;
 
   &::-webkit-scrollbar {
     width: 3px;
