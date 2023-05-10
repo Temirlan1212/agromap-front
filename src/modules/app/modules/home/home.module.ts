@@ -43,6 +43,7 @@ import { TabComponent } from '../../../ui/components/content-tabs/tab/tab.compon
 import { ContourInfoComponent } from './components/contour-info/contour-info.component';
 import { ContourDetailsComponent } from './components/contour-details/contour-details.component';
 import { ToggleButtonComponent } from '../../../ui/components/toggle-button/toggle-button.component';
+import { ColorLegendComponent } from 'src/modules/ui/components/color-legend/color-legend.component';
 
 @NgModule({
   declarations: [
@@ -92,6 +93,7 @@ import { ToggleButtonComponent } from '../../../ui/components/toggle-button/togg
     ContentTabsComponent,
     TabComponent,
     ToggleButtonComponent,
+    ColorLegendComponent,
   ],
   providers: [MapService, TranslatePipe],
 })
