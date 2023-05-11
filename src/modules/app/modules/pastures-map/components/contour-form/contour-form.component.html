@@ -34,17 +34,6 @@
       </app-input-select>
     </app-form-field>
 
-    <app-form-field name="type" #type>
-      <app-input-select
-        [items]="landTypeList"
-        formControlName="type"
-        [nameField]="'name_' + currentLang"
-        [placeholder]="'Land type' | translate"
-        [required]="type.required"
-      >
-      </app-input-select>
-    </app-form-field>
-
     <app-form-field name="culture" #culture>
       <app-input-select
         [items]="cultureList"

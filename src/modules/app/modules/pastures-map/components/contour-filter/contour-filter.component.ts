@@ -42,10 +42,6 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
   currentLang: string = this.translateSvc.currentLang;
   selectedId: number | null = null;
   filtersQuery!: ContourFiltersQuery;
-  radioOptions: any = [
-    { name: 'AI', value: 'agromap_store_ai' },
-    { name: 'Base', value: 'agromap_store' },
-  ];
   @Output() onCardClick = new EventEmitter<MapLayerFeature>();
   @Output() onEditClick = new EventEmitter<void>();
   @Output() onModeChanged = new EventEmitter<string>();
@@ -68,7 +64,7 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
         nonNullable: true,
       }
     ),
-    land_type: new FormControl<string | null>(null, {
+    land_type: new FormControl<string | null>('2', {
       nonNullable: true,
       validators: Validators.required,
     }),
@@ -78,7 +74,6 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
       validators: Validators.required,
     }),
   });
-  mode: FormControl = new FormControl<string | null>(null);
 
   subscriptions: Subscription[] = [
     this.form
@@ -96,20 +91,12 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
       ?.valueChanges.subscribe((value) =>
         this.handleContonChange(value)
       ) as Subscription,
-    this.mode?.valueChanges.pipe(filter((res) => !!res)).subscribe((value) => {
-      this.onModeChanged.emit(value);
-    }) as Subscription,
     this.translateSvc.onLangChange.subscribe(
       (res) => (this.currentLang = res.lang)
     ),
     this.mapService.map.subscribe((res: MapData | null) => {
       this.mapInstance = res?.map as Map;
       this.mapGeo = res?.geoJson as GeoJSON;
-    }),
-    this.store.watchItem('MapControlLayersSwitchComponent').subscribe((v) => {
-      this.mode?.patchValue(v.filterControlLayerSwitch?.oldValue, {
-        emitEvent: false,
-      });
     }),
   ];
 
@@ -125,12 +112,6 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    if (
-      this.store.getItem('MapControlLayersSwitchComponent')
-        ?.filterControlLayerSwitch?.name == null
-    ) {
-      this.mode?.patchValue('agromap_store_ai');
-    }
     this.getRegions();
     this.getLandTypes();
     this.getCultures();
@@ -218,7 +199,6 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
         land_type,
         culture,
         year,
-        ...(this.mode.value == 'agromap_store_ai' && { ai: true }),
       };
       // this.filteredContours = await this.api.contour.getFilteredContours(
       //   this.filtersQuery

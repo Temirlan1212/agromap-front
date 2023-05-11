@@ -66,7 +66,7 @@ export class ContourFormComponent implements OnInit, OnDestroy {
       disabled: true,
     }),
     conton: new FormControl<string | number | null>(null, Validators.required),
-    type: new FormControl<string | number | null>(null),
+    type: new FormControl<string | number | null>('2'),
     culture: new FormControl<string | number | null>(null),
     productivity: new FormControl<number | null>(null),
     year: new FormControl<number | null>(null, Validators.required),

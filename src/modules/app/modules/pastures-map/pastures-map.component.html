@@ -2,7 +2,6 @@
   <app-contour-filter
     (onCardClick)="map.handleFeatureClick($event.layer, $event.feature)"
     (onEditClick)="map.handleFeatureClose()"
-    (onModeChanged)="handleModeChange($event)"
     (onFormSubmit)="handleFilterFormSubmit($event)"
     (onFormReset)="handleFilterFormReset()"
   >
@@ -25,9 +24,9 @@
     <app-map-controls controls>
       <div rightPanel>
         <app-map-control-split-map
-          routerLink="/home/split-map"
+          routerLink="/home/pastures-map/split-map"
           *ngIf="layerFeature"
-          [isActive]="currentRouterPathname === '/home/split-map'"
+          [isActive]="currentRouterPathname === '/home/pastures-map/split-map'"
         >
         </app-map-control-split-map>
         <ng-container rightPanel>
@@ -44,6 +43,7 @@
             [wmsLayers]="wmsLayers"
             [wmsSelectedStatusLayers]="wmsSelectedStatusLayers"
             (wmsLayerChanged)="handleWmsLayerChanged($event)"
+            [storageName]="'PasturesMapControlLayersSwitchComponent'"
           ></app-map-control-layers-switch>
           <app-map-control-locate
             *ngIf="mapData && !layerFeature"
@@ -51,7 +51,13 @@
           ></app-map-control-locate>
         </ng-container>
       </div>
-      <ng-container topPanel>
+      <ng-container
+        topPanel
+        *ngIf="
+          !currentRouterPathname.includes('contour-add') &&
+          !currentRouterPathname.includes('contour-edit')
+        "
+      >
         <app-map-control-veg-indexes
           *ngIf="layerFeature && mapData"
           [layer]="layerFeature"
@@ -65,10 +71,7 @@
 
         <app-map-control-statistics
           *ngIf="!activeContour"
-          [collapseOnChanges]="
-            contourPastureStatisticsProductivityTableItems ||
-            contourCultureStatisticsProductivityTableItems
-          "
+          [collapseOnChanges]="contourPastureStatisticsProductivityTableItems"
           [title]="'Roll up' | translate"
         >
           <app-content-tabs>
@@ -92,24 +95,6 @@
                   {
                     title: 'Unproductive' | translate | truncate : 10,
                     field: 'unproductive'
-                  }
-                ]"
-              ></app-table>
-            </app-tab>
-            <app-tab [title]="'Land (square of cultures)' | translate">
-              <app-table
-                [items]="contourCultureStatisticsProductivityTableItems"
-                mode="dark"
-                [border]="false"
-                [fields]="[
-                  {
-                    title: 'Name' | translate,
-                    field: 'culture_name_' + currentLang
-                  },
-                  { title: 'Area' | translate, field: 'area_ha' },
-                  {
-                    title: 'Territory' | translate,
-                    field: 'territory_' + currentLang
                   }
                 ]"
               ></app-table>
@@ -138,6 +123,16 @@
             (onCancelClick)="map.handleFeatureClose()"
           >
           </app-contour-details>
+        </div>
+      </ng-container>
+
+      <ng-container leftBottomPanel>
+        <div class="tab transparent">
+          <app-color-legend
+            *ngIf="pasturesMapControlLayersSwitch['my_test_store']?.['name']"
+            [maxHeight]="'200px'"
+            [items]="productivityLayerColorLegend"
+          ></app-color-legend>
         </div>
       </ng-container>
     </app-map-controls>
@@ -173,7 +168,7 @@
   </app-map>
 
   <app-split-map
-    *ngIf="currentRouterPathname === '/home/split-map'"
+    *ngIf="currentRouterPathname === '/home/pastures-map/split-map'"
   ></app-split-map>
 </div>
 
@@ -190,13 +185,13 @@
   (onClick)="sidePanel.handlePanelToggle()"
   *ngIf="
     activeContour == null ||
-    currentRouterPathname === '/home/split-map' ||
-    currentRouterPathname === '/home'
+    currentRouterPathname === '/home/pastures-map/split-map' ||
+    currentRouterPathname === '/home/pastures-map'
   "
   [iconName]="
-    currentRouterPathname === '/home/contour-add'
+    currentRouterPathname === '/home/pastures-map/contour-add'
       ? 'contour-path'
-      : currentRouterPathname === '/home/split-map'
+      : currentRouterPathname === '/home/pastures-map/split-map'
       ? 'hamburger'
       : 'filter'
   "
