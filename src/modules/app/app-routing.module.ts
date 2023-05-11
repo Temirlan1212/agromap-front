@@ -8,7 +8,7 @@ const routes: Routes = [
   {
     title: 'App',
     path: '',
-    redirectTo: 'home',
+    redirectTo: 'home/pastures-map',
     pathMatch: 'full',
   },
   {
@@ -23,14 +23,19 @@ const routes: Routes = [
   {
     title: 'GiproZem',
     path: 'home',
-    data: { position: 'top', image: 'logo.png', class: 'homepage' },
+    data: {
+      position: 'top',
+      image: 'logo.png',
+      class: 'homepage',
+      path: 'home/pastures-map',
+    },
     loadChildren: () =>
       import('./modules/home/home.module').then((m) => m.HomeModule),
   },
   {
     title: 'Home',
     path: 'home',
-    data: { icon: 'home', class: 'homepage-mobile' },
+    data: { icon: 'home', class: 'homepage-mobile', path: 'home/pastures-map' },
     loadChildren: () =>
       import('./modules/home/home.module').then((m) => m.HomeModule),
   },
