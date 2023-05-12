@@ -6,13 +6,7 @@
     <h4>Редактирование контура</h4>
   </div>
   <app-loading [loading]="loading">
-    <app-contour-form
-      #form
-      [value]="contour"
-      [mode]="mode"
-      (onChange)="handleValueChange($event)"
-    >
-    </app-contour-form>
+    <app-contour-form #form [value]="contour" [mode]="mode"> </app-contour-form>
   </app-loading>
 </div>
 <div class="actions">

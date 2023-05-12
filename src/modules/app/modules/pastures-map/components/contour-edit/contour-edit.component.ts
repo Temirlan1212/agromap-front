@@ -43,7 +43,6 @@ export class ContourEditComponent implements OnInit, OnDestroy {
     const id = this.route.snapshot.paramMap.get('id');
     try {
       this.loading = true;
-
       this.contour = await this.api.contour.getOne(Number(id));
       this.polygon = this.contour.polygon;
     } catch (e: any) {
@@ -85,7 +84,6 @@ export class ContourEditComponent implements OnInit, OnDestroy {
 
   handleEditShape() {
     this.mapService.contourEditingMode.next(true);
-    this.mapInstance.pm.toggleGlobalEditMode({ allowSelfIntersection: false });
     if (this.mapGeo.getLayers().length > 1) {
       this.mapGeo.clearLayers();
     }
@@ -104,16 +102,6 @@ export class ContourEditComponent implements OnInit, OnDestroy {
       this.layer.pm.disable();
       this.isPolygonChanged = true;
     });
-  }
-
-  handleValueChange(layer: Record<string, any> | null) {
-    if (layer != null && layer['polygon'] != null) {
-      this.mapInstance.fitBounds(geoJson(layer['polygon']).getBounds());
-    } else {
-      const initBounds = latLngBounds(latLng(44.0, 68.0), latLng(39.0, 81.0));
-      this.mapInstance.fitBounds(initBounds);
-      this.mapInstance.setMaxBounds(initBounds);
-    }
   }
 
   async handleSaveClick(form: ContourFormComponent) {

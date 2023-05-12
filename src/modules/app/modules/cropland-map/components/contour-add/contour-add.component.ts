@@ -84,15 +84,6 @@ export class ContourAddComponent implements OnInit, OnDestroy {
     });
   }
 
-  handleValueChange(layer: Record<string, any> | null) {
-    if (layer != null && layer['polygon'] != null) {
-      this.mapInstance.fitBounds(geoJson(layer['polygon']).getBounds());
-    } else {
-      const initBounds = latLngBounds(latLng(44.0, 68.0), latLng(39.0, 81.0));
-      this.mapInstance.fitBounds(initBounds);
-    }
-  }
-
   async handleSaveClick(form: ContourFormComponent) {
     const formState = form.getState();
     const { region, district, ...rest } = formState.value;
