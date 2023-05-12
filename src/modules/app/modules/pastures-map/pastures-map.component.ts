@@ -2,6 +2,7 @@ import { geoJSON, latLngBounds, LatLngBounds, Map, tileLayer } from 'leaflet';
 import { GeoJSON } from 'geojson';
 import {
   AfterViewInit,
+  ChangeDetectorRef,
   Component,
   ElementRef,
   OnDestroy,
@@ -57,6 +58,14 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('sidePanel') sidePanel!: SidePanelComponent;
   @ViewChild('toggleBtn') toggleBtn!: ToggleButtonComponent;
   mode!: string;
+
+  productivityLayerColorLegend: Record<string, any>[] = [
+    { label: '-1', color: '#ffffe5' },
+    { label: '0.025', color: '#ffea00' },
+    { label: '0.4', color: '#1f991f' },
+    { label: '0.8', color: '#359b52' },
+    { label: '1', color: '#004529' },
+  ];
 
   wmsCQLFilter: string | null = null;
   wmsLayersOptions = {
@@ -120,15 +129,6 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
       type: 'radio',
     },
     {
-      title: 'AI',
-      name: 'agromap_store_ai',
-      layer: tileLayer.wms('https://geoserver.24mycrm.com/agromap/wms', {
-        layers: 'agromap:agromap_store_ai',
-        ...this.wmsLayersOptions,
-      }),
-      type: 'radio',
-    },
-    {
       title: 'SoilLayer',
       name: 'soil_agromap',
       layer: tileLayer.wms('https://geoserver.24mycrm.com/agromap/wms', {
@@ -157,12 +157,13 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
   isWmsAiActive: boolean = false;
   productivity: string | null = null;
   contourPastureStatisticsProductivityTableItems: ITableItem[][] = [];
-  contourCultureStatisticsProductivityTableItems: ITableItem[] = [];
   wmsSelectedStatusLayers: Record<string, string> | null = null;
   selectedContourId!: number;
   loading: boolean = false;
   activeContour!: any;
   activeContourSmall: any;
+
+  pasturesMapControlLayersSwitch: Record<string, any> = {};
 
   constructor(
     private api: ApiService,
@@ -172,7 +173,8 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
     private translateSvc: TranslateService,
     private router: Router,
     private translate: TranslatePipe,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private cd: ChangeDetectorRef
   ) {
     this.router.events.subscribe((event: Event) =>
       event instanceof NavigationEnd
@@ -201,17 +203,6 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
             )}`,
           }))
         );
-
-      this.contourCultureStatisticsProductivityTableItems =
-        this.contourCultureStatisticsProductivityTableItems.map((element) => {
-          return {
-            ...element,
-            area_ha: `${String(element?.['area_ha']).replace(
-              /га|ha/gi,
-              translateHa
-            )}`,
-          };
-        });
     }),
 
     this.mapService.contourEditingMode.subscribe((res) => {
@@ -221,6 +212,12 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
         this.mapComponent.handleMapEventSubscription();
       }
     }),
+
+    this.store
+      .watchItem('PasturesMapControlLayersSwitchComponent')
+      .subscribe((v) => {
+        this.pasturesMapControlLayersSwitch = v;
+      }),
   ];
 
   vegIndexesData: IVegSatelliteDate[] = [];
@@ -397,18 +394,12 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
       year: 2022,
     });
 
-    this.getCultureStatisticsProductivity({
-      land_type: '1',
-      year: 2022,
-    });
-
     this.wmsCQLFilter = null;
     this.setWmsParams();
   }
 
   handleFilterFormSubmit(formValue: Record<string, any>) {
     this.getPastureStatisticsProductivity(formValue['value']);
-    this.getCultureStatisticsProductivity(formValue['value']);
     this.sidePanel.handlePanelToggle();
     this.toggleBtn.isContentToggled = false;
   }
@@ -451,10 +442,6 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
         this.layerFeature?.feature?.properties?.['id'],
       vegIndexOption.id
     );
-  }
-
-  handleModeChange(mode: string | null) {
-    this.mode = mode as string;
   }
 
   handleWmsLayerChanged(layer: ITileLayer | null): void {
@@ -552,30 +539,6 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  async getCultureStatisticsProductivity(
-    query: ICulutreStatisticsQuery
-  ): Promise<void> {
-    this.contourCultureStatisticsProductivityTableItems = [];
-    if (!query.land_type.split(',').includes('1')) return;
-    if (this.isWmsAiActive) query.ai = this.isWmsAiActive;
-
-    try {
-      const res = await this.api.statistics.getCultureStatistics({
-        ...query,
-        land_type: '1',
-      });
-
-      this.contourCultureStatisticsProductivityTableItems = res.map(
-        (element) => ({
-          ...element,
-          area_ha: `${element?.area_ha} ${this.translate.transform('ha')}`,
-        })
-      ) as unknown as ITableItem[];
-    } catch (e: any) {
-      this.messages.error(e.message);
-    }
-  }
-
   private setWmsParams(): void {
     if (this.isWmsAiActive) {
       const finded = this.wmsLayers.find(
@@ -601,22 +564,19 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnInit(): void {
+    const data = this.store.getItem('PasturesMapControlLayersSwitchComponent');
+    if (!data) {
+      this.mode = 'agromap_store';
+    }
+
+    this.wmsSelectedStatusLayers = data;
     this.getPastureStatisticsProductivity({
       land_type: '2',
       year: 2022,
     });
 
-    this.getCultureStatisticsProductivity({
-      land_type: '1',
-      year: 2022,
-    });
-
-    this.wmsSelectedStatusLayers = this.store.getItem(
-      'MapControlLayersSwitchComponent'
-    );
-    const data = this.store.getItem('MapControlLayersSwitchComponent');
-    this.wmsSelectedStatusLayers = data;
     this.getVegIndexList();
+
     this.store
       .watchItem<ContourFiltersQuery | null>('ContourFilterComponent')
       .subscribe((v) => {
@@ -691,6 +651,7 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
         });
       }
     }
+    this.cd.detectChanges();
   }
 
   ngOnDestroy() {

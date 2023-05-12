@@ -4,14 +4,6 @@
   <form [formGroup]="form">
     <app-fields-group [title]="'Filter' | translate">
       <div class="field-group">
-        <div class="radio-btns">
-          <app-input-radio
-            [isResettable]="true"
-            [options]="radioOptions"
-            [formControl]="mode"
-          >
-          </app-input-radio>
-        </div>
         <app-form-field name="region" #region>
           <app-input-select
             [placeholder]="'Select a region' | translate"
@@ -34,23 +26,11 @@
 
         <app-form-field name="conton" #conton>
           <app-input-select
-            *ngIf="mode?.value != 'agromap_store_ai'"
             [placeholder]="'Select a conton' | translate"
             formControlName="conton"
             [items]="contons"
             [nameField]="'name_' + currentLang"
             [required]="conton.required"
-          ></app-input-select>
-        </app-form-field>
-
-        <app-form-field name="land_type" #land_type>
-          <app-input-select
-            [placeholder]="'Select a land type' | translate"
-            formControlName="land_type"
-            [items]="landTypes"
-            [multi]="true"
-            [nameField]="'name_' + currentLang"
-            [required]="land_type.required"
           ></app-input-select>
         </app-form-field>
 
@@ -90,7 +70,7 @@
 <div class="contours">
   <app-fields-group [title]="'Contours' | translate">
     <div class="field-group">
-      <button type="button" routerLink="/home/contour-add">
+      <button type="button" routerLink="/pastures-map/contour-add">
         {{ "Add a new contour" | translate }}
       </button>
 

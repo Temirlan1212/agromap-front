@@ -148,10 +148,6 @@ export class ContourEditComponent implements OnInit, OnDestroy {
     }
   }
 
-  handleCancelClick() {
-    this.router.navigate(['../..']);
-  }
-
   ngOnDestroy() {
     this.mapSubscription.unsubscribe();
     this.mapInstance.pm.toggleControls();

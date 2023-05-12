@@ -43,11 +43,8 @@ export class ContourEditComponent implements OnInit, OnDestroy {
     const id = this.route.snapshot.paramMap.get('id');
     try {
       this.loading = true;
-      if (this.mode === 'agromap_store_ai') {
-        this.contour = await this.api.aiContour.getOne(Number(id));
-      } else {
-        this.contour = await this.api.contour.getOne(Number(id));
-      }
+
+      this.contour = await this.api.contour.getOne(Number(id));
       this.polygon = this.contour.polygon;
     } catch (e: any) {
       this.messages.error(e.message);
@@ -146,10 +143,6 @@ export class ContourEditComponent implements OnInit, OnDestroy {
     } catch (e: any) {
       this.messages.error(e.message);
     }
-  }
-
-  handleCancelClick() {
-    this.router.navigate(['../..']);
   }
 
   ngOnDestroy() {

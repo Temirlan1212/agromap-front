@@ -121,7 +121,7 @@ export class ContourAddComponent implements OnInit, OnDestroy {
       );
       this.mapInstance.fitBounds(this.mapService.maxBounds);
       this.mapInstance.setMaxBounds(this.mapService.maxBounds);
-      this.router.navigate(['..']);
+      this.router.navigate(['/home/pastures-map']);
     } catch (e: any) {
       this.messages.error(e.message);
     }
