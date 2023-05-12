@@ -388,9 +388,7 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
           this.mapData.geoJson.options.interactive = true;
           this.mapData.geoJson.addData(polygons);
         } catch (e: any) {
-          this.messages.error(
-            e?.error?.message ? e?.error?.message : e?.message
-          );
+          this.messages.error(e.error?.message ?? e.message);
         } finally {
           this.loading = false;
         }
