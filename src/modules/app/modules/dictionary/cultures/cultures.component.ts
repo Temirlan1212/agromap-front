@@ -54,7 +54,7 @@ export class CulturesComponent implements OnInit, OnDestroy {
       this.loading = true;
       this.list = await this.api.culture.getList();
     } catch (e: any) {
-      console.log(e?.error?.message ? e?.error?.message : e?.message);
+      this.messages.error(e?.error?.message ? e?.error?.message : e?.message);
     } finally {
       this.loading = false;
     }
