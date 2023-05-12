@@ -13,6 +13,7 @@ import { environment } from 'src/environments/environment';
 import { Subscription } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 import { MapService } from '../../../../../ui/services/map.service';
+import { MessagesService } from 'src/modules/ui/components/services/messages.service';
 
 @Component({
   selector: 'app-split-map-sidebar',
@@ -55,7 +56,8 @@ export class SplitMapSidebarComponent implements OnDestroy, OnInit {
     private api: ApiService,
     private formatDate: FormatDatePipe,
     private translate: TranslateService,
-    private cd: ChangeDetectorRef
+    private cd: ChangeDetectorRef,
+    private messages: MessagesService
   ) {}
 
   handleSplitMapClick(splitMapQuantity: number) {
@@ -127,7 +129,7 @@ export class SplitMapSidebarComponent implements OnDestroy, OnInit {
       }
       this.satelliteDateData = res;
     } catch (e: any) {
-      console.log(e);
+      this.messages.error(e?.error?.message ? e?.error?.message : e?.message);
     }
     this.loadingSatelliteDates = false;
   }
@@ -137,7 +139,7 @@ export class SplitMapSidebarComponent implements OnDestroy, OnInit {
       this.vegIndexesOptions =
         (await this.api.vegIndexes.getVegIndexList()) as IVegIndexOption[];
     } catch (e: any) {
-      console.log(e);
+      this.messages.error(e?.error?.message ? e?.error?.message : e?.message);
     }
   }
 

@@ -39,7 +39,7 @@ export class EditProfileComponent implements OnInit {
         phone_number: user.phone_number,
       });
     } catch (e: any) {
-      this.messages.error(e.message);
+      this.messages.error(e?.error?.message ? e?.error?.message : e?.message);
     }
   }
 
@@ -56,7 +56,7 @@ export class EditProfileComponent implements OnInit {
       await this.getUser();
       this.messages.success(this.translate.transform('Successfully updated'));
     } catch (e: any) {
-      this.messages.error(e.message);
+      this.messages.error(e?.error?.message ? e?.error?.message : e?.message);
     }
 
     this.loading = false;

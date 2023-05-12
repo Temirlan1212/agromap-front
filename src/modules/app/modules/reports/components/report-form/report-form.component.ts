@@ -69,7 +69,7 @@ export class LandTypeFormComponent implements OnInit, OnDestroy {
     try {
       this.regions = await this.api.dictionary.getRegions();
     } catch (e: any) {
-      this.messages.error(e.message);
+      this.messages.error(e?.error?.message ? e?.error?.message : e?.message);
     }
   }
 
@@ -84,7 +84,7 @@ export class LandTypeFormComponent implements OnInit, OnDestroy {
       )) as IDistrict[];
       this.districts = res;
     } catch (e: any) {
-      this.messages.error(e.message);
+      this.messages.error(e?.error?.message ? e?.error?.message : e?.message);
     }
   }
 
@@ -96,7 +96,7 @@ export class LandTypeFormComponent implements OnInit, OnDestroy {
         polygon: true,
       })) as IConton[];
     } catch (e: any) {
-      this.messages.error(e.message);
+      this.messages.error(e?.error?.message ? e?.error?.message : e?.message);
     }
   }
 
@@ -104,7 +104,7 @@ export class LandTypeFormComponent implements OnInit, OnDestroy {
     try {
       this.land_types = await this.api.dictionary.getLandType();
     } catch (e: any) {
-      this.messages.error(e.message);
+      this.messages.error(e?.error?.message ? e?.error?.message : e?.message);
     }
   }
 
@@ -112,7 +112,7 @@ export class LandTypeFormComponent implements OnInit, OnDestroy {
     try {
       this.cultures = await this.api.culture.getList();
     } catch (e: any) {
-      this.messages.error(e.message);
+      this.messages.error(e?.error?.message ? e?.error?.message : e?.message);
     }
   }
 

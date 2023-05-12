@@ -9,6 +9,7 @@ import { StoreService } from '../ui/services/store.service';
 import { ELanguageCode, ILanguageStore } from '../ui/models/language.model';
 import { LanguageService } from '../ui/services/language.service';
 import { INotification } from '../api/models/notification.model';
+import { MessagesService } from '../ui/components/services/messages.service';
 
 @Component({
   selector: 'app-root',
@@ -48,7 +49,8 @@ export class AppComponent implements OnInit, OnDestroy {
     private translate: TranslateService,
     private titleService: Title,
     private store: StoreService,
-    private language: LanguageService
+    private language: LanguageService,
+    private messages: MessagesService
   ) {}
 
   private initLang(): void {
@@ -89,8 +91,8 @@ export class AppComponent implements OnInit, OnDestroy {
         'AppComponent',
         this.notifications
       );
-    } catch (e) {
-      console.log(e);
+    } catch (e: any) {
+      this.messages.error(e?.error?.message ? e?.error?.message : e?.message);
     }
   }
 

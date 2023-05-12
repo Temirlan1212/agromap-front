@@ -46,7 +46,7 @@ export class ContourEditComponent implements OnInit, OnDestroy {
       this.contour = await this.api.contour.getOne(Number(id));
       this.polygon = this.contour.polygon;
     } catch (e: any) {
-      this.messages.error(e.message);
+      this.messages.error(e?.error?.message ? e?.error?.message : e?.message);
     } finally {
       this.loading = false;
     }
@@ -129,7 +129,7 @@ export class ContourEditComponent implements OnInit, OnDestroy {
       await this.api.contour.update(this.contour.id, contour);
       this.router.navigate(['../..']);
     } catch (e: any) {
-      this.messages.error(e.message);
+      this.messages.error(e?.error?.message ? e?.error?.message : e?.message);
     }
   }
 

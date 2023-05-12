@@ -32,7 +32,7 @@ export class ResetPasswordComponent implements OnInit {
   async ngOnInit() {
     try {
     } catch (e: any) {
-      this.messages.error(e.message);
+      this.messages.error(e?.error?.message ? e?.error?.message : e?.message);
     }
   }
 

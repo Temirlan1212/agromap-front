@@ -32,7 +32,7 @@ export class IndexesComponent {
       this.loading = true;
       this.list = await this.api.dictionary.getIndexes();
     } catch (e: any) {
-      console.log(e.message);
+      console.log(e?.error?.message ? e?.error?.message : e?.message);
     } finally {
       this.loading = false;
     }
