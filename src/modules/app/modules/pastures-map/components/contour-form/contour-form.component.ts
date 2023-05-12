@@ -142,7 +142,7 @@ export class ContourFormComponent implements OnInit, OnDestroy {
         });
       }
     } catch (e: any) {
-      this.messages.error(e?.error?.message ? e?.error?.message : e?.message);
+      this.messages.error(e.error?.message ?? e.message);
     }
   }
 
@@ -153,7 +153,7 @@ export class ContourFormComponent implements OnInit, OnDestroy {
       })) as IDistrict[];
       this.districtList = results;
     } catch (e: any) {
-      this.messages.error(e?.error?.message ? e?.error?.message : e?.message);
+      this.messages.error(e.error?.message ?? e.message);
     }
   }
 
@@ -162,7 +162,7 @@ export class ContourFormComponent implements OnInit, OnDestroy {
       const res = (await this.api.dictionary.getRegions()) as IRegion[];
       this.regionList = res;
     } catch (e: any) {
-      this.messages.error(e?.error?.message ? e?.error?.message : e?.message);
+      this.messages.error(e.error?.message ?? e.message);
     }
   }
 
@@ -171,7 +171,7 @@ export class ContourFormComponent implements OnInit, OnDestroy {
       const res = await this.api.dictionary.getLandType();
       this.landTypeList = res;
     } catch (e: any) {
-      this.messages.error(e?.error?.message ? e?.error?.message : e?.message);
+      this.messages.error(e.error?.message ?? e.message);
     }
   }
 
@@ -180,7 +180,7 @@ export class ContourFormComponent implements OnInit, OnDestroy {
       const res = await this.api.culture.getList();
       this.cultureList = res;
     } catch (e: any) {
-      this.messages.error(e?.error?.message ? e?.error?.message : e?.message);
+      this.messages.error(e.error?.message ?? e.message);
     }
   }
 

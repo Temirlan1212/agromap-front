@@ -44,7 +44,7 @@ export class CroplandComponent implements OnInit, OnDestroy {
     try {
       this.cultures = await this.api.culture.getList();
     } catch (e: any) {
-      this.messages.error(e?.error?.message ? e?.error?.message : e?.message);
+      this.messages.error(e.error?.message ?? e.message);
     }
   }
 

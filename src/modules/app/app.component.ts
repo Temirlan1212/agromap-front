@@ -92,7 +92,7 @@ export class AppComponent implements OnInit, OnDestroy {
         this.notifications
       );
     } catch (e: any) {
-      this.messages.error(e?.error?.message ? e?.error?.message : e?.message);
+      this.messages.error(e.error?.message ?? e.message);
     }
   }
 

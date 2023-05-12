@@ -141,7 +141,7 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
     try {
       this.regions = await this.api.dictionary.getRegions({ polygon: false });
     } catch (e: any) {
-      this.messages.error(e?.error?.message ? e?.error?.message : e?.message);
+      this.messages.error(e.error?.message ?? e.message);
     }
   }
 
@@ -153,7 +153,7 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
       })) as IDistrict[];
       this.districts = results;
     } catch (e: any) {
-      this.messages.error(e?.error?.message ? e?.error?.message : e?.message);
+      this.messages.error(e.error?.message ?? e.message);
     }
   }
 
@@ -164,7 +164,7 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
         polygon: true,
       })) as IConton[];
     } catch (e: any) {
-      this.messages.error(e?.error?.message ? e?.error?.message : e?.message);
+      this.messages.error(e.error?.message ?? e.message);
     }
   }
 
@@ -172,7 +172,7 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
     try {
       this.landTypes = await this.api.dictionary.getLandType();
     } catch (e: any) {
-      this.messages.error(e?.error?.message ? e?.error?.message : e?.message);
+      this.messages.error(e.error?.message ?? e.message);
     }
   }
 
@@ -180,7 +180,7 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
     try {
       this.cultures = await this.api.culture.getList();
     } catch (e: any) {
-      this.messages.error(e?.error?.message ? e?.error?.message : e?.message);
+      this.messages.error(e.error?.message ?? e.message);
     }
   }
 
@@ -227,7 +227,7 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
         this.filtersQuery
       );
     } catch (e: any) {
-      this.messages.error(e?.error?.message ? e?.error?.message : e?.message);
+      this.messages.error(e.error?.message ?? e.message);
     } finally {
       this.loading = false;
     }
@@ -320,7 +320,7 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
         this.filtersQuery
       );
     } catch (e: any) {
-      this.messages.error(e?.error?.message ? e?.error?.message : e?.message);
+      this.messages.error(e.error?.message ?? e.message);
     }
   }
 

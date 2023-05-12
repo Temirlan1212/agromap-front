@@ -315,7 +315,7 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
         this.activeContour = await this.api.contour.getOne(id);
       }
     } catch (e: any) {
-      this.messages.error(e?.error?.message ? e?.error?.message : e?.message);
+      this.messages.error(e.error?.message ?? e.message);
     }
   }
 
@@ -345,7 +345,7 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
       }, {});
       this.contourData = data ? Object.values(data) : [];
     } catch (e: any) {
-      this.messages.error(e?.error?.message ? e?.error?.message : e?.message);
+      this.messages.error(e.error?.message ?? e.message);
       this.contourData = [];
     }
   }
@@ -404,7 +404,7 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
     try {
       this.landTypes = await this.api.dictionary.getLandType();
     } catch (e: any) {
-      this.messages.error(e?.error?.message ? e?.error?.message : e?.message);
+      this.messages.error(e.error?.message ?? e.message);
     }
   }
 
@@ -425,7 +425,7 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
         }
       });
     } catch (e: any) {
-      this.messages.error(e?.error?.message ? e?.error?.message : e?.message);
+      this.messages.error(e.error?.message ?? e.message);
     }
   }
 
@@ -473,7 +473,7 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
       }
       this.vegIndexesData = res;
     } catch (e: any) {
-      this.messages.error(e?.error?.message ? e?.error?.message : e?.message);
+      this.messages.error(e.error?.message ?? e.message);
     }
     this.loadingSatelliteDates = false;
   }
@@ -483,7 +483,7 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
       this.vegIndexOptionsList =
         (await this.api.vegIndexes.getVegIndexList()) as IVegIndexOption[];
     } catch (e: any) {
-      this.messages.error(e?.error?.message ? e?.error?.message : e?.message);
+      this.messages.error(e.error?.message ?? e.message);
     }
   }
 
@@ -535,7 +535,7 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
     try {
       await this.api.contour.remove(Number(id));
     } catch (e: any) {
-      this.messages.error(e?.error?.message ? e?.error?.message : e?.message);
+      this.messages.error(e.error?.message ?? e.message);
     }
   }
 
@@ -590,7 +590,7 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
         );
       }
     } catch (e: any) {
-      this.messages.error(e?.error?.message ? e?.error?.message : e?.message);
+      this.messages.error(e.error?.message ?? e.message);
     }
   }
 
@@ -614,7 +614,7 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
         })
       ) as unknown as ITableItem[];
     } catch (e: any) {
-      this.messages.error(e?.error?.message ? e?.error?.message : e?.message);
+      this.messages.error(e.error?.message ?? e.message);
     }
   }
 
