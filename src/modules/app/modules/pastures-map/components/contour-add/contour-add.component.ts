@@ -112,7 +112,7 @@ export class ContourAddComponent implements OnInit, OnDestroy {
       );
       this.mapInstance.fitBounds(this.mapService.maxBounds);
       this.mapInstance.setMaxBounds(this.mapService.maxBounds);
-      this.router.navigate(['/home/pastures-map']);
+      this.router.navigate(['..']);
     } catch (e: any) {
       this.messages.error(e.message);
     }
@@ -125,6 +125,7 @@ export class ContourAddComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    this.mapInstance.pm.Toolbar.setButtonDisabled('drawPolygon', false);
     this.mapSubscription.unsubscribe();
     this.mapInstance.pm.toggleControls();
     if (this.layer) {
