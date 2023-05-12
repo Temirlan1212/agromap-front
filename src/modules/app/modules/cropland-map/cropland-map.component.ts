@@ -44,6 +44,7 @@ import { ContourDetailsComponent } from './components/contour-details/contour-de
 import { SidePanelComponent } from '../../../ui/components/side-panel/side-panel.component';
 import { ToggleButtonComponent } from '../../../ui/components/toggle-button/toggle-button.component';
 import { MapControlLayersSwitchComponent } from '../../../ui/components/map-control-layers-switch/map-control-layers-switch.component';
+import { ILandType } from 'src/modules/api/models/land-type.model';
 
 @Component({
   selector: 'app-cropland-map',
@@ -157,6 +158,7 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
     },
   ];
 
+  landTypes: ILandType[] = [];
   mapData: MapData | null = null;
   layerFeature: MapLayerFeature | null = null;
   selectedLayer: any;
@@ -173,6 +175,7 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
   activeContour!: any;
   activeContourSmall: any;
   mapControlLayersSwitch: Record<string, any> = {};
+  filterFormValues!: any;
 
   constructor(
     private api: ApiService,
@@ -348,6 +351,10 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   async handleMapMove(mapMove: MapMove): Promise<void> {
+    const landTypeParam = this.filterFormValues
+      ? this.filterFormValues['land_type']
+      : this.landTypes.map((l: any) => l['id']).join(',');
+
     this.store.setItem<Record<string, LatLngBounds>>('ArableLandComponent', {
       mapBounds: mapMove.bounds,
     });
@@ -360,9 +367,15 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
           this.loading = true;
           let polygons: GeoJSON;
           if (this.isWmsAiActive) {
-            polygons = await this.api.map.getPolygonsInScreenAi(mapMove.bounds);
+            polygons = await this.api.map.getPolygonsInScreenAi({
+              latLngBounds: mapMove.bounds,
+              land_type: landTypeParam,
+            });
           } else {
-            polygons = await this.api.map.getPolygonsInScreen(mapMove.bounds);
+            polygons = await this.api.map.getPolygonsInScreen({
+              latLngBounds: mapMove.bounds,
+              land_type: landTypeParam,
+            });
           }
           this.mapData.geoJson.options.snapIgnore = true;
           this.mapData.geoJson.options.pmIgnore = true;
@@ -382,6 +395,14 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
       } else {
         this.activeContourSmall = null;
       }
+    }
+  }
+
+  async getLandTypes() {
+    try {
+      this.landTypes = await this.api.dictionary.getLandType();
+    } catch (e: any) {
+      this.messages.error(e.message);
     }
   }
 
@@ -422,8 +443,9 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   handleFilterFormSubmit(formValue: Record<string, any>) {
-    this.getPastureStatisticsProductivity(formValue['value']);
-    this.getCultureStatisticsProductivity(formValue['value']);
+    this.filterFormValues = formValue['value'];
+    this.getPastureStatisticsProductivity(this.filterFormValues);
+    this.getCultureStatisticsProductivity(this.filterFormValues);
     this.sidePanel.handlePanelToggle();
     this.toggleBtn.isContentToggled = false;
   }
@@ -615,7 +637,7 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     this.getPastureStatisticsProductivity({
       land_type: '2',
       year: 2022,
@@ -631,6 +653,8 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
     );
     const data = this.store.getItem('MapControlLayersSwitchComponent');
     this.wmsSelectedStatusLayers = data;
+
+    await this.getLandTypes();
     this.getVegIndexList();
     this.store
       .watchItem<ContourFiltersQuery | null>('ContourFilterComponent')

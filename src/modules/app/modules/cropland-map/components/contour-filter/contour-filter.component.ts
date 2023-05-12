@@ -51,6 +51,7 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
   @Output() onModeChanged = new EventEmitter<string>();
   @Output() onFormSubmit = new EventEmitter<Record<string, any>>();
   @Output() onFormReset = new EventEmitter<Record<string, any>>();
+
   loading: boolean = false;
   form: FormGroup = new FormGroup({
     region: new FormControl<string | null>(null, {
@@ -124,16 +125,16 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
     private store: StoreService
   ) {}
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     if (
       this.store.getItem('MapControlLayersSwitchComponent')
         ?.filterControlLayerSwitch?.name == null
     ) {
       this.mode?.patchValue('agromap_store_ai');
     }
-    this.getRegions();
-    this.getLandTypes();
-    this.getCultures();
+    await this.getRegions();
+    await this.getLandTypes();
+    await this.getCultures();
   }
 
   async getRegions(): Promise<void> {
@@ -220,9 +221,7 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
         year,
         ...(this.mode.value == 'agromap_store_ai' && { ai: true }),
       };
-      // this.filteredContours = await this.api.contour.getFilteredContours(
-      //   this.filtersQuery
-      // );
+
       this.store.setItem<ContourFiltersQuery | null>(
         'ContourFilterComponent',
         this.filtersQuery
