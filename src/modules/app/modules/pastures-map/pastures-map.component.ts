@@ -37,7 +37,6 @@ import { ContourFiltersQuery } from 'src/modules/api/models/contour.model';
 import {
   IContourStatisticsProductivity,
   IContourStatisticsProductivityQuery,
-  ICulutreStatisticsQuery,
 } from 'src/modules/api/models/statistics.model';
 import { ITableItem } from 'src/modules/ui/models/table.model';
 import { ContourDetailsComponent } from './components/contour-details/contour-details.component';
@@ -63,7 +62,7 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('toggleBtn') toggleBtn!: ToggleButtonComponent;
   mode!: string;
 
-  productivityLayerColorLegend: Record<string, any>[] = [
+  wmsProductivityLayerColorLegend: Record<string, any>[] = [
     { label: '-1', color: '#ffffe5' },
     { label: '0.025', color: '#ffea00' },
     { label: '0.4', color: '#1f991f' },

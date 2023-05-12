@@ -60,7 +60,7 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('toggleBtn') toggleBtn!: ToggleButtonComponent;
   mode!: string;
 
-  productivityLayerColorLegend: Record<string, any>[] = [
+  wmsProductivityLayerColorLegend: Record<string, any>[] = [
     { label: '-1', color: '#ffffe5' },
     { label: '0.025', color: '#ffea00' },
     { label: '0.4', color: '#1f991f' },

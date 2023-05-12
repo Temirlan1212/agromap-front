@@ -116,14 +116,17 @@ $tabDisabledColor: rgba(165, 178, 188, 0.7);
   left: 5px;
   right: 5px;
   pointer-events: none;
+  display: flex;
+  gap: 5px;
+  flex-direction: column;
 
   ::ng-deep {
     .tab {
       @extend .tab;
       position: relative;
-      display: inline-block;
       z-index: 401;
       pointer-events: initial;
+      display: inherit;
     }
   }
 }

@@ -131,7 +131,17 @@
           <app-color-legend
             *ngIf="pasturesMapControlLayersSwitch['my_test_store']?.['name']"
             [maxHeight]="'200px'"
-            [items]="productivityLayerColorLegend"
+            [items]="wmsProductivityLayerColorLegend"
+          ></app-color-legend>
+        </div>
+
+        <div class="tab transparent">
+          <app-color-legend
+            [maxHeight]="'200px'"
+            [items]="[
+              { label: 'Productive' | translate, color: '#1BA87D' },
+              { label: 'Unproductive' | translate, color: '#B3EC84' }
+            ]"
           ></app-color-legend>
         </div>
       </ng-container>
