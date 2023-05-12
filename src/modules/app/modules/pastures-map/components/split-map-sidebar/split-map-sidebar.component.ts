@@ -163,11 +163,12 @@ export class SplitMapSidebarComponent implements OnDestroy, OnInit {
       await this.getVegSatelliteDates(this.contourId, 1);
       this.buildSatelliteDatesOptions(this.satelliteDateData, this.currLang);
     }
-    const MapControlLayersSwitchComponent = this.store.getItem(
-      'MapControlLayersSwitchComponent'
+    const pasturesMapControlLayersSwitchComponent = this.store.getItem(
+      'PasturesMapControlLayersSwitchComponent'
     );
 
-    const name = MapControlLayersSwitchComponent.filterControlLayerSwitch.name;
+    const name =
+      pasturesMapControlLayersSwitchComponent.filterControlLayerSwitch.name;
 
     if (name) {
       if (name === 'agromap_store_ai') {
