@@ -8,7 +8,7 @@ const routes: Routes = [
   {
     title: 'App',
     path: '',
-    redirectTo: 'home/pastures-map',
+    redirectTo: 'pastures-map',
     pathMatch: 'full',
   },
   {
@@ -22,22 +22,25 @@ const routes: Routes = [
   },
   {
     title: 'GiproZem',
-    path: 'home',
+    path: 'pastures-map',
     data: {
       position: 'top',
       image: 'logo.png',
       class: 'homepage',
-      path: 'home/pastures-map',
     },
     loadChildren: () =>
-      import('./modules/home/home.module').then((m) => m.HomeModule),
+      import('./modules/pastures-map/pastures-map.module').then(
+        (m) => m.PasturesMapModule
+      ),
   },
   {
     title: 'Home',
-    path: 'home',
-    data: { icon: 'home', class: 'homepage-mobile', path: 'home/pastures-map' },
+    path: 'pastures-map',
+    data: { icon: 'home', class: 'homepage-mobile' },
     loadChildren: () =>
-      import('./modules/home/home.module').then((m) => m.HomeModule),
+      import('./modules/pastures-map/pastures-map.module').then(
+        (m) => m.PasturesMapModule
+      ),
   },
   {
     title: 'Cropland',

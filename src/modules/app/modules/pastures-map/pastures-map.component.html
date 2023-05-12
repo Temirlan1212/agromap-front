@@ -24,9 +24,9 @@
     <app-map-controls controls>
       <div rightPanel>
         <app-map-control-split-map
-          routerLink="/home/pastures-map/split-map"
+          routerLink="/pastures-map/split-map"
           *ngIf="layerFeature"
-          [isActive]="currentRouterPathname === '/home/pastures-map/split-map'"
+          [isActive]="currentRouterPathname.includes('split-map')"
         >
         </app-map-control-split-map>
         <ng-container rightPanel>
@@ -102,7 +102,7 @@
           </app-content-tabs>
         </app-map-control-statistics>
 
-        <div *ngIf="layerFeature && activeContour" class="tab transparent">
+        <div class="tab transparent">
           <app-contour-details
             #contourDetails
             [mapData]="mapData"
@@ -168,7 +168,7 @@
   </app-map>
 
   <app-split-map
-    *ngIf="currentRouterPathname === '/home/pastures-map/split-map'"
+    *ngIf="currentRouterPathname === '/pastures-map/split-map'"
   ></app-split-map>
 </div>
 
@@ -185,13 +185,13 @@
   (onClick)="sidePanel.handlePanelToggle()"
   *ngIf="
     activeContour == null ||
-    currentRouterPathname === '/home/pastures-map/split-map' ||
-    currentRouterPathname === '/home/pastures-map'
+    currentRouterPathname.includes('split-map') ||
+    currentRouterPathname.includes('pastures-map')
   "
   [iconName]="
-    currentRouterPathname === '/home/pastures-map/contour-add'
+    currentRouterPathname.includes('contour-add')
       ? 'contour-path'
-      : currentRouterPathname === '/home/pastures-map/split-map'
+      : currentRouterPathname.includes('split-map')
       ? 'hamburger'
       : 'filter'
   "

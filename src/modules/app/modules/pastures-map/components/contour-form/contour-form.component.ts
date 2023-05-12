@@ -66,7 +66,7 @@ export class ContourFormComponent implements OnInit, OnDestroy {
       disabled: true,
     }),
     conton: new FormControl<string | number | null>(null, Validators.required),
-    type: new FormControl<string | number | null>('2'),
+    type: new FormControl<string | number | null>(null),
     culture: new FormControl<string | number | null>(null),
     productivity: new FormControl<number | null>(null),
     year: new FormControl<number | null>(null, Validators.required),
@@ -83,10 +83,6 @@ export class ContourFormComponent implements OnInit, OnDestroy {
           district: selectedConton?.district,
           region: selectedConton?.region,
         });
-      } else {
-        if (this.mode != 'agromap_store_ai') {
-          this.form.patchValue({ district: null, region: null });
-        }
       }
     }) as Subscription,
     this.form.get('type')?.valueChanges.subscribe((res) => {
@@ -108,13 +104,15 @@ export class ContourFormComponent implements OnInit, OnDestroy {
     private translateSvc: TranslateService
   ) {}
 
-  ngOnInit() {
+  async ngOnInit(): Promise<void> {
     this.loading = true;
+    await this.getLandTypes();
+    this.getCultures();
     this.getRegions();
     this.getDistricts();
     this.getContons();
-    this.getCultures();
-    this.getLandTypes();
+
+    this.form.get('type')?.setValue(String(this.landTypeList[0].id));
     this.loading = false;
   }
 

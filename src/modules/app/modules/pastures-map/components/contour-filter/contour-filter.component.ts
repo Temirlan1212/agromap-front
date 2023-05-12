@@ -64,7 +64,7 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
         nonNullable: true,
       }
     ),
-    land_type: new FormControl<string | null>('2', {
+    land_type: new FormControl<string | null>(null, {
       nonNullable: true,
       validators: Validators.required,
     }),
@@ -111,10 +111,14 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
     private store: StoreService
   ) {}
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
+    await this.getLandTypes();
     this.getRegions();
-    this.getLandTypes();
     this.getCultures();
+
+    if (this.landTypes[0]?.id) {
+      this.form.get('land_type')?.setValue(String(this.landTypes[0].id));
+    }
   }
 
   async getRegions(): Promise<void> {
@@ -200,9 +204,6 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
         culture,
         year,
       };
-      // this.filteredContours = await this.api.contour.getFilteredContours(
-      //   this.filtersQuery
-      // );
       this.store.setItem<ContourFiltersQuery | null>(
         'ContourFilterComponent',
         this.filtersQuery
