@@ -125,16 +125,16 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
     private store: StoreService
   ) {}
 
-  async ngOnInit(): Promise<void> {
+  ngOnInit(): void {
     if (
       this.store.getItem('MapControlLayersSwitchComponent')
         ?.filterControlLayerSwitch?.name == null
     ) {
       this.mode?.patchValue('agromap_store_ai');
     }
-    await this.getRegions();
-    await this.getLandTypes();
-    await this.getCultures();
+    this.getRegions();
+    this.getLandTypes();
+    this.getCultures();
   }
 
   async getRegions(): Promise<void> {

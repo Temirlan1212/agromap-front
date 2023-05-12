@@ -353,7 +353,7 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
   async handleMapMove(mapMove: MapMove): Promise<void> {
     const landTypeParam = this.filterFormValues
       ? this.filterFormValues['land_type']
-      : this.landTypes.map((l: any) => l['id']).join(',');
+      : this.landTypes.map((l: ILandType) => l['id']).join(',');
 
     this.store.setItem<Record<string, LatLngBounds>>('ArableLandComponent', {
       mapBounds: mapMove.bounds,
