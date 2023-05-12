@@ -47,6 +47,7 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
   @Output() onModeChanged = new EventEmitter<string>();
   @Output() onFormSubmit = new EventEmitter<Record<string, any>>();
   @Output() onFormReset = new EventEmitter<Record<string, any>>();
+
   loading: boolean = false;
   form: FormGroup = new FormGroup({
     region: new FormControl<string | null>(null, {
@@ -113,8 +114,8 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
 
   async ngOnInit(): Promise<void> {
     await this.getLandTypes();
-    this.getRegions();
-    this.getCultures();
+    await this.getRegions();
+    await this.getCultures();
 
     if (this.landTypes[0]?.id) {
       this.form.get('land_type')?.setValue(String(this.landTypes[0].id));

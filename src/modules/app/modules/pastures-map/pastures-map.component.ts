@@ -43,6 +43,10 @@ import { ContourDetailsComponent } from './components/contour-details/contour-de
 import { SidePanelComponent } from '../../../ui/components/side-panel/side-panel.component';
 import { ToggleButtonComponent } from '../../../ui/components/toggle-button/toggle-button.component';
 import { MapControlLayersSwitchComponent } from '../../../ui/components/map-control-layers-switch/map-control-layers-switch.component';
+import { IConton } from 'src/modules/api/models/conton.model';
+import { ILandType } from 'src/modules/api/models/land-type.model';
+import { IDistrict } from 'src/modules/api/models/district.model';
+import { ICulture } from 'src/modules/api/models/culture.model';
 
 @Component({
   selector: 'app-pastures-map',
@@ -146,6 +150,8 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
       type: 'checkbox',
     },
   ];
+
+  landTypes: ILandType[] = [];
 
   mapData: MapData | null = null;
   layerFeature: MapLayerFeature | null = null;
@@ -340,11 +346,12 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
         try {
           this.loading = true;
           let polygons: GeoJSON;
-          if (this.isWmsAiActive) {
-            polygons = await this.api.map.getPolygonsInScreenAi(mapMove.bounds);
-          } else {
-            polygons = await this.api.map.getPolygonsInScreen(mapMove.bounds);
-          }
+
+          polygons = await this.api.map.getPolygonsInScreen({
+            latLngBounds: mapMove.bounds,
+            land_type: String(this.landTypes[0].id),
+          });
+
           this.mapData.geoJson.options.snapIgnore = true;
           this.mapData.geoJson.options.pmIgnore = true;
           this.mapData.geoJson.options.style = {
@@ -539,42 +546,45 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private setWmsParams(): void {
-    if (this.isWmsAiActive) {
-      const finded = this.wmsLayers.find(
-        (w) => w.name === 'agromap_store_ai'
-      ) as any;
-      if (finded != null) {
-        delete finded.layer.wmsParams.cql_filter;
-        if (this.wmsCQLFilter != null) {
-          finded.layer.setParams({ cql_filter: this.wmsCQLFilter });
-        }
-      }
-    } else {
-      const finded = this.wmsLayers.find(
-        (w) => w.name === 'agromap_store'
-      ) as any;
-      if (finded != null) {
-        delete finded.layer.wmsParams.cql_filter;
-        if (this.wmsCQLFilter != null) {
-          finded.layer?.setParams({ cql_filter: this.wmsCQLFilter });
-        }
+    const finded = this.wmsLayers.find(
+      (w) => w.name === 'agromap_store'
+    ) as any;
+
+    if (finded != null) {
+      delete finded.layer.wmsParams.cql_filter;
+      if (this.wmsCQLFilter != null) {
+        finded.layer?.setParams({ cql_filter: this.wmsCQLFilter });
       }
     }
   }
 
-  ngOnInit(): void {
+  async getLandTypes() {
+    try {
+      this.landTypes = await this.api.dictionary.getLandType();
+    } catch (e: any) {
+      this.messages.error(e.message);
+    }
+  }
+
+  async ngOnInit(): Promise<void> {
     const data = this.store.getItem('PasturesMapControlLayersSwitchComponent');
     if (!data) {
       this.mode = 'agromap_store';
     }
 
     this.wmsSelectedStatusLayers = data;
+
+    await this.getLandTypes();
+
+    this.getVegIndexList();
+
     this.getPastureStatisticsProductivity({
-      land_type: '2',
+      land_type: String(this.landTypes[0].id),
       year: 2022,
     });
 
-    this.getVegIndexList();
+    this.wmsCQLFilter = `ltype=${String(this.landTypes[0].id)}`;
+    this.setWmsParams();
 
     this.store
       .watchItem<ContourFiltersQuery | null>('ContourFilterComponent')

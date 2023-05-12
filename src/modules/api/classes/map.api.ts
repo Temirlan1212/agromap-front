@@ -2,21 +2,28 @@ import { HttpClient, HttpResponse } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import { LatLngBounds } from 'leaflet';
 import { GeoJSON } from 'geojson';
+import { IPolygonsInScreenQuery } from '../models/map.model';
 
 export class MapApi {
   constructor(private http: HttpClient) {}
 
-  async getPolygonsInScreen(data: LatLngBounds): Promise<GeoJSON> {
+  async getPolygonsInScreen(query: IPolygonsInScreenQuery): Promise<GeoJSON> {
+    const { latLngBounds, land_type } = query;
     const response = await firstValueFrom(
-      this.http.post<GeoJSON>('gip/polygons-in-screen', data)
+      this.http.post<GeoJSON>('gip/polygons-in-screen', latLngBounds, {
+        params: { land_type },
+      })
     );
 
     return response;
   }
 
-  async getPolygonsInScreenAi(data: LatLngBounds): Promise<GeoJSON> {
+  async getPolygonsInScreenAi(query: IPolygonsInScreenQuery): Promise<GeoJSON> {
+    const { latLngBounds, land_type } = query;
     const response = await firstValueFrom(
-      this.http.post<GeoJSON>('ai/contour-in-screen', data)
+      this.http.post<GeoJSON>('ai/contour-in-screen', latLngBounds, {
+        params: { land_type },
+      })
     );
 
     return response;

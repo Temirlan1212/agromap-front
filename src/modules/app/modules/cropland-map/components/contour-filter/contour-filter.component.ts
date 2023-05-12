@@ -51,6 +51,7 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
   @Output() onModeChanged = new EventEmitter<string>();
   @Output() onFormSubmit = new EventEmitter<Record<string, any>>();
   @Output() onFormReset = new EventEmitter<Record<string, any>>();
+
   loading: boolean = false;
   form: FormGroup = new FormGroup({
     region: new FormControl<string | null>(null, {
@@ -220,9 +221,7 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
         year,
         ...(this.mode.value == 'agromap_store_ai' && { ai: true }),
       };
-      // this.filteredContours = await this.api.contour.getFilteredContours(
-      //   this.filtersQuery
-      // );
+
       this.store.setItem<ContourFiltersQuery | null>(
         'ContourFilterComponent',
         this.filtersQuery
