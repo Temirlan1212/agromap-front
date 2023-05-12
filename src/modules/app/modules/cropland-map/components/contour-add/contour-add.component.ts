@@ -114,7 +114,7 @@ export class ContourAddComponent implements OnInit, OnDestroy {
       this.mapInstance.setMaxBounds(this.mapService.maxBounds);
       this.router.navigate(['..']);
     } catch (e: any) {
-      this.messages.error(e.message);
+      this.messages.error(e.error?.message ?? e.message);
     }
   }
 

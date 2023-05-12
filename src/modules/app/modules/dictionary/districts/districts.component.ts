@@ -42,7 +42,7 @@ export class DistrictsComponent {
       this.list = results;
       this.totalCount = count;
     } catch (e: any) {
-      console.log(e.message);
+      this.messages.error(e.error?.message ?? e.message);
     } finally {
       this.loading = false;
     }
