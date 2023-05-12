@@ -443,6 +443,9 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   handleFilterFormSubmit(formValue: Record<string, any>) {
+    if (this.mapData?.map) {
+      this.mapData.geoJson.clearLayers();
+    }
     this.filterFormValues = formValue['value'];
     this.getPastureStatisticsProductivity(this.filterFormValues);
     this.getCultureStatisticsProductivity(this.filterFormValues);
