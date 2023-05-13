@@ -1,4 +1,17 @@
-import { geoJSON, latLngBounds, LatLngBounds, Map, tileLayer } from 'leaflet';
+import {
+  geoJSON,
+  latLngBounds,
+  LatLngBounds,
+  Map,
+  tileLayer,
+  LeafletMouseEvent,
+  DomEvent,
+  Layer,
+  Polygon,
+  FeatureGroup,
+  Path,
+  Marker,
+} from 'leaflet';
 import { GeoJSON } from 'geojson';
 import {
   AfterViewInit,
@@ -348,6 +361,10 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
       this.messages.error(e.error?.message ?? e.message);
       this.contourData = [];
     }
+  }
+
+  handleMapClick(e: LeafletMouseEvent, map: MapComponent) {
+    map.handleFeatureClose();
   }
 
   async handleMapMove(mapMove: MapMove): Promise<void> {
