@@ -143,13 +143,16 @@
       <ng-container leftBottomPanel>
         <div class="tab transparent">
           <app-color-legend
-            *ngIf="pasturesMapControlLayersSwitch['my_test_store']?.['name']"
+            *ngIf="pasturesMapControlLayersSwitch['ndvi_heat_map']?.['name']"
             [maxHeight]="'200px'"
             [items]="wmsProductivityLayerColorLegend"
           ></app-color-legend>
         </div>
 
-        <div class="tab transparent" *ngIf="isBaseLayerActive">
+        <div
+          class="tab transparent"
+          *ngIf="pasturesMapControlLayersSwitch['filterControlLayerSwitch']?.['name']"
+        >
           <app-color-legend
             [maxHeight]="'200px'"
             [items]="[
@@ -192,7 +195,7 @@
   </app-map>
 
   <app-split-map
-    *ngIf="currentRouterPathname === '/pastures-map/split-map'"
+    *ngIf="currentRouterPathname.includes('split-map')"
   ></app-split-map>
 </div>
 

@@ -68,13 +68,13 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('sidePanel') sidePanel!: SidePanelComponent;
   @ViewChild('toggleBtn') toggleBtn!: ToggleButtonComponent;
   mode!: string;
-  isBaseLayerActive: boolean = false;
 
   wmsProductivityLayerColorLegend: Record<string, any>[] = [
-    { label: '-1', color: '#ffffe5' },
-    { label: '0.025', color: '#ffea00' },
-    { label: '0.4', color: '#1f991f' },
-    { label: '0.8', color: '#359b52' },
+    { label: '-1', color: '#000000' },
+    { label: '0.055', color: '#800000' },
+    { label: '0.075', color: '#ff0000' },
+    { label: '0.16', color: '#FFEA00' },
+    { label: '0.401', color: '#359b52' },
     { label: '1', color: '#004529' },
   ];
 
@@ -150,9 +150,9 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
     },
     {
       title: 'Productivity layer',
-      name: 'my_test_store',
-      layer: tileLayer.wms('https://geoserver.24mycrm.com/my_testing/wms', {
-        layers: 'my_testing:my_test_store',
+      name: 'ndvi_heat_map',
+      layer: tileLayer.wms('https://geoserver.24mycrm.com/agromap/wms', {
+        layers: 'agromap:ndvi_heat_map',
         ...this.wmsLayersOverlayOptions,
       }),
       type: 'checkbox',
@@ -580,9 +580,7 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
 
   async ngOnInit(): Promise<void> {
     const data = this.store.getItem('PasturesMapControlLayersSwitchComponent');
-    if (data) {
-      this.isBaseLayerActive = !!data['filterControlLayerSwitch']['name'];
-    } else {
+    if (!data) {
       this.mode = 'agromap_store';
     }
 
@@ -599,14 +597,6 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.wmsCQLFilter = `ltype=${String(this.landTypes[0].id)}`;
     this.setWmsParams();
-
-    this.store
-      .watchItem<Record<string, any>>('PasturesMapControlLayersSwitchComponent')
-      .subscribe((v) => {
-        if (v !== null && v['filterControlLayerSwitch']) {
-          this.isBaseLayerActive = !!v['filterControlLayerSwitch']['name'];
-        }
-      });
 
     this.store
       .watchItem<ContourFiltersQuery | null>('ContourFilterComponent')

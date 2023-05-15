@@ -74,10 +74,11 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
   mode!: string;
 
   wmsProductivityLayerColorLegend: Record<string, any>[] = [
-    { label: '-1', color: '#ffffe5' },
-    { label: '0.025', color: '#ffea00' },
-    { label: '0.4', color: '#1f991f' },
-    { label: '0.8', color: '#359b52' },
+    { label: '-1', color: '#000000' },
+    { label: '0.055', color: '#800000' },
+    { label: '0.075', color: '#ff0000' },
+    { label: '0.16', color: '#FFEA00' },
+    { label: '0.401', color: '#359b52' },
     { label: '1', color: '#004529' },
   ];
 
@@ -162,9 +163,9 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
     },
     {
       title: 'Productivity layer',
-      name: 'my_test_store',
-      layer: tileLayer.wms('https://geoserver.24mycrm.com/my_testing/wms', {
-        layers: 'my_testing:my_test_store',
+      name: 'ndvi_heat_map',
+      layer: tileLayer.wms('https://geoserver.24mycrm.com/agromap/wms', {
+        layers: 'agromap:ndvi_heat_map',
         ...this.wmsLayersOverlayOptions,
       }),
       type: 'checkbox',
