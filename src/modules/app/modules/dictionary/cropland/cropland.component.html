@@ -17,12 +17,12 @@
     [items]="culturalHealthIndicators"
     [fields]="[
       {
-        title: 'Districts' | translate,
+        title: 'Territory' | translate,
         field: 'name_' + currentLang,
-        rowspan: 2
+        colspan: 1
       },
       {
-        title: 'NDVI' | translate,
+        title: 'NDWI' | translate,
         field: 'name_' + currentLang,
         colspan: 2
       },
@@ -30,28 +30,79 @@
       { title: 'NDRE' | translate, field: 'population', colspan: 2 },
       { title: 'VARI' | translate, field: 'density', colspan: 2 },
       { title: 'SAVI' | translate, field: 'area', colspan: 2 },
-      { title: 'Высота' | translate, field: 'area', colspan: 2 }
+      { title: 'Elevation' | translate, field: 'area', colspan: 2 }
     ]"
     [nestedFields]="[
-      { title: 'min' | translate, field: 'district_name_' + currentLang },
+      {
+        title: 'Districts' | translate,
+        field: 'district_name_' + currentLang,
+        mobileTitle: 'Districts' | translate
+      },
+      {
+        title: 'min' | translate,
+        field: 'ndwi_min',
+        mobileTitle: ('min' | translate) + '. ' + ('NDWI' | translate)
+      },
+      {
+        title: 'max' | translate,
+        field: 'ndwi_max',
+        mobileTitle: ('max' | translate) + '. ' + ('NDWI' | translate)
+      },
 
-      { title: 'min' | translate, field: 'ndvi_min' },
-      { title: 'max' | translate, field: 'ndvi_max' },
+      {
+        title: 'min' | translate,
+        field: 'ndmi_min',
+        mobileTitle: ('min' | translate) + '. ' + ('NDMI' | translate)
+      },
+      {
+        title: 'max' | translate,
+        field: 'ndmi_max',
+        mobileTitle: ('min' | translate) + '. ' + ('NDMI' | translate)
+      },
 
-      { title: 'min' | translate, field: 'ndmi_min' },
-      { title: 'max' | translate, field: 'ndmi_max' },
+      {
+        title: 'min' | translate,
+        field: 'ndre_min',
+        mobileTitle: ('min' | translate) + '. ' + ('NDRE' | translate)
+      },
+      {
+        title: 'max' | translate,
+        field: 'ndre_max',
+        mobileTitle: ('min' | translate) + '. ' + ('NDRE' | translate)
+      },
 
-      { title: 'min' | translate, field: 'ndre_min' },
-      { title: 'max' | translate, field: 'ndre_max' },
+      {
+        title: 'min' | translate,
+        field: 'vari_min',
+        mobileTitle: ('min' | translate) + '. ' + ('VARI' | translate)
+      },
+      {
+        title: 'max' | translate,
+        field: 'vari_max',
+        mobileTitle: ('min' | translate) + '. ' + ('VARI' | translate)
+      },
 
-      { title: 'min' | translate, field: 'vari_min' },
-      { title: 'max' | translate, field: 'vari_max' },
+      {
+        title: 'min' | translate,
+        field: 'savi_min',
+        mobileTitle: ('min' | translate) + '. ' + ('SAVI' | translate)
+      },
+      {
+        title: 'max' | translate,
+        field: 'savi_max',
+        mobileTitle: ('min' | translate) + '. ' + ('SAVI' | translate)
+      },
 
-      { title: 'min' | translate, field: 'savi_min' },
-      { title: 'max' | translate, field: 'savi_max' },
-
-      { title: 'min' | translate, field: 'min_elevation' },
-      { title: 'max' | translate, field: 'max_elevation' }
+      {
+        title: 'min' | translate,
+        field: 'min_elevation',
+        mobileTitle: ('min' | translate) + '. ' + ('Elevation' | translate)
+      },
+      {
+        title: 'max' | translate,
+        field: 'max_elevation',
+        mobileTitle: ('max' | translate) + '. ' + ('Elevation' | translate)
+      }
     ]"
   ></app-table>
   <ng-template #noItems>
