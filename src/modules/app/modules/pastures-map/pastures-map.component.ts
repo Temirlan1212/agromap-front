@@ -27,7 +27,7 @@ import {
   MapMove,
 } from 'src/modules/ui/models/map.model';
 import { MapService } from '../../../ui/services/map.service';
-import { MessagesService } from '../../../ui/components/services/messages.service';
+import { MessagesService } from '../../../ui/services/messages.service';
 import { IChartData } from './components/spline-area-chart/spline-area-chart.component';
 import { ActualVegQuery } from '../../../api/classes/veg-indexes';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';

@@ -4,7 +4,7 @@ import { Subscription } from 'rxjs';
 import { ICulture } from 'src/modules/api/models/culture.model';
 import { FormControl } from '@angular/forms';
 import { ApiService } from 'src/modules/api/api.service';
-import { MessagesService } from 'src/modules/ui/components/services/messages.service';
+import { MessagesService } from 'src/modules/ui/services/messages.service';
 
 @Component({
   selector: 'app-cropland',

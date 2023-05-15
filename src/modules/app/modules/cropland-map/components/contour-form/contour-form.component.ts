@@ -20,7 +20,7 @@ import { Subscription } from 'rxjs';
 import { IRegion } from '../../../../../api/models/region.model';
 import { ILandType } from '../../../../../api/models/land-type.model';
 import { ICulture } from '../../../../../api/models/culture.model';
-import { MessagesService } from '../../../../../ui/components/services/messages.service';
+import { MessagesService } from '../../../../../ui/services/messages.service';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
