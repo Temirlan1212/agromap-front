@@ -60,6 +60,15 @@
           {{ "c. per ha." | translate }}
         </span>
       </div>
+
+      <div *ngIf="activeContour?.predicted_productivity">
+        {{ "Productivity" | translate }}
+        {{ "AI" | translate }}
+        <span
+          >{{ activeContour?.predicted_productivity }}
+          {{ "c. per ha." | translate }}</span
+        >
+      </div>
       <div>
         {{ "Elevation" | translate }}
         <span

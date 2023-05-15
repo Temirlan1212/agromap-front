@@ -5,6 +5,10 @@ import {
   Map,
   tileLayer,
   LeafletMouseEvent,
+  Layer,
+  Polygon,
+  LeafletEvent,
+  Tooltip,
 } from 'leaflet';
 import { GeoJSON } from 'geojson';
 import {
@@ -54,6 +58,7 @@ import { IConton } from 'src/modules/api/models/conton.model';
 import { ILandType } from 'src/modules/api/models/land-type.model';
 import { IDistrict } from 'src/modules/api/models/district.model';
 import { ICulture } from 'src/modules/api/models/culture.model';
+import * as L from 'leaflet';
 
 @Component({
   selector: 'app-pastures-map',
@@ -68,6 +73,7 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('sidePanel') sidePanel!: SidePanelComponent;
   @ViewChild('toggleBtn') toggleBtn!: ToggleButtonComponent;
   mode!: string;
+  pastureLayerProductivityTooltip: Tooltip | null = null;
 
   wmsProductivityLayerColorLegend: Record<string, any>[] = [
     { label: '-1', color: '#000000' },
@@ -140,6 +146,15 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
       type: 'radio',
     },
     {
+      title: 'Productivity layer',
+      name: 'productivity',
+      layer: tileLayer.wms('https://geoserver.24mycrm.com/agromap/wms', {
+        layers: 'agromap:productivity',
+        ...{ ...this.wmsLayersOverlayOptions, zIndex: 1000 },
+      }),
+      type: 'checkbox',
+    },
+    {
       title: 'SoilLayer',
       name: 'soil_agromap',
       layer: tileLayer.wms('https://geoserver.24mycrm.com/agromap/wms', {
@@ -149,7 +164,7 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
       type: 'checkbox',
     },
     {
-      title: 'Productivity layer',
+      title: 'NDVI heat map',
       name: 'ndvi_heat_map',
       layer: tileLayer.wms('https://geoserver.24mycrm.com/agromap/wms', {
         layers: 'agromap:ndvi_heat_map',
@@ -229,6 +244,10 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
     this.store
       .watchItem('PasturesMapControlLayersSwitchComponent')
       .subscribe((v) => {
+        if (this.pastureLayerProductivityTooltip) {
+          this.mapData?.map.removeLayer(this.pastureLayerProductivityTooltip);
+          this.pastureLayerProductivityTooltip = null;
+        }
         this.pasturesMapControlLayersSwitch = v;
       }),
   ];
@@ -301,11 +320,7 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
 
   async getContour(id: number): Promise<void> {
     try {
-      if (this.isWmsAiActive) {
-        this.activeContour = await this.api.aiContour.getOne(id);
-      } else {
-        this.activeContour = await this.api.contour.getOne(id);
-      }
+      this.activeContour = await this.api.contour.getOne(id);
     } catch (e) {
       console.log(e);
     }
@@ -342,7 +357,62 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  handleMapClick(e: LeafletMouseEvent, map: MapComponent) {
+  async handleMapClick(e: LeafletMouseEvent, map: MapComponent) {
+    if (this.pasturesMapControlLayersSwitch['productivity']?.['name']) {
+      let lat = e.latlng.lat;
+      let lng = e.latlng.lng;
+
+      let buffer = 0.1;
+      let bbox = [lng - buffer, lat - buffer, lng + buffer, lat + buffer];
+      const mapSize = this.mapData?.map.getSize();
+      if (mapSize) {
+        let params = {
+          service: 'WMS',
+          request: 'GetFeatureInfo',
+          srs: 'EPSG:4326',
+          styles: '',
+          format: 'image/png',
+          bbox: bbox.join(','),
+          layers: 'agromap:productivity',
+          query_layers: 'agromap:productivity',
+          transparent: true,
+          width: mapSize.x,
+          height: mapSize.y,
+          x: 50,
+          y: 50,
+          version: '1.1.1',
+          info_format: 'application/json',
+        };
+
+        try {
+          const data = await this.api.map.getFeatureInfo(params);
+
+          const gray_index = (data as any)?.features[0]?.properties?.GRAY_INDEX;
+          let tooltipContent = `${this.translate.transform(
+            'Productivity'
+          )} : ${gray_index?.toFixed(2)}`;
+
+          if (this.mapData?.map) {
+            if (this.pastureLayerProductivityTooltip) {
+              this.mapData.map.removeLayer(
+                this.pastureLayerProductivityTooltip
+              );
+              this.pastureLayerProductivityTooltip = null;
+            }
+
+            if (gray_index) {
+              this.pastureLayerProductivityTooltip = L.tooltip()
+                .setLatLng(e.latlng)
+                .setContent(tooltipContent)
+                .openOn(this.mapData.map);
+            }
+          }
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    }
+
     map.handleFeatureClose();
   }
 
@@ -371,8 +441,9 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
             weight: 0.4,
           };
 
-          this.mapData.geoJson.setZIndex(400);
           this.mapData.geoJson.options.interactive = true;
+          this.mapData.geoJson.setZIndex(400);
+
           this.mapData.geoJson.addData(polygons);
         } catch (e: any) {
           console.log(e);

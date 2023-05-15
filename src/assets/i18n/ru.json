@@ -195,5 +195,6 @@
   "max": "макс",
   "Pasture": "Пастбище",
   "Contour id": "Идентификатор контура",
-  "Culture is not defined": "Культура не определена"
+  "Culture is not defined": "Культура не определена",
+  "NDVI heat map": "Тепловая карта ndvi"
 }

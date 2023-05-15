@@ -36,6 +36,7 @@ export class ContonsComponent {
       const { results, count } = (await this.api.dictionary.getContons({
         page_size: this.pageSize,
         page: page,
+        pagination: true,
       })) as IContonWithPagination;
       this.list = results;
       this.totalCount = count;

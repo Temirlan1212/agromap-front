@@ -26,4 +26,5 @@ export interface IContonListQuery {
   next?: number;
   previous?: number;
   page?: number;
+  pagination?: boolean;
 }
