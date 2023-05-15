@@ -107,10 +107,10 @@ export class ContourFormComponent implements OnInit, OnDestroy {
   async ngOnInit(): Promise<void> {
     this.loading = true;
     await this.getLandTypes();
-    this.getCultures();
-    this.getRegions();
-    this.getDistricts();
-    this.getContons();
+    await this.getCultures();
+    await this.getRegions();
+    await this.getDistricts();
+    await this.getContons();
 
     this.form.get('type')?.setValue(String(this.landTypeList[0].id));
     this.loading = false;

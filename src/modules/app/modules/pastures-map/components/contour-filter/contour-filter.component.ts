@@ -113,9 +113,11 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
   ) {}
 
   async ngOnInit(): Promise<void> {
+    this.loading = true;
     await this.getLandTypes();
     await this.getRegions();
     await this.getCultures();
+    this.loading = false;
 
     if (this.landTypes[0]?.id) {
       this.form.get('land_type')?.setValue(String(this.landTypes[0].id));
