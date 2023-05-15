@@ -68,6 +68,7 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('sidePanel') sidePanel!: SidePanelComponent;
   @ViewChild('toggleBtn') toggleBtn!: ToggleButtonComponent;
   mode!: string;
+  isBaseLayerActive: boolean = false;
 
   wmsProductivityLayerColorLegend: Record<string, any>[] = [
     { label: '-1', color: '#ffffe5' },
@@ -579,7 +580,9 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
 
   async ngOnInit(): Promise<void> {
     const data = this.store.getItem('PasturesMapControlLayersSwitchComponent');
-    if (!data) {
+    if (data) {
+      this.isBaseLayerActive = !!data['filterControlLayerSwitch']['name'];
+    } else {
       this.mode = 'agromap_store';
     }
 
@@ -596,6 +599,14 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.wmsCQLFilter = `ltype=${String(this.landTypes[0].id)}`;
     this.setWmsParams();
+
+    this.store
+      .watchItem<Record<string, any>>('PasturesMapControlLayersSwitchComponent')
+      .subscribe((v) => {
+        if (v !== null && v['filterControlLayerSwitch']) {
+          this.isBaseLayerActive = !!v['filterControlLayerSwitch']['name'];
+        }
+      });
 
     this.store
       .watchItem<ContourFiltersQuery | null>('ContourFilterComponent')
