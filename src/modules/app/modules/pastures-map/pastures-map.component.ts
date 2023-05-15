@@ -376,8 +376,8 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
           layers: 'agromap:productivity',
           query_layers: 'agromap:productivity',
           transparent: true,
-          width: mapSize.x,
-          height: mapSize.y,
+          width: 101,
+          height: 101,
           x: 50,
           y: 50,
           version: '1.1.1',
@@ -388,6 +388,7 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
           const data = await this.api.map.getFeatureInfo(params);
 
           const gray_index = (data as any)?.features[0]?.properties?.GRAY_INDEX;
+
           let tooltipContent = `${this.translate.transform(
             'Productivity'
           )} : ${gray_index?.toFixed(2)}`;
@@ -400,7 +401,7 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
               this.pastureLayerProductivityTooltip = null;
             }
 
-            if (gray_index) {
+            if (gray_index != null) {
               this.pastureLayerProductivityTooltip = L.tooltip()
                 .setLatLng(e.latlng)
                 .setContent(tooltipContent)
