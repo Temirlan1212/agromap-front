@@ -7,9 +7,7 @@ import { TranslateModule, TranslatePipe } from '@ngx-translate/core';
 import { CulturesComponent } from './cultures/cultures.component';
 import { CheckExistPipe } from '../../../ui/pipes/check-exist.pipe';
 import { SvgIconComponent } from '../../../ui/components/svg-icon/svg-icon.component';
-import { CultureAddComponent } from './cultures/components/culture-add/culture-add.component';
-import { CultureEditComponent } from './cultures/components/culture-edit/culture-edit.component';
-import { CultureFormComponent } from './cultures/components/culture-form/culture-form.component';
+
 import { LoadingComponent } from '../../../ui/components/loading/loading.component';
 import { FieldsGroupComponent } from '../../../ui/components/fields-group/fields-group.component';
 import { InputComponent } from '../../../ui/components/input/input.component';
@@ -24,6 +22,15 @@ import { IndexesComponent } from './indexes/indexes.component';
 import { FormFieldComponent } from '../../../ui/components/form-field/form-field.component';
 import { ContentTabsComponent } from '../../../ui/components/content-tabs/content-tabs.component';
 import { TabComponent } from '../../../ui/components/content-tabs/tab/tab.component';
+import { ToggleButtonComponent } from '../../../ui/components/toggle-button/toggle-button.component';
+import { SoilTypesComponent } from './soil-types/soil-types.component';
+import { PaginatorComponent } from 'src/modules/ui/components/paginator/paginator.component';
+import { CroplandComponent } from './cropland/cropland.component';
+import { InputSelectComponent } from 'src/modules/ui/components/input-select/input-select.component';
+import { CultureAddComponent } from './cultures/components/culture-add/culture-add.component';
+import { CultureEditComponent } from './cultures/components/culture-edit/culture-edit.component';
+import { CultureFormComponent } from './cultures/components/culture-form/culture-form.component';
+import { PastureComponent } from './pasture/pasture.component';
 
 @NgModule({
   declarations: [
@@ -36,6 +43,9 @@ import { TabComponent } from '../../../ui/components/content-tabs/tab/tab.compon
     DistrictsComponent,
     ContonsComponent,
     IndexesComponent,
+    SoilTypesComponent,
+    CroplandComponent,
+    PastureComponent,
   ],
   imports: [
     CommonModule,
@@ -54,6 +64,9 @@ import { TabComponent } from '../../../ui/components/content-tabs/tab/tab.compon
     FormFieldComponent,
     ContentTabsComponent,
     TabComponent,
+    ToggleButtonComponent,
+    PaginatorComponent,
+    InputSelectComponent,
   ],
   providers: [TranslatePipe],
 })

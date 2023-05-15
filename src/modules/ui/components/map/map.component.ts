@@ -22,6 +22,10 @@ import {
   latLng,
   latLngBounds,
   tileLayer,
+  Browser,
+  DomEvent,
+  Polygon,
+  LeafletMouseEvent,
 } from 'leaflet';
 import { MapData, MapLayerFeature, MapMove } from '../../models/map.model';
 import '@geoman-io/leaflet-geoman-free';
@@ -53,9 +57,11 @@ export class MapComponent implements OnInit, OnDestroy {
   subscriptions: Subscription[] = [];
   @Output() mapData = new EventEmitter<MapData>();
   @Output() mapMove = new EventEmitter<MapMove>();
+  @Output() mapClick = new EventEmitter<LeafletMouseEvent>();
   @Output() featureClick = new EventEmitter<MapLayerFeature>();
   @Output() featureClose = new EventEmitter<void>();
-
+  @Output() featureHover = new EventEmitter<MapLayerFeature>();
+  @Output() featureUnhover = new EventEmitter<MapLayerFeature>();
   @HostBinding('class.open')
   featureOpen: boolean = false;
 
@@ -66,7 +72,14 @@ export class MapComponent implements OnInit, OnDestroy {
   geoJson: GeoJSON = geoJSON(undefined, {
     onEachFeature: (feature: Feature, layer: Layer) => {
       layer.on({
-        click: () => this.handleFeatureClick(layer, feature),
+        click: (e) => {
+          DomEvent.stopPropagation(e);
+          this.handleFeatureClick(layer, feature);
+        },
+        ...(!Browser.mobile && {
+          mouseover: () => this.handleFeatureHover(layer, feature),
+        }),
+        mouseout: () => this.featureUnhover.emit({ layer, feature }),
       });
     },
   });
@@ -98,6 +111,7 @@ export class MapComponent implements OnInit, OnDestroy {
 
     this.map.addLayer(this.geoJson);
     this.handleMapEventSubscription();
+    this.handleMapClick();
     this.mapData.emit({ map: this.map, geoJson: this.geoJson });
   }
 
@@ -105,7 +119,6 @@ export class MapComponent implements OnInit, OnDestroy {
     const s = fromEvent(this.map as Map, 'moveend')
       .pipe(
         debounce((i) => {
-          this.geoJson.clearLayers();
           return interval(1000);
         })
       )
@@ -125,9 +138,19 @@ export class MapComponent implements OnInit, OnDestroy {
     }
   }
 
+  handleMapClick(): void {
+    (this.map as Map).on('click', (e: LeafletMouseEvent) => {
+      this.mapClick.emit(e);
+    });
+  }
+
   handleFeatureClick(layer: Layer, feature: Feature): void {
     this.featureOpen = true;
     this.featureClick.emit({ layer, feature });
+  }
+
+  handleFeatureHover(layer: Layer, feature: Feature) {
+    this.featureHover.emit({ layer, feature });
   }
 
   handleFeatureClose(): void {

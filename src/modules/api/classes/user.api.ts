@@ -1,6 +1,7 @@
-import { HttpClient, HttpResponse } from '@angular/common/http';
-import { firstValueFrom } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { firstValueFrom, interval, Observable, switchMap } from 'rxjs';
 import { IPassword, IProfile, IUser } from '../models/user.model';
+import { INotification } from '../models/notification.model';
 
 export class UserApi {
   constructor(private http: HttpClient) {}
@@ -11,8 +12,14 @@ export class UserApi {
     );
 
     if (document != null && response != null) {
-      const ms = new Date().getTime() + 86400000;
-      document.cookie = `user=${JSON.stringify(response)}; expires=${ms}`;
+      const nowDate = new Date();
+      nowDate.setTime(nowDate.getTime() + 86400000);
+
+      let userCookie = `user=${JSON.stringify(response)};`;
+      userCookie += `expires=${nowDate.toUTCString()};`;
+      userCookie += 'path=/';
+
+      document.cookie = userCookie;
     }
 
     return response;
@@ -20,10 +27,12 @@ export class UserApi {
 
   async logOut(): Promise<boolean> {
     let result = false;
-    await firstValueFrom(this.http.get<any>(`account/logout_agromap`));
 
     if (document != null) {
-      document.cookie = 'user=;';
+      let userCookie = 'user=;';
+      userCookie += 'path=/';
+
+      document.cookie = userCookie;
       result = true;
     }
 
@@ -35,10 +44,10 @@ export class UserApi {
 
     if (document != null) {
       const cookies = document.cookie
-        .split('; ')
+        .split(';')
         .reduce((prev: Record<string, string>, current: string) => {
           const [name, ...value] = current.split('=');
-          prev[name] = value.join('=');
+          prev[name.trim()] = value.join('=');
           return prev;
         }, {});
 
@@ -65,4 +74,24 @@ export class UserApi {
       this.http.patch<IProfile>(`account/edit_profile`, data)
     );
   }
+
+  async getNotifications(): Promise<INotification[]> {
+    return await firstValueFrom(
+      this.http.get<INotification[]>(`account/notifications`)
+    );
+  }
+
+  async removeNotification(id: number): Promise<Record<string, any>> {
+    return await firstValueFrom(
+      this.http.delete<Record<string, any>>(
+        `account/delete_notifications/${id}`
+      )
+    );
+  }
+
+  notifications: Observable<INotification[]> = interval(1000 * 3600 * 4).pipe(
+    switchMap(() => {
+      return this.getNotifications();
+    })
+  );
 }

@@ -33,7 +33,7 @@ export class CultureEditComponent implements OnInit {
     try {
       this.culture = await this.api.culture.getOne(Number(id));
     } catch (e: any) {
-      this.messages.error(e.message);
+      this.messages.error(e.error?.message ?? e.message);
     }
   }
 
@@ -59,7 +59,7 @@ export class CultureEditComponent implements OnInit {
       this.router.navigate(['..'], { relativeTo: this.route });
       this.store.setItem('CultureEditComponent', { updated: true });
     } catch (e: any) {
-      this.messages.error(e.message);
+      this.messages.error(e.error?.message ?? e.message);
     }
   }
 }

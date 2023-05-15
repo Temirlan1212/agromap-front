@@ -1,4 +1,5 @@
 @import "constants";
+
 p {
   margin: 0;
 }
@@ -10,7 +11,7 @@ p {
   bottom: 0;
   right: 0;
   left: 0;
-  z-index: 1003;
+  z-index: 500;
 
   .column {
     display: flex;
@@ -18,6 +19,7 @@ p {
     flex-wrap: wrap;
     height: 100vh;
     gap: 3px;
+
     .mapNumber {
       position: absolute;
       z-index: 1002;
@@ -32,10 +34,12 @@ p {
       border-radius: 50%;
     }
   }
+
   .map {
     flex-grow: 1;
     display: none;
     flex-basis: calc(50% - 3px);
+
     &.initialized {
       display: flex;
     }

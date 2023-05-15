@@ -52,6 +52,11 @@ $tabDisabledColor: rgba(165, 178, 188, 0.7);
       background-color: $tabActiveBgHoverColor;
     }
   }
+
+  &.transparent {
+    background-color: transparent;
+    padding: 0;
+  }
 }
 
 .rightPanel {
@@ -86,7 +91,7 @@ $tabDisabledColor: rgba(165, 178, 188, 0.7);
     .dropdown-box,
     .timeline {
       position: relative;
-      z-index: 400;
+      z-index: 401;
       pointer-events: initial;
     }
     .date {
@@ -100,6 +105,28 @@ $tabDisabledColor: rgba(165, 178, 188, 0.7);
       display: inline-block;
       z-index: 400;
       pointer-events: initial;
+    }
+  }
+}
+
+.leftBottomPanel {
+  position: absolute;
+  bottom: 10px;
+  margin: 0 10px;
+  left: 5px;
+  right: 5px;
+  pointer-events: none;
+  display: flex;
+  gap: 5px;
+  flex-direction: column;
+
+  ::ng-deep {
+    .tab {
+      @extend .tab;
+      position: relative;
+      z-index: 401;
+      pointer-events: initial;
+      display: inherit;
     }
   }
 }

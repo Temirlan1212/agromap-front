@@ -14,6 +14,7 @@ import { PastureProductivityStatsComponent } from './components/pasture-producti
 import { LoadingComponent } from 'src/modules/ui/components/loading/loading.component';
 import { CultureStatsComponent } from './components/culture-stats/culture-stats.component';
 import { TableComponent } from 'src/modules/ui/components/table/table.component';
+import { InputRadioComponent } from 'src/modules/ui/components/input-radio/input-radio.component';
 
 @NgModule({
   declarations: [
@@ -33,6 +34,7 @@ import { TableComponent } from 'src/modules/ui/components/table/table.component'
     NgApexchartsModule,
     LoadingComponent,
     TableComponent,
+    InputRadioComponent,
   ],
   providers: [TranslatePipe],
 })

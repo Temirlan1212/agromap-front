@@ -1,0 +1,105 @@
+<div
+  class="dark-info-dialog"
+  [class.hidden]="isHidden"
+  *ngIf="activeContour != null || activeContourSmall != null"
+>
+  <div
+    *ngIf="activeContour != null && activeContourSmall == null; else partial"
+  >
+    <div class="header">
+      <h1
+        [ngClass]="activeContour?.culture?.['name_'+currentLang]"
+        [textContent]="activeContour?.culture?.['name_'+currentLang]"
+      ></h1>
+      <app-svg-icon
+        (click)="isHidden = !isHidden"
+        [class.hidden]="isHidden"
+        name="arrow-down"
+        size="16"
+      ></app-svg-icon>
+      <app-svg-icon
+        name="clear"
+        size="16"
+        (click)="onCancelClick.emit()"
+      ></app-svg-icon>
+    </div>
+
+    <div class="contour-info" *ngIf="!isHidden">
+      <div>
+        {{ "Area" | translate }}
+        <span>{{ activeContour.area_ha }} {{ "ha" | translate }}</span>
+      </div>
+      <div>
+        {{ "Region" | translate }}
+        <span
+          [textContent]="activeContour.region?.['name_' + currentLang]"
+        ></span>
+      </div>
+      <div>
+        {{ "District" | translate }}
+        <span
+          [textContent]="activeContour.district?.['name_' + currentLang]"
+        ></span>
+      </div>
+      <div>
+        {{ "Conton" | translate }}
+        <span
+          [textContent]="activeContour.conton?.['name_' + currentLang]"
+        ></span>
+      </div>
+      <div>
+        {{ "Land type" | translate }}
+        <span
+          [textContent]="activeContour.type?.['name_' + currentLang]"
+        ></span>
+      </div>
+      <div>
+        {{ "Productivity" | translate }}
+        <span
+          >{{ activeContour?.productivity }}
+          {{ "c. per ha." | translate }}
+        </span>
+      </div>
+      <div>
+        {{ "Elevation" | translate }}
+        <span
+          >{{ activeContour?.elevation }}
+          {{ "m. above sea level" | translate }}
+        </span>
+      </div>
+      <div *ngIf="activeContour.percent">
+        {{ "AI determination error" | translate
+        }}<span>{{ activeContour.percent * 100 }} % </span>
+      </div>
+      <div>
+        {{ "Soil class" | translate }}
+        <span
+          >ID {{ activeContour.soil_class?.ID }} -
+          {{ activeContour.soil_class?.['name_' + currentLang] }}
+        </span>
+      </div>
+      <div>
+        {{ "Culture" | translate }}
+        <span
+          *ngIf="activeContour.culture?.['name_' + currentLang]; else noCulture"
+          >{{ activeContour.culture?.['name_' + currentLang] }}</span
+        >
+        <ng-template #noCulture>
+          <span>{{ "Culture is not defined" | translate }}</span>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+  <ng-template #partial>
+    <div class="contour-info-partial" *ngIf="!isHidden">
+      <h1 [ngClass]="activeContourSmall?.contour_id">
+        {{ "Contour id" | translate }}
+        <p>{{ activeContourSmall?.contour_id }}</p>
+      </h1>
+      <div>
+        {{ "Area" | translate }}
+        <span>{{ activeContourSmall?.area_ha }} {{ "ha" | translate }}</span>
+      </div>
+    </div>
+  </ng-template>
+</div>

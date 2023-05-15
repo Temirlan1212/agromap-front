@@ -36,9 +36,13 @@ export class TableComponent implements OnChanges {
   @ViewChild('deleteDialog') deleteDialog!: QuestionDialogComponent;
   @ViewChild('table') table!: ElementRef<HTMLElement>;
   @Input() actions: boolean = false;
+  @Input() actionEdit: boolean = false;
+  @Input() actionDelete: boolean = false;
   @Input() fields: ITableField[] = [];
+  @Input() nestedFields: ITableField[] = [];
   @Input() items: ITableItem[] = [];
   @Input() mode = 'light';
+  @Input() border: boolean = true;
   @Output() actionClick = new EventEmitter<ITableAction>();
 
   columns: string[] = [];

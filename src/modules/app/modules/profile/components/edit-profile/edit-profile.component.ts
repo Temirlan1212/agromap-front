@@ -10,8 +10,9 @@ import { TranslatePipe } from '@ngx-translate/core';
   styleUrls: ['./edit-profile.component.scss'],
 })
 export class EditProfileComponent implements OnInit {
+  loading: boolean = false;
   form: FormGroup = new FormGroup({
-    full_name: new FormControl<string | null>(null, Validators.required),
+    full_name: new FormControl<string | null>(null, [Validators.required]),
     phone_number: new FormControl<string | null>(null, Validators.required),
   });
 
@@ -38,11 +39,13 @@ export class EditProfileComponent implements OnInit {
         phone_number: user.phone_number,
       });
     } catch (e: any) {
-      this.messages.error(e.message);
+      this.messages.error(e.error?.message ?? e.message);
     }
   }
 
   async handleSaveClick() {
+    this.loading = true;
+
     const formState = this.getState();
     if (!formState.valid) {
       this.messages.error(this.translate.transform('Form is invalid'));
@@ -51,8 +54,23 @@ export class EditProfileComponent implements OnInit {
     try {
       await this.api.user.updateProfile(this.form.value);
       await this.getUser();
+      this.messages.success(this.translate.transform('Successfully updated'));
     } catch (e: any) {
-      this.messages.error(e.message);
+      this.messages.error(e.error?.message ?? e.message);
+    }
+
+    this.loading = false;
+  }
+
+  handleKeydown(event: KeyboardEvent) {
+    let { type, value } = event.target as HTMLInputElement;
+    const pattern = type === 'text' ? /^[a-zA-Z]*$/ : /^[0-9]{0,8}$/;
+
+    if (
+      event.key !== 'Backspace' &&
+      !pattern.test(type === 'text' ? event.key : value)
+    ) {
+      event.preventDefault();
     }
   }
 }

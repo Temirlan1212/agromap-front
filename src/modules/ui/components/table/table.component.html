@@ -2,12 +2,15 @@
   #table
   *ngIf="items.length > 0"
   [ngClass]="[mode === 'light' ? 'light' : 'dark']"
+  [class.border]="border"
 >
   <thead>
     <tr>
       <ng-container *ngIf="fields.length > 0; else byColumns">
         <th
           *ngFor="let field of fields"
+          [attr.rowspan]="field.rowspan"
+          [attr.colspan]="field.colspan"
           [title]="field.title"
           [textContent]="field.title"
         ></th>
@@ -19,7 +22,27 @@
           [textContent]="column"
         ></th>
       </ng-template>
-      <th [title]="'Actions' | translate" *ngIf="actions"></th>
+      <th
+        [title]="'Actions' | translate"
+        [textContent]="'Actions' | translate"
+        *ngIf="actionDelete || actionEdit"
+      ></th>
+    </tr>
+
+    <tr *ngIf="nestedFields.length > 0">
+      <ng-container>
+        <th
+          *ngFor="let field of nestedFields"
+          [title]="field.title"
+          [textContent]="field.title"
+        ></th>
+      </ng-container>
+
+      <th
+        [title]="'Actions' | translate"
+        [textContent]="'Actions' | translate"
+        *ngIf="actionDelete || actionEdit"
+      ></th>
     </tr>
   </thead>
 
@@ -27,42 +50,58 @@
     <tr *ngFor="let item of items">
       <ng-container *ngIf="fields.length > 0; else byColumns">
         <td
+          [class]="field['mobileTitle'] && 'desktop'"
           [attr.data-label]="field.title"
-          *ngFor="let field of fields"
+          *ngFor="let field of nestedFields.length > 0 ? nestedFields : fields"
           [title]="item[field.field] | checkExist | translate"
           [textContent]="item[field.field] | checkExist | translate"
         ></td>
+
+        <ng-container
+          *ngFor="let field of nestedFields.length > 0 ? nestedFields : fields"
+        >
+          <td
+            *ngIf="field['mobileTitle']"
+            [class]="'mobile'"
+            [attr.data-label]="field['mobileTitle']"
+            [title]="item[field.field] | checkExist | translate"
+            [textContent]="item[field.field] | checkExist | translate"
+          ></td>
+        </ng-container>
       </ng-container>
       <ng-template #byColumns>
         <td
           *ngFor="let column of columns"
           [title]="item[column] | checkExist | translate"
           [textContent]="item[column] | checkExist | translate"
+          [attr.data-label]="item[column] | checkExist | translate"
         ></td>
       </ng-template>
-      <td class="actions" *ngIf="actions">
-        <button
-          type="button"
-          class="transparent"
-          (click)="handleActionClick('edit', item)"
-        >
-          <app-svg-icon
-            name="edit"
-            size="18"
+
+      <td
+        *ngIf="actions || actionEdit || actionDelete"
+        [attr.data-label]="'Actions' | translate"
+      >
+        <div class="actions">
+          <button
+            *ngIf="actions || actionEdit"
+            type="button"
+            class="transparent"
+            (click)="handleActionClick('edit', item)"
             [title]="'Edit' | translate"
-          ></app-svg-icon>
-        </button>
-        <button
-          type="button"
-          class="transparent"
-          (click)="handleActionClick('delete', item)"
-        >
-          <app-svg-icon
-            name="delete"
-            size="18"
+          >
+            <app-svg-icon name="edit" size="18"></app-svg-icon>
+          </button>
+          <button
+            *ngIf="actions || actionDelete"
+            type="button"
+            class="transparent"
+            (click)="handleActionClick('delete', item)"
             [title]="'Delete' | translate"
-          ></app-svg-icon>
-        </button>
+          >
+            <app-svg-icon name="delete" size="18"></app-svg-icon>
+          </button>
+        </div>
       </td>
     </tr>
   </tbody>

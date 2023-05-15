@@ -1,5 +1,5 @@
 @import "constants";
-@import '../node_modules/@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.css';
+@import "../node_modules/@geoman-io/leaflet-geoman-free/dist/leaflet-geoman.css";
 
 *,
 *::before,
@@ -213,12 +213,20 @@ hr {
   fill: $primaryColor;
 }
 
+.leaflet-top,
+.leaflet-bottom {
+  z-index: 400;
+}
+
 /*
 * Media queries
 */
 
 // Extra small
 @media only screen and (max-width: 576px) {
+  h4 {
+    font-size: 16px;
+  }
 }
 
 // Small

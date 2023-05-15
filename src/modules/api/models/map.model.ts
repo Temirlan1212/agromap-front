@@ -1,3 +1,5 @@
+import { LatLngBounds } from 'leaflet';
+
 export interface IFeatureProperties {
   contour_id: number;
   contour_ink: number;
@@ -26,4 +28,9 @@ export interface IGetFeatureInfoQuery {
   exceptions?: string;
   info_format?: string;
   feature_count?: number;
+}
+
+export interface IPolygonsInScreenQuery {
+  latLngBounds: LatLngBounds;
+  land_type: string | number;
 }

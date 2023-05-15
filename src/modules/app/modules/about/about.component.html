@@ -1,0 +1,91 @@
+<div class="container-qa-book-ai">
+  <nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item">
+        <a href="javascript:void(0);" routerLink="..">Главная</a>
+      </li>
+      <li class="breadcrumb-item">
+        <a href="javascript:void(0);">О Системе</a>
+      </li>
+    </ol>
+  </nav>
+
+  <div class="container-qa-book-ai-inner">
+    <section id="informational-system">
+      <div class="content">
+        <h4 [innerText]="'informational-system__title' | translate"></h4>
+        <h5 [innerText]="'informational-system__subtitle' | translate"></h5>
+        <p [innerHTML]="'informational-system__text-1' | translate"></p>
+        <p [innerText]="'informational-system__text-2' | translate"></p>
+      </div>
+      <app-gallery
+        [vertical]="false"
+        [data]="informationalSystemGalleryItems"
+        height="80vh"
+      ></app-gallery>
+    </section>
+
+    <section id="neural-networks">
+      <div class="content">
+        <h4 [innerText]="'neural-networks__title' | translate"></h4>
+        <h5 [innerText]="'neural-networks__subtitle' | translate"></h5>
+        <p [innerText]="'neural-networks__text-1' | translate"></p>
+        <p [innerText]="'neural-networks__text-2' | translate"></p>
+      </div>
+
+      <img
+        src="https://itchronicles.com/wp-content/uploads/2020/11/where-is-ai-used.jpg"
+      />
+    </section>
+
+    <section id="neural-network-models">
+      <div class="content">
+        <h4 [innerText]="'neural-network-models__title' | translate"></h4>
+        <h5 [innerText]="'neural-network-models__subtitle' | translate"></h5>
+        <p [innerText]="'neural-network-models__text-1' | translate"></p>
+        <p [innerText]="'neural-network-models__text-2' | translate"></p>
+        <p [innerText]="'neural-network-models__text-3' | translate"></p>
+
+        <ol>
+          <li *ngFor="let i of [1, 2, 3, 4, 5]">
+            <img
+              [src]="
+                '../../../../assets/images/neural-network-model-' + i + '.png'
+              "
+            />
+            <p
+              [innerText]="'neural-network-models__list-item-' + i | translate"
+            ></p>
+          </li>
+        </ol>
+
+        <p [innerText]="'neural-network-models__text-4' | translate"></p>
+      </div>
+    </section>
+
+    <section id="agrosphere">
+      <img src="../../../../assets/images/agromap_fields.png" />
+
+      <div class="content">
+        <p [innerText]="'agrosphere__text-1' | translate"></p>
+      </div>
+    </section>
+
+    <section id="mo-technologies">
+      <div class="content">
+        <h4 [innerText]="'mo-technologies__title' | translate"></h4>
+        <h5 [innerText]="'mo-technologies__subtitle' | translate"></h5>
+        <p [innerText]="'mo-technologies__text-1' | translate"></p>
+        <p [innerText]="'mo-technologies__text-2' | translate"></p>
+
+        <div class="subcontent">
+          <app-gallery
+            [vertical]="true"
+            [data]="moTechnologiesGalleryItems"
+            height="50vh"
+          ></app-gallery>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>

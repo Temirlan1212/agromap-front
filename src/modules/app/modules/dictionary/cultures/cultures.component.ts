@@ -6,6 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MessagesService } from '../../../../ui/services/messages.service';
 import { StoreService } from '../../../../ui/services/store.service';
 import { ITableAction } from 'src/modules/ui/models/table.model';
+import { IUser } from 'src/modules/api/models/user.model';
 
 @Component({
   selector: 'app-cultures',
@@ -15,6 +16,7 @@ import { ITableAction } from 'src/modules/ui/models/table.model';
 export class CulturesComponent implements OnInit, OnDestroy {
   loading: boolean = false;
   list: any[] = [];
+  user: IUser | null = this.api.user.getLoggedInUser();
   currentLang: string = this.translateSvc.currentLang;
   selectedId: number | null = null;
   subscriptions: Subscription[] = [
@@ -52,7 +54,7 @@ export class CulturesComponent implements OnInit, OnDestroy {
       this.loading = true;
       this.list = await this.api.culture.getList();
     } catch (e: any) {
-      console.log(e.message);
+      this.messages.error(e.error?.message ?? e.message);
     } finally {
       this.loading = false;
     }
@@ -78,7 +80,7 @@ export class CulturesComponent implements OnInit, OnDestroy {
     try {
       await this.api.culture.delete(this.selectedId as number);
     } catch (e: any) {
-      this.messages.error(e.message);
+      this.messages.error(e.error?.message ?? e.message);
     }
   }
 

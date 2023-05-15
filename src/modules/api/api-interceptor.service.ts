@@ -17,7 +17,13 @@ export const BYPASS_LOG = new HttpContextToken(() => false);
 @Injectable({ providedIn: 'root' })
 export class ApiInterceptorService implements HttpInterceptor {
   private apiErrorCallback: (error: HttpErrorResponse) => Promise<boolean> =
-    async (error: HttpErrorResponse) => false;
+    async (error: HttpErrorResponse) => {
+      if (error.status === 401) {
+        this.api.user.logOut();
+      }
+
+      return false;
+    };
 
   constructor(private api: ApiService) {}
 

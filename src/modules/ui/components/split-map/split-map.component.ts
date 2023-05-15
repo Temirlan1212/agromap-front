@@ -8,7 +8,7 @@ import {
   OnDestroy,
   ViewChild,
 } from '@angular/core';
-import { latLng, LatLng, Map } from 'leaflet';
+import { latLng, LatLng, Map, tileLayer } from 'leaflet';
 import 'leaflet.sync';
 import { Subscription } from 'rxjs';
 import { IVegIndexOption } from 'src/modules/api/models/veg-indexes.model';
@@ -63,7 +63,13 @@ export class SplitMapComponent implements OnDestroy, AfterViewInit {
           }
 
           if (val > i) {
-            this.maps[key] = this.mapService.initMap(key);
+            this.maps[key] = this.mapService.initMap(key, {
+              layers: [
+                tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+                  subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+                }),
+              ],
+            });
           } else {
             this.maps[key] = null;
           }

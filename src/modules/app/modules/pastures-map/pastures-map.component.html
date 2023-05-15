@@ -1,0 +1,209 @@
+<app-side-panel #sidePanel>
+  <app-contour-filter
+    (onCardClick)="map.handleFeatureClick($event.layer, $event.feature)"
+    (onEditClick)="map.handleFeatureClose()"
+    (onFormSubmit)="handleFilterFormSubmit($event)"
+    (onFormReset)="handleFilterFormReset()"
+  >
+  </app-contour-filter>
+  <router-outlet></router-outlet>
+</app-side-panel>
+
+<div class="map-container">
+  <app-loading *ngIf="loading" [loading]="loading"></app-loading>
+  <app-map
+    #map
+    (mapData)="handleMapData($event)"
+    (mapMove)="handleMapMove($event)"
+    (mapClick)="handleMapClick($event, map)"
+    (featureClick)="handleFeatureClick($event)"
+    (featureClose)="handleFeatureClose()"
+    (featureHover)="handleFeatureMouseOver($event)"
+    (featureUnhover)="handleFeatureMouseLeave($event)"
+    [featureTitle]="'Vegetative indexes' | translate"
+  >
+    <app-map-controls controls>
+      <div rightPanel>
+        <app-map-control-split-map
+          routerLink="split-map"
+          *ngIf="layerFeature"
+          [isActive]="currentRouterPathname.includes('split-map')"
+        >
+        </app-map-control-split-map>
+        <ng-container rightPanel>
+          <app-map-control-zoom
+            *ngIf="mapData"
+            [map]="mapData.map"
+          ></app-map-control-zoom>
+          <app-map-control-layers-switch
+            #mapControls
+            [mode]="mode"
+            *ngIf="mapData"
+            [map]="mapData.map"
+            [baseLayers]="baseLayers"
+            [wmsLayers]="wmsLayers"
+            [wmsSelectedStatusLayers]="wmsSelectedStatusLayers"
+            (wmsLayerChanged)="handleWmsLayerChanged($event)"
+            [storageName]="'PasturesMapControlLayersSwitchComponent'"
+          ></app-map-control-layers-switch>
+          <app-map-control-locate
+            *ngIf="mapData && !layerFeature"
+            [map]="mapData.map"
+          ></app-map-control-locate>
+        </ng-container>
+      </div>
+      <ng-container
+        topPanel
+        *ngIf="
+          !currentRouterPathname.includes('contour-add') &&
+          !currentRouterPathname.includes('contour-edit')
+        "
+      >
+        <app-map-control-veg-indexes
+          *ngIf="layerFeature && mapData"
+          [layer]="layerFeature"
+          [mapData]="mapData"
+          [vegIndexesData]="vegIndexesData"
+          [vegIndexOptionsList]="vegIndexOptionsList"
+          (vegIndexOptionClick)="handleVegIndexOptionClick($event)"
+          [loadingSatelliteDates]="loadingSatelliteDates"
+          (onDateSelect)="contourDetails.isHidden = true"
+        ></app-map-control-veg-indexes>
+
+        <app-map-control-statistics
+          *ngIf="!activeContour"
+          [collapseOnChanges]="contourPastureStatisticsProductivityTableItems"
+          [title]="'Roll up' | translate"
+        >
+          <app-content-tabs>
+            <app-tab [title]="'Pasture (productivity area)' | translate">
+              <app-table
+                *ngFor="
+                  let item of contourPastureStatisticsProductivityTableItems
+                "
+                [items]="item"
+                [border]="false"
+                mode="dark"
+                [fields]="[
+                  {
+                    title: item[0]['areaType'].toString() | translate,
+                    field: 'areaName_' + currentLang
+                  },
+                  {
+                    title: 'Productive' | translate | truncate : 10,
+                    field: 'productive'
+                  },
+                  {
+                    title: 'Unproductive' | translate | truncate : 10,
+                    field: 'unproductive'
+                  }
+                ]"
+              ></app-table>
+            </app-tab>
+          </app-content-tabs>
+        </app-map-control-statistics>
+
+        <div class="tab transparent">
+          <app-contour-details
+            #contourDetails
+            [mapData]="mapData"
+            [activeContour]="activeContour"
+            (onCancelClick)="map.handleFeatureClose()"
+          >
+          </app-contour-details>
+        </div>
+
+        <div
+          *ngIf="activeContourSmall && !(layerFeature && activeContour)"
+          class="tab transparent"
+        >
+          <app-contour-details
+            #contourDetails
+            [mapData]="mapData"
+            [activeContourSmall]="activeContourSmall"
+            (onCancelClick)="map.handleFeatureClose()"
+          >
+          </app-contour-details>
+        </div>
+      </ng-container>
+
+      <ng-container leftBottomPanel>
+        <div class="tab transparent">
+          <app-color-legend
+            *ngIf="pasturesMapControlLayersSwitch['my_test_store']?.['name']"
+            [maxHeight]="'200px'"
+            [items]="wmsProductivityLayerColorLegend"
+          ></app-color-legend>
+        </div>
+
+        <div class="tab transparent">
+          <app-color-legend
+            [maxHeight]="'200px'"
+            [items]="[
+              { label: 'Productive' | translate, color: '#1BA87D' },
+              { label: 'Unproductive' | translate, color: '#B3EC84' }
+            ]"
+          ></app-color-legend>
+        </div>
+      </ng-container>
+    </app-map-controls>
+
+    <app-spline-area-chart
+      featureBody
+      [chartData]="contourData"
+      *ngIf="layerFeature && contourData.length > 0; else noContourData"
+    >
+    </app-spline-area-chart>
+    <ng-template #noContourData>
+      <h3 class="no-data-text">
+        {{ "No data" | translate }}
+      </h3>
+    </ng-template>
+
+    <button
+      actions
+      type="button"
+      class="transparent"
+      (click)="handleEditClick(map)"
+    >
+      <app-svg-icon name="edit" size="18"></app-svg-icon>
+    </button>
+    <button
+      actions
+      type="button"
+      class="transparent"
+      (click)="deleteDialog.show()"
+    >
+      <app-svg-icon name="delete" size="18"></app-svg-icon>
+    </button>
+  </app-map>
+
+  <app-split-map
+    *ngIf="currentRouterPathname === '/pastures-map/split-map'"
+  ></app-split-map>
+</div>
+
+<app-question-dialog
+  #deleteDialog
+  [title]="'Delete contour' | translate"
+  [isDanger]="true"
+  (submitted)="handleDeleteSubmitted(deleteDialog, map)"
+>
+  {{ "Contour will be deleted, continue?" | translate }}
+</app-question-dialog>
+<app-toggle-button
+  #toggleBtn
+  (onClick)="sidePanel.handlePanelToggle()"
+  *ngIf="
+    activeContour == null ||
+    currentRouterPathname.includes('split-map') ||
+    currentRouterPathname.includes('pastures-map')
+  "
+  [iconName]="
+    currentRouterPathname.includes('contour-add')
+      ? 'contour-path'
+      : currentRouterPathname.includes('split-map')
+      ? 'hamburger'
+      : 'filter'
+  "
+></app-toggle-button>

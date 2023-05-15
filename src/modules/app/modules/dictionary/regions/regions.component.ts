@@ -32,7 +32,7 @@ export class RegionsComponent implements OnInit {
       this.loading = true;
       this.list = await this.api.dictionary.getRegions();
     } catch (e: any) {
-      console.log(e.message);
+      this.messages.error(e.error?.message ?? e.message);
     } finally {
       this.loading = false;
     }

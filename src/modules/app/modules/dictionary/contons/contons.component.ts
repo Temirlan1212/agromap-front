@@ -13,6 +13,8 @@ export class ContonsComponent {
   loading: boolean = false;
   list: any[] = [];
   currentLang: string = this.translateSvc.currentLang;
+  pageSize: number = 20;
+  totalCount: number = 0;
 
   constructor(
     private api: ApiService,
@@ -25,18 +27,20 @@ export class ContonsComponent {
   }
 
   ngOnInit() {
-    this.getList();
+    this.getList(1);
   }
 
-  async getList() {
+  async getList(page: number) {
     try {
       this.loading = true;
-      const { results } = (await this.api.dictionary.getContons({
-        page_size: 100,
+      const { results, count } = (await this.api.dictionary.getContons({
+        page_size: this.pageSize,
+        page: page,
       })) as IContonWithPagination;
       this.list = results;
+      this.totalCount = count;
     } catch (e: any) {
-      console.log(e.message);
+      this.messages.error(e.error?.message ?? e.message);
     } finally {
       this.loading = false;
     }

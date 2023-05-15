@@ -13,6 +13,7 @@ import {
 } from '../models/district.model';
 import { ILandType } from '../models/land-type.model';
 import { Index } from '../models/actual-veg-indexes';
+import { SoilClass } from '../models/soil.model';
 
 export class DictionaryApi {
   constructor(private http: HttpClient) {}
@@ -53,5 +54,9 @@ export class DictionaryApi {
 
   async getIndexes(): Promise<Index[]> {
     return await firstValueFrom(this.http.get<Index[]>('info/index-list'));
+  }
+
+  async getSoilClasses(): Promise<SoilClass[]> {
+    return await firstValueFrom(this.http.get<SoilClass[]>('gip/soil-class'));
   }
 }

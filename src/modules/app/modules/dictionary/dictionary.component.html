@@ -1,25 +1,63 @@
-<app-side-panel>
+<app-side-panel #sidePanel>
   <div class="dictionary-list">
     <h4>{{ "Dictionary" | translate }}</h4>
     <nav>
-      <a routerLink="regions" routerLinkActive="active">{{
-        "Regions" | translate
-      }}</a>
-      <a routerLink="districts" routerLinkActive="active">{{
-        "Districts" | translate
-      }}</a>
-      <a routerLink="contons" routerLinkActive="active">{{
-        "Contons" | translate
-      }}</a>
-      <a routerLink="cultures" routerLinkActive="active">{{
-        "Cultures" | translate
-      }}</a>
-      <a routerLink="indexes" routerLinkActive="active">{{
-        "Indexes" | translate
-      }}</a>
+      <a
+        (click)="handleLinkClick()"
+        routerLink="/dictionary/regions"
+        routerLinkActive="active"
+        >{{ "Regions" | translate }}</a
+      >
+      <a
+        (click)="handleLinkClick()"
+        routerLink="/dictionary/districts"
+        routerLinkActive="active"
+        >{{ "Districts" | translate }}</a
+      >
+      <a
+        (click)="handleLinkClick()"
+        routerLink="/dictionary/contons"
+        routerLinkActive="active"
+        >{{ "Contons" | translate }}</a
+      >
+      <a
+        (click)="handleLinkClick()"
+        routerLink="/dictionary/cultures"
+        routerLinkActive="active"
+        >{{ "Cultures" | translate }}</a
+      >
+      <a
+        (click)="handleLinkClick()"
+        routerLink="/dictionary/indexes"
+        routerLinkActive="active"
+        >{{ "Indexes" | translate }}</a
+      >
+      <a
+        (click)="handleLinkClick()"
+        routerLink="/dictionary/soil-types"
+        routerLinkActive="active"
+        >{{ "Soil types" | translate }}</a
+      >
+      <a
+        (click)="handleLinkClick()"
+        routerLink="/dictionary/cropland"
+        routerLinkActive="active"
+        >{{ "Cropland" | translate }}</a
+      >
+      <a
+        (click)="handleLinkClick()"
+        routerLink="/dictionary/pasture"
+        routerLinkActive="active"
+        >{{ "Pasture" | translate }}</a
+      >
     </nav>
   </div>
 </app-side-panel>
 <div class="content">
   <router-outlet></router-outlet>
 </div>
+<app-toggle-button
+  #toggleBtn
+  iconName="hamburger"
+  (onClick)="sidePanel.handlePanelToggle()"
+></app-toggle-button>

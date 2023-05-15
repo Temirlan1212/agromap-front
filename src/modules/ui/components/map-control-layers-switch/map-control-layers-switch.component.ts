@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import {
+  ChangeDetectorRef,
   Component,
   ElementRef,
   EventEmitter,
@@ -40,19 +41,20 @@ export class MapControlLayersSwitchComponent implements OnChanges {
   @Input() activeBaseLayer: ITileLayer | null = null;
   @Input() activeWmsLayers: ITileLayer[] = [];
   @Input() wmsSelectedStatusLayers: Record<string, string> | null = null;
+  @Input() storageName: string = 'MapControlLayersSwitchComponent';
   @Output() wmsLayerChanged = new EventEmitter<ITileLayer | null>();
   @Output() baseLayerChanged = new EventEmitter<ITileLayer | null>();
-
   wmsBaseLayers: ITileLayer[] = [];
   wmsOverLayers: ITileLayer[] = [];
-
   selected: Record<string, ISelectedControlLayer> = {};
   isCollapsed = false;
+  initialBaseLayer!: ITileLayer;
 
   constructor(
     private elementRef: ElementRef,
     public translate: TranslateService,
-    private store: StoreService
+    private store: StoreService,
+    private cd: ChangeDetectorRef
   ) {}
 
   ngOnChanges(changes: SimpleChanges) {
@@ -125,7 +127,7 @@ export class MapControlLayersSwitchComponent implements OnChanges {
       obj.oldValue = String(layerName);
     }
 
-    const data = this.store.getItem('MapControlLayersSwitchComponent');
+    const data = this.store.getItem(this.storageName);
     this.selected = {
       ...data,
       filterControlLayerSwitch: Object.assign(
@@ -135,7 +137,7 @@ export class MapControlLayersSwitchComponent implements OnChanges {
       ),
     };
 
-    this.store.setItem('MapControlLayersSwitchComponent', this.selected);
+    this.store.setItem(this.storageName, this.selected);
   }
 
   handleWmsCheckboxLayerChange(checked: boolean, layerName: string): void {
@@ -150,7 +152,7 @@ export class MapControlLayersSwitchComponent implements OnChanges {
 
         this.selected[l.name] = { name: layerName, opacity: 100 };
 
-        const data = this.store.getItem('MapControlLayersSwitchComponent');
+        const data = this.store.getItem(this.storageName);
         const opacity = (this.wmsSelectedStatusLayers?.[layerName] as any)
           ?.opacity;
 
@@ -165,7 +167,7 @@ export class MapControlLayersSwitchComponent implements OnChanges {
         this.selected[l.name]['name'] = checked ? layerName : '';
 
         this.store.setItem(
-          'MapControlLayersSwitchComponent',
+          this.storageName,
           Object.assign({}, data, this.selected)
         );
       }
@@ -183,7 +185,7 @@ export class MapControlLayersSwitchComponent implements OnChanges {
 
     if (!(value instanceof Object)) this.selected[key ? key : layerName] = obj;
 
-    this.store.setItem('MapControlLayersSwitchComponent', this.selected);
+    this.store.setItem(this.storageName, this.selected);
   }
 
   handleBaseLayerChange(layerName: string | number): void {
@@ -195,9 +197,11 @@ export class MapControlLayersSwitchComponent implements OnChanges {
     const current = this.baseLayers.find((l) => l.name === layerName);
     if (current != null) {
       this.activeBaseLayer = current;
+      this.initialBaseLayer = current;
       this.map.addLayer(this.activeBaseLayer.layer);
     }
 
+    this.cd.detectChanges();
     this.baseLayerChanged.emit(this.activeBaseLayer);
   }
 }

@@ -4,6 +4,7 @@
   display: block;
   overflow: auto;
   min-height: auto;
+  margin: 10px 0;
 
   &::-webkit-scrollbar {
     width: 3px;
@@ -40,16 +41,26 @@ table {
   td {
     padding: 10px 5px;
 
-    &.actions {
+    .actions {
       display: flex;
       align-items: center;
       justify-content: flex-end;
       gap: 10px;
-      visibility: hidden;
 
       button {
         padding: 0;
       }
+    }
+
+    &.mobile {
+      display: none;
+    }
+  }
+
+  &.border {
+    th,
+    td {
+      border: 1px solid $tableBodyRowBorderColor;
     }
   }
 
@@ -58,8 +69,6 @@ table {
     font-weight: 700;
     background-color: $tableHeaderBackgroundColor;
     color: $tableHeaderTextColor;
-    position: sticky;
-    top: 0;
 
     tr {
       border-bottom: 3px solid $tableHeaderBorderColor;
@@ -71,14 +80,8 @@ table {
     color: $tableBodyTextColor;
 
     tr {
-      border-bottom: 1px solid $tableBodyRowBorderColor;
-
       &:hover {
         background-color: $tableBodyRowHoverBackgroundColor;
-
-        td.actions {
-          visibility: visible;
-        }
       }
     }
   }
@@ -86,17 +89,21 @@ table {
   &.dark {
     thead {
       background-color: $darkColor;
+
+      tr {
+        border: none;
+      }
     }
+
     tbody {
       background-color: transparent;
       color: $lightColor;
-    }
-    tr {
-      border-bottom: none !important;
-      &:hover {
+
+      tr:hover {
         background-color: transparent !important;
       }
     }
+
     th {
       color: $lightColor;
     }
@@ -125,6 +132,19 @@ table {
     padding-left: 50%;
     text-align: left;
     position: relative;
+
+    &.actions {
+      justify-content: flex-start;
+      visibility: visible;
+    }
+
+    &.mobile {
+      display: block;
+    }
+
+    &.desktop {
+      display: none;
+    }
   }
   table td::before {
     content: attr(data-label);

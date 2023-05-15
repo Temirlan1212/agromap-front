@@ -1,5 +1,10 @@
 <div class="wrapper">
-  <div class="tab" (click)="toggle()" [class.isCollapsed]="isCollapsed">
+  <div
+    *ngIf="!isCollapsed"
+    class="tab"
+    (click)="toggle()"
+    [class.isCollapsed]="isCollapsed"
+  >
     <app-svg-icon name="info" class="icon" size="14px"></app-svg-icon>
   </div>
   <div class="container" [class.isCollapsed]="isCollapsed">

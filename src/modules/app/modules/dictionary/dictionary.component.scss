@@ -39,4 +39,18 @@
 .content {
   position: relative;
   flex: 1;
+  overflow: auto;
+  padding: 30px;
+}
+
+@media only screen and (min-width: 576px) {
+  .content {
+    height: 100vh;
+  }
+}
+
+@media only screen and (max-width: 992px) {
+  .dictionary-list {
+    width: 100%;
+  }
 }

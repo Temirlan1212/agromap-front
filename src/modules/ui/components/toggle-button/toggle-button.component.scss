@@ -1,0 +1,19 @@
+@import "constants";
+
+button {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  z-index: 999999;
+  background-color: $darkColor;
+  opacity: 1;
+  border-radius: 50%;
+  color: #fff;
+  display: none;
+}
+
+@media only screen and (max-width: 992px) {
+  button {
+    display: block;
+  }
+}

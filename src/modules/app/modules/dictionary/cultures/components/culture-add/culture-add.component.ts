@@ -43,7 +43,7 @@ export class CultureAddComponent {
       this.router.navigate(['..'], { relativeTo: this.route });
       this.store.setItem('CultureAddComponent', { created: true });
     } catch (e: any) {
-      this.messages.error(e.message);
+      this.messages.error(e.error?.message ?? e.message);
     }
   }
 }
