@@ -49,6 +49,19 @@
             *ngIf="mapData && !layerFeature"
             [map]="mapData.map"
           ></app-map-control-locate>
+
+          <div
+            (click)="sidePanel.handlePanelToggle()"
+            class="tab"
+            [class.active]="currentRouterPathname.includes('contour-add')"
+            [routerLink]="
+              currentRouterPathname.includes('contour-add')
+                ? '..'
+                : 'contour-add'
+            "
+          >
+            <app-svg-icon name="add-layer" size="14"></app-svg-icon>
+          </div>
         </ng-container>
       </div>
       <ng-container
@@ -135,7 +148,7 @@
           ></app-color-legend>
         </div>
 
-        <div class="tab transparent">
+        <div class="tab transparent" *ngIf="isBaseLayerActive">
           <app-color-legend
             [maxHeight]="'200px'"
             [items]="[
