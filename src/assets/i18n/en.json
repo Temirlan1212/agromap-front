@@ -195,5 +195,6 @@
   "max": "max",
   "Pasture": "Pasture",
   "Contour id": "Contour id",
-  "Culture is not defined": "Culture is not defined"
+  "Culture is not defined": "Culture is not defined",
+  "NDVI heat map": "NDVI heat map"
 }

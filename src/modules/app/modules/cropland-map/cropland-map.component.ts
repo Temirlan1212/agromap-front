@@ -162,7 +162,7 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
       type: 'checkbox',
     },
     {
-      title: 'Productivity layer',
+      title: 'NDVI heat map',
       name: 'ndvi_heat_map',
       layer: tileLayer.wms('https://geoserver.24mycrm.com/agromap/wms', {
         layers: 'agromap:ndvi_heat_map',
