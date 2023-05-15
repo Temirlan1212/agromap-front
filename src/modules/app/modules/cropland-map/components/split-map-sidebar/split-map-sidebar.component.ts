@@ -13,7 +13,7 @@ import { environment } from 'src/environments/environment';
 import { Subscription } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 import { MapService } from '../../../../../ui/services/map.service';
-import { MessagesService } from 'src/modules/ui/components/services/messages.service';
+import { MessagesService } from 'src/modules/ui/services/messages.service';
 
 @Component({
   selector: 'app-split-map-sidebar',

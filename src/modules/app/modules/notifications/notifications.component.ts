@@ -4,7 +4,7 @@ import { Subscription } from 'rxjs';
 import { ApiService } from '../../../api/api.service';
 import { StoreService } from '../../../ui/services/store.service';
 import { ITableAction } from '../../../ui/models/table.model';
-import { MessagesService } from '../../../ui/components/services/messages.service';
+import { MessagesService } from '../../../ui/services/messages.service';
 import { INotification } from '../../../api/models/notification.model';
 
 @Component({
