@@ -152,7 +152,7 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
       title: 'Productivity layer',
       name: 'ndvi_heat_map',
       layer: tileLayer.wms('https://geoserver.24mycrm.com/agromap/wms', {
-        layers: '	agromap:ndvi_heat_map',
+        layers: 'agromap:ndvi_heat_map',
         ...this.wmsLayersOverlayOptions,
       }),
       type: 'checkbox',
