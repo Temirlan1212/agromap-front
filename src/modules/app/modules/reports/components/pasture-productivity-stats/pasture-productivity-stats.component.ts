@@ -6,7 +6,7 @@ import {
 } from '@angular/core';
 import { ApiService } from 'src/modules/api/api.service';
 import { LandTypeFormComponent } from '../report-form/report-form.component';
-import { MessagesService } from 'src/modules/ui/components/services/messages.service';
+import { MessagesService } from 'src/modules/ui/services/messages.service';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({

@@ -7,7 +7,7 @@ import {
   IDistrict,
   IDistrictWithPagination,
 } from '../../../../../api/models/district.model';
-import { MessagesService } from '../../../../../ui/components/services/messages.service';
+import { MessagesService } from '../../../../../ui/services/messages.service';
 import { Subscription } from 'rxjs';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { ILandType } from 'src/modules/api/models/land-type.model';

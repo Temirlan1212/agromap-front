@@ -8,7 +8,7 @@ import {
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ApiService } from 'src/modules/api/api.service';
 import { IRegion } from 'src/modules/api/models/region.model';
-import { MessagesService } from '../../../../../ui/components/services/messages.service';
+import { MessagesService } from '../../../../../ui/services/messages.service';
 import { IConton } from '../../../../../api/models/conton.model';
 import { IDistrict } from '../../../../../api/models/district.model';
 import { filter, Subscription } from 'rxjs';
@@ -113,9 +113,11 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
   ) {}
 
   async ngOnInit(): Promise<void> {
+    this.loading = true;
     await this.getLandTypes();
     await this.getRegions();
     await this.getCultures();
+    this.loading = false;
 
     if (this.landTypes[0]?.id) {
       this.form.get('land_type')?.setValue(String(this.landTypes[0].id));

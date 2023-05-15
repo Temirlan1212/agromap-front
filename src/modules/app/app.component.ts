@@ -9,7 +9,7 @@ import { StoreService } from '../ui/services/store.service';
 import { ELanguageCode, ILanguageStore } from '../ui/models/language.model';
 import { LanguageService } from '../ui/services/language.service';
 import { INotification } from '../api/models/notification.model';
-import { MessagesService } from '../ui/components/services/messages.service';
+import { MessagesService } from '../ui/services/messages.service';
 
 @Component({
   selector: 'app-root',

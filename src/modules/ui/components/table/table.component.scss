@@ -51,6 +51,10 @@ table {
         padding: 0;
       }
     }
+
+    &.mobile {
+      display: none;
+    }
   }
 
   &.border {
@@ -132,6 +136,14 @@ table {
     &.actions {
       justify-content: flex-start;
       visibility: visible;
+    }
+
+    &.mobile {
+      display: block;
+    }
+
+    &.desktop {
+      display: none;
     }
   }
   table td::before {

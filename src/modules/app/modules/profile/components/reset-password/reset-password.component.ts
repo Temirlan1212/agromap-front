@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ApiService } from '../../../../../api/api.service';
-import { MessagesService } from '../../../../../ui/components/services/messages.service';
+import { MessagesService } from '../../../../../ui/services/messages.service';
 import { TranslatePipe } from '@ngx-translate/core';
 import { IProfile } from '../../../../../api/models/user.model';
 import { ActivatedRoute, Route, Router } from '@angular/router';

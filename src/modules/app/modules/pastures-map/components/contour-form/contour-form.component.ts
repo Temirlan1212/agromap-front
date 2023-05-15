@@ -20,7 +20,7 @@ import { Subscription } from 'rxjs';
 import { IRegion } from '../../../../../api/models/region.model';
 import { ILandType } from '../../../../../api/models/land-type.model';
 import { ICulture } from '../../../../../api/models/culture.model';
-import { MessagesService } from '../../../../../ui/components/services/messages.service';
+import { MessagesService } from '../../../../../ui/services/messages.service';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
@@ -107,10 +107,10 @@ export class ContourFormComponent implements OnInit, OnDestroy {
   async ngOnInit(): Promise<void> {
     this.loading = true;
     await this.getLandTypes();
-    this.getCultures();
-    this.getRegions();
-    this.getDistricts();
-    this.getContons();
+    await this.getCultures();
+    await this.getRegions();
+    await this.getDistricts();
+    await this.getContons();
 
     this.form.get('type')?.setValue(String(this.landTypeList[0].id));
     this.loading = false;

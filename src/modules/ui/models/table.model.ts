@@ -5,6 +5,7 @@ export interface ITableField {
   field: string;
   rowspan?: number;
   colspan?: number;
+  mobileTitle?: string;
 }
 
 export interface ITableAction {

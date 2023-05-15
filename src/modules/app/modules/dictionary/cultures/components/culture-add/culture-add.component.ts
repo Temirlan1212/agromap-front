@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ApiService } from '../../../../../../api/api.service';
 import { CultureFormComponent } from '../culture-form/culture-form.component';
-import { MessagesService } from '../../../../../../ui/components/services/messages.service';
+import { MessagesService } from '../../../../../../ui/services/messages.service';
 import { TranslatePipe } from '@ngx-translate/core';
 import { StoreService } from '../../../../../../ui/services/store.service';
 

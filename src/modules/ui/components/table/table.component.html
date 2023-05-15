@@ -32,7 +32,7 @@
     <tr *ngIf="nestedFields.length > 0">
       <ng-container>
         <th
-          *ngFor="let field of nestedFields.slice(1, nestedFields.length)"
+          *ngFor="let field of nestedFields"
           [title]="field.title"
           [textContent]="field.title"
         ></th>
@@ -50,11 +50,24 @@
     <tr *ngFor="let item of items">
       <ng-container *ngIf="fields.length > 0; else byColumns">
         <td
+          [class]="field['mobileTitle'] && 'desktop'"
           [attr.data-label]="field.title"
           *ngFor="let field of nestedFields.length > 0 ? nestedFields : fields"
           [title]="item[field.field] | checkExist | translate"
           [textContent]="item[field.field] | checkExist | translate"
         ></td>
+
+        <ng-container
+          *ngFor="let field of nestedFields.length > 0 ? nestedFields : fields"
+        >
+          <td
+            *ngIf="field['mobileTitle']"
+            [class]="'mobile'"
+            [attr.data-label]="field['mobileTitle']"
+            [title]="item[field.field] | checkExist | translate"
+            [textContent]="item[field.field] | checkExist | translate"
+          ></td>
+        </ng-container>
       </ng-container>
       <ng-template #byColumns>
         <td

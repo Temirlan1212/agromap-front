@@ -8,7 +8,7 @@ import {
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ApiService } from 'src/modules/api/api.service';
 import { IRegion } from 'src/modules/api/models/region.model';
-import { MessagesService } from '../../../../../ui/components/services/messages.service';
+import { MessagesService } from '../../../../../ui/services/messages.service';
 import { IConton } from '../../../../../api/models/conton.model';
 import { IDistrict } from '../../../../../api/models/district.model';
 import { filter, Subscription } from 'rxjs';
@@ -125,16 +125,19 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
     private store: StoreService
   ) {}
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     if (
       this.store.getItem('MapControlLayersSwitchComponent')
         ?.filterControlLayerSwitch?.name == null
     ) {
       this.mode?.patchValue('agromap_store_ai');
     }
-    this.getRegions();
-    this.getLandTypes();
-    this.getCultures();
+
+    this.loading = true;
+    await this.getRegions();
+    await this.getLandTypes();
+    await this.getCultures();
+    this.loading = false;
   }
 
   async getRegions(): Promise<void> {

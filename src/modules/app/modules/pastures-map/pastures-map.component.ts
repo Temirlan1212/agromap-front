@@ -1,4 +1,11 @@
-import { geoJSON, latLngBounds, LatLngBounds, Map, tileLayer } from 'leaflet';
+import {
+  geoJSON,
+  latLngBounds,
+  LatLngBounds,
+  Map,
+  tileLayer,
+  LeafletMouseEvent,
+} from 'leaflet';
 import { GeoJSON } from 'geojson';
 import {
   AfterViewInit,
@@ -20,7 +27,7 @@ import {
   MapMove,
 } from 'src/modules/ui/models/map.model';
 import { MapService } from '../../../ui/services/map.service';
-import { MessagesService } from '../../../ui/components/services/messages.service';
+import { MessagesService } from '../../../ui/services/messages.service';
 import { IChartData } from './components/spline-area-chart/spline-area-chart.component';
 import { ActualVegQuery } from '../../../api/classes/veg-indexes';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -333,6 +340,10 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
       this.messages.error(e.message);
       this.contourData = [];
     }
+  }
+
+  handleMapClick(e: LeafletMouseEvent, map: MapComponent) {
+    map.handleFeatureClose();
   }
 
   async handleMapMove(mapMove: MapMove): Promise<void> {

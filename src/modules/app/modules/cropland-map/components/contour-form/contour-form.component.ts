@@ -20,7 +20,7 @@ import { Subscription } from 'rxjs';
 import { IRegion } from '../../../../../api/models/region.model';
 import { ILandType } from '../../../../../api/models/land-type.model';
 import { ICulture } from '../../../../../api/models/culture.model';
-import { MessagesService } from '../../../../../ui/components/services/messages.service';
+import { MessagesService } from '../../../../../ui/services/messages.service';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
@@ -108,13 +108,13 @@ export class ContourFormComponent implements OnInit, OnDestroy {
     private translateSvc: TranslateService
   ) {}
 
-  ngOnInit() {
+  async ngOnInit(): Promise<void> {
     this.loading = true;
-    this.getRegions();
-    this.getDistricts();
-    this.getContons();
-    this.getCultures();
-    this.getLandTypes();
+    await this.getRegions();
+    await this.getDistricts();
+    await this.getContons();
+    await this.getCultures();
+    await this.getLandTypes();
     this.loading = false;
   }
 
