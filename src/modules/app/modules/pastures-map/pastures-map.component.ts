@@ -5,10 +5,8 @@ import {
   Map,
   tileLayer,
   LeafletMouseEvent,
-  Layer,
-  Polygon,
-  LeafletEvent,
   Tooltip,
+  tooltip,
 } from 'leaflet';
 import { GeoJSON, FeatureCollection } from 'geojson';
 import {
@@ -54,11 +52,7 @@ import { ContourDetailsComponent } from './components/contour-details/contour-de
 import { SidePanelComponent } from '../../../ui/components/side-panel/side-panel.component';
 import { ToggleButtonComponent } from '../../../ui/components/toggle-button/toggle-button.component';
 import { MapControlLayersSwitchComponent } from '../../../ui/components/map-control-layers-switch/map-control-layers-switch.component';
-import { IConton } from 'src/modules/api/models/conton.model';
 import { ILandType } from 'src/modules/api/models/land-type.model';
-import { IDistrict } from 'src/modules/api/models/district.model';
-import { ICulture } from 'src/modules/api/models/culture.model';
-import * as L from 'leaflet';
 
 @Component({
   selector: 'app-pastures-map',
@@ -398,7 +392,7 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
             'Productivity'
           )}: ${gray_index}`;
 
-          this.pastureLayerProductivityTooltip = L.tooltip()
+          this.pastureLayerProductivityTooltip = tooltip()
             .setLatLng(e.latlng)
             .setContent(tooltipContent)
             .openOn(this.mapData.map);
