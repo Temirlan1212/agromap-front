@@ -5,12 +5,10 @@ import {
   Map,
   tileLayer,
   LeafletMouseEvent,
-  Layer,
-  Polygon,
-  LeafletEvent,
   Tooltip,
+  tooltip,
 } from 'leaflet';
-import { GeoJSON } from 'geojson';
+import { GeoJSON, FeatureCollection } from 'geojson';
 import {
   AfterViewInit,
   ChangeDetectorRef,
@@ -54,11 +52,7 @@ import { ContourDetailsComponent } from './components/contour-details/contour-de
 import { SidePanelComponent } from '../../../ui/components/side-panel/side-panel.component';
 import { ToggleButtonComponent } from '../../../ui/components/toggle-button/toggle-button.component';
 import { MapControlLayersSwitchComponent } from '../../../ui/components/map-control-layers-switch/map-control-layers-switch.component';
-import { IConton } from 'src/modules/api/models/conton.model';
 import { ILandType } from 'src/modules/api/models/land-type.model';
-import { IDistrict } from 'src/modules/api/models/district.model';
-import { ICulture } from 'src/modules/api/models/culture.model';
-import * as L from 'leaflet';
 
 @Component({
   selector: 'app-pastures-map',
@@ -358,15 +352,20 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   async handleMapClick(e: LeafletMouseEvent, map: MapComponent) {
-    if (this.pasturesMapControlLayersSwitch['productivity']?.['name']) {
-      let lat = e.latlng.lat;
-      let lng = e.latlng.lng;
+    map.handleFeatureClose();
+  }
 
-      let buffer = 0.1;
-      let bbox = [lng - buffer, lat - buffer, lng + buffer, lat + buffer];
-      const mapSize = this.mapData?.map.getSize();
-      if (mapSize) {
-        let params = {
+  async handleMapMousemove(e: LeafletMouseEvent) {
+    if (this.pastureLayerProductivityTooltip) {
+      this.mapData?.map.removeLayer(this.pastureLayerProductivityTooltip);
+      this.pastureLayerProductivityTooltip = null;
+    }
+    if (this.pasturesMapControlLayersSwitch?.['productivity']?.name) {
+      const { lat, lng } = e.latlng;
+      const bbox = [lng - 0.1, lat - 0.1, lng + 0.1, lat + 0.1];
+
+      try {
+        const data = await this.api.map.getFeatureInfo({
           service: 'WMS',
           request: 'GetFeatureInfo',
           srs: 'EPSG:4326',
@@ -382,39 +381,26 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
           y: 50,
           version: '1.1.1',
           info_format: 'application/json',
-        };
+        });
 
-        try {
-          const data = await this.api.map.getFeatureInfo(params);
+        const gray_index = (
+          data as FeatureCollection
+        )?.features?.[0]?.properties?.['GRAY_INDEX']?.toFixed(2);
 
-          const gray_index = (data as any)?.features[0]?.properties?.GRAY_INDEX;
-
-          let tooltipContent = `${this.translate.transform(
+        if (this.mapData?.map && gray_index != null) {
+          const tooltipContent = `${this.translate.transform(
             'Productivity'
-          )} : ${gray_index?.toFixed(2)}`;
+          )}: ${gray_index}`;
 
-          if (this.mapData?.map) {
-            if (this.pastureLayerProductivityTooltip) {
-              this.mapData.map.removeLayer(
-                this.pastureLayerProductivityTooltip
-              );
-              this.pastureLayerProductivityTooltip = null;
-            }
-
-            if (gray_index != null) {
-              this.pastureLayerProductivityTooltip = L.tooltip()
-                .setLatLng(e.latlng)
-                .setContent(tooltipContent)
-                .openOn(this.mapData.map);
-            }
-          }
-        } catch (e) {
-          console.log(e);
+          this.pastureLayerProductivityTooltip = tooltip()
+            .setLatLng(e.latlng)
+            .setContent(tooltipContent)
+            .openOn(this.mapData.map);
         }
+      } catch (e) {
+        console.log(e);
       }
     }
-
-    map.handleFeatureClose();
   }
 
   async handleMapMove(mapMove: MapMove): Promise<void> {

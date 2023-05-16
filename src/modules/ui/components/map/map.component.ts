@@ -26,6 +26,7 @@ import {
   DomEvent,
   Polygon,
   LeafletMouseEvent,
+  LeafletEvent,
 } from 'leaflet';
 import { MapData, MapLayerFeature, MapMove } from '../../models/map.model';
 import '@geoman-io/leaflet-geoman-free';
@@ -58,6 +59,7 @@ export class MapComponent implements OnInit, OnDestroy {
   @Output() mapData = new EventEmitter<MapData>();
   @Output() mapMove = new EventEmitter<MapMove>();
   @Output() mapClick = new EventEmitter<LeafletMouseEvent>();
+  @Output() mapMousemove = new EventEmitter<LeafletMouseEvent>();
   @Output() featureClick = new EventEmitter<MapLayerFeature>();
   @Output() featureClose = new EventEmitter<void>();
   @Output() featureHover = new EventEmitter<MapLayerFeature>();
@@ -124,6 +126,12 @@ export class MapComponent implements OnInit, OnDestroy {
       )
       .subscribe(() => this.handleMapMove());
     this.subscriptions.push(s);
+
+    this.subscriptions.push(
+      fromEvent<LeafletMouseEvent>(this.map as Map, 'mousemove')
+        .pipe(debounceTime(100))
+        .subscribe((e) => this.handleMapMousemove(e))
+    );
   }
 
   removeSubscriptions() {
@@ -142,6 +150,10 @@ export class MapComponent implements OnInit, OnDestroy {
     (this.map as Map).on('click', (e: LeafletMouseEvent) => {
       this.mapClick.emit(e);
     });
+  }
+
+  handleMapMousemove(e: LeafletMouseEvent): void {
+    this.mapMousemove.emit(e as LeafletMouseEvent);
   }
 
   handleFeatureClick(layer: Layer, feature: Feature): void {
