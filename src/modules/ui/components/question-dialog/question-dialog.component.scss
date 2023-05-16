@@ -17,6 +17,8 @@
     border: none;
     border-radius: 8px;
     filter: drop-shadow(0px 4px 32px rgba(0, 16, 61, 0.16));
+    max-width: 400px;
+    width: 100%;
 
     &[open] {
       position: fixed;
@@ -47,9 +49,8 @@
     .body {
       display: flex;
       align-items: center;
-      width: 400px;
 
-      div[class^=icon] {
+      div[class^="icon"] {
         flex: 0 0 36px;
         margin-right: 13px;
       }
@@ -66,12 +67,12 @@
       justify-content: flex-end;
       gap: 16px;
       padding: 12px 20px;
-      background-color: #F9F9F9;
+      background-color: #f9f9f9;
       margin: 20px -20px -20px -20px;
 
       .btn-secondary-outlined {
-        border-color: #B2CCD7;
-        color: #6B6F7B;
+        border-color: #b2ccd7;
+        color: #6b6f7b;
       }
     }
   }
