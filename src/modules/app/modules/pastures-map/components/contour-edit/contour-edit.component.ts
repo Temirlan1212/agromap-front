@@ -10,6 +10,7 @@ import { Subscription } from 'rxjs';
 import { MapData } from '../../../../../ui/models/map.model';
 import { TranslatePipe } from '@ngx-translate/core';
 import { StoreService } from '../../../../../ui/services/store.service';
+import { SidePanelComponent } from 'src/modules/ui/components/side-panel/side-panel.component';
 
 @Component({
   selector: 'app-contour-edit',
@@ -38,6 +39,7 @@ export class ContourEditComponent implements OnInit, OnDestroy {
   ) {}
 
   async ngOnInit() {
+    this.store.setItem('SidePanelComponent', { state: true });
     const data = this.store.getItem('MapControlLayersSwitchComponent');
     this.mode = data?.filterControlLayerSwitch.name;
     const id = this.route.snapshot.paramMap.get('id');
@@ -83,7 +85,7 @@ export class ContourEditComponent implements OnInit, OnDestroy {
   }
 
   handleEditShape() {
-    this.mapService.contourEditingMode.next(true);
+    this.handleSetSidePanelState(true);
     if (this.mapGeo.getLayers().length > 1) {
       this.mapGeo.clearLayers();
     }
@@ -102,6 +104,10 @@ export class ContourEditComponent implements OnInit, OnDestroy {
       this.layer.pm.disable();
       this.isPolygonChanged = true;
     });
+  }
+
+  handleSetSidePanelState(state: boolean) {
+    this.store.setItem('SidePanelComponent', { state });
   }
 
   async handleSaveClick(form: ContourFormComponent) {
@@ -134,6 +140,7 @@ export class ContourEditComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    this.handleSetSidePanelState(false);
     this.mapSubscription.unsubscribe();
     this.mapInstance.pm.toggleControls();
     this.mapInstance.off('pm:globaleditmodetoggled');

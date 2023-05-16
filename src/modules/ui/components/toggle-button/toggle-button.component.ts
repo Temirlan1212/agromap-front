@@ -13,7 +13,7 @@ export class ToggleButtonComponent {
   @Input() iconName: string = '';
   @Input() iconSize: string = '16px';
   @Output() onClick = new EventEmitter<void>();
-  isContentToggled: boolean = false;
+  @Input() isContentToggled: boolean = false;
 
   constructor() {}
 

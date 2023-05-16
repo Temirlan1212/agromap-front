@@ -111,7 +111,6 @@ export class ContourFormComponent implements OnInit, OnDestroy {
     await this.getRegions();
     await this.getDistricts();
     await this.getContons();
-
     this.form.get('type')?.setValue(String(this.landTypeList[0].id));
     this.loading = false;
   }

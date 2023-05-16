@@ -5,7 +5,16 @@
     </button>
     <h4>{{ "Add contour" | translate }}</h4>
   </div>
-  <app-contour-form #form> </app-contour-form>
+  <app-contour-form #form>
+    <button
+      type="button"
+      class="success w-100 md"
+      (click)="handleSetSidePanelState(false)"
+      actions
+    >
+      {{ "Draw a field" | translate }}
+    </button>
+  </app-contour-form>
 </div>
 <div class="actions">
   <button type="button" class="success" (click)="handleSaveClick(form)">

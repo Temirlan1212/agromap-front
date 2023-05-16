@@ -99,6 +99,10 @@
       >
       </app-input>
     </app-form-field>
+
+    <div class="actions">
+      <ng-content select="[actions]"></ng-content>
+    </div>
   </div>
 
   <app-loading [loading]="loading" class="dynamic-color"></app-loading>

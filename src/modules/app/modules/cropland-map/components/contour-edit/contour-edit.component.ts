@@ -10,6 +10,7 @@ import { Subscription } from 'rxjs';
 import { MapData } from '../../../../../ui/models/map.model';
 import { TranslatePipe } from '@ngx-translate/core';
 import { StoreService } from '../../../../../ui/services/store.service';
+import { SidePanelComponent } from 'src/modules/ui/components/side-panel/side-panel.component';
 
 @Component({
   selector: 'app-contour-edit',
@@ -38,6 +39,8 @@ export class ContourEditComponent implements OnInit, OnDestroy {
   ) {}
 
   async ngOnInit() {
+    this.handleSetSidePanelState(true);
+
     const data = this.store.getItem('MapControlLayersSwitchComponent');
     this.mode = data?.filterControlLayerSwitch.name;
     const id = this.route.snapshot.paramMap.get('id');
@@ -86,9 +89,12 @@ export class ContourEditComponent implements OnInit, OnDestroy {
     );
   }
 
+  handleSetSidePanelState(state: boolean) {
+    this.store.setItem('SidePanelComponent', { state });
+  }
+
   handleEditShape() {
     this.mapService.contourEditingMode.next(true);
-    this.mapInstance.pm.toggleGlobalEditMode({ allowSelfIntersection: false });
     if (this.mapGeo.getLayers().length > 1) {
       this.mapGeo.clearLayers();
     }
@@ -139,6 +145,7 @@ export class ContourEditComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    this.handleSetSidePanelState(false);
     this.mapSubscription.unsubscribe();
     this.mapInstance.pm.toggleControls();
     this.mapInstance.off('pm:globaleditmodetoggled');

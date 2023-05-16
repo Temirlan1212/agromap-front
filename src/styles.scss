@@ -163,6 +163,14 @@ button {
   &.transparent {
     background-color: transparent;
   }
+
+  &.w-100 {
+    width: 100%;
+  }
+
+  &.h-100 {
+    height: 100%;
+  }
 }
 
 nav {
@@ -231,16 +239,34 @@ hr {
 
 // Small
 @media only screen and (min-width: 576px) {
+  .xs {
+    display: none;
+  }
 }
 
 // Medium
 @media only screen and (min-width: 768px) {
+  .sm {
+    display: none;
+  }
 }
 
 // Large
 @media only screen and (min-width: 992px) {
+  .md {
+    display: none;
+  }
 }
 
 // Extra large
 @media only screen and (min-width: 1200px) {
+  .lg {
+    display: none;
+  }
+}
+
+@media only screen and (min-width: 1400px) {
+  .xl {
+    display: none;
+  }
 }

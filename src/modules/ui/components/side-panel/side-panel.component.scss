@@ -21,7 +21,7 @@
     padding: 10px;
     position: fixed;
     z-index: 500;
-    height: calc(100% - ($mobileBottomNavHeight + $mobileNavMarginBottom));
+    height: calc(100% - $mobileBottomNavHeight);
     top: 0;
     width: 100%;
     margin: 0 auto;

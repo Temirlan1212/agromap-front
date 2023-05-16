@@ -6,7 +6,16 @@
     <h4>Редактирование контура</h4>
   </div>
   <app-loading [loading]="loading">
-    <app-contour-form #form [value]="contour" [mode]="mode"> </app-contour-form>
+    <app-contour-form #form [value]="contour" [mode]="mode">
+      <button
+        type="button"
+        class="success w-100 md"
+        (click)="handleSetSidePanelState(false)"
+        actions
+      >
+        {{ "Edit the field" | translate }}
+      </button>
+    </app-contour-form>
   </app-loading>
 </div>
 <div class="actions">

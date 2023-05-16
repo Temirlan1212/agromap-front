@@ -1,4 +1,4 @@
-<app-side-panel #sidePanel>
+<app-side-panel [isOpened]="sidePanelData['state']">
   <app-contour-filter
     (onCardClick)="map.handleFeatureClick($event.layer, $event.feature)"
     (onEditClick)="map.handleFeatureClose()"
@@ -53,7 +53,6 @@
           ></app-map-control-locate>
 
           <div
-            (click)="sidePanel.handlePanelToggle()"
             class="tab"
             [class.active]="currentRouterPathname.includes('contour-add')"
             [routerLink]="
@@ -66,6 +65,7 @@
           </div>
         </ng-container>
       </div>
+
       <ng-container
         topPanel
         *ngIf="
@@ -171,6 +171,7 @@
       *ngIf="layerFeature && contourData.length > 0; else noContourData"
     >
     </app-spline-area-chart>
+
     <ng-template #noContourData>
       <h3 class="no-data-text">
         {{ "No data" | translate }}
@@ -185,6 +186,7 @@
     >
       <app-svg-icon name="edit" size="18"></app-svg-icon>
     </button>
+
     <button
       actions
       type="button"
@@ -210,7 +212,8 @@
 </app-question-dialog>
 <app-toggle-button
   #toggleBtn
-  (onClick)="sidePanel.handlePanelToggle()"
+  (onClick)="handleSidePanelToggle(sidePanelData['state'])"
+  [isContentToggled]="sidePanelData['state']"
   *ngIf="
     activeContour == null ||
     currentRouterPathname.includes('split-map') ||

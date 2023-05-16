@@ -1,7 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
 import { ToggleButtonComponent } from '../../../ui/components/toggle-button/toggle-button.component';
-import { SidePanelComponent } from '../../../ui/components/side-panel/side-panel.component';
 
 @Component({
   selector: 'app-dictionary',
@@ -10,14 +8,18 @@ import { SidePanelComponent } from '../../../ui/components/side-panel/side-panel
 })
 export class DictionaryComponent implements OnInit {
   @ViewChild('toggleBtn') toggleBtn!: ToggleButtonComponent;
-  @ViewChild('sidePanel') sidePanel!: SidePanelComponent;
+  sidePanelData: Record<string, any> = {};
 
-  constructor(private route: ActivatedRoute, private router: Router) {}
+  constructor() {}
 
   ngOnInit() {}
 
+  handleSidePanelToggle(isOpened: boolean) {
+    this.sidePanelData['state'] = !isOpened;
+  }
+
   handleLinkClick() {
-    this.sidePanel.handlePanelToggle();
     this.toggleBtn.isContentToggled = false;
+    this.sidePanelData['state'] = false;
   }
 }
