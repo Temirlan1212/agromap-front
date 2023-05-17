@@ -371,10 +371,6 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   async handleMapMove(mapMove: MapMove): Promise<void> {
-    const landTypeParam = this.filterFormValues
-      ? this.filterFormValues['land_type']
-      : this.landTypes.map((l: ILandType) => l['id']).join(',');
-
     this.store.setItem<Record<string, LatLngBounds>>('ArableLandComponent', {
       mapBounds: mapMove.bounds,
     });
@@ -552,19 +548,16 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  handleEditClick(map: MapComponent) {
+  handleEditClick() {
     const id = this.layerFeature?.feature?.properties?.['id'];
     this.router.navigate(['contour-edit', id], { relativeTo: this.route });
-    map.handleFeatureClose();
+    if (this.mapComponent) this.mapComponent.handleFeatureClose();
   }
 
-  async handleDeleteSubmitted(
-    dialog: QuestionDialogComponent,
-    map: MapComponent
-  ): Promise<void> {
+  async handleDeleteSubmitted(dialog: QuestionDialogComponent): Promise<void> {
     await this.deleteItem();
     dialog.close();
-    map.handleFeatureClose();
+    if (this.mapComponent) this.mapComponent.handleFeatureClose();
     this.mapData?.map.fitBounds(this.mapService.maxBounds);
     this.mapData?.map.setMaxBounds(this.mapService.maxBounds);
   }

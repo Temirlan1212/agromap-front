@@ -187,7 +187,7 @@
       actions
       type="button"
       class="transparent"
-      (click)="handleEditClick(map)"
+      (click)="handleEditClick()"
     >
       <app-svg-icon name="edit" size="18"></app-svg-icon>
     </button>
@@ -210,7 +210,7 @@
   #deleteDialog
   [title]="'Delete contour' | translate"
   [isDanger]="true"
-  (submitted)="handleDeleteSubmitted(deleteDialog, map)"
+  (submitted)="handleDeleteSubmitted(deleteDialog)"
 >
   {{ "Contour will be deleted, continue?" | translate }}
 </app-question-dialog>
