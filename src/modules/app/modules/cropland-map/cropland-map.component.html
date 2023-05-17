@@ -163,7 +163,7 @@
       <ng-container leftBottomPanel>
         <div class="tab transparent">
           <app-color-legend
-            *ngIf="mapControlLayersSwitch['ndvi_heat_map']?.['name']"
+            *ngIf="mapControlLayersSwitch['ndvi_heat_map']?.['name'] && (!map?.['feautureCollapse'] || !map?.['featureOpen'])"
             [maxHeight]="'200px'"
             [items]="wmsProductivityLayerColorLegend"
           ></app-color-legend>
