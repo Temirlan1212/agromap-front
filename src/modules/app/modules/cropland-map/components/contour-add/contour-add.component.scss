@@ -20,6 +20,10 @@ $indent: 0 20px;
   align-items: center;
   gap: $indent;
 
+  button {
+    padding: 0;
+  }
+
   app-svg-icon {
     transform: rotate(90deg);
   }
@@ -50,6 +54,10 @@ $indent: 0 20px;
 
     &::-webkit-scrollbar {
       display: none;
+    }
+
+    .form-wrapper {
+      display: grid;
     }
   }
 }
