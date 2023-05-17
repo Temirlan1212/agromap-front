@@ -195,11 +195,22 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
     private route: ActivatedRoute,
     private cd: ChangeDetectorRef
   ) {
-    this.router.events.subscribe((event: Event) =>
-      event instanceof NavigationEnd
-        ? (this.currentRouterPathname = router.url)
-        : ''
-    );
+    this.router.events.subscribe((event: Event) => {
+      if (event instanceof NavigationEnd) {
+        this.currentRouterPathname = router.url;
+        const isChildRoute = this.route.firstChild !== null;
+
+        if (this.mapData?.map && !isChildRoute && this.mapData?.geoJson) {
+          this.mapData.geoJson.clearLayers();
+          const data = this.store.getItem<Record<string, LatLngBounds>>(
+            'ArableLandComponent'
+          );
+          if (data?.['mapBounds']) {
+            this.addPolygonsInScreenToMap(data?.['mapBounds']);
+          }
+        }
+      }
+    });
   }
 
   subscriptions: Subscription[] = [
@@ -367,7 +378,9 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   handleMapClick(e: LeafletMouseEvent) {
-    if (this.mapComponent) this.mapComponent.handleFeatureClose();
+    if (this.mapComponent && this.activeContour != null) {
+      this.mapComponent.handleFeatureClose();
+    }
   }
 
   async handleMapMove(mapMove: MapMove): Promise<void> {
@@ -377,53 +390,51 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.mapData?.map != null) {
       this.mapData.geoJson.clearLayers();
       this.getRegionsPolygon();
+      this.addPolygonsInScreenToMap(mapMove.bounds);
 
-      if (mapMove.zoom >= 12) {
-        try {
-          this.loading = true;
-          await this.addPolygonsInScreenToMap(mapMove.bounds);
-        } catch (e: any) {
-          this.messages.error(e.error?.message ?? e.message);
-        } finally {
-          this.loading = false;
-        }
-      } else {
-        this.activeContourSmall = null;
-      }
+      if (mapMove.zoom < 12) this.activeContourSmall = null;
     }
   }
 
   async addPolygonsInScreenToMap(mapBounds: LatLngBounds) {
-    if (this.mapData?.map != null) {
-      const zoom = this.mapData.map.getZoom();
+    this.loading = true;
+    try {
+      if (this.mapData?.map != null) {
+        const zoom = this.mapData.map.getZoom();
 
-      if (zoom >= 12) {
-        const landTypeParam = this.filterFormValues
-          ? this.filterFormValues['land_type']
-          : this.landTypes.map((l: ILandType) => l['id']).join(',');
-        let polygons: GeoJSON;
-        if (this.isWmsAiActive) {
-          polygons = await this.api.map.getPolygonsInScreenAi({
-            latLngBounds: mapBounds,
-            land_type: landTypeParam,
-          });
-        } else {
-          polygons = await this.api.map.getPolygonsInScreen({
-            latLngBounds: mapBounds,
-            land_type: landTypeParam,
-          });
+        if (zoom >= 12) {
+          const landTypeParam =
+            this.filterFormValues?.['land_type'] ??
+            this.landTypes.map((l: ILandType) => l['id']).join(',');
+
+          let polygons: GeoJSON;
+          if (this.isWmsAiActive) {
+            polygons = await this.api.map.getPolygonsInScreenAi({
+              latLngBounds: mapBounds,
+              land_type: landTypeParam,
+            });
+          } else {
+            polygons = await this.api.map.getPolygonsInScreen({
+              latLngBounds: mapBounds,
+              land_type: landTypeParam,
+            });
+          }
+          this.mapData.geoJson.options.snapIgnore = true;
+          this.mapData.geoJson.options.pmIgnore = true;
+          this.mapData.geoJson.options.style = {
+            fillOpacity: 0,
+            weight: 0.4,
+          };
+
+          this.mapData.geoJson.setZIndex(400);
+          this.mapData.geoJson.options.interactive = true;
+          this.mapData.geoJson.addData(polygons);
         }
-        this.mapData.geoJson.options.snapIgnore = true;
-        this.mapData.geoJson.options.pmIgnore = true;
-        this.mapData.geoJson.options.style = {
-          fillOpacity: 0,
-          weight: 0.4,
-        };
-
-        this.mapData.geoJson.setZIndex(400);
-        this.mapData.geoJson.options.interactive = true;
-        this.mapData.geoJson.addData(polygons);
       }
+    } catch (e: any) {
+      this.messages.error(e.error?.message ?? e.message);
+    } finally {
+      this.loading = false;
     }
   }
 
