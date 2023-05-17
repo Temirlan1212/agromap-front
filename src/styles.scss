@@ -229,18 +229,44 @@ hr {
   }
 }
 
+// Extra Small
+@media only screen and (min-width: 0px) {
+  .xs-show {
+    display: none;
+  }
+}
+
 // Small
 @media only screen and (min-width: 576px) {
+  .sm-show {
+    display: none;
+  }
 }
 
 // Medium
 @media only screen and (min-width: 768px) {
+  .md-show {
+    display: none;
+  }
 }
 
 // Large
 @media only screen and (min-width: 992px) {
+  .lg-show {
+    display: none;
+  }
 }
 
 // Extra large
 @media only screen and (min-width: 1200px) {
+  .xl-show {
+    display: none;
+  }
+}
+
+// Extra extra large
+@media only screen and (min-width: 1400px) {
+  .xxl-show {
+    display: none;
+  }
 }

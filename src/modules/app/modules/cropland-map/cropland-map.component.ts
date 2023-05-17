@@ -5,12 +5,6 @@ import {
   Map,
   tileLayer,
   LeafletMouseEvent,
-  DomEvent,
-  Layer,
-  Polygon,
-  FeatureGroup,
-  Path,
-  Marker,
 } from 'leaflet';
 import { GeoJSON } from 'geojson';
 import {
@@ -54,7 +48,6 @@ import {
 } from 'src/modules/api/models/statistics.model';
 import { ITableItem } from 'src/modules/ui/models/table.model';
 import { ContourDetailsComponent } from './components/contour-details/contour-details.component';
-import { SidePanelComponent } from '../../../ui/components/side-panel/side-panel.component';
 import { ToggleButtonComponent } from '../../../ui/components/toggle-button/toggle-button.component';
 import { MapControlLayersSwitchComponent } from '../../../ui/components/map-control-layers-switch/map-control-layers-switch.component';
 import { ILandType } from 'src/modules/api/models/land-type.model';
@@ -69,7 +62,6 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('map') mapComponent!: MapComponent;
   @ViewChild('contourDetails') contourDetails!: ContourDetailsComponent;
   @ViewChild('mapControls') mapControls!: MapControlLayersSwitchComponent;
-  @ViewChild('sidePanel') sidePanel!: SidePanelComponent;
   @ViewChild('toggleBtn') toggleBtn!: ToggleButtonComponent;
   mode!: string;
 
@@ -190,6 +182,7 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
   activeContourSmall: any;
   mapControlLayersSwitch: Record<string, any> = {};
   filterFormValues!: any;
+  sidePanelData: Record<string, any> = {};
 
   constructor(
     private api: ApiService,
@@ -252,6 +245,11 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.store.watchItem('MapControlLayersSwitchComponent').subscribe((v) => {
       this.mapControlLayersSwitch = v;
+    }),
+
+    this.store.watchItem('SidePanelComponent').subscribe((v) => {
+      this.sidePanelData = v;
+      this.cd.detectChanges();
     }),
   ];
 
@@ -364,6 +362,10 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
+  handleSidePanelToggle(isOpened: boolean) {
+    this.store.setItem('SidePanelComponent', { state: !isOpened });
+  }
+
   handleMapClick(e: LeafletMouseEvent, map: MapComponent) {
     map.handleFeatureClose();
   }
@@ -467,7 +469,7 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
     this.filterFormValues = formValue['value'];
     this.getPastureStatisticsProductivity(this.filterFormValues);
     this.getCultureStatisticsProductivity(this.filterFormValues);
-    this.sidePanel.handlePanelToggle();
+    this.store.setItem('SidePanelComponent', { state: false });
     this.toggleBtn.isContentToggled = false;
   }
 

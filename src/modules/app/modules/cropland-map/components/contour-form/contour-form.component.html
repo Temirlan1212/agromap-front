@@ -78,9 +78,12 @@
       </app-input>
     </app-form-field>
 
-    <app-form-field name="code_soato" #code_soato>
+    <app-form-field
+      name="code_soato"
+      #code_soato
+      *ngIf="mode != 'agromap_store_ai'"
+    >
       <app-input
-        *ngIf="mode != 'agromap_store_ai'"
         type="text"
         [placeholder]="'Code SOATO' | translate"
         formControlName="code_soato"
@@ -89,9 +92,8 @@
       </app-input>
     </app-form-field>
 
-    <app-form-field name="ink" #ink>
+    <app-form-field name="ink" #ink *ngIf="mode != 'agromap_store_ai'">
       <app-input
-        *ngIf="mode != 'agromap_store_ai'"
         type="text"
         [placeholder]="'INK' | translate"
         formControlName="ink"
@@ -99,6 +101,10 @@
       >
       </app-input>
     </app-form-field>
+
+    <div class="actions">
+      <ng-content select="[actions]"></ng-content>
+    </div>
   </div>
 
   <app-loading [loading]="loading" class="dynamic-color"></app-loading>

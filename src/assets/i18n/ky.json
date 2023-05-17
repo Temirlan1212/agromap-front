@@ -196,5 +196,7 @@
   "Pasture": "Жайыт",
   "Contour id": "Контурдун идентификатору",
   "Culture is not defined": "Өсүмдүк түрү аныктала элек",
-  "NDVI heat map": "NDVI жылуулук картасы"
+  "NDVI heat map": "NDVI жылуулук картасы",
+  "Draw a field": "Полигон чийүү",
+  "Edit the field": "Полигон оңдоо"
 }

@@ -196,5 +196,7 @@
   "Pasture": "Пастбище",
   "Contour id": "Идентификатор контура",
   "Culture is not defined": "Культура не определена",
-  "NDVI heat map": "Тепловая карта ndvi"
+  "NDVI heat map": "Тепловая карта ndvi",
+  "Draw a field": "Нарисовать поле",
+  "Edit the field": "Отредактировать поле"
 }

@@ -1,4 +1,4 @@
-import { Component, HostBinding, OnInit } from '@angular/core';
+import { Component, HostBinding, Input, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-side-panel',
@@ -7,7 +7,12 @@ import { Component, HostBinding, OnInit } from '@angular/core';
   standalone: true,
 })
 export class SidePanelComponent implements OnInit {
-  @HostBinding('class.isOpened') isOpened: boolean = false;
+  @Input() isOpened: boolean = false;
+
+  @HostBinding('class.isOpened')
+  get isOpenedClass(): boolean {
+    return this.isOpened;
+  }
 
   constructor() {}
 

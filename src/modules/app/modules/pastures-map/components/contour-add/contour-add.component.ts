@@ -3,20 +3,14 @@ import { MapService } from '../../../../../ui/services/map.service';
 import { Subscription } from 'rxjs';
 import { MapData } from '../../../../../ui/models/map.model';
 import { Router } from '@angular/router';
-import {
-  Map,
-  LeafletEvent,
-  geoJson,
-  latLngBounds,
-  latLng,
-  Layer,
-} from 'leaflet';
-import { GeoJSON } from 'geojson';
+import { Map, LeafletEvent, Layer } from 'leaflet';
 import { ContourFormComponent } from '../contour-form/contour-form.component';
 import { IContour } from '../../../../../api/models/contour.model';
 import { ApiService } from '../../../../../api/api.service';
 import { MessagesService } from '../../../../../ui/services/messages.service';
 import { TranslatePipe } from '@ngx-translate/core';
+import { SidePanelComponent } from 'src/modules/ui/components/side-panel/side-panel.component';
+import { StoreService } from 'src/modules/ui/services/store.service';
 
 @Component({
   selector: 'app-contour-add',
@@ -34,10 +28,13 @@ export class ContourAddComponent implements OnInit, OnDestroy {
     private router: Router,
     private api: ApiService,
     private messages: MessagesService,
-    private translate: TranslatePipe
+    private translate: TranslatePipe,
+    private store: StoreService
   ) {}
 
   async ngOnInit() {
+    this.handleSetSidePanelState(true);
+
     this.mapSubscription = this.mapService.map.subscribe(
       (res: MapData | null) => {
         this.mapInstance = res?.map as Map;
@@ -64,6 +61,10 @@ export class ContourAddComponent implements OnInit, OnDestroy {
       }
     );
     this.handleDrawShape();
+  }
+
+  handleSetSidePanelState(state: boolean) {
+    this.store.setItem('SidePanelComponent', { state });
   }
 
   handleDrawShape() {
@@ -125,6 +126,7 @@ export class ContourAddComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    this.handleSetSidePanelState(false);
     this.mapInstance.pm.Toolbar.setButtonDisabled('drawPolygon', false);
     this.mapSubscription.unsubscribe();
     this.mapInstance.pm.toggleControls();

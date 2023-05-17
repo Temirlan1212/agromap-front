@@ -49,7 +49,6 @@ import {
 } from 'src/modules/api/models/statistics.model';
 import { ITableItem } from 'src/modules/ui/models/table.model';
 import { ContourDetailsComponent } from './components/contour-details/contour-details.component';
-import { SidePanelComponent } from '../../../ui/components/side-panel/side-panel.component';
 import { ToggleButtonComponent } from '../../../ui/components/toggle-button/toggle-button.component';
 import { MapControlLayersSwitchComponent } from '../../../ui/components/map-control-layers-switch/map-control-layers-switch.component';
 import { ILandType } from 'src/modules/api/models/land-type.model';
@@ -64,7 +63,6 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('map') mapComponent!: MapComponent;
   @ViewChild('contourDetails') contourDetails!: ContourDetailsComponent;
   @ViewChild('mapControls') mapControls!: MapControlLayersSwitchComponent;
-  @ViewChild('sidePanel') sidePanel!: SidePanelComponent;
   @ViewChild('toggleBtn') toggleBtn!: ToggleButtonComponent;
   mode!: string;
   pastureLayerProductivityTooltip: Tooltip | null = null;
@@ -184,7 +182,7 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
   loading: boolean = false;
   activeContour!: any;
   activeContourSmall: any;
-
+  sidePanelData: Record<string, any> = {};
   pasturesMapControlLayersSwitch: Record<string, any> = {};
 
   constructor(
@@ -244,6 +242,11 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
         }
         this.pasturesMapControlLayersSwitch = v;
       }),
+
+    this.store.watchItem('SidePanelComponent').subscribe((v) => {
+      this.sidePanelData = v;
+      this.cd.detectChanges();
+    }),
   ];
 
   vegIndexesData: IVegSatelliteDate[] = [];
@@ -318,6 +321,10 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
     } catch (e) {
       console.log(e);
     }
+  }
+
+  handleSidePanelToggle(isOpened: boolean) {
+    this.store.setItem('SidePanelComponent', { state: !isOpened });
   }
 
   async getContourData(id: number) {
@@ -476,7 +483,7 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
 
   handleFilterFormSubmit(formValue: Record<string, any>) {
     this.getPastureStatisticsProductivity(formValue['value']);
-    this.sidePanel.handlePanelToggle();
+    this.store.setItem('SidePanelComponent', { state: false });
     this.toggleBtn.isContentToggled = false;
   }
 

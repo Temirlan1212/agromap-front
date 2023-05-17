@@ -9,7 +9,7 @@
 
   dialog {
     overflow: auto;
-    min-width: 320px;
+    min-width: 300px;
     min-height: 240px;
     max-width: 100%;
     max-height: 100%;
@@ -47,9 +47,9 @@
     .body {
       display: flex;
       align-items: center;
-      width: 400px;
+      gap: 10px;
 
-      div[class^=icon] {
+      div[class^="icon"] {
         flex: 0 0 36px;
         margin-right: 13px;
       }
@@ -66,37 +66,60 @@
       justify-content: flex-end;
       gap: 16px;
       padding: 12px 20px;
-      background-color: #F9F9F9;
+      background-color: #f9f9f9;
       margin: 20px -20px -20px -20px;
 
       .btn-secondary-outlined {
-        border-color: #B2CCD7;
-        color: #6B6F7B;
+        border-color: #b2ccd7;
+        color: #6b6f7b;
       }
     }
   }
 
-  &.info .btn-submit {
-    background-color: $primaryColor;
-    border-color: $primaryColor;
-    color: #fff;
+  &.info {
+    .btn-submit {
+      background-color: $primaryColor;
+      border-color: $primaryColor;
+      color: #fff;
+    }
+
+    .notification-icon {
+      color: $primaryColor;
+    }
   }
 
-  &.danger .btn-submit {
-    background-color: $dangerColor;
-    border-color: $dangerColor;
-    color: #fff;
+  &.danger {
+    .btn-submit {
+      background-color: $dangerColor;
+      border-color: $dangerColor;
+      color: #fff;
+    }
+
+    .notification-icon {
+      color: $dangerColor;
+    }
+  }
+  &.warning {
+    .btn-submit {
+      background-color: $warningColor;
+      border-color: $warningColor;
+      color: #fff;
+    }
+
+    .notification-icon {
+      color: $warningColor;
+    }
   }
 
-  &.warning .btn-submit {
-    background-color: $warningColor;
-    border-color: $warningColor;
-    color: #fff;
-  }
+  &.success {
+    .btn-submit {
+      background-color: $successColor;
+      border-color: $successColor;
+      color: #fff;
+    }
 
-  &.success .btn-submit {
-    background-color: $successColor;
-    border-color: $successColor;
-    color: #fff;
+    .notification-icon {
+      color: $successColor;
+    }
   }
 }

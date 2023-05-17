@@ -1,4 +1,4 @@
-<app-side-panel #sidePanel>
+<app-side-panel [isOpened]="sidePanelData['state']">
   <app-contour-filter
     (onCardClick)="map.handleFeatureClick($event.layer, $event.feature)"
     (onEditClick)="map.handleFeatureClose()"
@@ -52,7 +52,6 @@
           ></app-map-control-locate>
 
           <div
-            (click)="sidePanel.handlePanelToggle()"
             class="tab"
             [class.active]="currentRouterPathname.includes('contour-add')"
             [routerLink]="
@@ -217,7 +216,8 @@
 </app-question-dialog>
 <app-toggle-button
   #toggleBtn
-  (onClick)="sidePanel.handlePanelToggle()"
+  (onClick)="handleSidePanelToggle(sidePanelData['state'])"
+  [isContentToggled]="sidePanelData['state']"
   *ngIf="
     activeContour == null ||
     currentRouterPathname.includes('split-map') ||
