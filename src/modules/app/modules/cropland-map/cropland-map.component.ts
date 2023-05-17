@@ -366,15 +366,11 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
     this.store.setItem('SidePanelComponent', { state: !isOpened });
   }
 
-  handleMapClick(e: LeafletMouseEvent, map: MapComponent) {
-    map.handleFeatureClose();
+  handleMapClick(e: LeafletMouseEvent) {
+    if (this.mapComponent) this.mapComponent.handleFeatureClose();
   }
 
   async handleMapMove(mapMove: MapMove): Promise<void> {
-    const landTypeParam = this.filterFormValues
-      ? this.filterFormValues['land_type']
-      : this.landTypes.map((l: ILandType) => l['id']).join(',');
-
     this.store.setItem<Record<string, LatLngBounds>>('ArableLandComponent', {
       mapBounds: mapMove.bounds,
     });
@@ -385,28 +381,7 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
       if (mapMove.zoom >= 12) {
         try {
           this.loading = true;
-          let polygons: GeoJSON;
-          if (this.isWmsAiActive) {
-            polygons = await this.api.map.getPolygonsInScreenAi({
-              latLngBounds: mapMove.bounds,
-              land_type: landTypeParam,
-            });
-          } else {
-            polygons = await this.api.map.getPolygonsInScreen({
-              latLngBounds: mapMove.bounds,
-              land_type: landTypeParam,
-            });
-          }
-          this.mapData.geoJson.options.snapIgnore = true;
-          this.mapData.geoJson.options.pmIgnore = true;
-          this.mapData.geoJson.options.style = {
-            fillOpacity: 0,
-            weight: 0.4,
-          };
-
-          this.mapData.geoJson.setZIndex(400);
-          this.mapData.geoJson.options.interactive = true;
-          this.mapData.geoJson.addData(polygons);
+          await this.addPolygonsInScreenToMap(mapMove.bounds);
         } catch (e: any) {
           this.messages.error(e.error?.message ?? e.message);
         } finally {
@@ -414,6 +389,40 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
         }
       } else {
         this.activeContourSmall = null;
+      }
+    }
+  }
+
+  async addPolygonsInScreenToMap(mapBounds: LatLngBounds) {
+    if (this.mapData?.map != null) {
+      const zoom = this.mapData.map.getZoom();
+
+      if (zoom >= 12) {
+        const landTypeParam = this.filterFormValues
+          ? this.filterFormValues['land_type']
+          : this.landTypes.map((l: ILandType) => l['id']).join(',');
+        let polygons: GeoJSON;
+        if (this.isWmsAiActive) {
+          polygons = await this.api.map.getPolygonsInScreenAi({
+            latLngBounds: mapBounds,
+            land_type: landTypeParam,
+          });
+        } else {
+          polygons = await this.api.map.getPolygonsInScreen({
+            latLngBounds: mapBounds,
+            land_type: landTypeParam,
+          });
+        }
+        this.mapData.geoJson.options.snapIgnore = true;
+        this.mapData.geoJson.options.pmIgnore = true;
+        this.mapData.geoJson.options.style = {
+          fillOpacity: 0,
+          weight: 0.4,
+        };
+
+        this.mapData.geoJson.setZIndex(400);
+        this.mapData.geoJson.options.interactive = true;
+        this.mapData.geoJson.addData(polygons);
       }
     }
   }
@@ -460,13 +469,22 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.wmsCQLFilter = null;
     this.setWmsParams();
+    if (this.mapComponent) this.mapComponent.handleFeatureClose();
   }
 
   handleFilterFormSubmit(formValue: Record<string, any>) {
+    this.filterFormValues = formValue['value'];
+
     if (this.mapData?.map) {
       this.mapData.geoJson.clearLayers();
+      const data = this.store.getItem<Record<string, LatLngBounds>>(
+        'ArableLandComponent'
+      );
+      if (data?.['mapBounds']) {
+        this.addPolygonsInScreenToMap(data?.['mapBounds']);
+      }
     }
-    this.filterFormValues = formValue['value'];
+
     this.getPastureStatisticsProductivity(this.filterFormValues);
     this.getCultureStatisticsProductivity(this.filterFormValues);
     this.store.setItem('SidePanelComponent', { state: false });
@@ -530,20 +548,16 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  handleEditClick(map: MapComponent) {
+  handleEditClick() {
     const id = this.layerFeature?.feature?.properties?.['id'];
     this.router.navigate(['contour-edit', id], { relativeTo: this.route });
-    map.handleFeatureClose();
-    this.handleFeatureClose();
+    if (this.mapComponent) this.mapComponent.handleFeatureClose();
   }
 
-  async handleDeleteSubmitted(
-    dialog: QuestionDialogComponent,
-    map: MapComponent
-  ): Promise<void> {
+  async handleDeleteSubmitted(dialog: QuestionDialogComponent): Promise<void> {
     await this.deleteItem();
     dialog.close();
-    map.handleFeatureClose();
+    if (this.mapComponent) this.mapComponent.handleFeatureClose();
     this.mapData?.map.fitBounds(this.mapService.maxBounds);
     this.mapData?.map.setMaxBounds(this.mapService.maxBounds);
   }
