@@ -156,7 +156,9 @@ export class SplitMapSidebarComponent implements OnDestroy, OnInit {
   }
 
   async ngOnInit(): Promise<void> {
-    this.layerFeature = this.store.getItem<Feature>('selectedLayerFeature');
+    this.layerFeature = this.store.getItem<Feature>(
+      'PasturesMapSelectedLayerFeature'
+    );
     if (this.layerFeature != null) {
       this.contourId = this.layerFeature.properties?.['id'];
       this.bounds = L.geoJSON(this.layerFeature).getBounds();

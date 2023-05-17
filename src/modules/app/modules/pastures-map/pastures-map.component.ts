@@ -201,7 +201,12 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
       if (event instanceof NavigationEnd) {
         this.currentRouterPathname = router.url;
         const isChildRoute = this.route.firstChild !== null;
-        if (isChildRoute && this.mapComponent && this.activeContour != null) {
+        if (
+          isChildRoute &&
+          this.mapComponent &&
+          this.activeContour != null &&
+          !this.currentRouterPathname.includes('split-map')
+        ) {
           this.mapComponent.handleFeatureClose();
         }
 
@@ -316,12 +321,15 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
     await this.getContour(Number(cid));
 
     this.getVegSatelliteDates(cid);
-    this.store.setItem<Feature>('selectedLayerFeature', layerFeature.feature);
+    this.store.setItem<Feature>(
+      'PasturesMapSelectedLayerFeature',
+      layerFeature.feature
+    );
   }
 
   handleFeatureClose(): void {
     this.layerFeature = null;
-    this.store.removeItem('selectedLayerFeature');
+    this.store.removeItem('PasturesMapSelectedLayerFeature');
     if (this.selectedLayer) {
       this.selectedLayer.remove();
     }

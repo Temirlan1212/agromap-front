@@ -200,7 +200,12 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
         this.currentRouterPathname = router.url;
         const isChildRoute = this.route.firstChild !== null;
 
-        if (isChildRoute && this.mapComponent && this.activeContour != null) {
+        if (
+          isChildRoute &&
+          this.mapComponent &&
+          this.activeContour != null &&
+          !this.currentRouterPathname.includes('split-map')
+        ) {
           this.mapComponent.handleFeatureClose();
         }
 
