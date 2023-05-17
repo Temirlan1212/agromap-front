@@ -200,6 +200,10 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
         this.currentRouterPathname = router.url;
         const isChildRoute = this.route.firstChild !== null;
 
+        if (isChildRoute && this.mapComponent && this.activeContour != null) {
+          this.mapComponent.handleFeatureClose();
+        }
+
         if (this.mapData?.map && !isChildRoute && this.mapData?.geoJson) {
           this.mapData.geoJson.clearLayers();
           const data = this.store.getItem<Record<string, LatLngBounds>>(
@@ -563,6 +567,10 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
       const mapBounds = this.store.getItem<Record<string, LatLngBounds>>(
         'ArableLandComponent'
       )?.['mapBounds'];
+
+      if (this.mapComponent && this.activeContour != null) {
+        this.mapComponent.handleFeatureClose();
+      }
 
       if (this.mapComponent && this.activeContour != null) {
         this.mapComponent.handleFeatureClose();

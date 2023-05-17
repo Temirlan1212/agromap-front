@@ -201,12 +201,14 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
       if (event instanceof NavigationEnd) {
         this.currentRouterPathname = router.url;
         const isChildRoute = this.route.firstChild !== null;
+        if (isChildRoute && this.mapComponent && this.activeContour != null) {
+          this.mapComponent.handleFeatureClose();
+        }
 
         if (this.mapData?.map && !isChildRoute && this.mapData?.geoJson) {
           this.mapData.geoJson.clearLayers();
-          const data = this.store.getItem<Record<string, LatLngBounds>>(
-            'ArableLandComponent'
-          );
+          const data =
+            this.store.getItem<Record<string, LatLngBounds>>('HomeComponent');
           if (data?.['mapBounds']) {
             this.addPolygonsInScreenToMap(data?.['mapBounds']);
           }
@@ -449,17 +451,12 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
             this.landTypes.map((l: ILandType) => l['id']).join(',');
 
           let polygons: GeoJSON;
-          if (this.isWmsAiActive) {
-            polygons = await this.api.map.getPolygonsInScreenAi({
-              latLngBounds: mapBounds,
-              land_type: landTypeParam,
-            });
-          } else {
-            polygons = await this.api.map.getPolygonsInScreen({
-              latLngBounds: mapBounds,
-              land_type: landTypeParam,
-            });
-          }
+
+          polygons = await this.api.map.getPolygonsInScreen({
+            latLngBounds: mapBounds,
+            land_type: landTypeParam,
+          });
+
           this.mapData.geoJson.options.snapIgnore = true;
           this.mapData.geoJson.options.pmIgnore = true;
           this.mapData.geoJson.options.style = {
