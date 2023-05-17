@@ -144,7 +144,7 @@
       <ng-container leftBottomPanel>
         <div class="tab transparent">
           <app-color-legend
-            *ngIf="pasturesMapControlLayersSwitch['ndvi_heat_map']?.['name']"
+            *ngIf="pasturesMapControlLayersSwitch['ndvi_heat_map']?.['name'] && (!map?.['feautureCollapse'] || !map?.['featureOpen'])"
             [maxHeight]="'200px'"
             [items]="wmsProductivityLayerColorLegend"
           ></app-color-legend>
@@ -152,7 +152,7 @@
 
         <div
           class="tab transparent"
-          *ngIf="pasturesMapControlLayersSwitch['filterControlLayerSwitch']?.['name']"
+          *ngIf="pasturesMapControlLayersSwitch['filterControlLayerSwitch']?.['name'] && (!map?.['feautureCollapse'] || !map?.['featureOpen'])"
         >
           <app-color-legend
             [maxHeight]="'200px'"
