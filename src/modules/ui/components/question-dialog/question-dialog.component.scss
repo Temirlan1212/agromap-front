@@ -9,7 +9,7 @@
 
   dialog {
     overflow: auto;
-    min-width: 320px;
+    min-width: 300px;
     min-height: 240px;
     max-width: 100%;
     max-height: 100%;
@@ -17,8 +17,6 @@
     border: none;
     border-radius: 8px;
     filter: drop-shadow(0px 4px 32px rgba(0, 16, 61, 0.16));
-    max-width: 400px;
-    width: 100%;
 
     &[open] {
       position: fixed;
@@ -49,6 +47,7 @@
     .body {
       display: flex;
       align-items: center;
+      gap: 10px;
 
       div[class^="icon"] {
         flex: 0 0 36px;
@@ -77,27 +76,50 @@
     }
   }
 
-  &.info .btn-submit {
-    background-color: $primaryColor;
-    border-color: $primaryColor;
-    color: #fff;
+  &.info {
+    .btn-submit {
+      background-color: $primaryColor;
+      border-color: $primaryColor;
+      color: #fff;
+    }
+
+    .notification-icon {
+      color: $primaryColor;
+    }
   }
 
-  &.danger .btn-submit {
-    background-color: $dangerColor;
-    border-color: $dangerColor;
-    color: #fff;
+  &.danger {
+    .btn-submit {
+      background-color: $dangerColor;
+      border-color: $dangerColor;
+      color: #fff;
+    }
+
+    .notification-icon {
+      color: $dangerColor;
+    }
+  }
+  &.warning {
+    .btn-submit {
+      background-color: $warningColor;
+      border-color: $warningColor;
+      color: #fff;
+    }
+
+    .notification-icon {
+      color: $warningColor;
+    }
   }
 
-  &.warning .btn-submit {
-    background-color: $warningColor;
-    border-color: $warningColor;
-    color: #fff;
-  }
+  &.success {
+    .btn-submit {
+      background-color: $successColor;
+      border-color: $successColor;
+      color: #fff;
+    }
 
-  &.success .btn-submit {
-    background-color: $successColor;
-    border-color: $successColor;
-    color: #fff;
+    .notification-icon {
+      color: $successColor;
+    }
   }
 }

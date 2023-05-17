@@ -249,6 +249,7 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.store.watchItem('SidePanelComponent').subscribe((v) => {
       this.sidePanelData = v;
+      this.cd.detectChanges();
     }),
   ];
 

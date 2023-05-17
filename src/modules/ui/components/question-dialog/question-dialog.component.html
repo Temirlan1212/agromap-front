@@ -1,22 +1,55 @@
 <dialog #dialog>
   <div class="header">
     <h1 class="title" [textContent]="title"></h1>
-    <app-svg-icon class="icon" name="clear" size="16" (click)="handleCloseClick()"></app-svg-icon>
+    <app-svg-icon
+      class="icon"
+      name="clear"
+      size="16"
+      (click)="handleCloseClick()"
+    ></app-svg-icon>
   </div>
   <div class="body">
-    <div class="icon-dialog-info" *ngIf="isInfo"></div>
-    <div class="icon-dialog-danger" *ngIf="isDanger"></div>
-    <div class="icon-dialog-warning" *ngIf="isWarning"></div>
-    <div class="icon-dialog-success" *ngIf="isSuccess"></div>
+    <app-svg-icon
+      class="notification-icon"
+      name="rounded-error"
+      size="24px"
+      *ngIf="isDanger"
+    ></app-svg-icon>
+    <app-svg-icon
+      class="notification-icon"
+      name="rounded-success"
+      size="24px"
+      *ngIf="isSuccess"
+    ></app-svg-icon>
+    <app-svg-icon
+      class="notification-icon"
+      name="rounded-warning"
+      size="24px"
+      *ngIf="isWarning"
+    ></app-svg-icon>
+    <app-svg-icon
+      class="notification-icon"
+      name="rounded-info"
+      size="24px"
+      *ngIf="isInfo"
+    ></app-svg-icon>
 
     <span>
-            <ng-content></ng-content>
-        </span>
+      <ng-content></ng-content>
+    </span>
   </div>
   <div class="footer">
-    <button type="button" class="btn-secondary-outlined" [textContent]="cancelText | translate"
-            (click)="handleCloseClick()"></button>
-    <button type="button" class="btn btn-submit" [textContent]="submitText | translate"
-            (click)="handleSubmitClick()"></button>
+    <button
+      type="button"
+      class="btn-secondary-outlined"
+      [textContent]="cancelText | translate"
+      (click)="handleCloseClick()"
+    ></button>
+    <button
+      type="button"
+      class="btn btn-submit"
+      [textContent]="submitText | translate"
+      (click)="handleSubmitClick()"
+    ></button>
   </div>
 </dialog>
