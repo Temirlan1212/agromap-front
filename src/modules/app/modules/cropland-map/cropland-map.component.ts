@@ -564,6 +564,10 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
         'ArableLandComponent'
       )?.['mapBounds'];
 
+      if (this.mapComponent && this.activeContour != null) {
+        this.mapComponent.handleFeatureClose();
+      }
+
       if (mapBounds) {
         this.addPolygonsInScreenToMap(mapBounds);
         this.cd.detectChanges();
