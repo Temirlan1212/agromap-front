@@ -29,7 +29,7 @@ export class ContourAddComponent implements OnInit, OnDestroy {
     private api: ApiService,
     private messages: MessagesService,
     private translate: TranslatePipe,
-    public store: StoreService
+    private store: StoreService
   ) {}
 
   async ngOnInit() {
