@@ -6,15 +6,9 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
-import {
-  IConton,
-  IContonListQuery,
-} from '../../../../../api/models/conton.model';
+import { IConton } from '../../../../../api/models/conton.model';
 import { ApiService } from '../../../../../api/api.service';
-import {
-  IDistrict,
-  IDistrictWithPagination,
-} from '../../../../../api/models/district.model';
+import { IDistrict } from '../../../../../api/models/district.model';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { IRegion } from '../../../../../api/models/region.model';
@@ -43,6 +37,8 @@ export class ContourFormComponent implements OnInit, OnDestroy {
       this.form.reset();
     } else {
       this.form.patchValue({
+        region: v.region?.id,
+        district: v.district?.id,
         conton: v.conton?.id,
         type: v.type?.id,
         culture: v.culture?.id,
@@ -57,15 +53,9 @@ export class ContourFormComponent implements OnInit, OnDestroy {
   }
 
   form: FormGroup = new FormGroup({
-    region: new FormControl<string | number | null>({
-      value: null,
-      disabled: true,
-    }),
-    district: new FormControl<string | number | null>({
-      value: null,
-      disabled: true,
-    }),
-    conton: new FormControl<string | number | null>(null, Validators.required),
+    region: new FormControl<number | null>(null),
+    district: new FormControl<string | null>({ value: null, disabled: true }),
+    conton: new FormControl<string | null>({ value: null, disabled: true }),
     type: new FormControl<string | number | null>(null),
     culture: new FormControl<string | number | null>(null),
     productivity: new FormControl<number | null>(null),
@@ -76,19 +66,17 @@ export class ContourFormComponent implements OnInit, OnDestroy {
   @Output() onChange = new EventEmitter<any>();
 
   formSubscriptions: Subscription[] = [
-    this.form.get('conton')?.valueChanges.subscribe((res) => {
-      if (res) {
-        const selectedConton = this.contonList.find((c) => c.id === res);
-        this.form.patchValue({
-          district: selectedConton?.district,
-          region: selectedConton?.region,
-        });
-      } else {
-        if (this.mode != 'agromap_store_ai') {
-          this.form.patchValue({ district: null, region: null });
-        }
-      }
-    }) as Subscription,
+    this.form
+      .get('region')
+      ?.valueChanges.subscribe((value) =>
+        this.handleRegionChange(value)
+      ) as Subscription,
+    this.form
+      .get('district')
+      ?.valueChanges.subscribe((value) =>
+        this.handleDistrictChange(value)
+      ) as Subscription,
+
     this.form.get('type')?.valueChanges.subscribe((res) => {
       if (res && res === 2) {
         this.form.get('culture')?.disable();
@@ -110,11 +98,12 @@ export class ContourFormComponent implements OnInit, OnDestroy {
 
   async ngOnInit(): Promise<void> {
     this.loading = true;
-    await this.getRegions();
-    await this.getDistricts();
-    await this.getContons();
-    await this.getCultures();
     await this.getLandTypes();
+    await this.getCultures();
+    await this.getRegions();
+    this.getDistricts();
+    this.getContons();
+    this.form.get('type')?.setValue(String(this.landTypeList[0].id));
     this.loading = false;
   }
 
@@ -128,32 +117,53 @@ export class ContourFormComponent implements OnInit, OnDestroy {
   }
 
   async getContons() {
-    const query: IContonListQuery = {
-      polygon: true,
-    };
+    const district_id = this.form.get('district')?.value;
     try {
-      const res = (await this.api.dictionary.getContons(query)) as IConton[];
-      this.contonList = res;
-      if (this.form.get('conton')?.value != null) {
-        const selectedConton = this.contonList.find(
-          (c) => c.id === this.form.get('conton')?.value
-        );
-        this.form.patchValue({
-          district: selectedConton?.district,
-          region: selectedConton?.region,
-        });
-      }
+      this.contonList = (await this.api.dictionary.getContons({
+        district_id: district_id ? this.form.get('district')?.value : '',
+        polygon: true,
+      })) as IConton[];
     } catch (e: any) {
       this.messages.error(e.error?.message ?? e.message);
     }
   }
 
-  async getDistricts() {
+  async handleRegionChange(value: number | null) {
+    const districtVal = this.form.get('district');
+    if (value != null) {
+      await this.getDistricts(value);
+      districtVal?.enable({ emitEvent: false });
+    } else if (value != null && districtVal?.enabled) {
+      await this.getDistricts();
+    } else {
+      districtVal?.patchValue(null);
+      districtVal?.disable({ emitEvent: false });
+    }
+  }
+
+  async handleDistrictChange(value: number | null) {
+    const contonVal = this.form.get('conton');
+    if (value != null) {
+      await this.getContons();
+      contonVal?.enable({ emitEvent: false });
+    } else if (value != null && contonVal?.enabled) {
+      await this.getContons();
+    } else {
+      contonVal?.patchValue(null, { emitEvent: false });
+      contonVal?.disable({ emitEvent: false });
+    }
+  }
+
+  async getDistricts(regionId?: number) {
+    if (!regionId) return;
+    const query = {
+      ...(regionId && { region_id: regionId, polygon: true }),
+    };
     try {
-      const results = (await this.api.dictionary.getDistricts({
-        polygon: true,
-      })) as IDistrict[];
-      this.districtList = results;
+      const res = (await this.api.dictionary.getDistricts(
+        query
+      )) as IDistrict[];
+      this.districtList = res;
     } catch (e: any) {
       this.messages.error(e.error?.message ?? e.message);
     }

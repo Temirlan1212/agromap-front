@@ -3,13 +3,12 @@ import { MapService } from '../../../../../ui/services/map.service';
 import { Subscription } from 'rxjs';
 import { MapData } from '../../../../../ui/models/map.model';
 import { Router } from '@angular/router';
-import { Map, LeafletEvent, Layer } from 'leaflet';
+import { Map, LeafletEvent, Layer, GeoJSON } from 'leaflet';
 import { ContourFormComponent } from '../contour-form/contour-form.component';
 import { IContour } from '../../../../../api/models/contour.model';
 import { ApiService } from '../../../../../api/api.service';
 import { MessagesService } from '../../../../../ui/services/messages.service';
 import { TranslatePipe } from '@ngx-translate/core';
-import { SidePanelComponent } from 'src/modules/ui/components/side-panel/side-panel.component';
 import { StoreService } from 'src/modules/ui/services/store.service';
 
 @Component({
@@ -22,6 +21,7 @@ export class ContourAddComponent implements OnInit, OnDestroy {
   mapInstance!: Map;
   layer: Layer | null = null;
   polygon: GeoJSON.Polygon | null = null;
+  mapGeo!: GeoJSON;
 
   constructor(
     private mapService: MapService,
@@ -37,7 +37,13 @@ export class ContourAddComponent implements OnInit, OnDestroy {
 
     this.mapSubscription = this.mapService.map.subscribe(
       (res: MapData | null) => {
+        this.mapService.contourEditingMode.next(true);
         this.mapInstance = res?.map as Map;
+        this.mapGeo = res?.geoJson as GeoJSON;
+        if (this.mapGeo.getLayers().length > 1) {
+          this.mapGeo.clearLayers();
+        }
+
         this.mapInstance.pm.setGlobalOptions({
           allowSelfIntersection: false,
         });
