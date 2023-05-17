@@ -454,9 +454,7 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
         const zoom = this.mapData.map.getZoom();
 
         if (zoom >= 12) {
-          const landTypeParam =
-            this.filterFormValues?.['land_type'] ??
-            this.landTypes.map((l: ILandType) => l['id']).join(',');
+          const landTypeParam = this.landTypes[0]?.['id'];
 
           let polygons: GeoJSON;
 
