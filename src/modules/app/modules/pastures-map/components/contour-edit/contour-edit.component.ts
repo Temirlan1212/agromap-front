@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { geoJson, latLng, latLngBounds, Map, GeoJSON, PM } from 'leaflet';
+import { geoJson, Map, GeoJSON, PM } from 'leaflet';
 import { ContourFormComponent } from '../contour-form/contour-form.component';
 import { IContour } from '../../../../../api/models/contour.model';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -10,7 +10,6 @@ import { Subscription } from 'rxjs';
 import { MapData } from '../../../../../ui/models/map.model';
 import { TranslatePipe } from '@ngx-translate/core';
 import { StoreService } from '../../../../../ui/services/store.service';
-import { SidePanelComponent } from 'src/modules/ui/components/side-panel/side-panel.component';
 
 @Component({
   selector: 'app-contour-edit',
@@ -26,7 +25,6 @@ export class ContourEditComponent implements OnInit, OnDestroy {
   layer: any = null;
   polygon: GeoJSON.Polygon | null = null;
   isPolygonChanged: boolean = false;
-  mode: string | null = null;
 
   constructor(
     private api: ApiService,
@@ -40,8 +38,6 @@ export class ContourEditComponent implements OnInit, OnDestroy {
 
   async ngOnInit() {
     this.store.setItem('SidePanelComponent', { state: true });
-    const data = this.store.getItem('MapControlLayersSwitchComponent');
-    this.mode = data?.filterControlLayerSwitch.name;
     const id = this.route.snapshot.paramMap.get('id');
     try {
       this.loading = true;
@@ -85,10 +81,16 @@ export class ContourEditComponent implements OnInit, OnDestroy {
   }
 
   handleEditShape() {
-    this.handleSetSidePanelState(true);
+    this.mapService.contourEditingMode.next(true);
     if (this.mapGeo.getLayers().length > 1) {
       this.mapGeo.clearLayers();
     }
+
+    this.mapGeo.options.style = {
+      fillOpacity: 0,
+      weight: 0.4,
+    };
+    this.mapGeo.options.interactive = false;
     this.mapGeo.addData(this.contour.polygon);
     this.layer = this.mapGeo?.getLayers()[0];
     this.layer.options.pmIgnore = false;
