@@ -26,6 +26,10 @@
 
     <div class="contour-info" *ngIf="!isHidden">
       <div>
+        {{ "Contour id" | translate }}
+        <span>{{ activeContour?.id }} {{ "ha" | translate }}</span>
+      </div>
+      <div>
         {{ "Area" | translate }}
         <span>{{ activeContour.area_ha }} {{ "ha" | translate }}</span>
       </div>

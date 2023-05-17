@@ -543,18 +543,35 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   handleModeChange(mode: string | null) {
-    this.mode = mode as string;
+    if (this.mode === mode) {
+      this.mode =
+        mode === 'agromap_store_ai' ? 'agromap_store' : 'agromap_store_ai';
+    } else {
+      this.mode = mode as string;
+    }
   }
 
   handleWmsLayerChanged(layer: ITileLayer | null): void {
     this.mapData?.geoJson.clearLayers();
     this.getRegionsPolygon();
+
     if (layer != null) {
       const finded = this.wmsLayers.find((l) => l.name === layer.name);
       if (finded != null && finded.name === 'agromap_store_ai') {
         this.isWmsAiActive = true;
       } else {
         this.isWmsAiActive = false;
+      }
+    }
+
+    if (this.mapData?.map) {
+      const mapBounds = this.store.getItem<Record<string, LatLngBounds>>(
+        'ArableLandComponent'
+      )?.['mapBounds'];
+
+      if (mapBounds) {
+        this.addPolygonsInScreenToMap(mapBounds);
+        this.cd.detectChanges();
       }
     }
   }
