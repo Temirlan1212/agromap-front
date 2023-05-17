@@ -543,12 +543,7 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   handleModeChange(mode: string | null) {
-    if (this.mode === mode) {
-      this.mode =
-        mode === 'agromap_store_ai' ? 'agromap_store' : 'agromap_store_ai';
-    } else {
-      this.mode = mode as string;
-    }
+    this.mode = mode as string;
   }
 
   handleWmsLayerChanged(layer: ITileLayer | null): void {
