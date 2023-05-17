@@ -358,8 +358,8 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  async handleMapClick(e: LeafletMouseEvent, map: MapComponent) {
-    map.handleFeatureClose();
+  async handleMapClick(e: LeafletMouseEvent) {
+    if (this.mapComponent) this.mapComponent.handleFeatureClose();
   }
 
   async handleMapMousemove(e: LeafletMouseEvent) {
@@ -479,6 +479,7 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.wmsCQLFilter = null;
     this.setWmsParams();
+    if (this.mapComponent) this.mapComponent.handleFeatureClose();
   }
 
   handleFilterFormSubmit(formValue: Record<string, any>) {
@@ -544,7 +545,6 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
     const id = this.layerFeature?.feature?.properties?.['id'];
     this.router.navigate(['contour-edit', id], { relativeTo: this.route });
     map.handleFeatureClose();
-    this.handleFeatureClose();
   }
 
   async handleDeleteSubmitted(
