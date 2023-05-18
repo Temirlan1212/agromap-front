@@ -229,44 +229,35 @@ hr {
   }
 }
 
-// Extra Small
-@media only screen and (min-width: 0px) {
+@media only screen and (min-width: 0px) and (max-width: 576px) {
   .xs-show {
-    display: none;
+    display: block !important;
   }
 }
 
-// Small
-@media only screen and (min-width: 576px) {
+@media only screen and (min-width: 576px) and (max-width: 767px) {
   .sm-show {
-    display: none;
+    display: block !important;
   }
 }
 
 // Medium
-@media only screen and (min-width: 768px) {
+@media only screen and (min-width: 768px) and (max-width: 991px) {
   .md-show {
-    display: none;
+    display: block !important;
   }
 }
 
 // Large
-@media only screen and (min-width: 992px) {
+@media only screen and (min-width: 992px) and (max-width: 1199px) {
   .lg-show {
-    display: none;
+    display: block !important;
   }
 }
 
 // Extra large
-@media only screen and (min-width: 1200px) {
+@media only screen and (min-width: 1200px) and (max-width: 1399px) {
   .xl-show {
-    display: none;
-  }
-}
-
-// Extra extra large
-@media only screen and (min-width: 1400px) {
-  .xxl-show {
-    display: none;
+    display: block !important;
   }
 }

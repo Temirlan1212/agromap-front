@@ -119,6 +119,8 @@
 
         <div class="tab transparent">
           <app-contour-details
+            [hidden]="true"
+            class="lg-show xl-show md-show sm-show"
             #contourDetails
             [mapData]="mapData"
             [activeContour]="activeContour"
@@ -227,3 +229,14 @@
       : 'filter'
   "
 ></app-toggle-button>
+<div [hidden]="map?.['feautureCollapse']">
+  <app-contour-details
+    class="xs-show"
+    [hidden]="true"
+    #contourDetails
+    [mapData]="mapData"
+    [activeContour]="activeContour"
+    (onCancelClick)="map.handleFeatureClose()"
+  >
+  </app-contour-details>
+</div>
