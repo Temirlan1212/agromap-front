@@ -264,7 +264,6 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.store.watchItem('SidePanelComponent').subscribe((v) => {
       this.sidePanelData = v;
-      console.log(this.sidePanelData);
       this.cd.detectChanges();
     }),
   ];
