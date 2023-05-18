@@ -10,6 +10,7 @@ import { ApiService } from '../../../../../api/api.service';
 import { MessagesService } from '../../../../../ui/services/messages.service';
 import { TranslatePipe } from '@ngx-translate/core';
 import { StoreService } from 'src/modules/ui/services/store.service';
+import { Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-contour-add',
@@ -98,6 +99,10 @@ export class ContourAddComponent implements OnInit, OnDestroy {
       ...rest,
       polygon: this.polygon,
     };
+
+    form.form.get('district')?.setValidators(Validators.required);
+    form.form.get('conton')?.setValidators(Validators.required);
+
     if (!formState.touched) {
       this.messages.warning(this.translate.transform('No changes in form'));
       return;
