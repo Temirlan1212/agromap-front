@@ -383,7 +383,7 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   handleSidePanelToggle(isOpened: boolean) {
-    this.store.setItem('SidePanelComponent', { state: !isOpened });
+    this.store.setItem('SidePanelComponent', { state: isOpened });
   }
 
   handleMapClick(e: LeafletMouseEvent) {

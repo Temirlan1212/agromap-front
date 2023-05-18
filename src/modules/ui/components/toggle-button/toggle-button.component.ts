@@ -12,13 +12,13 @@ import { NgIf } from '@angular/common';
 export class ToggleButtonComponent {
   @Input() iconName: string = '';
   @Input() iconSize: string = '16px';
-  @Output() onClick = new EventEmitter<void>();
+  @Output() onClick = new EventEmitter<boolean>();
   @Input() isContentToggled: boolean = false;
 
   constructor() {}
 
   handleClick() {
-    this.onClick.emit();
     this.isContentToggled = !this.isContentToggled;
+    this.onClick.emit(this.isContentToggled);
   }
 }

@@ -264,6 +264,7 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.store.watchItem('SidePanelComponent').subscribe((v) => {
       this.sidePanelData = v;
+      console.log(this.sidePanelData);
       this.cd.detectChanges();
     }),
   ];
@@ -346,7 +347,7 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   handleSidePanelToggle(isOpened: boolean) {
-    this.store.setItem('SidePanelComponent', { state: !isOpened });
+    this.store.setItem('SidePanelComponent', { state: isOpened });
   }
 
   async getContourData(id: number) {

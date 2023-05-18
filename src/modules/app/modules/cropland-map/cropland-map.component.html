@@ -216,7 +216,7 @@
 </app-question-dialog>
 <app-toggle-button
   #toggleBtn
-  (onClick)="handleSidePanelToggle(sidePanelData['state'])"
+  (onClick)="handleSidePanelToggle($event)"
   [isContentToggled]="sidePanelData['state']"
   *ngIf="
     activeContour == null ||
