@@ -552,6 +552,10 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   handleModeChange(mode: string | null) {
+    if (this.mode === mode) {
+      this.mode = '';
+      this.cd.detectChanges();
+    }
     this.mode = mode as string;
   }
 
