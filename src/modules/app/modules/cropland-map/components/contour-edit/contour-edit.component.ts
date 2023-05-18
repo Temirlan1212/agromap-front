@@ -10,6 +10,7 @@ import { Subscription } from 'rxjs';
 import { MapData } from '../../../../../ui/models/map.model';
 import { TranslatePipe } from '@ngx-translate/core';
 import { StoreService } from '../../../../../ui/services/store.service';
+import { FormControl, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-contour-edit',
@@ -121,6 +122,17 @@ export class ContourEditComponent implements OnInit, OnDestroy {
   }
 
   async handleSaveClick(form: ContourFormComponent) {
+    const formValueNames =
+      this.mode === 'agromap_store_ai'
+        ? ['district', 'conton']
+        : ['district', 'conton', 'code_soato', 'ink'];
+
+    formValueNames.forEach((controlName) => {
+      const control = form.form.get(controlName) as FormControl;
+      control.setValidators([Validators.required]);
+      control.updateValueAndValidity();
+    });
+
     const formState = form.getState();
     const { region, district, ...rest } = formState.value;
     const contour: Partial<IContour> = {
@@ -142,10 +154,24 @@ export class ContourEditComponent implements OnInit, OnDestroy {
       return;
     }
     try {
-      await this.api.contour.update(this.contour.id, contour);
-      this.router.navigate(['../..']);
+      if (this.mode === 'agromap_store_ai') {
+        await this.api.aiContour.update(this.contour.id, contour);
+      } else {
+        await this.api.contour.update(this.contour.id, contour);
+      }
+      this.messages.success(
+        this.translate.transform('Polygon successfully edited')
+      );
+      this.router.navigate(['../..'], { relativeTo: this.route });
     } catch (e: any) {
-      this.messages.error(e.error?.message ?? e.message);
+      const errors = Object.values<string>(e.error || {});
+      if (errors.length > 0) {
+        for (const value of errors) {
+          this.messages.error(value);
+        }
+      } else {
+        this.messages.error(e.message);
+      }
     }
   }
 

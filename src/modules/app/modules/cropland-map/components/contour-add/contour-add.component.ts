@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MapService } from '../../../../../ui/services/map.service';
 import { Subscription } from 'rxjs';
 import { MapData } from '../../../../../ui/models/map.model';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Map, LeafletEvent, Layer, GeoJSON } from 'leaflet';
 import { ContourFormComponent } from '../contour-form/contour-form.component';
 import { IContour } from '../../../../../api/models/contour.model';
@@ -10,7 +10,7 @@ import { ApiService } from '../../../../../api/api.service';
 import { MessagesService } from '../../../../../ui/services/messages.service';
 import { TranslatePipe } from '@ngx-translate/core';
 import { StoreService } from 'src/modules/ui/services/store.service';
-import { Validators } from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-contour-add',
@@ -30,7 +30,8 @@ export class ContourAddComponent implements OnInit, OnDestroy {
     private api: ApiService,
     private messages: MessagesService,
     private translate: TranslatePipe,
-    private store: StoreService
+    private store: StoreService,
+    private route: ActivatedRoute
   ) {}
 
   async ngOnInit() {
@@ -93,16 +94,18 @@ export class ContourAddComponent implements OnInit, OnDestroy {
   }
 
   async handleSaveClick(form: ContourFormComponent) {
+    ['district', 'conton', 'code_soato', 'ink'].forEach((controlName) => {
+      const control = form.form.get(controlName) as FormControl;
+      control.setValidators([Validators.required]);
+      control.updateValueAndValidity();
+    });
+
     const formState = form.getState();
     const { region, district, ...rest } = formState.value;
     const contour: Partial<IContour> = {
       ...rest,
       polygon: this.polygon,
     };
-
-    form.form.get('district')?.setValidators(Validators.required);
-    form.form.get('conton')?.setValidators(Validators.required);
-
     if (!formState.touched) {
       this.messages.warning(this.translate.transform('No changes in form'));
       return;
@@ -122,11 +125,16 @@ export class ContourAddComponent implements OnInit, OnDestroy {
       this.messages.success(
         this.translate.transform('Polygon created successfully')
       );
-      this.mapInstance.fitBounds(this.mapService.maxBounds);
-      this.mapInstance.setMaxBounds(this.mapService.maxBounds);
-      this.router.navigate(['..']);
+      this.router.navigate(['../'], { relativeTo: this.route });
     } catch (e: any) {
-      this.messages.error(e.error?.message ?? e.message);
+      const errors = Object.values<string>(e.error || {});
+      if (errors.length > 0) {
+        for (const value of errors) {
+          this.messages.error(value);
+        }
+      } else {
+        this.messages.error(e.message);
+      }
     }
   }
 
