@@ -85,6 +85,7 @@ export class MapControlLayersSwitchComponent implements OnChanges {
           this.handleWmsRadioButtonLayerChange(
             filterControlLayerSwitchStatus.name
           );
+
           this.handleWmsInputRangeChange(
             filterControlLayerSwitchStatus.opacity,
             filterControlLayerSwitchStatus.name,

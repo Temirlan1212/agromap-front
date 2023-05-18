@@ -201,7 +201,12 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
       if (event instanceof NavigationEnd) {
         this.currentRouterPathname = router.url;
         const isChildRoute = this.route.firstChild !== null;
-        if (isChildRoute && this.mapComponent && this.activeContour != null) {
+        if (
+          isChildRoute &&
+          this.mapComponent &&
+          this.activeContour != null &&
+          !this.currentRouterPathname.includes('split-map')
+        ) {
           this.mapComponent.handleFeatureClose();
         }
 
@@ -316,12 +321,15 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
     await this.getContour(Number(cid));
 
     this.getVegSatelliteDates(cid);
-    this.store.setItem<Feature>('selectedLayerFeature', layerFeature.feature);
+    this.store.setItem<Feature>(
+      'PasturesMapSelectedLayerFeature',
+      layerFeature.feature
+    );
   }
 
   handleFeatureClose(): void {
     this.layerFeature = null;
-    this.store.removeItem('selectedLayerFeature');
+    this.store.removeItem('PasturesMapSelectedLayerFeature');
     if (this.selectedLayer) {
       this.selectedLayer.remove();
     }
@@ -338,7 +346,7 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   handleSidePanelToggle(isOpened: boolean) {
-    this.store.setItem('SidePanelComponent', { state: !isOpened });
+    this.store.setItem('SidePanelComponent', { state: isOpened });
   }
 
   async getContourData(id: number) {
@@ -446,9 +454,7 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
         const zoom = this.mapData.map.getZoom();
 
         if (zoom >= 12) {
-          const landTypeParam =
-            this.filterFormValues?.['land_type'] ??
-            this.landTypes.map((l: ILandType) => l['id']).join(',');
+          const landTypeParam = this.landTypes[0]?.['id'];
 
           let polygons: GeoJSON;
 

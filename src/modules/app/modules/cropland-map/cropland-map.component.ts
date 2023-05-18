@@ -200,7 +200,12 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
         this.currentRouterPathname = router.url;
         const isChildRoute = this.route.firstChild !== null;
 
-        if (isChildRoute && this.mapComponent && this.activeContour != null) {
+        if (
+          isChildRoute &&
+          this.mapComponent &&
+          this.activeContour != null &&
+          !this.currentRouterPathname.includes('split-map')
+        ) {
           this.mapComponent.handleFeatureClose();
         }
 
@@ -378,7 +383,7 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   handleSidePanelToggle(isOpened: boolean) {
-    this.store.setItem('SidePanelComponent', { state: !isOpened });
+    this.store.setItem('SidePanelComponent', { state: isOpened });
   }
 
   handleMapClick(e: LeafletMouseEvent) {
@@ -547,6 +552,10 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   handleModeChange(mode: string | null) {
+    if (this.mode === mode) {
+      this.mode = '';
+      this.cd.detectChanges();
+    }
     this.mode = mode as string;
   }
 

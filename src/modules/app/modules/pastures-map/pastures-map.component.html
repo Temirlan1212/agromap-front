@@ -212,12 +212,12 @@
 </app-question-dialog>
 <app-toggle-button
   #toggleBtn
-  (onClick)="handleSidePanelToggle(sidePanelData['state'])"
+  (onClick)="handleSidePanelToggle($event)"
   [isContentToggled]="sidePanelData['state']"
   *ngIf="
-    activeContour == null ||
-    currentRouterPathname.includes('split-map') ||
-    currentRouterPathname.includes('pastures-map')
+    activeContour == null &&
+    (currentRouterPathname.includes('split-map') ||
+      currentRouterPathname.includes('pastures-map'))
   "
   [iconName]="
     currentRouterPathname.includes('contour-add')
