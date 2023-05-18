@@ -219,9 +219,9 @@
   (onClick)="handleSidePanelToggle($event)"
   [isContentToggled]="sidePanelData['state']"
   *ngIf="
-    activeContour == null ||
-    currentRouterPathname.includes('split-map') ||
-    currentRouterPathname.includes('pastures-map')
+    activeContour == null &&
+    (currentRouterPathname.includes('split-map') ||
+      currentRouterPathname.includes('cropland-map'))
   "
   [iconName]="
     currentRouterPathname.includes('contour-add')

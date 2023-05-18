@@ -87,10 +87,6 @@ $tabDisabledColor: rgba(165, 178, 188, 0.7);
   right: 5px;
   pointer-events: none;
 
-  @media only screen and (max-width: 992px) {
-    right: 55px;
-  }
-
   ::ng-deep {
     .dropdown-box,
     .timeline {
