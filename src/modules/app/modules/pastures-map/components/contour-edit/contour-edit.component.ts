@@ -135,9 +135,19 @@ export class ContourEditComponent implements OnInit, OnDestroy {
     }
     try {
       await this.api.contour.update(this.contour.id, contour);
+      this.messages.success(
+        this.translate.transform('Polygon successfully edited')
+      );
       this.router.navigate(['../..']);
     } catch (e: any) {
-      this.messages.error(e.error?.message ?? e.message);
+      const errors = Object.values<string>(e.error || {});
+      if (errors.length > 0) {
+        for (const value of errors) {
+          this.messages.error(value);
+        }
+      } else {
+        this.messages.error(e.message);
+      }
     }
   }
 

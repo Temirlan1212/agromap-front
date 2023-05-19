@@ -116,11 +116,17 @@ export class ContourAddComponent implements OnInit, OnDestroy {
       this.messages.success(
         this.translate.transform('Polygon created successfully')
       );
-      this.mapInstance.fitBounds(this.mapService.maxBounds);
-      this.mapInstance.setMaxBounds(this.mapService.maxBounds);
+
       this.router.navigate(['..']);
     } catch (e: any) {
-      this.messages.error(e.error?.message ?? e.message);
+      const errors = Object.values<string>(e.error || {});
+      if (errors.length > 0) {
+        for (const value of errors) {
+          this.messages.error(value);
+        }
+      } else {
+        this.messages.error(e.message);
+      }
     }
   }
 
