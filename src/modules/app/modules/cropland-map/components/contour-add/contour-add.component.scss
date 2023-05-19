@@ -29,6 +29,10 @@ $indent: 0 20px;
   }
 }
 
+button[actions] {
+  width: 100%;
+}
+
 .content {
   padding: $indent;
 }

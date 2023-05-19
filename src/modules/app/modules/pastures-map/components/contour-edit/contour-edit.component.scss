@@ -28,6 +28,9 @@ $indent: 0 20px;
     transform: rotate(90deg);
   }
 }
+button[actions] {
+  width: 100%;
+}
 
 .content {
   padding: $indent;

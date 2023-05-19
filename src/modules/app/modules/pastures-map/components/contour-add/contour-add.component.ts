@@ -69,7 +69,7 @@ export class ContourAddComponent implements OnInit, OnDestroy {
   }
 
   handleSetSidePanelState(state: boolean) {
-    this.store.setItem('SidePanelComponent', { state });
+    this.store.setItem('PasturesMapSidePanelComponent', { state });
   }
 
   handleDrawShape() {

@@ -237,7 +237,7 @@ hr {
   display: block !important;
 }
 
-@media only screen and (max-width: 576px) {
+@media only screen and (max-width: 575px) {
   .d-xs-block {
     display: block !important;
   }
@@ -276,7 +276,7 @@ hr {
 }
 
 // Extra large
-@media only screen and (max-width: 1200px) {
+@media only screen and (min-width: 1200px) {
   .d-xl-block {
     display: block !important;
   }

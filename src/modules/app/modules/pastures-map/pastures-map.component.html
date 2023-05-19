@@ -81,12 +81,7 @@
           [vegIndexOptionsList]="vegIndexOptionsList"
           (vegIndexOptionClick)="handleVegIndexOptionClick($event)"
           [loadingSatelliteDates]="loadingSatelliteDates"
-          (onDateSelect)="
-            [
-              (contourDetails.isHidden = true),
-              (contourDetailsMobile.isHidden = true)
-            ]
-          "
+          (onDateSelect)="contourDetails.isHidden = true"
         ></app-map-control-veg-indexes>
 
         <app-map-control-statistics
@@ -121,6 +116,16 @@
             </app-tab>
           </app-content-tabs>
         </app-map-control-statistics>
+
+        <div class="tab transparent primary d-none d-xs-block">
+          <app-contour-details
+            #contourDetails
+            [mapData]="mapData"
+            [activeContour]="activeContour"
+            (onCancelClick)="map.handleFeatureClose()"
+          >
+          </app-contour-details>
+        </div>
 
         <div class="tab transparent d-xs-none">
           <app-contour-details
@@ -232,11 +237,11 @@
       : 'filter'
   "
 ></app-toggle-button>
-
-<div class="d-xs-block d-none" *ngIf="!activeContourLoading && !isChildRoute">
+<div [hidden]="map?.['feautureCollapse']">
   <app-contour-details
-    [hidden]="map?.['feautureCollapse']"
-    #contourDetailsMobile
+    class="xs-show"
+    [hidden]="true"
+    #contourDetails
     [mapData]="mapData"
     [activeContour]="activeContour"
     (onCancelClick)="map.handleFeatureClose()"

@@ -37,7 +37,7 @@ export class ContourEditComponent implements OnInit, OnDestroy {
   ) {}
 
   async ngOnInit() {
-    this.store.setItem('SidePanelComponent', { state: true });
+    this.handleSetSidePanelState(true);
     const id = this.route.snapshot.paramMap.get('id');
     try {
       this.loading = true;
@@ -109,7 +109,7 @@ export class ContourEditComponent implements OnInit, OnDestroy {
   }
 
   handleSetSidePanelState(state: boolean) {
-    this.store.setItem('SidePanelComponent', { state });
+    this.store.setItem('PasturesMapSidePanelComponent', { state });
   }
 
   async handleSaveClick(form: ContourFormComponent) {

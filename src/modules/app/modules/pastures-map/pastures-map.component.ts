@@ -62,8 +62,6 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('featurePopup') featurePopup!: ElementRef<HTMLElement>;
   @ViewChild('map') mapComponent!: MapComponent;
   @ViewChild('contourDetails') contourDetails!: ContourDetailsComponent;
-  @ViewChild('contourDetailsMobile')
-  contourDetailsMobile!: ContourDetailsComponent;
   @ViewChild('mapControls') mapControls!: MapControlLayersSwitchComponent;
   @ViewChild('toggleBtn') toggleBtn!: ToggleButtonComponent;
   mode!: string;
@@ -188,7 +186,6 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
   sidePanelData: Record<string, any> = {};
   pasturesMapControlLayersSwitch: Record<string, any> = {};
   filterFormValues!: any;
-  isChildRoute: boolean = false;
 
   constructor(
     private api: ApiService,
@@ -204,9 +201,9 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
     this.router.events.subscribe((event: Event) => {
       if (event instanceof NavigationEnd) {
         this.currentRouterPathname = router.url;
-        this.isChildRoute = this.route.firstChild !== null;
+        const isChildRoute = this.route.firstChild !== null;
         if (
-          this.isChildRoute &&
+          isChildRoute &&
           this.mapComponent &&
           this.activeContour != null &&
           !this.currentRouterPathname.includes('split-map')
@@ -214,7 +211,7 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
           this.mapComponent.handleFeatureClose();
         }
 
-        if (this.mapData?.map && !this.isChildRoute && this.mapData?.geoJson) {
+        if (this.mapData?.map && !isChildRoute && this.mapData?.geoJson) {
           this.mapData.geoJson.clearLayers();
           const data =
             this.store.getItem<Record<string, LatLngBounds>>('HomeComponent');
@@ -266,7 +263,7 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
         this.pasturesMapControlLayersSwitch = v;
       }),
 
-    this.store.watchItem('SidePanelComponent').subscribe((v) => {
+    this.store.watchItem('PasturesMapSidePanelComponent').subscribe((v) => {
       this.sidePanelData = v;
       this.cd.detectChanges();
     }),
@@ -353,7 +350,7 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   handleSidePanelToggle(isOpened: boolean) {
-    this.store.setItem('SidePanelComponent', { state: isOpened });
+    this.store.setItem('PasturesMapSidePanelComponent', { state: isOpened });
   }
 
   async getContourData(id: number) {
@@ -525,7 +522,7 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
     this.filterFormValues = formValue['value'];
 
     this.getPastureStatisticsProductivity(formValue['value']);
-    this.store.setItem('SidePanelComponent', { state: false });
+    this.store.setItem('PasturesMapSidePanelComponent', { state: false });
     this.toggleBtn.isContentToggled = false;
   }
 

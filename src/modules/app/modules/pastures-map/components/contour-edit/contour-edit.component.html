@@ -9,8 +9,8 @@
     <app-contour-form #form [value]="contour">
       <button
         type="button"
-        class="success lg-show"
-        (click)="handleSetSidePanelState(true)"
+        class="success d-lg-none d-xl-none"
+        (click)="handleSetSidePanelState(false)"
         actions
       >
         {{ "Edit the field" | translate }}
