@@ -2,7 +2,6 @@
 
 .dark-info-dialog {
   max-width: 400px;
-  max-height: 320px;
   padding: 0 20px;
   z-index: 400;
   font-size: 20px;
@@ -15,6 +14,11 @@
     transform: translateX(-380px);
     box-shadow: none;
     background-color: transparent;
+  }
+
+  .contour-info {
+    max-height: 50vh;
+    overflow: auto;
   }
 
   .contour-info,
