@@ -119,6 +119,7 @@
 
         <div class="tab transparent primary d-none d-xs-block">
           <app-contour-details
+            [hidden]="map?.['feautureCollapse']"
             #contourDetails
             [mapData]="mapData"
             [activeContour]="activeContour"
@@ -129,6 +130,7 @@
 
         <div class="tab transparent d-xs-none">
           <app-contour-details
+            [hidden]="map?.['feautureCollapse']"
             #contourDetails
             [mapData]="mapData"
             [activeContour]="activeContour"

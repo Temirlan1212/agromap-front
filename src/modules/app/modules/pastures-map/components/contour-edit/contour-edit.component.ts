@@ -38,6 +38,7 @@ export class ContourEditComponent implements OnInit, OnDestroy {
 
   async ngOnInit() {
     this.handleSetSidePanelState(true);
+
     const id = this.route.snapshot.paramMap.get('id');
     try {
       this.loading = true;
@@ -140,8 +141,10 @@ export class ContourEditComponent implements OnInit, OnDestroy {
       );
       this.router.navigate(['../..']);
     } catch (e: any) {
-      const errors = Object.values<string>(e.error || {});
-      if (errors.length > 0) {
+      const errors =
+        e.error === 'object' ? Object.values<string>(e.error || {}) : '';
+
+      if (errors.length > 0 && errors) {
         for (const value of errors) {
           this.messages.error(value);
         }
