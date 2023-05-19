@@ -113,9 +113,6 @@
 
     &.hidden {
       transform: translateX(0px);
-      .contour-info {
-        visibility: hidden;
-      }
     }
     .contour-info {
       padding-bottom: 20px;
