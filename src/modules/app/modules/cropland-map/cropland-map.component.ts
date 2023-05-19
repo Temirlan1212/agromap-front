@@ -51,6 +51,7 @@ import { ContourDetailsComponent } from './components/contour-details/contour-de
 import { ToggleButtonComponent } from '../../../ui/components/toggle-button/toggle-button.component';
 import { MapControlLayersSwitchComponent } from '../../../ui/components/map-control-layers-switch/map-control-layers-switch.component';
 import { ILandType } from 'src/modules/api/models/land-type.model';
+import { IUser } from 'src/modules/api/models/user.model';
 
 @Component({
   selector: 'app-cropland-map',
@@ -64,6 +65,7 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('mapControls') mapControls!: MapControlLayersSwitchComponent;
   @ViewChild('toggleBtn') toggleBtn!: ToggleButtonComponent;
   mode!: string;
+  user: IUser | null = this.api.user.getLoggedInUser();
 
   wmsProductivityLayerColorLegend: Record<string, any>[] = [
     { label: '-1', color: '#000000' },

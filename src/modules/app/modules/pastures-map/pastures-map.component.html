@@ -53,6 +53,7 @@
           ></app-map-control-locate>
 
           <div
+            *ngIf="user != null"
             class="tab"
             [class.active]="currentRouterPathname.includes('contour-add')"
             [routerLink]="
@@ -191,6 +192,7 @@
     </ng-template>
 
     <button
+      *ngIf="user != null"
       actions
       type="button"
       class="transparent"
@@ -200,6 +202,7 @@
     </button>
 
     <button
+      *ngIf="user != null"
       actions
       type="button"
       class="transparent"
