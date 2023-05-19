@@ -136,7 +136,23 @@
           </app-content-tabs>
         </app-map-control-statistics>
 
-        <div class="tab transparent">
+        <div
+          class="tab transparent primary d-none d-xs-block"
+          *ngIf="!map?.['feautureCollapse']"
+        >
+          <app-contour-details
+            #contourDetails
+            [mapData]="mapData"
+            [activeContour]="activeContour"
+            (onCancelClick)="map.handleFeatureClose()"
+          >
+          </app-contour-details>
+        </div>
+
+        <div
+          class="tab transparent d-xs-none"
+          *ngIf="!map?.['feautureCollapse']"
+        >
           <app-contour-details
             #contourDetails
             [mapData]="mapData"

@@ -2,7 +2,6 @@
 
 .dark-info-dialog {
   max-width: 400px;
-  max-height: 320px;
   padding: 0 20px;
   z-index: 400;
   font-size: 20px;
@@ -15,6 +14,10 @@
     transform: translateX(-380px);
     box-shadow: none;
     background-color: transparent;
+  }
+  .contour-info {
+    max-height: 50vh;
+    overflow: auto;
   }
 
   .contour-info,
@@ -35,6 +38,7 @@
   }
 
   .header {
+    min-height: $mobileBottomNavHeight;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -90,6 +94,51 @@
     app-svg-icon[name="arrow-down"] {
       &.hidden {
         left: 82vw !important;
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 576px) {
+  .dark-info-dialog {
+    box-shadow: none;
+    backdrop-filter: blur(30px);
+    max-height: initial;
+    position: fixed;
+    max-width: inherit;
+    left: 0;
+    right: 0;
+    bottom: calc($mobileBottomNavHeight * 2 - 5px);
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    background-color: rgba(0, 0, 0, 0.25);
+    z-index: 500;
+
+    &.hidden {
+      transform: translateX(0px);
+    }
+    .contour-info {
+      padding-bottom: 20px;
+    }
+
+    .header {
+      app-svg-icon {
+        &[name="arrow-down"] {
+          transform: rotate(0deg);
+
+          &.hidden {
+            left: 0px;
+            transform: rotate(-180deg);
+          }
+        }
+      }
+    }
+
+    h1 {
+      transform: translateX(0);
+
+      &.hidden {
+        transform: translateX(-85vw);
       }
     }
   }

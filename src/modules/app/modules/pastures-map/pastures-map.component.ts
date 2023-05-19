@@ -180,6 +180,7 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
   wmsSelectedStatusLayers: Record<string, string> | null = null;
   selectedContourId!: number;
   loading: boolean = false;
+  activeContourLoading: boolean = false;
   activeContour!: any;
   activeContourSmall: any;
   sidePanelData: Record<string, any> = {};
@@ -263,7 +264,7 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
         this.pasturesMapControlLayersSwitch = v;
       }),
 
-    this.store.watchItem('SidePanelComponent').subscribe((v) => {
+    this.store.watchItem('PasturesMapSidePanelComponent').subscribe((v) => {
       this.sidePanelData = v;
       this.cd.detectChanges();
     }),
@@ -340,14 +341,17 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
 
   async getContour(id: number): Promise<void> {
     try {
+      this.activeContourLoading = true;
       this.activeContour = await this.api.contour.getOne(id);
     } catch (e) {
       console.log(e);
+    } finally {
+      this.activeContourLoading = false;
     }
   }
 
   handleSidePanelToggle(isOpened: boolean) {
-    this.store.setItem('SidePanelComponent', { state: isOpened });
+    this.store.setItem('PasturesMapSidePanelComponent', { state: isOpened });
   }
 
   async getContourData(id: number) {
@@ -519,7 +523,7 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
     this.filterFormValues = formValue['value'];
 
     this.getPastureStatisticsProductivity(formValue['value']);
-    this.store.setItem('SidePanelComponent', { state: false });
+    this.store.setItem('PasturesMapSidePanelComponent', { state: false });
     this.toggleBtn.isContentToggled = false;
   }
 

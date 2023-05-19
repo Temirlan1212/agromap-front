@@ -127,8 +127,10 @@ export class ContourAddComponent implements OnInit, OnDestroy {
       );
       this.router.navigate(['../'], { relativeTo: this.route });
     } catch (e: any) {
-      const errors = Object.values<string>(e.error || {});
-      if (errors.length > 0) {
+      const errors =
+        e.error === 'object' ? Object.values<string>(e.error || {}) : '';
+
+      if (errors.length > 0 && errors) {
         for (const value of errors) {
           this.messages.error(value);
         }

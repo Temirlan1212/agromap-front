@@ -24,7 +24,7 @@
       ></app-svg-icon>
     </div>
 
-    <div class="contour-info" *ngIf="!isHidden">
+    <div class="contour-info" [hidden]="isHidden">
       <div>
         {{ "Contour id" | translate }}
         <span>{{ activeContour?.id }}</span>

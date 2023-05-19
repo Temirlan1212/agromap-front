@@ -110,7 +110,7 @@ export class ContourEditComponent implements OnInit, OnDestroy {
   }
 
   handleSetSidePanelState(state: boolean) {
-    this.store.setItem('SidePanelComponent', { state });
+    this.store.setItem('PasturesMapSidePanelComponent', { state });
   }
 
   async handleSaveClick(form: ContourFormComponent) {
@@ -141,8 +141,10 @@ export class ContourEditComponent implements OnInit, OnDestroy {
       );
       this.router.navigate(['../..']);
     } catch (e: any) {
-      const errors = Object.values<string>(e.error || {});
-      if (errors.length > 0) {
+      const errors =
+        e.error === 'object' ? Object.values<string>(e.error || {}) : '';
+
+      if (errors.length > 0 && errors) {
         for (const value of errors) {
           this.messages.error(value);
         }

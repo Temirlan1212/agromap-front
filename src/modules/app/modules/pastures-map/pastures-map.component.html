@@ -117,8 +117,20 @@
           </app-content-tabs>
         </app-map-control-statistics>
 
-        <div class="tab transparent">
+        <div class="tab transparent primary d-none d-xs-block">
           <app-contour-details
+            [hidden]="map?.['feautureCollapse']"
+            #contourDetails
+            [mapData]="mapData"
+            [activeContour]="activeContour"
+            (onCancelClick)="map.handleFeatureClose()"
+          >
+          </app-contour-details>
+        </div>
+
+        <div class="tab transparent d-xs-none">
+          <app-contour-details
+            [hidden]="map?.['feautureCollapse']"
             #contourDetails
             [mapData]="mapData"
             [activeContour]="activeContour"
