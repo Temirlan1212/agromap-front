@@ -217,6 +217,7 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
           if (data?.['mapBounds']) {
             this.addPolygonsInScreenToMap(data?.['mapBounds']);
           }
+          this.getRegionsPolygon();
         }
       }
     });

@@ -53,14 +53,14 @@ export class ContourFormComponent implements OnInit, OnDestroy {
   }
 
   form: FormGroup = new FormGroup({
-    region: new FormControl<number | null>(null),
+    region: new FormControl<number | null>(null, Validators.required),
     district: new FormControl<string | null>({ value: null, disabled: true }),
     conton: new FormControl<string | null>({ value: null, disabled: true }),
     type: new FormControl<string | number | null>(null),
     culture: new FormControl<string | number | null>(null),
     productivity: new FormControl<number | null>(null),
     year: new FormControl<number | null>(null, Validators.required),
-    code_soato: new FormControl<string | null>(null, Validators.required),
+    code_soato: new FormControl<string | null>(null),
     ink: new FormControl<string | null>(null),
   });
   @Output() onChange = new EventEmitter<any>();

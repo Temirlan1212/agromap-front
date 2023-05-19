@@ -24,11 +24,11 @@
 
     <app-form-field name="conton" #conton>
       <app-input-select
-        (onSelectItem)="onChange.emit($event)"
         [placeholder]="'Conton' | translate"
         [items]="contonList"
         [nameField]="'name_' + currentLang"
         formControlName="conton"
+        [required]="district.required"
       >
       </app-input-select>
     </app-form-field>
