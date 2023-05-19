@@ -239,14 +239,3 @@
       : 'filter'
   "
 ></app-toggle-button>
-<div [hidden]="map?.['feautureCollapse']">
-  <app-contour-details
-    class="xs-show"
-    [hidden]="true"
-    #contourDetails
-    [mapData]="mapData"
-    [activeContour]="activeContour"
-    (onCancelClick)="map.handleFeatureClose()"
-  >
-  </app-contour-details>
-</div>
