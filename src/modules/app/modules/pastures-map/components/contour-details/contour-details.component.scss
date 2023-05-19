@@ -35,6 +35,7 @@
   }
 
   .header {
+    min-height: $mobileBottomNavHeight;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -107,11 +108,14 @@
     bottom: calc($mobileBottomNavHeight * 2 - 5px);
     border-top-left-radius: 20px;
     border-top-right-radius: 20px;
-    background-color: rgba(0, 0, 0, 0.55);
+    background-color: rgba(0, 0, 0, 0.25);
     z-index: 500;
 
     &.hidden {
       transform: translateX(0px);
+    }
+    .contour-info {
+      padding-bottom: 20px;
     }
 
     .header {
@@ -120,6 +124,7 @@
           transform: rotate(0deg);
 
           &.hidden {
+            left: 0px;
             transform: rotate(-180deg);
           }
         }
@@ -131,12 +136,6 @@
 
       &.hidden {
         transform: translateX(-85vw);
-      }
-
-      app-svg-icon[name="arrow-down"] {
-        &.hidden {
-          left: 82vw !important;
-        }
       }
     }
   }

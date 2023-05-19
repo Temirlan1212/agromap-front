@@ -229,35 +229,58 @@ hr {
   }
 }
 
-@media only screen and (min-width: 0px) and (max-width: 576px) {
-  .xs-show {
+.d-none {
+  display: none !important;
+}
+
+.d-block {
+  display: block !important;
+}
+
+@media only screen and (max-width: 576px) {
+  .d-xs-block {
     display: block !important;
+  }
+  .d-xs-none {
+    display: none !important;
   }
 }
 
 @media only screen and (min-width: 576px) and (max-width: 767px) {
-  .sm-show {
+  .d-sm-block {
     display: block !important;
+  }
+  .d-sm-none {
+    display: none !important;
   }
 }
 
 // Medium
 @media only screen and (min-width: 768px) and (max-width: 991px) {
-  .md-show {
+  .d-md-block {
     display: block !important;
+  }
+  .d-md-none {
+    display: none !important;
   }
 }
 
 // Large
 @media only screen and (min-width: 992px) and (max-width: 1199px) {
-  .lg-show {
+  .d-lg-block {
     display: block !important;
+  }
+  .d-lg-none {
+    display: none !important;
   }
 }
 
 // Extra large
-@media only screen and (min-width: 1200px) and (max-width: 1399px) {
-  .xl-show {
+@media only screen and (max-width: 1200px) {
+  .d-xl-block {
     display: block !important;
+  }
+  .d-xl-none {
+    display: none !important;
   }
 }

@@ -62,6 +62,8 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('featurePopup') featurePopup!: ElementRef<HTMLElement>;
   @ViewChild('map') mapComponent!: MapComponent;
   @ViewChild('contourDetails') contourDetails!: ContourDetailsComponent;
+  @ViewChild('contourDetailsMobile')
+  contourDetailsMobile!: ContourDetailsComponent;
   @ViewChild('mapControls') mapControls!: MapControlLayersSwitchComponent;
   @ViewChild('toggleBtn') toggleBtn!: ToggleButtonComponent;
   mode!: string;
@@ -180,11 +182,13 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
   wmsSelectedStatusLayers: Record<string, string> | null = null;
   selectedContourId!: number;
   loading: boolean = false;
+  activeContourLoading: boolean = false;
   activeContour!: any;
   activeContourSmall: any;
   sidePanelData: Record<string, any> = {};
   pasturesMapControlLayersSwitch: Record<string, any> = {};
   filterFormValues!: any;
+  isChildRoute: boolean = false;
 
   constructor(
     private api: ApiService,
@@ -200,9 +204,9 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
     this.router.events.subscribe((event: Event) => {
       if (event instanceof NavigationEnd) {
         this.currentRouterPathname = router.url;
-        const isChildRoute = this.route.firstChild !== null;
+        this.isChildRoute = this.route.firstChild !== null;
         if (
-          isChildRoute &&
+          this.isChildRoute &&
           this.mapComponent &&
           this.activeContour != null &&
           !this.currentRouterPathname.includes('split-map')
@@ -210,7 +214,7 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
           this.mapComponent.handleFeatureClose();
         }
 
-        if (this.mapData?.map && !isChildRoute && this.mapData?.geoJson) {
+        if (this.mapData?.map && !this.isChildRoute && this.mapData?.geoJson) {
           this.mapData.geoJson.clearLayers();
           const data =
             this.store.getItem<Record<string, LatLngBounds>>('HomeComponent');
@@ -339,9 +343,12 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
 
   async getContour(id: number): Promise<void> {
     try {
+      this.activeContourLoading = true;
       this.activeContour = await this.api.contour.getOne(id);
     } catch (e) {
       console.log(e);
+    } finally {
+      this.activeContourLoading = false;
     }
   }
 
