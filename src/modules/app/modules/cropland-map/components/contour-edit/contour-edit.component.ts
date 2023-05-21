@@ -176,6 +176,9 @@ export class ContourEditComponent implements OnInit, OnDestroy {
       );
       return;
     }
+
+    this.mapInstance.pm.disableGlobalEditMode();
+
     try {
       if (this.mode === 'agromap_store_ai') {
         await this.api.aiContour.update(this.contour.id, contour);
@@ -188,7 +191,7 @@ export class ContourEditComponent implements OnInit, OnDestroy {
       this.router.navigate(['../..'], { relativeTo: this.route });
     } catch (e: any) {
       const errors =
-        e.error === 'object' ? Object.values<string>(e.error || {}) : '';
+        typeof e.error === 'object' ? Object.values<string>(e.error || {}) : '';
 
       if (errors.length > 0 && errors) {
         for (const value of errors) {
@@ -201,6 +204,8 @@ export class ContourEditComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    const polygons = this.mapInstance.pm.getGeomanLayers();
+    polygons.forEach((polygon) => this.mapInstance.removeLayer(polygon));
     this.handleSetSidePanelState(false);
     this.mapSubscription.unsubscribe();
     this.mapInstance.pm.toggleControls();

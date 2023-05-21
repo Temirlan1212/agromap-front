@@ -14,6 +14,21 @@
     >
       {{ "Draw a field" | translate }}
     </button>
+
+    <button
+      *ngIf="polygon"
+      type="button"
+      class="success d-lg-none d-xl-none"
+      (click)="
+        [
+          handleSetSidePanelState(false),
+          triggerPmControlBtnClick('.leaflet-pm-icon-edit')
+        ]
+      "
+      actions
+    >
+      {{ "Edit the field" | translate }}
+    </button>
   </app-contour-form>
 </div>
 <div class="actions">
