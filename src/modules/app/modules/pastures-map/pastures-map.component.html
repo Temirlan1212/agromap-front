@@ -37,6 +37,10 @@
             [map]="mapData.map"
           ></app-map-control-zoom>
           <app-map-control-layers-switch
+            [hidden]="
+              currentRouterPathname.includes('contour-add') ||
+              currentRouterPathname.includes('contour-edit')
+            "
             #mapControls
             [mode]="mode"
             *ngIf="mapData"
@@ -53,7 +57,9 @@
           ></app-map-control-locate>
 
           <div
-            *ngIf="user != null"
+            *ngIf="
+              user != null && !currentRouterPathname.includes('contour-edit')
+            "
             class="tab"
             [class.active]="currentRouterPathname.includes('contour-add')"
             [routerLink]="
@@ -157,17 +163,23 @@
       <ng-container leftBottomPanel>
         <div class="tab transparent">
           <app-color-legend
+            [hidden]="
+              currentRouterPathname.includes('contour-add') ||
+              currentRouterPathname.includes('contour-edit')
+            "
             *ngIf="pasturesMapControlLayersSwitch['ndvi_heat_map']?.['name'] && (!map?.['feautureCollapse'] || !map?.['featureOpen'])"
             [maxHeight]="'200px'"
             [items]="wmsProductivityLayerColorLegend"
           ></app-color-legend>
         </div>
 
-        <div
-          class="tab transparent"
-          *ngIf="pasturesMapControlLayersSwitch['filterControlLayerSwitch']?.['name'] && (!map?.['feautureCollapse'] || !map?.['featureOpen'])"
-        >
+        <div class="tab transparent">
           <app-color-legend
+            [hidden]="
+              currentRouterPathname.includes('contour-add') ||
+              currentRouterPathname.includes('contour-edit')
+            "
+            *ngIf="pasturesMapControlLayersSwitch['filterControlLayerSwitch']?.['name'] && (!map?.['feautureCollapse'] || !map?.['featureOpen'])"
             [maxHeight]="'200px'"
             [items]="[
               { label: 'Productive' | translate, color: '#1BA87D' },
