@@ -89,6 +89,22 @@ export class ContourEditComponent implements OnInit, OnDestroy {
     );
   }
 
+  triggerPmControlBtnClick(name: string) {
+    const editControlButton = document.querySelector(name);
+    const clickEvent = new MouseEvent('click', {
+      bubbles: true,
+      cancelable: true,
+    });
+    const isActive =
+      editControlButton?.parentElement?.parentElement?.classList.contains(
+        'active'
+      );
+
+    if (editControlButton && !isActive) {
+      editControlButton.dispatchEvent(clickEvent);
+    }
+  }
+
   handleSetSidePanelState(state: boolean) {
     this.store.setItem('SidePanelComponent', { state });
   }
@@ -119,6 +135,13 @@ export class ContourEditComponent implements OnInit, OnDestroy {
       this.layer.pm.disable();
       this.isPolygonChanged = true;
     });
+
+    this.triggerPmControlBtnClick('.leaflet-pm-icon-edit');
+
+    const finishEditButton = document?.querySelector('.action-finishMode');
+    finishEditButton?.addEventListener('click', () =>
+      this.handleSetSidePanelState(true)
+    );
   }
 
   async handleSaveClick(form: ContourFormComponent) {

@@ -8,8 +8,9 @@ import { MessagesService } from '../../../../../ui/services/messages.service';
 import { MapService } from '../../../../../ui/services/map.service';
 import { Subscription } from 'rxjs';
 import { MapData } from '../../../../../ui/models/map.model';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { StoreService } from '../../../../../ui/services/store.service';
+import * as L from 'leaflet';
 
 @Component({
   selector: 'app-contour-edit',
@@ -107,6 +108,28 @@ export class ContourEditComponent implements OnInit, OnDestroy {
       this.layer.pm.disable();
       this.isPolygonChanged = true;
     });
+
+    this.triggerPmControlBtnClick('.leaflet-pm-icon-edit');
+    const finishEditButton = document?.querySelector('.action-finishMode');
+    finishEditButton?.addEventListener('click', () =>
+      this.handleSetSidePanelState(true)
+    );
+  }
+
+  triggerPmControlBtnClick(name: string) {
+    const editControlButton = document.querySelector(name);
+    const clickEvent = new MouseEvent('click', {
+      bubbles: true,
+      cancelable: true,
+    });
+    const isActive =
+      editControlButton?.parentElement?.parentElement?.classList.contains(
+        'active'
+      );
+
+    if (editControlButton && !isActive) {
+      editControlButton.dispatchEvent(clickEvent);
+    }
   }
 
   handleSetSidePanelState(state: boolean) {
