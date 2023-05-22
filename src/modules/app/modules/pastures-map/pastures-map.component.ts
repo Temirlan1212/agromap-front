@@ -592,8 +592,6 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
     await this.deleteItem();
     dialog.close();
     if (this.mapComponent) this.mapComponent.handleFeatureClose();
-    this.mapData?.map.fitBounds(this.mapService.maxBounds);
-    this.mapData?.map.setMaxBounds(this.mapService.maxBounds);
   }
 
   async deleteItem(): Promise<void> {
