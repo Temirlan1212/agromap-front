@@ -199,5 +199,6 @@
   "NDVI heat map": "Тепловая карта ndvi",
   "Draw a field": "Нарисовать поле",
   "Edit the field": "Отредактировать поле",
-  "Polygon successfully edited": "Полигон успешно отредактирован"
+  "Polygon successfully edited": "Полигон успешно отредактирован",
+  "Polygon successfully deleted": "Полигон успешно удален"
 }

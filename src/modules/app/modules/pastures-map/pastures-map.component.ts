@@ -592,12 +592,25 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
     await this.deleteItem();
     dialog.close();
     if (this.mapComponent) this.mapComponent.handleFeatureClose();
+    const data =
+      this.store.getItem<Record<string, LatLngBounds>>('HomeComponent');
+
+    if (data?.['mapBounds'] && this.mapData) {
+      this.mapData.geoJson.clearLayers();
+      if (this.mapData.geoJson.getLayers().length < 1) {
+        this.addPolygonsInScreenToMap(data?.['mapBounds']);
+        this.getRegionsPolygon();
+      }
+    }
   }
 
   async deleteItem(): Promise<void> {
     const id = this.layerFeature?.feature?.properties?.['id'];
     try {
       await this.api.contour.remove(Number(id));
+      this.messages.success(
+        this.translate.transform('Polygon successfully deleted')
+      );
     } catch (e: any) {
       this.messages.error(e.message);
     }
