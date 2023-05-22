@@ -204,6 +204,7 @@ export class ContourEditComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    this.mapInstance.pm.disableGlobalEditMode();
     const polygons = this.mapInstance.pm.getGeomanLayers();
     polygons.forEach((polygon) => this.mapInstance.removeLayer(polygon));
     this.handleSetSidePanelState(false);

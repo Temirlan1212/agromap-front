@@ -176,14 +176,13 @@ export class ContourAddComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    this.mapInstance.pm.disableGlobalEditMode();
     this.mapService.contourEditingMode.next(false);
     this.handleSetSidePanelState(false);
     this.mapInstance.pm.Toolbar.setButtonDisabled('drawPolygon', false);
     this.mapSubscription.unsubscribe();
     this.mapInstance.pm.toggleControls();
-    if (this.layer) {
-      this.handleDeletePolygon();
-    }
+    this.handleDeletePolygon();
     this.mapInstance.off('pm:create');
     this.mapInstance.off('pm:remove');
     this.mapInstance.pm.disableDraw('Polygon');
