@@ -8,8 +8,9 @@ import { MessagesService } from '../../../../../ui/services/messages.service';
 import { MapService } from '../../../../../ui/services/map.service';
 import { Subscription } from 'rxjs';
 import { MapData } from '../../../../../ui/models/map.model';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { StoreService } from '../../../../../ui/services/store.service';
+import * as L from 'leaflet';
 
 @Component({
   selector: 'app-contour-edit',
@@ -107,10 +108,37 @@ export class ContourEditComponent implements OnInit, OnDestroy {
       this.layer.pm.disable();
       this.isPolygonChanged = true;
     });
+
+    this.triggerPmControlBtnClick('.leaflet-pm-icon-edit');
+    const finishEditButton = document?.querySelector('.action-finishMode');
+    finishEditButton?.addEventListener('click', () =>
+      this.handleSetSidePanelState(true)
+    );
+  }
+
+  triggerPmControlBtnClick(name: string) {
+    const editControlButton = document.querySelector(name);
+    const clickEvent = new MouseEvent('click', {
+      bubbles: true,
+      cancelable: true,
+    });
+    const isActive =
+      editControlButton?.parentElement?.parentElement?.classList.contains(
+        'active'
+      );
+
+    if (editControlButton && !isActive) {
+      editControlButton.dispatchEvent(clickEvent);
+    }
   }
 
   handleSetSidePanelState(state: boolean) {
     this.store.setItem('PasturesMapSidePanelComponent', { state });
+  }
+
+  handleEditClick() {
+    this.triggerPmControlBtnClick('.leaflet-pm-icon-edit');
+    this.handleSetSidePanelState(false);
   }
 
   async handleSaveClick(form: ContourFormComponent) {
@@ -134,6 +162,8 @@ export class ContourEditComponent implements OnInit, OnDestroy {
       );
       return;
     }
+
+    this.mapInstance.pm.disableGlobalEditMode();
     try {
       await this.api.contour.update(this.contour.id, contour);
       this.messages.success(
@@ -142,7 +172,7 @@ export class ContourEditComponent implements OnInit, OnDestroy {
       this.router.navigate(['../..']);
     } catch (e: any) {
       const errors =
-        e.error === 'object' ? Object.values<string>(e.error || {}) : '';
+        typeof e.error === 'object' ? Object.values<string>(e.error || {}) : '';
 
       if (errors.length > 0 && errors) {
         for (const value of errors) {
@@ -155,6 +185,9 @@ export class ContourEditComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    this.mapInstance.pm.disableGlobalEditMode();
+    const polygons = this.mapInstance.pm.getGeomanLayers();
+    polygons.forEach((polygon) => this.mapInstance.removeLayer(polygon));
     this.handleSetSidePanelState(false);
     this.mapSubscription.unsubscribe();
     this.mapInstance.pm.toggleControls();

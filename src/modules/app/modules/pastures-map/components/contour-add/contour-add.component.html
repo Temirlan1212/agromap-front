@@ -7,12 +7,23 @@
   </div>
   <app-contour-form #form>
     <button
+      *ngIf="!polygon"
       type="button"
       class="success d-lg-none d-xl-none"
-      (click)="this.handleSetSidePanelState(false)"
+      (click)="handleDrawClick()"
       actions
     >
       {{ "Draw a field" | translate }}
+    </button>
+
+    <button
+      *ngIf="polygon"
+      type="button"
+      class="success d-lg-none d-xl-none"
+      (click)="handleEditClick()"
+      actions
+    >
+      {{ "Edit the field" | translate }}
     </button>
   </app-contour-form>
 </div>

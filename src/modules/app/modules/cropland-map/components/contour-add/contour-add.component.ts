@@ -3,7 +3,7 @@ import { MapService } from '../../../../../ui/services/map.service';
 import { Subscription } from 'rxjs';
 import { MapData } from '../../../../../ui/models/map.model';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Map, LeafletEvent, Layer, GeoJSON } from 'leaflet';
+import { Map, LeafletEvent, Layer, GeoJSON, PM } from 'leaflet';
 import { ContourFormComponent } from '../contour-form/contour-form.component';
 import { IContour } from '../../../../../api/models/contour.model';
 import { ApiService } from '../../../../../api/api.service';
@@ -45,7 +45,6 @@ export class ContourAddComponent implements OnInit, OnDestroy {
         if (this.mapGeo.getLayers().length > 1) {
           this.mapGeo.clearLayers();
         }
-
         this.mapInstance.pm.setGlobalOptions({
           allowSelfIntersection: false,
         });
@@ -68,6 +67,7 @@ export class ContourAddComponent implements OnInit, OnDestroy {
         });
       }
     );
+
     this.handleDrawShape();
   }
 
@@ -75,11 +75,30 @@ export class ContourAddComponent implements OnInit, OnDestroy {
     this.store.setItem('SidePanelComponent', { state });
   }
 
+  handleEditClick() {
+    this.triggerPmControlBtnClick('.leaflet-pm-icon-edit');
+    this.handleSetSidePanelState(false);
+  }
+
+  handleDrawClick() {
+    this.mapInstance.pm.enableDraw('Polygon');
+    this.handleSetSidePanelState(false);
+  }
+
   handleDrawShape() {
+    this.mapInstance.pm.enableDraw('Polygon', { snappable: false });
+    this.mapInstance.on('pm:remove', (e: LeafletEvent) => {
+      this.mapInstance.pm.Toolbar.setButtonDisabled('drawPolygon', false);
+
+      this.polygon = null;
+      requestAnimationFrame(() =>
+        this.mapInstance.pm.enableDraw('Polygon', { snappable: false })
+      );
+    });
+
     this.mapInstance.on('pm:create', (e: LeafletEvent) => {
       if (!this.polygon) {
         this.layer = e['layer'];
-        this.mapInstance.pm.Toolbar.setButtonDisabled('drawPolygon', true);
         const geoJson: any = this.mapInstance.pm
           .getGeomanDrawLayers(true)
           .toGeoJSON();
@@ -87,10 +106,34 @@ export class ContourAddComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.mapInstance.on('pm:remove', (e: LeafletEvent) => {
-      this.mapInstance.pm.Toolbar.setButtonDisabled('drawPolygon', false);
-      this.polygon = null;
+    this.mapInstance.on('pm:drawend', (e: LeafletEvent) => {
+      if (this.layer && this.polygon) {
+        PM.reInitLayer(this.layer);
+        this.triggerPmControlBtnClick('.leaflet-pm-icon-edit');
+      }
     });
+
+    const finishEditButtonTooltip =
+      document?.querySelector('.action-finishMode');
+    finishEditButtonTooltip?.addEventListener('click', () => {
+      this.handleSetSidePanelState(true);
+    });
+  }
+
+  triggerPmControlBtnClick(name: string) {
+    const editControlButton = document.querySelector(name);
+    const clickEvent = new MouseEvent('click', {
+      bubbles: true,
+      cancelable: true,
+    });
+    const isActive =
+      editControlButton?.parentElement?.parentElement?.classList.contains(
+        'active'
+      );
+
+    if (editControlButton && !isActive) {
+      editControlButton.dispatchEvent(clickEvent);
+    }
   }
 
   async handleSaveClick(form: ContourFormComponent) {
@@ -120,6 +163,8 @@ export class ContourAddComponent implements OnInit, OnDestroy {
       );
       return;
     }
+
+    this.mapInstance.pm.disableGlobalEditMode();
     try {
       await this.api.contour.create(contour);
       this.messages.success(
@@ -128,7 +173,7 @@ export class ContourAddComponent implements OnInit, OnDestroy {
       this.router.navigate(['../'], { relativeTo: this.route });
     } catch (e: any) {
       const errors =
-        e.error === 'object' ? Object.values<string>(e.error || {}) : '';
+        typeof e.error === 'object' ? Object.values<string>(e.error || {}) : '';
 
       if (errors.length > 0 && errors) {
         for (const value of errors) {
@@ -141,21 +186,22 @@ export class ContourAddComponent implements OnInit, OnDestroy {
   }
 
   handleDeletePolygon() {
-    this.mapInstance.removeLayer(this.layer as Layer);
+    const polygons = this.mapInstance.pm.getGeomanLayers();
+    polygons.forEach((polygon) => this.mapInstance.removeLayer(polygon));
     this.layer = null;
     this.polygon = null;
   }
 
   ngOnDestroy() {
+    this.mapInstance.pm.disableGlobalEditMode();
     this.mapService.contourEditingMode.next(false);
     this.handleSetSidePanelState(false);
     this.mapInstance.pm.Toolbar.setButtonDisabled('drawPolygon', false);
     this.mapSubscription.unsubscribe();
     this.mapInstance.pm.toggleControls();
-    if (this.layer) {
-      this.handleDeletePolygon();
-    }
+    this.handleDeletePolygon();
     this.mapInstance.off('pm:create');
     this.mapInstance.off('pm:remove');
+    this.mapInstance.pm.disableDraw('Polygon');
   }
 }

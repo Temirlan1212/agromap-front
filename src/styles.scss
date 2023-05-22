@@ -218,6 +218,42 @@ hr {
   z-index: 400;
 }
 
+.leaflet-touch .leaflet-control-layers,
+.leaflet-touch .leaflet-bar {
+  border: none !important;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.leaflet-buttons-control-button {
+  background-color: $darkColor !important;
+  border-radius: 100% !important;
+  border: none !important;
+  padding: 10.5px !important;
+  width: 37px !important;
+  height: 37px !important;
+  transition: all 0.4s ease;
+
+  &:hover {
+    background-color: black !important;
+  }
+
+  .control-icon {
+    filter: brightness(0) invert(1) grayscale(1);
+  }
+}
+.button-container .leaflet-pm-actions-container {
+  top: 4.3px !important;
+  left: 110% !important;
+  .leaflet-pm-action {
+    background-color: $darkColor !important;
+    border-radius: 10px !important;
+    border: none !important;
+    margin-left: 5px;
+  }
+}
+
 /*
 * Media queries
 */
