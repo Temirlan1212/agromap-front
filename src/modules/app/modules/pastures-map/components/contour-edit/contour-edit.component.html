@@ -10,12 +10,7 @@
       <button
         type="button"
         class="success d-lg-none d-xl-none"
-        (click)="
-          [
-            handleSetSidePanelState(false),
-            triggerPmControlBtnClick('.leaflet-pm-icon-edit')
-          ]
-        "
+        (click)="handleEditClick()"
         actions
       >
         {{ "Edit the field" | translate }}

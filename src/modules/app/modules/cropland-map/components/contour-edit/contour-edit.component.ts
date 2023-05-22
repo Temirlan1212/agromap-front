@@ -144,6 +144,11 @@ export class ContourEditComponent implements OnInit, OnDestroy {
     );
   }
 
+  handleEditClick() {
+    this.triggerPmControlBtnClick('.leaflet-pm-icon-edit');
+    this.handleSetSidePanelState(false);
+  }
+
   async handleSaveClick(form: ContourFormComponent) {
     const formValueNames =
       this.mode === 'agromap_store_ai'

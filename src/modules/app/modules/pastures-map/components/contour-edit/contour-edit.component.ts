@@ -136,6 +136,11 @@ export class ContourEditComponent implements OnInit, OnDestroy {
     this.store.setItem('PasturesMapSidePanelComponent', { state });
   }
 
+  handleEditClick() {
+    this.triggerPmControlBtnClick('.leaflet-pm-icon-edit');
+    this.handleSetSidePanelState(false);
+  }
+
   async handleSaveClick(form: ContourFormComponent) {
     const formState = form.getState();
     const { region, district, ...rest } = formState.value;

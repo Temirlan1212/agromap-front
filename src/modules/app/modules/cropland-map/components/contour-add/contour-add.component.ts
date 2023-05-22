@@ -75,6 +75,16 @@ export class ContourAddComponent implements OnInit, OnDestroy {
     this.store.setItem('SidePanelComponent', { state });
   }
 
+  handleEditClick() {
+    this.triggerPmControlBtnClick('.leaflet-pm-icon-edit');
+    this.handleSetSidePanelState(false);
+  }
+
+  handleDrawClick() {
+    this.mapInstance.pm.enableDraw('Polygon');
+    this.handleSetSidePanelState(false);
+  }
+
   handleDrawShape() {
     this.mapInstance.pm.enableDraw('Polygon', { snappable: false });
     this.mapInstance.on('pm:remove', (e: LeafletEvent) => {
