@@ -621,7 +621,12 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
   async deleteItem(): Promise<void> {
     const id = this.layerFeature?.feature?.properties?.['id'];
     try {
-      await this.api.contour.remove(Number(id));
+      if (this.isWmsAiActive) {
+        await this.api.aiContour.remove(Number(id));
+      } else {
+        await this.api.contour.remove(Number(id));
+      }
+
       this.messages.success(
         this.translate.transform('Polygon successfully deleted')
       );
