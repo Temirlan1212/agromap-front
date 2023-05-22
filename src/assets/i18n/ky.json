@@ -199,5 +199,6 @@
   "NDVI heat map": "NDVI жылуулук картасы",
   "Draw a field": "Полигон чийүү",
   "Edit the field": "Полигон оңдоо",
-  "Polygon successfully edited": "Полигон ийгиликтүү оңдолду"
+  "Polygon successfully edited": "Полигон ийгиликтүү оңдолду",
+  "Polygon successfully deleted": "Полигон ийгиликтүү өчүрүлдү"
 }

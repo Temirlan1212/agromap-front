@@ -199,5 +199,6 @@
   "NDVI heat map": "NDVI heat map",
   "Draw a field": "Draw a field",
   "Edit the field": "Edit the field",
-  "Polygon successfully edited": "Polygon successfully edited"
+  "Polygon successfully edited": "Polygon successfully edited",
+  "Polygon successfully deleted": "Polygon successfully deleted"
 }
