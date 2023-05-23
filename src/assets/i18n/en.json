@@ -200,5 +200,6 @@
   "Draw a field": "Draw a field",
   "Edit the field": "Edit the field",
   "Polygon successfully edited": "Polygon successfully edited",
-  "Polygon successfully deleted": "Polygon successfully deleted"
+  "Polygon successfully deleted": "Polygon successfully deleted",
+  "Invalid input. Please use only non-numeric characters or a single space.": "Invalid input. Please use only non-numeric characters or a single space."
 }

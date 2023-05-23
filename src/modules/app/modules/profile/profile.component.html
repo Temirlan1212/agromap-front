@@ -3,18 +3,23 @@
     <div>
       <h4>{{ "Profile" | translate }}</h4>
       <nav>
-        <a (click)="handleLinkClick('edit')" routerLinkActive="active">{{
-          "Edit profile" | translate
-        }}</a>
         <a
-          (click)="handleLinkClick('reset-password')"
+          (click)="handleLinkClick()"
           routerLinkActive="active"
+          routerLink="edit"
+          >{{ "Edit profile" | translate }}</a
+        >
+        <a
+          (click)="handleLinkClick()"
+          routerLinkActive="active"
+          routerLink="reset-password"
           >{{ "Reset password" | translate }}</a
         >
         <a
           *ngIf="currentUser?.is_superuser"
-          (click)="handleLinkClick('create-dataset')"
+          (click)="handleLinkClick()"
           routerLinkActive="active"
+          routerLink="create-dataset"
           >{{ "Create a dataset" | translate }}</a
         >
       </nav>

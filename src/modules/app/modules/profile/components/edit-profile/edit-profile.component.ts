@@ -12,8 +12,15 @@ import { TranslatePipe } from '@ngx-translate/core';
 export class EditProfileComponent implements OnInit {
   loading: boolean = false;
   form: FormGroup = new FormGroup({
-    full_name: new FormControl<string | null>(null, [Validators.required]),
-    phone_number: new FormControl<string | null>(null, Validators.required),
+    full_name: new FormControl<string | null>(null, [
+      Validators.required,
+      Validators.pattern(/^(?!.* {2})[^0-9]*$/),
+    ]),
+    phone_number: new FormControl<string | null>(null, [
+      Validators.required,
+      Validators.maxLength(9),
+      Validators.minLength(9),
+    ]),
   });
 
   constructor(
@@ -44,32 +51,31 @@ export class EditProfileComponent implements OnInit {
   }
 
   async handleSaveClick() {
-    this.loading = true;
-
     const formState = this.getState();
     if (!formState.valid) {
       this.messages.error(this.translate.transform('Form is invalid'));
       return;
     }
     try {
+      this.loading = true;
       await this.api.user.updateProfile(this.form.value);
       await this.getUser();
       this.messages.success(this.translate.transform('Successfully updated'));
     } catch (e: any) {
       this.messages.error(e.error?.message ?? e.message);
+    } finally {
+      this.loading = false;
     }
-
-    this.loading = false;
   }
 
-  handleKeydown(event: KeyboardEvent) {
-    let { type, value } = event.target as HTMLInputElement;
-    const pattern = type === 'text' ? /^[a-zA-Z]*$/ : /^[0-9]{0,8}$/;
-
-    if (
+  handleTelValidation(event: KeyboardEvent) {
+    const { value } = event.target as HTMLInputElement;
+    const pattern = /^[0-9]{0,8}$/;
+    const isInvalidInput =
       event.key !== 'Backspace' &&
-      !pattern.test(type === 'text' ? event.key : value)
-    ) {
+      (!pattern.test(value) || /[^\d]/.test(event.key));
+
+    if (isInvalidInput) {
       event.preventDefault();
     }
   }

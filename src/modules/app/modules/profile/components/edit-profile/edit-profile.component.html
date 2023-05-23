@@ -7,9 +7,17 @@
         [placeholder]="'Fullname' | translate"
         formControlName="full_name"
         [required]="full_name.required"
-        (keydown)="handleKeydown($event)"
       >
       </app-input>
+
+      <span
+        class="field-error"
+        *ngIf="form.get('full_name')?.errors?.['pattern']"
+        [textContent]="
+          'Invalid input. Please use only non-numeric characters or a single space.'
+            | translate
+        "
+      ></span>
     </app-form-field>
 
     <div class="phone_number">
@@ -23,7 +31,7 @@
       <app-form-field name="phone_number" #phone_number>
         <app-input
           type="tel"
-          (keydown)="handleKeydown($event)"
+          (keydown)="handleTelValidation($event)"
           [placeholder]="'Phone number' | translate"
           formControlName="phone_number"
           [required]="phone_number.required"

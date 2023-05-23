@@ -200,5 +200,6 @@
   "Draw a field": "Полигон чийүү",
   "Edit the field": "Полигон оңдоо",
   "Polygon successfully edited": "Полигон ийгиликтүү оңдолду",
-  "Polygon successfully deleted": "Полигон ийгиликтүү өчүрүлдү"
+  "Polygon successfully deleted": "Полигон ийгиликтүү өчүрүлдү",
+  "Invalid input. Please use only non-numeric characters or a single space.": "Туура эмес толтурулду. Сураныч, сандык эмес белгилерди же бир гана боштук колдонуңуз."
 }

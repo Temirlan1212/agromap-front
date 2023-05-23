@@ -119,7 +119,7 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
       layer: tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png'),
     },
     {
-      title: this.translate.transform('Base Map'),
+      title: 'Base Map',
       name: 'Base Map',
       layer: tileLayer(
         'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
