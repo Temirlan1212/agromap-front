@@ -28,8 +28,7 @@ export class ProfileComponent {
     this.router.navigate(['']);
   }
 
-  handleLinkClick(url: string) {
-    this.router.navigate([url], { relativeTo: this.route });
+  handleLinkClick() {
     this.sidePanel.handlePanelToggle();
     this.toggleBtn.isContentToggled = false;
   }
