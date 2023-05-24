@@ -4,7 +4,9 @@ import {
   EventEmitter,
   forwardRef,
   Input,
+  OnChanges,
   Output,
+  SimpleChanges,
   ViewChild,
 } from '@angular/core';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
@@ -27,11 +29,10 @@ export type InputType = 'text' | 'number' | 'password' | 'email' | 'tel';
     },
   ],
 })
-export class InputComponent implements ControlValueAccessor {
-  onChange: Function = () => null;
-  onTouched: Function = () => null;
+export class InputComponent implements ControlValueAccessor, OnChanges {
   @ViewChild('input') inputElement!: ElementRef<HTMLInputElement>;
   @Input() type: InputType = 'text';
+  @Input() pattern: string | null = null;
   @Input() placeholder: string = 'Placeholder';
   @Input() leftIcon: string | null = null;
   @Input() rightIcon: string | null = 'clear';
@@ -39,9 +40,39 @@ export class InputComponent implements ControlValueAccessor {
   @Input() min: number = 0;
   @Input() max: number = 100;
   @Input() step: number = 1;
-  @Output() leftIconClick = new EventEmitter<void>();
   @Input() required: boolean = false;
   @Input() disabled: boolean = false;
+  @Output() leftIconClick = new EventEmitter<void>();
+  @Output() validity = new EventEmitter<boolean>();
+
+  private onChange: Function = () => null;
+  private onTouched: Function = () => null;
+  private onValidity(): void {
+    this.validity.emit(this.inputElement.nativeElement.checkValidity());
+  }
+
+  constructor() {}
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['type'] != null && this.pattern == null) {
+      switch (changes['type'].currentValue) {
+        case 'email':
+          this.pattern = '^[\\w.-]+@[\\w.-]+\\.[\\w]{2,4}$';
+          break;
+        case 'number':
+          this.pattern = '^[0-9.,]+$';
+          break;
+        case 'password':
+          this.pattern = '^[^\\s]{4,}$';
+          break;
+        case 'tel':
+          this.pattern = '^996[0-9]{9,9}$';
+          break;
+        case 'text':
+        default:
+      }
+    }
+  }
 
   handleRightIconClick(e: Event) {
     e.preventDefault();
@@ -63,13 +94,16 @@ export class InputComponent implements ControlValueAccessor {
 
   handleInputChange(e: Event) {
     const inputValue = this.inputElement.nativeElement.value;
+
     if (inputValue !== '') {
       this.value = inputValue;
     } else {
       this.value = null;
     }
+
     this.onChange(this.value);
     this.onTouched();
+    this.onValidity();
   }
 
   writeValue(obj: string): void {

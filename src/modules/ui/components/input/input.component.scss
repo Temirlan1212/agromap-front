@@ -1,39 +1,46 @@
 @import "constants";
 
-$spaceFromTop: 35%;
-
 :host {
   position: relative;
   display: block;
 
+  .left-icon {
+    position: absolute;
+    z-index: 1;
+    top: $inputPlaceholderTop;
+    left: 12px;
+    cursor: pointer;
+  }
+
   input {
-    padding-right: 35px;
     width: 100%;
     border-color: $inputBorderColor;
 
     &:focus {
       border-color: rgba(27, 85, 235, 0.48);
+
+      & + .placeholder {
+        transform: scale(0.9) translateY(-25px);
+      }
     }
-  }
 
-  .right {
-    position: absolute;
-    top: $spaceFromTop;
-    right: 16px;
-    cursor: pointer;
-  }
+    &.has-left-icon {
+      padding-left: 35px;
 
-  .left {
-    position: absolute;
-    z-index: 1;
-    top: $spaceFromTop;
-    left: 10px;
-    cursor: pointer;
+      & + .placeholder {
+        left: 30px;
+      }
+    }
+
+    &.has-right-icon {
+      padding-right: 35px;
+    }
   }
 
   .placeholder {
     position: absolute;
-    top: $spaceFromTop;
+    top: $inputPlaceholderTop;
+    left: 12px;
     color: #65656a;
     background-color: $primaryBackgroundColor;
     padding: 0 5px;
@@ -44,8 +51,11 @@ $spaceFromTop: 35%;
     }
   }
 
-  input:focus + .placeholder {
-    transform: scale(0.9) translateY(-25px);
+  .right-icon {
+    position: absolute;
+    top: $inputPlaceholderTop;
+    right: 12px;
+    cursor: pointer;
   }
 
   &.ng-touched.ng-invalid {

@@ -68,15 +68,12 @@ export class EditProfileComponent implements OnInit {
     }
   }
 
-  handleTelValidation(event: KeyboardEvent) {
-    const { value } = event.target as HTMLInputElement;
-    const pattern = /^[0-9]{0,8}$/;
-    const isInvalidInput =
-      event.key !== 'Backspace' &&
-      (!pattern.test(value) || /[^\d]/.test(event.key));
-
-    if (isInvalidInput) {
-      event.preventDefault();
+  handlePhoneValidity(valid: boolean) {
+    if (!valid) {
+      this.api.form.setError(
+        { phone_number: 'Incorrect phone number' },
+        this.form
+      );
     }
   }
 }

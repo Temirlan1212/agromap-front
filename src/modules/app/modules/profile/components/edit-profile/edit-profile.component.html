@@ -1,5 +1,5 @@
 <h2>{{ "Edit profile" | translate }}</h2>
-<form [formGroup]="form">
+<form [formGroup]="form" (ngSubmit)="handleSaveClick()">
   <div class="field-group">
     <app-form-field name="full_name" #full_name>
       <app-input
@@ -21,27 +21,26 @@
     </app-form-field>
 
     <div class="phone_number">
-      <app-input
-        type="text"
-        [placeholder]="''"
-        [value]="'+996'"
-        [disabled]="true"
-      ></app-input>
-
       <app-form-field name="phone_number" #phone_number>
         <app-input
           type="tel"
-          (keydown)="handleTelValidation($event)"
           [placeholder]="'Phone number' | translate"
           formControlName="phone_number"
           [required]="phone_number.required"
+          (validity)="handlePhoneValidity($event)"
         >
         </app-input>
+
+        <span
+          class="field-error"
+          *ngIf="form.getError('phone_number') != null"
+          [textContent]="form.getError('phone_number') | translate"
+        ></span>
       </app-form-field>
     </div>
 
     <div class="actions">
-      <button type="button" class="success" (click)="handleSaveClick()">
+      <button type="submit" class="success">
         {{ "Save" | translate }}
       </button>
 
