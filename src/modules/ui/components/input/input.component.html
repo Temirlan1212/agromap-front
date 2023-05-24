@@ -1,6 +1,6 @@
 <app-svg-icon
-  size="16"
-  class="left"
+  size="14px"
+  class="left-icon"
   *ngIf="leftIcon != null"
   [name]="leftIcon"
   (click)="handleLeftIconClick()"
@@ -14,10 +14,12 @@
   [min]="min"
   [max]="max"
   [step]="step"
-  (keyup)="handleInputChange($event)"
-  (change)="handleInputChange($event)"
-  [ngStyle]="{ 'padding-left': leftIcon == null ? '16px' : '35px' }"
+  [attr.pattern]="pattern"
+  [required]="required"
   [disabled]="disabled"
+  [class.has-left-icon]="leftIcon"
+  [class.has-right-icon]="rightIcon"
+  (input)="handleInputChange($event)"
 />
 
 <span
@@ -26,15 +28,16 @@
   [class.active]="value != null"
   [class.required]="required"
   [textContent]="placeholder"
-  [ngStyle]="{ left: leftIcon == null ? '12px' : '30px' }"
 >
 </span>
 
 <app-svg-icon
   size="14px"
-  class="right"
+  class="right-icon"
   [name]="rightIcon"
-  *ngIf="rightIcon != null && value != null && !disabled"
+  *ngIf="
+    rightIcon != null || (rightIcon === 'clear' && !disabled && value != null)
+  "
   (click)="handleRightIconClick($event)"
 >
 </app-svg-icon>
