@@ -200,5 +200,9 @@
   "Draw a field": "Нарисовать поле",
   "Edit the field": "Отредактировать поле",
   "Polygon successfully edited": "Полигон успешно отредактирован",
-  "Polygon successfully deleted": "Полигон успешно удален"
+  "Polygon successfully deleted": "Полигон успешно удален",
+  "Invalid input. Please use only non-numeric characters or a single space.": "Неверный ввод. Пожалуйста, используйте только нечисловые символы или один пробел.",
+  "User name": "Имя пользователя",
+  "Incorrect user data": "Неправильные данные пользователя",
+  "Incorrect phone number": "Неправильный номер телефона"
 }

@@ -134,8 +134,8 @@
   "Density": "Density",
   "Population": "Population",
   "Description": "Description",
-  "This field is required": "Бул кутучаны толтуруңуз",
-  "Notifications": "Эскертмелер",
+  "This field is required": "This field is required",
+  "Notifications": "Notifications",
   "Productivity layer": "Productivity layer",
   "Contour details": "Contour details",
   "Vegetative indexes": "Vegetative indexes",
@@ -200,5 +200,9 @@
   "Draw a field": "Draw a field",
   "Edit the field": "Edit the field",
   "Polygon successfully edited": "Polygon successfully edited",
-  "Polygon successfully deleted": "Polygon successfully deleted"
+  "Polygon successfully deleted": "Polygon successfully deleted",
+  "Invalid input. Please use only non-numeric characters or a single space.": "Invalid input. Please use only non-numeric characters or a single space.",
+  "User name": "User name",
+  "Incorrect user data": "Incorrect user data",
+  "Incorrect phone number": "Incorrect phone number"
 }

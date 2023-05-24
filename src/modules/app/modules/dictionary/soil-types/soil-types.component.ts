@@ -36,7 +36,6 @@ export class SoilTypesComponent {
     try {
       this.loading = true;
       this.list = await this.api.dictionary.getSoilClasses();
-      console.log(this.list);
     } catch (e: any) {
       this.messages.error(e.error?.message ?? e.message);
     } finally {

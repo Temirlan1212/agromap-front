@@ -45,8 +45,34 @@ export class InputComponent implements ControlValueAccessor, OnChanges {
   @Output() leftIconClick = new EventEmitter<void>();
   @Output() validity = new EventEmitter<boolean>();
 
-  onChange: Function = () => null;
-  onTouched: Function = () => null;
+  private onChange: Function = () => null;
+  private onTouched: Function = () => null;
+  private onValidity(): void {
+    this.validity.emit(this.inputElement.nativeElement.checkValidity());
+  }
+
+  constructor() {}
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['type'] != null && this.pattern == null) {
+      switch (changes['type'].currentValue) {
+        case 'email':
+          this.pattern = '^[\\w.-]+@[\\w.-]+\\.[\\w]{2,4}$';
+          break;
+        case 'number':
+          this.pattern = '^[0-9.,]+$';
+          break;
+        case 'password':
+          this.pattern = '^[^\\s]{4,}$';
+          break;
+        case 'tel':
+          this.pattern = '^996[0-9]{9,9}$';
+          break;
+        case 'text':
+        default:
+      }
+    }
+  }
 
   handleRightIconClick(e: Event) {
     e.preventDefault();
@@ -75,30 +101,9 @@ export class InputComponent implements ControlValueAccessor, OnChanges {
       this.value = null;
     }
 
-    this.validity.emit(this.inputElement.nativeElement.checkValidity());
     this.onChange(this.value);
     this.onTouched();
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['type'] != null && this.pattern == null) {
-      switch (changes['type'].currentValue) {
-        case 'email':
-          this.pattern = '^[\\w.-]+@[\\w.-]+\\.[\\w]{2,4}$';
-          break;
-        case 'number':
-          this.pattern = '^[0-9.,]+$';
-          break;
-        case 'password':
-          this.pattern = '^[^\\s]{4,}$';
-          break;
-        case 'tel':
-          this.pattern = '^996[0-9]{9,9}$';
-          break;
-        case 'text':
-        default:
-      }
-    }
+    this.onValidity();
   }
 
   writeValue(obj: string): void {
