@@ -16,11 +16,7 @@ export class EditProfileComponent implements OnInit {
       Validators.required,
       Validators.pattern(/^(?!.* {2})[^0-9]*$/),
     ]),
-    phone_number: new FormControl<string | null>(null, [
-      Validators.required,
-      Validators.maxLength(9),
-      Validators.minLength(9),
-    ]),
+    phone_number: new FormControl<string | null>(null, [Validators.required]),
   });
 
   constructor(
