@@ -135,7 +135,7 @@
         ></app-color-legend>
       </div>
 
-      <div class="tab transparent">
+      <div class="tab transparent" *ngIf="showLegends['productivityStatus']">
         <app-color-legend
           [hidden]="
             currentRouterPathname.includes('contour-add') ||

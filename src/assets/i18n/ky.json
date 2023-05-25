@@ -204,5 +204,6 @@
   "Invalid input. Please use only non-numeric characters or a single space.": "Туура эмес толтурулду. Сураныч, сандык эмес белгилерди же бир гана боштук колдонуңуз.",
   "User name": "Колдонуучунун аты",
   "Incorrect user data": "Колдонуучунун маалыматтары туура эмес",
-  "Incorrect phone number": "Туура эмес телефон номуру"
+  "Incorrect phone number": "Туура эмес телефон номуру",
+  "Go back": "Артка кайтуу"
 }

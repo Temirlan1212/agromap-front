@@ -46,11 +46,16 @@
     text-align: center;
     position: relative;
 
-    app-svg-icon {
+    .toggle-btn {
       position: absolute;
       top: 40%;
+      background-color: $darkColor;
+      border-radius: 100%;
+      background-color: $darkColor;
+      padding: 13px;
+      color: $lightColor;
 
-      &[name="arrow-down"] {
+      &.arrow {
         transform: rotate(90deg);
         left: 0;
         transition: transform 0.5s ease;
@@ -61,13 +66,9 @@
         }
       }
 
-      &[name="clear"] {
+      &.clear {
         right: 0;
       }
-    }
-
-    app-svg-icon {
-      cursor: pointer;
     }
   }
 
@@ -91,7 +92,7 @@
       transform: translateX(-85vw);
     }
 
-    app-svg-icon[name="arrow-down"] {
+    .toggle-btn {
       &.hidden {
         left: 82vw !important;
       }
@@ -108,11 +109,12 @@
     max-width: inherit;
     left: 0;
     right: 0;
+    bottom: 0;
     bottom: calc($mobileBottomNavHeight * 2 - 5px);
     border-top-left-radius: 20px;
     border-top-right-radius: 20px;
     background-color: rgba(0, 0, 0, 0.25);
-    z-index: 500;
+    z-index: 400;
 
     &.hidden {
       transform: translateX(0px);
@@ -122,9 +124,14 @@
     }
 
     .header {
-      app-svg-icon {
-        &[name="arrow-down"] {
+      .toggle-btn {
+        background-color: transparent;
+        padding: 0;
+
+        &.arrow {
           transform: rotate(0deg);
+          left: 0;
+          transition: transform 0.5s ease;
 
           &.hidden {
             left: 0px;

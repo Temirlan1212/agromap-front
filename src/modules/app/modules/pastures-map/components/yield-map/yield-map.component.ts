@@ -76,6 +76,10 @@ export class YieldMapComponent
   @Input() storageName: string = '';
   @Input() showActiveContourInfo: boolean = true;
   @Input() showControlStatistics: boolean = true;
+  @Input() showLegends: Record<string, boolean> = {
+    productivityStatus: true,
+  };
+
   @HostBinding('style.width')
   @Input()
   width: string = '100%';
@@ -367,13 +371,7 @@ export class YieldMapComponent
   async getContour(id: number): Promise<void> {
     try {
       this.activeContourLoading = true;
-      const res = await this.api.contour.getOne(id);
-      this.activeContour = {
-        culture: res.culture,
-        productivity: res.productivity,
-        predicted_productivity: res.predicted_productivity,
-        id: res.id,
-      };
+      this.activeContour = await this.api.contour.getOne(id);
     } catch (e) {
       console.log(e);
     } finally {

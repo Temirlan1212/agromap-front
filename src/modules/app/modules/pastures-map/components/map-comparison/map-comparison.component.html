@@ -2,8 +2,8 @@
 <div class="back">
   <button class="transparent" (click)="clickBack.emit(false)">
     <app-svg-icon name="arrow-left" size="18"></app-svg-icon>
+    <p [textContent]="'Go back' | translate"></p>
   </button>
-  <p [textContent]="'Go back' | translate"></p>
 </div>
 <div class="maps">
   <app-yield-map
@@ -17,5 +17,6 @@
     [width]="'50%'"
     [showActiveContourInfo]="false"
     [showControlStatistics]="false"
+    [showLegends]="{ productivityStatus: false }"
   ></app-yield-map>
 </div>

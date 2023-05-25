@@ -9,6 +9,8 @@ import {
   OnChanges,
   Output,
   SimpleChanges,
+  ViewChild,
+  AfterViewInit,
 } from '@angular/core';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
 import { Map } from 'leaflet';
@@ -33,7 +35,12 @@ import { InputRangeComponent } from '../input-range/input-range.component';
     InputRangeComponent,
   ],
 })
-export class MapControlLayersSwitchComponent implements OnChanges {
+export class MapControlLayersSwitchComponent
+  implements OnChanges, AfterViewInit
+{
+  @ViewChild('dialog')
+  dialog!: ElementRef<HTMLInputElement>;
+
   @Input() map!: Map;
   @Input() mode!: string;
   @Input() baseLayers: ITileLayer[] = [];
@@ -56,6 +63,10 @@ export class MapControlLayersSwitchComponent implements OnChanges {
     private store: StoreService,
     private cd: ChangeDetectorRef
   ) {}
+
+  ngAfterViewInit(): void {
+    this.adjustPosition();
+  }
 
   ngOnChanges(changes: SimpleChanges) {
     const value = changes['mode'].currentValue;
@@ -204,5 +215,18 @@ export class MapControlLayersSwitchComponent implements OnChanges {
 
     this.cd.detectChanges();
     this.baseLayerChanged.emit(this.activeBaseLayer);
+  }
+
+  adjustPosition() {
+    const element = this.dialog.nativeElement;
+    const rect = element.getBoundingClientRect();
+
+    if (rect.left < 0) {
+      element.style.left = '0';
+      element.style.bottom = '50px';
+    } else if (rect.right > window.innerWidth) {
+      element.style.left = window.innerWidth - rect.width + 'px';
+      element.style.bottom = '50px';
+    }
   }
 }

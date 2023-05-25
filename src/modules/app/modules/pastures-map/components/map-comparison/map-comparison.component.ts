@@ -72,8 +72,8 @@ export class MapComparisonComponent
             syncCursorMarkerOptions: {
               radius: 5,
               fillOpacity: 1,
-              color: 'red',
-              fillColor: 'black',
+              color: 'black',
+              fillColor: 'white',
             },
           });
         }

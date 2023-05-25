@@ -13,10 +13,19 @@
   .back {
     background-color: $lightColor;
     color: $darkColor;
-    padding: 0px 20px;
-    display: flex;
+    padding: 14px 20px;
     position: relative;
     z-index: 500;
+    button {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0;
+      p {
+        margin: 0px;
+        font-size: 15px;
+      }
+    }
   }
 
   .maps {
