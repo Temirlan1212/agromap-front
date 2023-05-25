@@ -5,10 +5,12 @@
   padding: 0 20px;
   z-index: 400;
   font-size: 20px;
-  box-shadow: 0px 0 50px 70px rgba(0, 0, 0, 0.7);
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: rgba($darkColor, 0.8);
   transform: translateX(0);
   transition: transform 0.5s ease;
+  border-radius: 15px;
+  padding: 10px;
+  margin-top: 10px;
 
   &.hidden {
     transform: translateX(-380px);
@@ -38,7 +40,7 @@
   }
 
   .header {
-    min-height: $mobileBottomNavHeight;
+    min-height: $mobileBottomNavHeight / 1.5;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -48,7 +50,6 @@
 
     .toggle-btn {
       position: absolute;
-      top: 40%;
       background-color: $darkColor;
       border-radius: 100%;
       background-color: $darkColor;
