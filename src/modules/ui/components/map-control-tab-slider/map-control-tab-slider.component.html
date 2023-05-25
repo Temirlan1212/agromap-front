@@ -13,7 +13,7 @@
     [class.selected]="selectedDate === date"
     #timelineItem
   >
-    <a>{{ date | formatDate : "fullDate" : currLang }}</a>
+    <a>{{ date }}</a>
   </li>
   <li *ngIf="vegIndexesData.length === 0 && !loading" class="empty">
     <a>{{ "No data" | translate }}</a>
