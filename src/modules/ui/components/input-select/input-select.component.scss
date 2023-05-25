@@ -95,8 +95,18 @@
       }
     }
 
+    .options-list {
+      padding: 0;
+      margin-top: 60px;
+    }
+
     &.collapsed {
       max-height: 200px;
+      .search {
+        position: absolute;
+        left: 0px;
+        right: 6px;
+      }
     }
 
     &::-webkit-scrollbar-track {

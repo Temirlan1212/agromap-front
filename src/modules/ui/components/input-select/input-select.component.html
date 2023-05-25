@@ -52,7 +52,7 @@
     </div>
   </div>
 
-  <div>
+  <div class="search">
     <input
       #input
       type="text"
@@ -61,29 +61,31 @@
     />
   </div>
 
-  <ng-container *ngIf="!groupField">
-    <ng-container
-      *ngFor="let item of localItems"
-      [ngTemplateOutlet]="option"
-      [ngTemplateOutletContext]="{item}"
-    >
+  <div class="options-list">
+    <ng-container *ngIf="!groupField">
+      <ng-container
+        *ngFor="let item of localItems"
+        [ngTemplateOutlet]="option"
+        [ngTemplateOutletContext]="{item}"
+      >
+      </ng-container>
     </ng-container>
-  </ng-container>
 
-  <ng-container *ngIf="groupField">
-    <div *ngFor="let group of groups">
-      <p>{{ group }}</p>
+    <ng-container *ngIf="groupField">
+      <div *ngFor="let group of groups">
+        <p>{{ group }}</p>
 
-      <div *ngFor="let item of localItems">
-        <ng-container
-          *ngIf="item[groupField] === group"
-          [ngTemplateOutlet]="option"
-          [ngTemplateOutletContext]="{item}"
-        >
-        </ng-container>
+        <div *ngFor="let item of localItems">
+          <ng-container
+            *ngIf="item[groupField] === group"
+            [ngTemplateOutlet]="option"
+            [ngTemplateOutletContext]="{item}"
+          >
+          </ng-container>
+        </div>
       </div>
-    </div>
-  </ng-container>
+    </ng-container>
+  </div>
 </div>
 
 <ng-template #option let-item="item">
