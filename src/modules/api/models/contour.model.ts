@@ -26,6 +26,7 @@ export interface IContour {
   region: IRegion;
   district: IDistrict;
   soil_class: SoilClass;
+  predicted_productivity: string;
 }
 
 export interface ContourFiltersQuery {
