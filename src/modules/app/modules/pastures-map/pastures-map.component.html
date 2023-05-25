@@ -14,6 +14,14 @@
     *ngIf="loading && !isComparisonMapsActivated"
     [loading]="loading"
   ></app-loading>
+
+  <app-map-comparison
+    *ngIf="isComparisonMapsActivated"
+    (clickBack)="isComparisonMapsActivated = $event"
+    [filterFormValues]="filterFormValues"
+    [filterFormResetValues]="filterFormResetValues"
+  ></app-map-comparison>
+
   <app-map
     [class.hidden]="isComparisonMapsActivated"
     #map

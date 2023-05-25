@@ -253,6 +253,9 @@ hr {
     margin-left: 5px;
   }
 }
+.leaflet-control-locate {
+  display: none !important;
+}
 
 /*
 * Media queries

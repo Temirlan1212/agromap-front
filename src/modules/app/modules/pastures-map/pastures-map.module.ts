@@ -44,6 +44,8 @@ import { ContourInfoComponent } from './components/contour-info/contour-info.com
 import { ContourDetailsComponent } from './components/contour-details/contour-details.component';
 import { ToggleButtonComponent } from '../../../ui/components/toggle-button/toggle-button.component';
 import { ColorLegendComponent } from 'src/modules/ui/components/color-legend/color-legend.component';
+import { MapComparisonComponent } from './components/map-comparison/map-comparison.component';
+import { YieldMapComponent } from './components/yield-map/yield-map.component';
 
 @NgModule({
   declarations: [
@@ -56,6 +58,8 @@ import { ColorLegendComponent } from 'src/modules/ui/components/color-legend/col
     ContourEditComponent,
     ContourInfoComponent,
     ContourDetailsComponent,
+    MapComparisonComponent,
+    YieldMapComponent,
   ],
   imports: [
     CommonModule,

@@ -189,6 +189,7 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
   sidePanelData: Record<string, any> = {};
   pasturesMapControlLayersSwitch: Record<string, any> = {};
   filterFormValues!: any;
+  filterFormResetValues!: any;
 
   constructor(
     private api: ApiService,
@@ -512,11 +513,12 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   handleFilterFormReset(): void {
-    this.getPastureStatisticsProductivity({
+    this.filterFormResetValues = {
       land_type: '2',
       year: 2022,
-    });
+    };
 
+    this.getPastureStatisticsProductivity(this.filterFormResetValues);
     this.wmsCQLFilter = null;
     this.setWmsParams();
     if (this.mapComponent) this.mapComponent.handleFeatureClose();
@@ -705,10 +707,11 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.getVegIndexList();
 
-    this.getPastureStatisticsProductivity({
+    this.filterFormValues = {
       land_type: String(this.landTypes[0].id),
       year: 2022,
-    });
+    };
+    this.getPastureStatisticsProductivity(this.filterFormValues);
 
     this.wmsCQLFilter = `ltype=${String(this.landTypes[0].id)}`;
     this.setWmsParams();

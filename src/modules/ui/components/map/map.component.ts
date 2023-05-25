@@ -1,4 +1,5 @@
 import {
+  ChangeDetectorRef,
   Component,
   EventEmitter,
   HostBinding,
@@ -55,6 +56,7 @@ export class MapComponent implements OnInit, OnDestroy {
     latLng(39.0, 81.0)
   );
   @Input() featureTitle: string = '';
+  @Input() mapId: string = 'map';
   subscriptions: Subscription[] = [];
   @Output() mapData = new EventEmitter<MapData>();
   @Output() mapMove = new EventEmitter<MapMove>();
@@ -89,15 +91,17 @@ export class MapComponent implements OnInit, OnDestroy {
   constructor(
     @Inject(LOCALE_ID) public locale: string,
     private translate: TranslateService,
-    private mapService: MapService
+    private mapService: MapService,
+    private cd: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
+    this.cd.detectChanges();
     this.initMap();
   }
 
   initMap(): void {
-    this.map = this.mapService.initMap('map', {
+    this.map = this.mapService.initMap(this.mapId, {
       maxBounds: this.maxBounds,
       center: this.center,
     });
