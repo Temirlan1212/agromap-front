@@ -68,6 +68,7 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
   mode!: string;
   pastureLayerProductivityTooltip: Tooltip | null = null;
   user: IUser | null = this.api.user.getLoggedInUser();
+  isComparisonMapsActivated: boolean = false;
 
   wmsProductivityLayerColorLegend: Record<string, any>[] = [
     { label: '-1', color: '#000000' },

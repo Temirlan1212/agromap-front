@@ -70,6 +70,14 @@
           >
             <app-svg-icon name="add-layer" size="14"></app-svg-icon>
           </div>
+
+          <div
+            class="tab"
+            [class.active]="isComparisonMapsActivated"
+            (click)="isComparisonMapsActivated = true"
+          >
+            <app-svg-icon name="screen-comparison" size="14"></app-svg-icon>
+          </div>
         </ng-container>
       </div>
 
