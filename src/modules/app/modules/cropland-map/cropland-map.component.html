@@ -148,6 +148,7 @@
           *ngIf="!map?.['feautureCollapse']"
         >
           <app-contour-details
+            [hidden]="currentRouterPathname.includes('split-map')"
             #contourDetails
             [mapData]="mapData"
             [activeContour]="activeContour"
@@ -161,6 +162,7 @@
           *ngIf="!map?.['feautureCollapse']"
         >
           <app-contour-details
+            [hidden]="currentRouterPathname.includes('split-map')"
             #contourDetails
             [mapData]="mapData"
             [activeContour]="activeContour"
@@ -174,6 +176,7 @@
           class="tab transparent d-xs-none"
         >
           <app-contour-details
+            [hidden]="currentRouterPathname.includes('split-map')"
             #contourDetails
             [mapData]="mapData"
             [activeContourSmall]="activeContourSmall"
@@ -248,9 +251,8 @@
   (onClick)="handleSidePanelToggle($event)"
   [isContentToggled]="sidePanelData['state']"
   *ngIf="
-    activeContour == null &&
-    (currentRouterPathname.includes('split-map') ||
-      currentRouterPathname.includes('cropland-map'))
+    currentRouterPathname.includes('split-map') ||
+    currentRouterPathname.includes('cropland-map')
   "
   [iconName]="
     currentRouterPathname.includes('contour-add')

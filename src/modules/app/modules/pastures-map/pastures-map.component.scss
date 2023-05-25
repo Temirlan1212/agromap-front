@@ -25,3 +25,8 @@ app-loading {
 app-side-panel {
   z-index: 999;
 }
+
+.hidden {
+  visibility: hidden;
+  pointer-events: none;
+}
