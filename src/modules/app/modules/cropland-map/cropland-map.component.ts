@@ -400,9 +400,11 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
       mapBounds: mapMove.bounds,
     });
     if (this.mapData?.map != null) {
-      this.mapData.geoJson.clearLayers();
-      this.getRegionsPolygon();
-      this.addPolygonsInScreenToMap(mapMove.bounds);
+      if (mapMove.zoom > 13) {
+        this.mapData.geoJson.clearLayers();
+        this.getRegionsPolygon();
+        this.addPolygonsInScreenToMap(mapMove.bounds);
+      }
 
       if (mapMove.zoom < 12) this.activeContourSmall = null;
     }
