@@ -5,17 +5,18 @@
   padding: 0 20px;
   z-index: 400;
   font-size: 20px;
-  box-shadow: 0px 0 50px 70px rgba(0, 0, 0, 0.7);
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: rgba($darkColor, 0.8);
   transform: translateX(0);
   transition: transform 0.5s ease;
+  border-radius: 15px;
+  padding: 10px;
+  margin-top: 10px;
 
   &.hidden {
     transform: translateX(-380px);
     box-shadow: none;
     background-color: transparent;
   }
-
   .contour-info {
     max-height: 50vh;
     overflow: auto;
@@ -39,7 +40,7 @@
   }
 
   .header {
-    min-height: $mobileBottomNavHeight;
+    min-height: $mobileBottomNavHeight / 1.5;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -47,11 +48,15 @@
     text-align: center;
     position: relative;
 
-    app-svg-icon {
+    .toggle-btn {
       position: absolute;
-      top: 40%;
+      background-color: $darkColor;
+      border-radius: 100%;
+      background-color: $darkColor;
+      padding: 13px;
+      color: $lightColor;
 
-      &[name="arrow-down"] {
+      &.arrow {
         transform: rotate(90deg);
         left: 0;
         transition: transform 0.5s ease;
@@ -62,13 +67,9 @@
         }
       }
 
-      &[name="clear"] {
+      &.clear {
         right: 0;
       }
-    }
-
-    app-svg-icon {
-      cursor: pointer;
     }
   }
 
@@ -92,7 +93,7 @@
       transform: translateX(-85vw);
     }
 
-    app-svg-icon[name="arrow-down"] {
+    .toggle-btn {
       &.hidden {
         left: 82vw !important;
       }
@@ -109,6 +110,7 @@
     max-width: inherit;
     left: 0;
     right: 0;
+    bottom: 0;
     bottom: calc($mobileBottomNavHeight * 2 - 5px);
     border-top-left-radius: 20px;
     border-top-right-radius: 20px;
@@ -123,9 +125,14 @@
     }
 
     .header {
-      app-svg-icon {
-        &[name="arrow-down"] {
+      .toggle-btn {
+        background-color: transparent;
+        padding: 0;
+
+        &.arrow {
           transform: rotate(0deg);
+          left: 0;
+          transition: transform 0.5s ease;
 
           &.hidden {
             left: 0px;
