@@ -2,19 +2,12 @@
   #map
   [mapId]="mapId"
   (mapData)="handleMapData($event)"
-  (mapMove)="handleMapMove($event)"
   (mapClick)="handleMapClick($event)"
   (mapMousemove)="handleMapMousemove($event)"
   [featureTitle]="'Vegetative indexes' | translate"
 >
   <app-map-controls controls>
     <div rightPanel>
-      <app-map-control-split-map
-        routerLink="split-map"
-        *ngIf="layerFeature"
-        [isActive]="currentRouterPathname.includes('split-map')"
-      >
-      </app-map-control-split-map>
       <ng-container rightPanel>
         <app-map-control-zoom
           *ngIf="mapData"
