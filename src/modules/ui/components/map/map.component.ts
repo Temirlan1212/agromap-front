@@ -183,6 +183,7 @@ export class MapComponent implements OnInit, OnDestroy {
 
   handleFeatureCollapseToggle() {
     this.feautureCollapse = !this.feautureCollapse;
+    if (this.map) this.mapService.invalidateSize(this.map);
   }
 
   ngOnDestroy() {
