@@ -34,10 +34,6 @@
     display: flex;
     gap: 2px;
     background-color: $darkColor;
-
-    @media only screen and (max-width: 768px) {
-      // flex-direction: column-reverse;
-    }
   }
 }
 
