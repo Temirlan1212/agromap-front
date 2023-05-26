@@ -215,12 +215,16 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
 
         if (this.mapData?.map && !isChildRoute && this.mapData?.geoJson) {
           this.mapData.geoJson.clearLayers();
-          const data =
-            this.store.getItem<Record<string, LatLngBounds>>('HomeComponent');
-          if (data?.['mapBounds']) {
-            this.addPolygonsInScreenToMap(data?.['mapBounds']);
-          }
           this.getRegionsPolygon();
+          const data =
+            this.store.getItem<Record<string, LatLngBounds | number>>(
+              'HomeComponent'
+            );
+
+          const zoom = data?.['mapZoom'] as number;
+          const bounds = data?.['mapBounds'] as LatLngBounds;
+
+          if (bounds && zoom >= 12) this.addPolygonsInScreenToMap(bounds);
         }
       }
     });
@@ -442,13 +446,16 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   async handleMapMove(mapMove: MapMove): Promise<void> {
-    this.store.setItem<Record<string, LatLngBounds>>('HomeComponent', {
+    this.store.setItem<Record<string, LatLngBounds | number>>('HomeComponent', {
       mapBounds: mapMove.bounds,
+      mapZoom: mapMove.zoom,
     });
     if (this.mapData?.map != null) {
-      this.mapData.geoJson.clearLayers();
-      this.getRegionsPolygon();
-      this.addPolygonsInScreenToMap(mapMove.bounds);
+      if (mapMove.zoom >= 12) {
+        this.mapData.geoJson.clearLayers();
+        this.getRegionsPolygon();
+        this.addPolygonsInScreenToMap(mapMove.bounds);
+      }
 
       if (mapMove.zoom < 12) this.activeContourSmall = null;
     }
@@ -458,29 +465,25 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
     this.loading = true;
     try {
       if (this.mapData?.map != null) {
-        const zoom = this.mapData.map.getZoom();
+        const landTypeParam = this.landTypes[0]?.['id'];
 
-        if (zoom >= 12) {
-          const landTypeParam = this.landTypes[0]?.['id'];
+        let polygons: GeoJSON;
 
-          let polygons: GeoJSON;
+        polygons = await this.api.map.getPolygonsInScreen({
+          latLngBounds: mapBounds,
+          land_type: landTypeParam,
+        });
 
-          polygons = await this.api.map.getPolygonsInScreen({
-            latLngBounds: mapBounds,
-            land_type: landTypeParam,
-          });
+        this.mapData.geoJson.options.snapIgnore = true;
+        this.mapData.geoJson.options.pmIgnore = true;
+        this.mapData.geoJson.options.style = {
+          fillOpacity: 0,
+          weight: 0.4,
+        };
 
-          this.mapData.geoJson.options.snapIgnore = true;
-          this.mapData.geoJson.options.pmIgnore = true;
-          this.mapData.geoJson.options.style = {
-            fillOpacity: 0,
-            weight: 0.4,
-          };
-
-          this.mapData.geoJson.setZIndex(400);
-          this.mapData.geoJson.options.interactive = true;
-          this.mapData.geoJson.addData(polygons);
-        }
+        this.mapData.geoJson.setZIndex(400);
+        this.mapData.geoJson.options.interactive = true;
+        this.mapData.geoJson.addData(polygons);
       }
     } catch (e: any) {
       this.messages.error(e.error?.message ?? e.message);
@@ -596,12 +599,16 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
     dialog.close();
     if (this.mapComponent) this.mapComponent.handleFeatureClose();
     const data =
-      this.store.getItem<Record<string, LatLngBounds>>('HomeComponent');
+      this.store.getItem<Record<string, LatLngBounds | number>>(
+        'HomeComponent'
+      );
 
-    if (data?.['mapBounds'] && this.mapData) {
+    const bounds = data?.['mapBounds'] as LatLngBounds;
+
+    if (bounds && this.mapData) {
       this.mapData.geoJson.clearLayers();
       if (this.mapData.geoJson.getLayers().length < 1) {
-        this.addPolygonsInScreenToMap(data?.['mapBounds']);
+        this.addPolygonsInScreenToMap(bounds);
         this.getRegionsPolygon();
       }
     }

@@ -213,13 +213,16 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
 
         if (this.mapData?.map && !isChildRoute && this.mapData?.geoJson) {
           this.mapData.geoJson.clearLayers();
-          const data = this.store.getItem<Record<string, LatLngBounds>>(
-            'ArableLandComponent'
-          );
-          if (data?.['mapBounds']) {
-            this.addPolygonsInScreenToMap(data?.['mapBounds']);
-          }
           this.getRegionsPolygon();
+          const data =
+            this.store.getItem<Record<string, LatLngBounds | number>>(
+              'HomeComponent'
+            );
+
+          const zoom = data?.['mapZoom'] as number;
+          const bounds = data?.['mapBounds'] as LatLngBounds;
+
+          if (bounds && zoom >= 12) this.addPolygonsInScreenToMap(bounds);
         }
       }
     });
@@ -396,13 +399,19 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   async handleMapMove(mapMove: MapMove): Promise<void> {
-    this.store.setItem<Record<string, LatLngBounds>>('ArableLandComponent', {
-      mapBounds: mapMove.bounds,
-    });
+    this.store.setItem<Record<string, LatLngBounds | number>>(
+      'ArableLandComponent',
+      {
+        mapBounds: mapMove.bounds,
+        mapZoom: mapMove.zoom,
+      }
+    );
     if (this.mapData?.map != null) {
-      this.mapData.geoJson.clearLayers();
-      this.getRegionsPolygon();
-      this.addPolygonsInScreenToMap(mapMove.bounds);
+      if (mapMove.zoom >= 12) {
+        this.mapData.geoJson.clearLayers();
+        this.getRegionsPolygon();
+        this.addPolygonsInScreenToMap(mapMove.bounds);
+      }
 
       if (mapMove.zoom < 12) this.activeContourSmall = null;
     }
@@ -412,36 +421,32 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
     this.loading = true;
     try {
       if (this.mapData?.map != null) {
-        const zoom = this.mapData.map.getZoom();
+        const landTypeParam =
+          this.filterFormValues?.['land_type'] ??
+          this.landTypes.map((l: ILandType) => l['id']).join(',');
 
-        if (zoom >= 12) {
-          const landTypeParam =
-            this.filterFormValues?.['land_type'] ??
-            this.landTypes.map((l: ILandType) => l['id']).join(',');
-
-          let polygons: GeoJSON;
-          if (this.isWmsAiActive) {
-            polygons = await this.api.map.getPolygonsInScreenAi({
-              latLngBounds: mapBounds,
-              land_type: landTypeParam,
-            });
-          } else {
-            polygons = await this.api.map.getPolygonsInScreen({
-              latLngBounds: mapBounds,
-              land_type: landTypeParam,
-            });
-          }
-          this.mapData.geoJson.options.snapIgnore = true;
-          this.mapData.geoJson.options.pmIgnore = true;
-          this.mapData.geoJson.options.style = {
-            fillOpacity: 0,
-            weight: 0.4,
-          };
-
-          this.mapData.geoJson.setZIndex(400);
-          this.mapData.geoJson.options.interactive = true;
-          this.mapData.geoJson.addData(polygons);
+        let polygons: GeoJSON;
+        if (this.isWmsAiActive) {
+          polygons = await this.api.map.getPolygonsInScreenAi({
+            latLngBounds: mapBounds,
+            land_type: landTypeParam,
+          });
+        } else {
+          polygons = await this.api.map.getPolygonsInScreen({
+            latLngBounds: mapBounds,
+            land_type: landTypeParam,
+          });
         }
+        this.mapData.geoJson.options.snapIgnore = true;
+        this.mapData.geoJson.options.pmIgnore = true;
+        this.mapData.geoJson.options.style = {
+          fillOpacity: 0,
+          weight: 0.4,
+        };
+
+        this.mapData.geoJson.setZIndex(400);
+        this.mapData.geoJson.options.interactive = true;
+        this.mapData.geoJson.addData(polygons);
       }
     } catch (e: any) {
       this.messages.error(e.error?.message ?? e.message);
