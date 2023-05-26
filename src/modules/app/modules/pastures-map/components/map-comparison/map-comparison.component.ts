@@ -43,14 +43,14 @@ export class MapComparisonComponent
   constructor(private store: StoreService) {}
 
   ngOnChanges(changes: SimpleChanges): void {
-    // if ('filterFormResetValues' in changes) {
-    //   this.filterFormValues = changes['filterFormResetValues'].currentValue;
-    //   this.handleFilterFormReset();
-    // }
-    // if ('filterFormValues' in changes) {
-    //   this.filterFormValues = changes['filterFormValues'].currentValue;
-    //   this.handleFilterFormSubmit();
-    // }
+    if ('filterFormResetValues' in changes) {
+      this.filterFormValues = changes['filterFormResetValues'].currentValue;
+      this.handleFilterFormReset();
+    }
+    if ('filterFormValues' in changes) {
+      this.filterFormValues = changes['filterFormValues'].currentValue;
+      this.handleFilterFormSubmit();
+    }
   }
 
   handleFilterFormReset(): void {
