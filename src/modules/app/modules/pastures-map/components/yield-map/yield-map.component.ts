@@ -52,7 +52,6 @@ import {
   IContourStatisticsProductivityQuery,
 } from 'src/modules/api/models/statistics.model';
 import { ITableItem } from 'src/modules/ui/models/table.model';
-import { ToggleButtonComponent } from '../../../../../ui/components/toggle-button/toggle-button.component';
 import { MapControlLayersSwitchComponent } from '../../../../../ui/components/map-control-layers-switch/map-control-layers-switch.component';
 import { ILandType } from 'src/modules/api/models/land-type.model';
 import { IUser } from 'src/modules/api/models/user.model';
@@ -556,6 +555,9 @@ export class YieldMapComponent
         contourId: contoruId,
         vegIndexId: vegIndexId,
       };
+      if (this.vegIndexOptionsList[0]?.id) {
+        query.vegIndexId = this.vegIndexOptionsList[0].id;
+      }
       let res: IVegSatelliteDate[];
       if (this.isWmsAiActive) {
         res = await this.api.vegIndexes.getVegSatelliteDatesAi(query);
