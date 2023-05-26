@@ -148,6 +148,9 @@ export class MapComparisonComponent
         mapComponent.featureUnhover.subscribe((layerFeature: MapLayerFeature) =>
           refs.forEach((ref) => ref.handleFeatureMouseLeave(layerFeature))
         ),
+        ref.onDateSelect?.subscribe(() => {
+          refs.first.contourDetailsComponents.map((c) => (c.isHidden = true));
+        }),
       ];
 
       this.subscriptions.push(...subscriptions);

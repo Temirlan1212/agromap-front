@@ -50,9 +50,7 @@
         [vegIndexOptionsList]="vegIndexOptionsList"
         (vegIndexOptionClick)="handleVegIndexOptionClick($event)"
         [loadingSatelliteDates]="loadingSatelliteDates"
-        (onDateSelect)="
-          showActiveContourInfo && (contourDetails.isHidden = true)
-        "
+        (onDateSelect)="onDateSelect.emit()"
       ></app-map-control-veg-indexes>
 
       <app-map-control-statistics

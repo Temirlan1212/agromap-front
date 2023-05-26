@@ -17,7 +17,9 @@ import {
   HostBinding,
   OnDestroy,
   OnInit,
+  QueryList,
   ViewChild,
+  ViewChildren,
 } from '@angular/core';
 import { ApiService } from 'src/modules/api/api.service';
 import {
@@ -64,10 +66,12 @@ import { MapComparisonComponent } from './components/map-comparison/map-comparis
 export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('featurePopup') featurePopup!: ElementRef<HTMLElement>;
   @ViewChild('map') mapComponent!: MapComponent;
-  @ViewChild('contourDetails') contourDetails!: ContourDetailsComponent;
   @ViewChild('mapControls') mapControls!: MapControlLayersSwitchComponent;
   @ViewChild('toggleBtn') toggleBtn!: ToggleButtonComponent;
   @ViewChild('mapComparison') mapComparison!: MapComparisonComponent;
+  @ViewChildren(ContourDetailsComponent)
+  contourDetailsComponents!: QueryList<ContourDetailsComponent>;
+
   mode!: string;
   pastureLayerProductivityTooltip: Tooltip | null = null;
   user: IUser | null = this.api.user.getLoggedInUser();
@@ -316,7 +320,9 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   async handleFeatureClick(layerFeature: MapLayerFeature): Promise<void> {
-    this.contourDetails.isHidden = false;
+    this.contourDetailsComponents.map((c) => {
+      if (c) c.isHidden = false;
+    });
     if (this.layerFeature) {
       this.selectedLayer.remove();
     }
@@ -358,7 +364,9 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
       this.selectedLayer.remove();
     }
     this.activeContour = null;
-    this.contourDetails.ngOnDestroy();
+    this.contourDetailsComponents.map((c) => {
+      if (c) c.ngOnDestroy();
+    });
     if (this.mapData?.map) this.mapService.invalidateSize(this.mapData.map);
   }
 
@@ -371,6 +379,12 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
     } finally {
       this.activeContourLoading = false;
     }
+  }
+
+  hanldeVegIndexesDateSelect() {
+    this.contourDetailsComponents.map((c) => {
+      if (c) c.isHidden = true;
+    });
   }
 
   handleSidePanelToggle(isOpened: boolean) {
