@@ -266,23 +266,8 @@ export class YieldMapComponent
   subscriptions: Subscription[] = [
     this.translateSvc.onLangChange.subscribe((res) => {
       this.currentLang = res.lang;
-      const translateHa =
-        this.translateSvc.translations[this.currentLang]['ha'];
 
-      this.contourPastureStatisticsProductivityTableItems =
-        this.contourPastureStatisticsProductivityTableItems.map((arr) =>
-          arr.map((element) => ({
-            ...element,
-            productive: `${String(element?.['productive']).replace(
-              /га|ha/gi,
-              translateHa
-            )}`,
-            unproductive: `${String(element?.['unproductive']).replace(
-              /га|ha/gi,
-              translateHa
-            )}`,
-          }))
-        );
+      this.contourPastureStatisticsOnLangChange();
     }),
 
     this.mapService.contourEditingMode.subscribe((res) => {
@@ -302,6 +287,24 @@ export class YieldMapComponent
   vegIndexesData: IVegSatelliteDate[] = [];
   vegIndexOptionsList: IVegIndexOption[] = [];
   loadingSatelliteDates: boolean = false;
+
+  contourPastureStatisticsOnLangChange() {
+    const translateHa = this.translateSvc.translations[this.currentLang]['ha'];
+    this.contourPastureStatisticsProductivityTableItems =
+      this.contourPastureStatisticsProductivityTableItems.map((arr) =>
+        arr.map((element) => ({
+          ...element,
+          productive: `${String(element?.['productive']).replace(
+            /га|ha/gi,
+            translateHa
+          )}`,
+          unproductive: `${String(element?.['unproductive']).replace(
+            /га|ha/gi,
+            translateHa
+          )}`,
+        }))
+      );
+  }
 
   handleMapData(mapData: MapData): void {
     this.mapData = mapData;
@@ -698,6 +701,61 @@ export class YieldMapComponent
     }
   }
 
+  private buildWmsCQLFilter(v: ContourFiltersQuery | null) {
+    if (v != null) {
+      this.wmsCQLFilter = '';
+      if (v.region) {
+        if (this.wmsCQLFilter.length > 0) {
+          this.wmsCQLFilter += '&&';
+        }
+        this.wmsCQLFilter += 'rgn=' + v.region;
+      }
+      if (v.district) {
+        if (this.wmsCQLFilter.length > 0) {
+          this.wmsCQLFilter += '&&';
+        }
+        this.wmsCQLFilter += 'dst=' + v.district;
+      }
+      if (v.conton) {
+        if (this.wmsCQLFilter.length > 0) {
+          this.wmsCQLFilter += '&&';
+        }
+        this.wmsCQLFilter += 'cntn=' + v.conton;
+      }
+      if (v.culture) {
+        const val = v.culture;
+        if (this.wmsCQLFilter.length > 0) {
+          this.wmsCQLFilter += '&&';
+        }
+        if (typeof val === 'string' && val.split(',').length > 1) {
+          this.wmsCQLFilter += val
+            .split(',')
+            .reduce((acc, i) => (acc += 'clt=' + i + ' OR '), '')
+            .slice(0, -3)
+            .trim();
+        } else {
+          this.wmsCQLFilter += 'clt=' + v.culture;
+        }
+      }
+      if (v.land_type) {
+        const val = v.land_type;
+        if (this.wmsCQLFilter.length > 0) {
+          this.wmsCQLFilter += '&&';
+        }
+        if (typeof val === 'string' && val.split(',').length > 1) {
+          this.wmsCQLFilter += val
+            .split(',')
+            .reduce((acc, i) => (acc += 'ltype=' + i + ' OR '), '')
+            .slice(0, -3)
+            .trim();
+        } else {
+          this.wmsCQLFilter += 'ltype=' + v.land_type;
+        }
+      }
+      this.setWmsParams();
+    }
+  }
+
   async getLandTypes() {
     try {
       this.landTypes = await this.api.dictionary.getLandType();
@@ -723,60 +781,7 @@ export class YieldMapComponent
 
     this.store
       .watchItem<ContourFiltersQuery | null>('ContourFilterComponent')
-      .subscribe((v) => {
-        if (v != null) {
-          this.wmsCQLFilter = '';
-          if (v.region) {
-            if (this.wmsCQLFilter.length > 0) {
-              this.wmsCQLFilter += '&&';
-            }
-            this.wmsCQLFilter += 'rgn=' + v.region;
-          }
-          if (v.district) {
-            if (this.wmsCQLFilter.length > 0) {
-              this.wmsCQLFilter += '&&';
-            }
-            this.wmsCQLFilter += 'dst=' + v.district;
-          }
-          if (v.conton) {
-            if (this.wmsCQLFilter.length > 0) {
-              this.wmsCQLFilter += '&&';
-            }
-            this.wmsCQLFilter += 'cntn=' + v.conton;
-          }
-          if (v.culture) {
-            const val = v.culture;
-            if (this.wmsCQLFilter.length > 0) {
-              this.wmsCQLFilter += '&&';
-            }
-            if (typeof val === 'string' && val.split(',').length > 1) {
-              this.wmsCQLFilter += val
-                .split(',')
-                .reduce((acc, i) => (acc += 'clt=' + i + ' OR '), '')
-                .slice(0, -3)
-                .trim();
-            } else {
-              this.wmsCQLFilter += 'clt=' + v.culture;
-            }
-          }
-          if (v.land_type) {
-            const val = v.land_type;
-            if (this.wmsCQLFilter.length > 0) {
-              this.wmsCQLFilter += '&&';
-            }
-            if (typeof val === 'string' && val.split(',').length > 1) {
-              this.wmsCQLFilter += val
-                .split(',')
-                .reduce((acc, i) => (acc += 'ltype=' + i + ' OR '), '')
-                .slice(0, -3)
-                .trim();
-            } else {
-              this.wmsCQLFilter += 'ltype=' + v.land_type;
-            }
-          }
-          this.setWmsParams();
-        }
-      });
+      .subscribe((v) => this.buildWmsCQLFilter(v));
   }
 
   ngAfterViewInit(): void {
