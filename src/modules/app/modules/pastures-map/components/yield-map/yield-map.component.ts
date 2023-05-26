@@ -216,7 +216,8 @@ export class YieldMapComponent
     private router: Router,
     private translate: TranslatePipe,
     private route: ActivatedRoute,
-    private cd: ChangeDetectorRef
+    private cd: ChangeDetectorRef,
+    private mapService: MapService
   ) {
     this.router.events.subscribe((event: Event) => {
       if (event instanceof NavigationEnd) {
@@ -298,6 +299,7 @@ export class YieldMapComponent
 
   handleMapData(mapData: MapData): void {
     this.mapData = mapData;
+    this.mapService.map.next(mapData);
   }
 
   async handleFeatureMouseOver(layerFeature: MapLayerFeature) {

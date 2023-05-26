@@ -37,6 +37,7 @@ export class MapComparisonComponent
   polygons!: GeoJSON;
 
   @Output() clickBack = new EventEmitter<boolean>(false);
+  @Output() onDestroy = new EventEmitter();
   @Input() filterFormValues: any;
   @Input() filterFormResetValues: any;
 
@@ -45,7 +46,10 @@ export class MapComparisonComponent
   ngOnChanges(changes: SimpleChanges): void {
     if ('filterFormResetValues' in changes) {
       this.filterFormValues = changes['filterFormResetValues'].currentValue;
-      this.handleFilterFormReset();
+
+      if (this.yieldMapComponents) {
+        this.yieldMapComponents.map((ref) => this.handleFilterFormReset(ref));
+      }
     }
     if ('filterFormValues' in changes) {
       this.filterFormValues = changes['filterFormValues'].currentValue;
@@ -53,8 +57,8 @@ export class MapComparisonComponent
     }
   }
 
-  handleFilterFormReset(): void {
-    this.yieldMapComponents?.first.handleFilterFormReset(this.filterFormValues);
+  handleFilterFormReset(component: YieldMapComponent): void {
+    component.handleFilterFormReset(this.filterFormValues);
   }
 
   handleFilterFormSubmit(): void {
@@ -159,6 +163,7 @@ export class MapComparisonComponent
   }
 
   ngOnDestroy(): void {
+    this.onDestroy.emit();
     this.subscriptions.forEach((subscription) => subscription.unsubscribe());
   }
 }
