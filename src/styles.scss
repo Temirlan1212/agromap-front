@@ -266,6 +266,11 @@ hr {
   h4 {
     font-size: 16px;
   }
+  .button-container .leaflet-pm-actions-container {
+    .action-removeLastVertex {
+      display: none;
+    }
+  }
 }
 
 .d-none {
