@@ -32,6 +32,8 @@
     width: 100%;
     height: 100%;
     display: flex;
+    gap: 2px;
+    background-color: $darkColor;
 
     @media only screen and (max-width: 768px) {
       // flex-direction: column-reverse;
@@ -57,13 +59,6 @@
 
       .feature-content {
         display: none !important;
-      }
-      .mobile-contour-info {
-        position: absolute;
-        z-index: 449;
-        bottom: 0;
-        left: 0;
-        right: 0;
       }
       .dark-info-dialog {
         bottom: $mobileBottomNavHeight !important;
