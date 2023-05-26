@@ -53,6 +53,7 @@ import { ToggleButtonComponent } from '../../../ui/components/toggle-button/togg
 import { MapControlLayersSwitchComponent } from '../../../ui/components/map-control-layers-switch/map-control-layers-switch.component';
 import { ILandType } from 'src/modules/api/models/land-type.model';
 import { IUser } from 'src/modules/api/models/user.model';
+import { MapComparisonComponent } from './components/map-comparison/map-comparison.component';
 
 @Component({
   selector: 'app-pastures-map',
@@ -65,6 +66,7 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('contourDetails') contourDetails!: ContourDetailsComponent;
   @ViewChild('mapControls') mapControls!: MapControlLayersSwitchComponent;
   @ViewChild('toggleBtn') toggleBtn!: ToggleButtonComponent;
+  @ViewChild('mapComparison') mapComparison!: MapComparisonComponent;
   mode!: string;
   pastureLayerProductivityTooltip: Tooltip | null = null;
   user: IUser | null = this.api.user.getLoggedInUser();
@@ -703,6 +705,10 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
     } catch (e: any) {
       this.messages.error(e.message);
     }
+  }
+
+  mapComparisonOnDestroy() {
+    this.mapData && this.mapService.map.next(this.mapData);
   }
 
   async ngOnInit(): Promise<void> {
