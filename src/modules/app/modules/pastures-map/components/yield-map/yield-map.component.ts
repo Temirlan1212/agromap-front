@@ -222,27 +222,6 @@ export class YieldMapComponent
     this.router.events.subscribe((event: Event) => {
       if (event instanceof NavigationEnd) {
         this.currentRouterPathname = router.url;
-        const isChildRoute = this.route.firstChild !== null;
-        if (
-          isChildRoute &&
-          this.mapComponent &&
-          this.activeContour != null &&
-          !this.currentRouterPathname.includes('split-map')
-        ) {
-          this.mapComponent.handleFeatureClose();
-        }
-
-        if (this.mapData?.map && !isChildRoute && this.mapData?.geoJson) {
-          this.mapData.geoJson.clearLayers();
-          const data =
-            this.store.getItem<Record<string, LatLngBounds>>('HomeComponent');
-          if (data?.['mapBounds']) {
-            this.getPolygonsInScreen(data?.['mapBounds']).then((polygons) => {
-              this.addPolygonsInScreenToMap(polygons);
-            });
-          }
-          this.getRegionsPolygon();
-        }
       }
     });
   }
@@ -508,11 +487,11 @@ export class YieldMapComponent
 
       polygons.map((polygon) => {
         if (this.mapData?.map != null) {
-          this.mapData.geoJson.options.snapIgnore = true;
-          this.mapData.geoJson.options.pmIgnore = true;
-          this.mapData.geoJson.options.style = { fillOpacity: 0 };
-          this.mapData.geoJson.options.interactive = false;
-          this.mapData.geoJson.addData(polygon.polygon);
+          this.mapData.geoJsonStatic.options.snapIgnore = true;
+          this.mapData.geoJsonStatic.options.pmIgnore = true;
+          this.mapData.geoJsonStatic.options.style = { fillOpacity: 0 };
+          this.mapData.geoJsonStatic.options.interactive = false;
+          this.mapData.geoJsonStatic.addData(polygon.polygon);
         }
       });
     } catch (e: any) {
@@ -579,8 +558,6 @@ export class YieldMapComponent
   }
 
   handleWmsLayerChanged(layer: ITileLayer | null): void {
-    this.mapData?.geoJson.clearLayers();
-    this.getRegionsPolygon();
     if (layer != null) {
       const finded = this.wmsLayers.find((l) => l.name === layer.name);
       if (finded != null && finded.name === 'agromap_store_ai') {
@@ -722,6 +699,7 @@ export class YieldMapComponent
   }
 
   async ngOnInit(): Promise<void> {
+    this.getRegionsPolygon();
     const data = this.store.getItem(this.storageName);
     if (!data) {
       this.mode = 'agromap_store';

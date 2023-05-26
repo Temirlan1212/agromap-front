@@ -4,6 +4,7 @@ import { Map, GeoJSON, Layer, LatLngBounds, TileLayer } from 'leaflet';
 export interface MapData {
   map: Map;
   geoJson: GeoJSON;
+  geoJsonStatic: GeoJSON;
 }
 
 export interface MapLayerFeature {

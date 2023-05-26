@@ -61,7 +61,6 @@
             [baseLayers]="baseLayers"
             [wmsLayers]="wmsLayers"
             [wmsSelectedStatusLayers]="wmsSelectedStatusLayers"
-            (wmsLayerChanged)="handleWmsLayerChanged($event)"
             [storageName]="'PasturesMapControlLayersSwitchComponent'"
           ></app-map-control-layers-switch>
           <app-map-control-locate
@@ -86,7 +85,6 @@
 
           <div
             class="tab"
-            [class.active]="isComparisonMapsActivated"
             (click)="isComparisonMapsActivated = true"
             *ngIf="activeContour == null"
           >
@@ -145,17 +143,6 @@
             </app-tab>
           </app-content-tabs>
         </app-map-control-statistics>
-
-        <div class="tab transparent primary d-none d-xs-block">
-          <app-contour-details
-            [hidden]="map?.['feautureCollapse'] || isComparisonMapsActivated || currentRouterPathname.includes('split-map')"
-            #contourDetails
-            [mapData]="mapData"
-            [activeContour]="activeContour"
-            (onCancelClick)="map.handleFeatureClose()"
-          >
-          </app-contour-details>
-        </div>
 
         <div class="tab transparent d-xs-none">
           <app-contour-details
@@ -277,3 +264,13 @@
       : 'filter'
   "
 ></app-toggle-button>
+<div class="tab transparent d-none d-xs-block">
+  <app-contour-details
+    [hidden]="map?.['feautureCollapse'] || isComparisonMapsActivated || currentRouterPathname.includes('split-map')"
+    #contourDetails
+    [mapData]="mapData"
+    [activeContour]="activeContour"
+    (onCancelClick)="map.handleFeatureClose()"
+  >
+  </app-contour-details>
+</div>

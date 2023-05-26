@@ -88,6 +88,8 @@ export class MapComponent implements OnInit, OnDestroy {
     },
   });
 
+  geoJsonStatic: GeoJSON = geoJSON(undefined);
+
   constructor(
     @Inject(LOCALE_ID) public locale: string,
     private translate: TranslateService,
@@ -116,9 +118,14 @@ export class MapComponent implements OnInit, OnDestroy {
     });
 
     this.map.addLayer(this.geoJson);
+    this.map.addLayer(this.geoJsonStatic);
     this.handleMapEventSubscription();
     this.handleMapClick();
-    this.mapData.emit({ map: this.map, geoJson: this.geoJson });
+    this.mapData.emit({
+      map: this.map,
+      geoJson: this.geoJson,
+      geoJsonStatic: this.geoJsonStatic,
+    });
   }
 
   handleMapEventSubscription() {
