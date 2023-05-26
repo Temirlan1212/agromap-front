@@ -524,6 +524,9 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
         contourId: contoruId,
         vegIndexId: vegIndexId,
       };
+      if (this.vegIndexOptionsList[0]?.id) {
+        query.vegIndexId = this.vegIndexOptionsList[0].id;
+      }
       let res: IVegSatelliteDate[];
       if (this.isWmsAiActive) {
         res = await this.api.vegIndexes.getVegSatelliteDatesAi(query);

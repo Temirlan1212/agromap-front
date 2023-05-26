@@ -57,7 +57,7 @@ export class MapControlTabSliderComponent
       for (const a in this.timelineListEl.nativeElement.children) {
         if (
           this.timelineListEl.nativeElement.children[a].textContent?.includes(
-            `${this.formatDate.transform(date, 'fullDate', this.currLang)}`
+            date
           )
         ) {
           this.timelineListEl.nativeElement.children[a].scrollIntoView({
