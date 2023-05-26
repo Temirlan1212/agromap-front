@@ -330,7 +330,9 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
       });
     await this.getContour(Number(cid));
 
-    this.getVegSatelliteDates(cid);
+    if (this.vegIndexOptionsList[0]?.id) {
+      this.getVegSatelliteDates(cid, this.vegIndexOptionsList[0].id);
+    }
     this.store.setItem<Feature>(
       'PasturesMapSelectedLayerFeature',
       layerFeature.feature
@@ -537,7 +539,7 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
 
   async getVegSatelliteDates(
     contoruId: number,
-    vegIndexId: number = 1
+    vegIndexId: number
   ): Promise<void> {
     this.loadingSatelliteDates = true;
     try {
@@ -545,9 +547,7 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
         contourId: contoruId,
         vegIndexId: vegIndexId,
       };
-      if (this.vegIndexOptionsList[0]?.id) {
-        query.vegIndexId = this.vegIndexOptionsList[0].id;
-      }
+
       let res: IVegSatelliteDate[];
       if (this.isWmsAiActive) {
         res = await this.api.vegIndexes.getVegSatelliteDatesAi(query);

@@ -210,7 +210,6 @@ export class YieldMapComponent
 
   constructor(
     private api: ApiService,
-    private mapService: MapService,
     private messages: MessagesService,
     private store: StoreService,
     private translateSvc: TranslateService,
@@ -269,14 +268,6 @@ export class YieldMapComponent
       this.contourPastureStatisticsOnLangChange();
     }),
 
-    this.mapService.contourEditingMode.subscribe((res) => {
-      if (res) {
-        this.mapComponent.removeSubscriptions();
-      } else {
-        this.mapComponent.handleMapEventSubscription();
-      }
-    }),
-
     this.store.watchItem('PasturesMapSidePanelComponent').subscribe((v) => {
       this.sidePanelData = v;
       this.cd.detectChanges();
@@ -307,7 +298,6 @@ export class YieldMapComponent
 
   handleMapData(mapData: MapData): void {
     this.mapData = mapData;
-    this.mapService.map.next(mapData);
   }
 
   async handleFeatureMouseOver(layerFeature: MapLayerFeature) {
@@ -352,8 +342,9 @@ export class YieldMapComponent
         color: '#f6ab39',
       });
     await this.getContour(Number(cid));
-
-    this.getVegSatelliteDates(cid);
+    if (this.vegIndexOptionsList[0]?.id) {
+      this.getVegSatelliteDates(cid, this.vegIndexOptionsList[0].id);
+    }
     this.store.setItem<Feature>(
       this.storageName + 'Feature',
       layerFeature.feature
@@ -470,8 +461,6 @@ export class YieldMapComponent
     }
   }
 
-  async handleMapMove(mapMove: MapMove): Promise<void> {}
-
   async getPolygonsInScreen(mapMove: LatLngBounds) {
     const landTypeParam = this.landTypes[0]?.['id'];
     let polygons: GeoJSON;
@@ -547,7 +536,7 @@ export class YieldMapComponent
 
   async getVegSatelliteDates(
     contoruId: number,
-    vegIndexId: number = 1
+    vegIndexId: number
   ): Promise<void> {
     this.loadingSatelliteDates = true;
     try {
@@ -555,10 +544,9 @@ export class YieldMapComponent
         contourId: contoruId,
         vegIndexId: vegIndexId,
       };
-      if (this.vegIndexOptionsList[0]?.id) {
-        query.vegIndexId = this.vegIndexOptionsList[0].id;
-      }
+
       let res: IVegSatelliteDate[];
+
       if (this.isWmsAiActive) {
         res = await this.api.vegIndexes.getVegSatelliteDatesAi(query);
       } else {
@@ -598,41 +586,6 @@ export class YieldMapComponent
       } else {
         this.isWmsAiActive = false;
       }
-    }
-  }
-
-  handleEditClick() {
-    const id = this.layerFeature?.feature?.properties?.['id'];
-    this.router.navigate(['contour-edit', id], { relativeTo: this.route });
-    if (this.mapComponent) this.mapComponent.handleFeatureClose();
-  }
-
-  async handleDeleteSubmitted(dialog: QuestionDialogComponent): Promise<void> {
-    await this.deleteItem();
-    dialog.close();
-    if (this.mapComponent) this.mapComponent.handleFeatureClose();
-    const data =
-      this.store.getItem<Record<string, LatLngBounds>>('HomeComponent');
-
-    if (data?.['mapBounds'] && this.mapData) {
-      this.mapData.geoJson.clearLayers();
-      if (this.mapData.geoJson.getLayers().length < 1) {
-        const polygons = await this.getPolygonsInScreen(data?.['mapBounds']);
-        this.addPolygonsInScreenToMap(polygons);
-        this.getRegionsPolygon();
-      }
-    }
-  }
-
-  async deleteItem(): Promise<void> {
-    const id = this.layerFeature?.feature?.properties?.['id'];
-    try {
-      await this.api.contour.remove(Number(id));
-      this.messages.success(
-        this.translate.transform('Polygon successfully deleted')
-      );
-    } catch (e: any) {
-      this.messages.error(e.message);
     }
   }
 

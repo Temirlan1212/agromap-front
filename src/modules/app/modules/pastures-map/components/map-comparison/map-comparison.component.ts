@@ -47,7 +47,6 @@ export class MapComparisonComponent
       this.filterFormValues = changes['filterFormResetValues'].currentValue;
       this.handleFilterFormReset();
     }
-
     if ('filterFormValues' in changes) {
       this.filterFormValues = changes['filterFormValues'].currentValue;
       this.handleFilterFormSubmit();
