@@ -222,7 +222,7 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
           const zoom = data?.['mapZoom'] as number;
           const bounds = data?.['mapBounds'] as LatLngBounds;
 
-          if (bounds && zoom > 13) this.addPolygonsInScreenToMap(bounds);
+          if (bounds && zoom >= 12) this.addPolygonsInScreenToMap(bounds);
         }
       }
     });
@@ -407,7 +407,7 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
       }
     );
     if (this.mapData?.map != null) {
-      if (mapMove.zoom > 13) {
+      if (mapMove.zoom >= 12) {
         this.mapData.geoJson.clearLayers();
         this.getRegionsPolygon();
         this.addPolygonsInScreenToMap(mapMove.bounds);
