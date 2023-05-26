@@ -100,7 +100,7 @@ export class MapComparisonComponent
       mapBounds: mapMove.bounds,
     });
 
-    if (mapMove.zoom > 13) {
+    if (mapMove.zoom >= 12) {
       this.loading = true;
       this.polygons = await this.yieldMapComponents.first.getPolygonsInScreen(
         mapMove.bounds
@@ -111,15 +111,13 @@ export class MapComparisonComponent
     this.yieldMapComponents.forEach((ref) => {
       const mapData = ref.mapData;
       if (mapData?.map != null) {
-        if (mapMove.zoom > 13) {
+        if (mapMove.zoom >= 12) {
           mapData.geoJson.clearLayers();
           ref.addPolygonsInScreenToMap(this.polygons);
           ref.getRegionsPolygon();
         }
 
-        if (mapMove.zoom < 12) {
-          ref.activeContourSmall = null;
-        }
+        if (mapMove.zoom < 12) ref.activeContourSmall = null;
       }
     });
   }
