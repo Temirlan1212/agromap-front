@@ -216,10 +216,9 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
         }
 
         if (this.mapData?.map && !isChildRoute && this.mapData?.geoJson) {
-          const data =
-            this.store.getItem<Record<string, LatLngBounds | number>>(
-              'HomeComponent'
-            );
+          const data = this.store.getItem<
+            Record<string, LatLngBounds | number>
+          >('ArableLandComponent');
 
           const layersLength = this.mapData.geoJson.getLayers().length;
           const zoom = data?.['mapZoom'] as number;
