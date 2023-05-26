@@ -165,6 +165,7 @@ export class MapComparisonComponent
 
   ngOnDestroy(): void {
     this.onDestroy.emit();
+    this.clickBack.emit(false);
     this.subscriptions.forEach((subscription) => subscription.unsubscribe());
   }
 }

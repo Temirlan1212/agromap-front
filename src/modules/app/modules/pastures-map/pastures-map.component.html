@@ -17,7 +17,7 @@
 
   <app-map-comparison
     (onDestroy)="mapComparisonOnDestroy()"
-    *ngIf="isComparisonMapsActivated"
+    *ngIf="isComparisonMapsActivated && !isChildRoute"
     (clickBack)="isComparisonMapsActivated = $event"
     [filterFormValues]="filterFormValues"
     [filterFormResetValues]="filterFormResetValues"
