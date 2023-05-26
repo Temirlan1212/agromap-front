@@ -99,8 +99,9 @@ export class MapComparisonComponent
   }
 
   async handleMapMove(mapMove: MapMove): Promise<void> {
-    this.store.setItem<Record<string, LatLngBounds>>('HomeComponent', {
+    this.store.setItem<Record<string, LatLngBounds | number>>('HomeComponent', {
       mapBounds: mapMove.bounds,
+      mapZoom: mapMove.zoom,
     });
 
     if (mapMove.zoom >= 12) {
@@ -114,12 +115,9 @@ export class MapComparisonComponent
     this.yieldMapComponents.forEach((ref) => {
       const mapData = ref.mapData;
       if (mapData?.map != null) {
-        if (mapMove.zoom >= 12) {
-          mapData.geoJson.clearLayers();
-          ref.addPolygonsInScreenToMap(this.polygons);
-          ref.getRegionsPolygon();
-        }
-
+        const layersLength = mapData.geoJson.getLayers().length;
+        if (layersLength > 0) mapData.geoJson.clearLayers();
+        if (mapMove.zoom >= 12) ref.addPolygonsInScreenToMap(this.polygons);
         if (mapMove.zoom < 12) ref.activeContourSmall = null;
       }
     });

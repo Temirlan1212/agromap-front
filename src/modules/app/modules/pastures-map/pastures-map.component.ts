@@ -14,6 +14,7 @@ import {
   ChangeDetectorRef,
   Component,
   ElementRef,
+  HostBinding,
   OnDestroy,
   OnInit,
   ViewChild,
@@ -70,6 +71,8 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
   mode!: string;
   pastureLayerProductivityTooltip: Tooltip | null = null;
   user: IUser | null = this.api.user.getLoggedInUser();
+
+  @HostBinding('class.isComparisonMapsActivated')
   isComparisonMapsActivated: boolean = false;
 
   wmsProductivityLayerColorLegend: Record<string, any>[] = [
@@ -218,16 +221,16 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
         }
 
         if (this.mapData?.map && !isChildRoute && this.mapData?.geoJson) {
-          this.mapData.geoJson.clearLayers();
-          this.getRegionsPolygon();
           const data =
             this.store.getItem<Record<string, LatLngBounds | number>>(
               'HomeComponent'
             );
 
+          const layersLength = this.mapData.geoJson.getLayers().length;
           const zoom = data?.['mapZoom'] as number;
           const bounds = data?.['mapBounds'] as LatLngBounds;
 
+          if (layersLength > 0) this.mapData.geoJson.clearLayers();
           if (bounds && zoom >= 12) this.addPolygonsInScreenToMap(bounds);
         }
       }
@@ -457,12 +460,9 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
       mapZoom: mapMove.zoom,
     });
     if (this.mapData?.map != null) {
-      if (mapMove.zoom >= 12) {
-        this.mapData.geoJson.clearLayers();
-        this.getRegionsPolygon();
-        this.addPolygonsInScreenToMap(mapMove.bounds);
-      }
-
+      const layersLength = this.mapData.geoJson.getLayers().length;
+      if (layersLength > 0) this.mapData.geoJson.clearLayers();
+      if (mapMove.zoom >= 12) this.addPolygonsInScreenToMap(mapMove.bounds);
       if (mapMove.zoom < 12) this.activeContourSmall = null;
     }
   }
@@ -507,11 +507,11 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
 
       polygons.map((polygon) => {
         if (this.mapData?.map != null) {
-          this.mapData.geoJson.options.snapIgnore = true;
-          this.mapData.geoJson.options.pmIgnore = true;
-          this.mapData.geoJson.options.style = { fillOpacity: 0 };
-          this.mapData.geoJson.options.interactive = false;
-          this.mapData.geoJson.addData(polygon.polygon);
+          this.mapData.geoJsonStatic.options.snapIgnore = true;
+          this.mapData.geoJsonStatic.options.pmIgnore = true;
+          this.mapData.geoJsonStatic.options.style = { fillOpacity: 0 };
+          this.mapData.geoJsonStatic.options.interactive = false;
+          this.mapData.geoJsonStatic.addData(polygon.polygon);
         }
       });
     } catch (e: any) {
@@ -580,19 +580,6 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
     );
   }
 
-  handleWmsLayerChanged(layer: ITileLayer | null): void {
-    this.mapData?.geoJson.clearLayers();
-    this.getRegionsPolygon();
-    if (layer != null) {
-      const finded = this.wmsLayers.find((l) => l.name === layer.name);
-      if (finded != null && finded.name === 'agromap_store_ai') {
-        this.isWmsAiActive = true;
-      } else {
-        this.isWmsAiActive = false;
-      }
-    }
-  }
-
   handleEditClick() {
     const id = this.layerFeature?.feature?.properties?.['id'];
     this.router.navigate(['contour-edit', id], { relativeTo: this.route });
@@ -609,13 +596,12 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
       );
 
     const bounds = data?.['mapBounds'] as LatLngBounds;
+    const zoom = data?.['mapZoom'] as number;
 
     if (bounds && this.mapData) {
-      this.mapData.geoJson.clearLayers();
-      if (this.mapData.geoJson.getLayers().length < 1) {
-        this.addPolygonsInScreenToMap(bounds);
-        this.getRegionsPolygon();
-      }
+      const layersLength = this.mapData.geoJson.getLayers().length;
+      if (layersLength > 0) this.mapData.geoJson.clearLayers();
+      if (zoom >= 12) this.addPolygonsInScreenToMap(bounds);
     }
   }
 
@@ -791,6 +777,7 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
+    this.getRegionsPolygon();
     this.mapControls.handleBaseLayerChange('FULL_KR_TCI');
 
     const data = this.store.getItem('HomeComponent');
