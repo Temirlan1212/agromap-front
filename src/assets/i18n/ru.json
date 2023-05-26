@@ -204,5 +204,6 @@
   "Invalid input. Please use only non-numeric characters or a single space.": "Неверный ввод. Пожалуйста, используйте только нечисловые символы или один пробел.",
   "User name": "Имя пользователя",
   "Incorrect user data": "Неправильные данные пользователя",
-  "Incorrect phone number": "Неправильный номер телефона"
+  "Incorrect phone number": "Неправильный номер телефона",
+  "Go back": "Вернуться назад"
 }

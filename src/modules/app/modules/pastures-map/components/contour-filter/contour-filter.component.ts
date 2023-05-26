@@ -189,6 +189,9 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
   }
 
   async handleFormSubmit(): Promise<void> {
+    if (this.landTypes[0]?.id) {
+      this.form.get('land_type')?.setValue(String(this.landTypes[0].id));
+    }
     const formState = this.getState();
     if (!formState.valid) {
       this.messages.error(this.translate.transform('Form is invalid'));

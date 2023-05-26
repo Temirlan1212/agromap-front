@@ -7,6 +7,7 @@ $transitionDelay: 0.2s;
   flex-direction: column;
   height: 100%;
   transition: flex $transitionDelay;
+  width: 100%;
 
   &.open {
     .feature-content {
@@ -45,8 +46,9 @@ $transitionDelay: 0.2s;
   position: relative;
 }
 
-#map {
+.map {
   height: 100%;
+  width: 100% !important;
 }
 
 .feature-content {
@@ -82,11 +84,6 @@ $transitionDelay: 0.2s;
 
 @media only screen and (max-width: 576px) {
   :host {
-    border-top-right-radius: 20px;
-    border-top-left-radius: 20px;
-  }
-
-  .feature-content {
     border-top-right-radius: 20px;
     border-top-left-radius: 20px;
   }

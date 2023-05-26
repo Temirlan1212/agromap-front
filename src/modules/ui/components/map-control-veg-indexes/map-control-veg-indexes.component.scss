@@ -62,6 +62,7 @@ p {
     background-color: $dBgColor;
     font-weight: 600;
     transition: all, $transitionDelay;
+    justify-content: space-around;
 
     &:hover {
       color: currentColor;

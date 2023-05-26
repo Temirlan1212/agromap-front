@@ -1,0 +1,88 @@
+@import "constants";
+
+:host {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  z-index: 500;
+  width: 100%;
+  .back {
+    background-color: $lightColor;
+    color: $darkColor;
+    padding: 14px 20px;
+    position: relative;
+    z-index: 500;
+    button {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0;
+      p {
+        margin: 0px;
+        font-size: 15px;
+      }
+    }
+  }
+
+  .maps {
+    width: 100%;
+    height: 100%;
+    display: flex;
+
+    @media only screen and (max-width: 768px) {
+      // flex-direction: column-reverse;
+    }
+  }
+}
+
+::ng-deep {
+  @media only screen and (max-width: 768px) {
+    .indexesPanel {
+      justify-content: space-between;
+      flex-direction: column-reverse;
+      gap: 10px !important;
+    }
+    .topPanel {
+      margin: 0px !important;
+    }
+    .date {
+      display: none;
+    }
+    .feature-content {
+      display: none !important;
+    }
+    .mobile-contour-info {
+      position: absolute;
+      z-index: 449;
+      bottom: 0;
+      left: 0;
+      right: 0;
+    }
+    .dark-info-dialog {
+      bottom: $mobileBottomNavHeight !important;
+    }
+  }
+  app-toggle-button {
+    &.comparisonMapsActivated {
+      button {
+        top: 5px !important;
+        padding: 9px !important;
+        right: 9px !important;
+        background-color: $sideNavMenuBgColor !important;
+        color: $darkColor !important;
+      }
+    }
+  }
+}
+
+app-loading {
+  position: absolute;
+  z-index: 9999;
+  background-color: rgba(255, 255, 255, 0.7);
+  width: 100%;
+  height: 100%;
+}

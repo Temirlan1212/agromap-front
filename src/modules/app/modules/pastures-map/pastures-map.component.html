@@ -10,8 +10,20 @@
 </app-side-panel>
 
 <div class="map-container">
-  <app-loading *ngIf="loading" [loading]="loading"></app-loading>
+  <app-loading
+    *ngIf="loading && !isComparisonMapsActivated"
+    [loading]="loading"
+  ></app-loading>
+
+  <app-map-comparison
+    *ngIf="isComparisonMapsActivated"
+    (clickBack)="isComparisonMapsActivated = $event"
+    [filterFormValues]="filterFormValues"
+    [filterFormResetValues]="filterFormResetValues"
+  ></app-map-comparison>
+
   <app-map
+    [class.hidden]="isComparisonMapsActivated"
     #map
     (mapData)="handleMapData($event)"
     (mapMove)="handleMapMove($event)"
@@ -70,6 +82,15 @@
           >
             <app-svg-icon name="add-layer" size="14"></app-svg-icon>
           </div>
+
+          <div
+            class="tab"
+            [class.active]="isComparisonMapsActivated"
+            (click)="isComparisonMapsActivated = true"
+            *ngIf="activeContour == null"
+          >
+            <app-svg-icon name="screen-comparison" size="14"></app-svg-icon>
+          </div>
         </ng-container>
       </div>
 
@@ -126,7 +147,7 @@
 
         <div class="tab transparent primary d-none d-xs-block">
           <app-contour-details
-            [hidden]="map?.['feautureCollapse']"
+            [hidden]="map?.['feautureCollapse'] || isComparisonMapsActivated || currentRouterPathname.includes('split-map')"
             #contourDetails
             [mapData]="mapData"
             [activeContour]="activeContour"
@@ -137,7 +158,7 @@
 
         <div class="tab transparent d-xs-none">
           <app-contour-details
-            [hidden]="map?.['feautureCollapse']"
+            [hidden]="map?.['feautureCollapse'] || isComparisonMapsActivated || currentRouterPathname.includes('split-map')"
             #contourDetails
             [mapData]="mapData"
             [activeContour]="activeContour"
@@ -151,6 +172,7 @@
           class="tab transparent d-xs-none"
         >
           <app-contour-details
+            [hidden]="currentRouterPathname.includes('split-map')"
             #contourDetails
             [mapData]="mapData"
             [activeContourSmall]="activeContourSmall"
@@ -238,13 +260,13 @@
   {{ "Contour will be deleted, continue?" | translate }}
 </app-question-dialog>
 <app-toggle-button
+  [class.comparisonMapsActivated]="isComparisonMapsActivated"
   #toggleBtn
   (onClick)="handleSidePanelToggle($event)"
   [isContentToggled]="sidePanelData['state']"
   *ngIf="
-    activeContour == null &&
-    (currentRouterPathname.includes('split-map') ||
-      currentRouterPathname.includes('pastures-map'))
+    currentRouterPathname.includes('split-map') ||
+    currentRouterPathname.includes('pastures-map')
   "
   [iconName]="
     currentRouterPathname.includes('contour-add')

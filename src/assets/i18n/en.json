@@ -204,5 +204,6 @@
   "Invalid input. Please use only non-numeric characters or a single space.": "Invalid input. Please use only non-numeric characters or a single space.",
   "User name": "User name",
   "Incorrect user data": "Incorrect user data",
-  "Incorrect phone number": "Incorrect phone number"
+  "Incorrect phone number": "Incorrect phone number",
+  "Go back": "Go back"
 }

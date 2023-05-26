@@ -6,7 +6,7 @@
   <app-svg-icon name="layer" class="icon" size="16px"></app-svg-icon>
 </div>
 
-<div class="dialog" [class.collapsed]="isCollapsed">
+<div class="dialog" [class.collapsed]="isCollapsed" #dialog>
   <h5>{{ "MapSettings" | translate }}</h5>
   <div class="over-layers-group">
     <app-input-radio

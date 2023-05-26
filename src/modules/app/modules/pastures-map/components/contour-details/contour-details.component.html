@@ -11,17 +11,21 @@
         [ngClass]="activeContour?.culture?.['name_'+currentLang]"
         [textContent]="activeContour?.culture?.['name_'+currentLang]"
       ></h1>
-      <app-svg-icon
+      <button
+        class="toggle-btn arrow"
         (click)="isHidden = !isHidden"
         [class.hidden]="isHidden"
-        name="arrow-down"
-        size="16"
-      ></app-svg-icon>
-      <app-svg-icon
-        name="clear"
-        size="16"
+      >
+        <app-svg-icon name="arrow-down" size="16"></app-svg-icon>
+      </button>
+
+      <button
+        class="toggle-btn clear"
         (click)="onCancelClick.emit()"
-      ></app-svg-icon>
+        [class.hidden]="isHidden"
+      >
+        <app-svg-icon name="clear" size="16"></app-svg-icon>
+      </button>
     </div>
 
     <div class="contour-info" [hidden]="isHidden">
@@ -29,35 +33,35 @@
         {{ "Contour id" | translate }}
         <span>{{ activeContour?.id }}</span>
       </div>
-      <div>
+      <div *ngIf="activeContour?.area_ha">
         {{ "Area" | translate }}
         <span>{{ activeContour.area_ha }} {{ "ha" | translate }}</span>
       </div>
-      <div>
+      <div *ngIf="activeContour?.region">
         {{ "Region" | translate }}
         <span
           [textContent]="activeContour.region?.['name_' + currentLang]"
         ></span>
       </div>
-      <div>
+      <div *ngIf="activeContour?.district">
         {{ "District" | translate }}
         <span
           [textContent]="activeContour.district?.['name_' + currentLang]"
         ></span>
       </div>
-      <div>
+      <div *ngIf="activeContour?.conton">
         {{ "Conton" | translate }}
         <span
           [textContent]="activeContour.conton?.['name_' + currentLang]"
         ></span>
       </div>
-      <div>
+      <div *ngIf="activeContour?.type">
         {{ "Land type" | translate }}
         <span
           [textContent]="activeContour.type?.['name_' + currentLang]"
         ></span>
       </div>
-      <div>
+      <div *ngIf="activeContour?.productivity">
         {{ "Productivity" | translate }}
         <span
           >{{ activeContour?.productivity }}
@@ -73,18 +77,18 @@
           {{ "c. per ha." | translate }}</span
         >
       </div>
-      <div>
+      <div *ngIf="activeContour?.elevation">
         {{ "Elevation" | translate }}
         <span
           >{{ activeContour?.elevation }}
           {{ "m. above sea level" | translate }}
         </span>
       </div>
-      <div *ngIf="activeContour.percent">
+      <div *ngIf="activeContour?.percent">
         {{ "AI determination error" | translate
         }}<span>{{ activeContour.percent * 100 }} % </span>
       </div>
-      <div>
+      <div *ngIf="activeContour?.soil_class">
         {{ "Soil class" | translate }}
         <span
           >ID {{ activeContour.soil_class?.ID }} -
