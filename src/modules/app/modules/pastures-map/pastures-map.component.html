@@ -86,7 +86,7 @@
           <div
             class="tab"
             (click)="isComparisonMapsActivated = true"
-            *ngIf="activeContour == null"
+            *ngIf="activeContour == null && !isChildRoute"
           >
             <app-svg-icon name="screen-comparison" size="14"></app-svg-icon>
           </div>

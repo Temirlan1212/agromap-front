@@ -64,5 +64,11 @@ export class MapService {
     return imageOverlayIncstance;
   }
 
+  invalidateSize(map: Map, delay: number = 300) {
+    setTimeout(() => {
+      map.invalidateSize();
+    }, delay);
+  }
+
   constructor() {}
 }

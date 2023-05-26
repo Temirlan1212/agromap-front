@@ -335,6 +335,11 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
       this.getVegSatelliteDates(cid, this.vegIndexOptionsList[0].id);
     }
     this.store.setItem<Feature>('selectedLayerFeature', layerFeature.feature);
+    const bounds = geoJSON(layerFeature.feature).getBounds();
+    if (this.mapData?.map) {
+      this.mapData.map.fitBounds(bounds);
+      this.mapService.invalidateSize(this.mapData.map);
+    }
   }
 
   handleFeatureClose(): void {
@@ -345,6 +350,7 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
     }
     this.activeContour = null;
     this.contourDetails.ngOnDestroy();
+    if (this.mapData?.map) this.mapService.invalidateSize(this.mapData.map);
   }
 
   async getContour(id: number): Promise<void> {

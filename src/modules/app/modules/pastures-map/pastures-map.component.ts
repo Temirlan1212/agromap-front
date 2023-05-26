@@ -195,6 +195,7 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
   pasturesMapControlLayersSwitch: Record<string, any> = {};
   filterFormValues!: any;
   filterFormResetValues!: any;
+  isChildRoute: boolean = false;
 
   constructor(
     private api: ApiService,
@@ -210,9 +211,9 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
     this.router.events.subscribe((event: Event) => {
       if (event instanceof NavigationEnd) {
         this.currentRouterPathname = router.url;
-        const isChildRoute = this.route.firstChild !== null;
+        this.isChildRoute = this.route.firstChild !== null;
         if (
-          isChildRoute &&
+          this.isChildRoute &&
           this.mapComponent &&
           this.activeContour != null &&
           !this.currentRouterPathname.includes('split-map')
@@ -220,7 +221,7 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
           this.mapComponent.handleFeatureClose();
         }
 
-        if (this.mapData?.map && !isChildRoute && this.mapData?.geoJson) {
+        if (this.mapData?.map && !this.isChildRoute && this.mapData?.geoJson) {
           const data =
             this.store.getItem<Record<string, LatLngBounds | number>>(
               'HomeComponent'
@@ -342,6 +343,12 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
       'PasturesMapSelectedLayerFeature',
       layerFeature.feature
     );
+
+    const bounds = geoJSON(layerFeature.feature).getBounds();
+    if (this.mapData?.map) {
+      this.mapData.map.fitBounds(bounds);
+      this.mapService.invalidateSize(this.mapData.map);
+    }
   }
 
   handleFeatureClose(): void {
@@ -352,6 +359,7 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
     }
     this.activeContour = null;
     this.contourDetails.ngOnDestroy();
+    if (this.mapData?.map) this.mapService.invalidateSize(this.mapData.map);
   }
 
   async getContour(id: number): Promise<void> {

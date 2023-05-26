@@ -330,6 +330,12 @@ export class YieldMapComponent
       this.storageName + 'Feature',
       layerFeature.feature
     );
+
+    const bounds = geoJSON(layerFeature.feature).getBounds();
+    if (this.mapData?.map) {
+      this.mapData.map.fitBounds(bounds);
+      this.mapService.invalidateSize(this.mapData.map);
+    }
   }
 
   handleFeatureClose(): void {
@@ -340,6 +346,7 @@ export class YieldMapComponent
     }
     this.activeContour = null;
     if (this.contourDetails) this.contourDetails.ngOnDestroy();
+    if (this.mapData?.map) this.mapService.invalidateSize(this.mapData.map);
   }
 
   async getContour(id: number): Promise<void> {
