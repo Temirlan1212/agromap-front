@@ -43,7 +43,7 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
   selectedId: number | null = null;
   filtersQuery!: ContourFiltersQuery;
   radioOptions: any = [
-    { name: 'AI', value: 'agromap_store_ai' },
+    { name: 'RSE', value: 'agromap_store_ai' },
     { name: 'Base', value: 'agromap_store' },
   ];
   @Output() onCardClick = new EventEmitter<MapLayerFeature>();

@@ -69,6 +69,7 @@ export class YieldMapComponent
   @ViewChild('mapControls') mapControls!: MapControlLayersSwitchComponent;
   @ViewChildren(ContourDetailsComponent)
   contourDetailsComponents!: QueryList<ContourDetailsComponent>;
+  @Input() title: string | null = null;
   @Input() mapId: string = 'map';
   @Input() storageName: string = '';
   @Input() showActiveContourInfo: boolean = true;

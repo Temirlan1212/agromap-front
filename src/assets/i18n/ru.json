@@ -142,7 +142,7 @@
   "Soil class": "Вид почвы",
   "Elevation": "Высота",
   "m. above sea level": "м. над уровнем моря",
-  "AI determination error": "Погрешность определения ИИ",
+  "RSE determination error": "Погрешность определения ДЗЗ",
   "Roll up": "Свернуть",
   "Country": "Страна",
   "Pasture (productivity area)": "Пастбище (площадь продуктивности)",
@@ -206,5 +206,6 @@
   "Incorrect user data": "Неправильные данные пользователя",
   "Incorrect phone number": "Неправильный номер телефона",
   "Go back": "Вернуться назад",
-  "RSE": "ДЗЗ"
+  "RSE": "ДЗЗ",
+  "Remote sensing of the earth": "Дистанционное зондирование земли"
 }

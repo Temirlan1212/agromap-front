@@ -30,3 +30,15 @@ app-side-panel {
   position: relative;
   z-index: 998;
 }
+
+.title {
+  margin: 5px 0;
+  text-shadow: 1px 0 0 #000, 0 -1px 0 #000, 0 1px 0 #000, -1px 0 0 #000;
+}
+
+@media only screen and (max-width: 768px) {
+  .title {
+    font-size: 13px;
+    line-height: 20px;
+  }
+}

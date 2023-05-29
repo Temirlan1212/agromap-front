@@ -42,6 +42,13 @@
         !currentRouterPathname.includes('contour-edit')
       "
     >
+      <div
+        class="tab transparent w-100"
+        *ngIf="title && !activeContour && !layerFeature"
+      >
+        <h3 class="title" [textContent]="title"></h3>
+      </div>
+
       <app-map-control-veg-indexes
         *ngIf="layerFeature && mapData"
         [layer]="layerFeature"

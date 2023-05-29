@@ -142,7 +142,7 @@
   "Soil class": "Топурактын түрү",
   "Elevation": "Бийиктиги",
   "m. above sea level": "м. деңиз денгээлинен жогору",
-  "AI determination error": "ЖИ аныктоо катасы",
+  "RSE determination error": "ЖАЗ аныктоо катасы",
   "Roll up": "Жабуу",
   "Country": "Өлкө",
   "Pasture (productivity area)": "Жайыт (түшүмдүүлүк аянты)",
@@ -206,5 +206,6 @@
   "Incorrect user data": "Колдонуучунун маалыматтары туура эмес",
   "Incorrect phone number": "Туура эмес телефон номуру",
   "Go back": "Артка кайтуу",
-  "RSE": "ЖАЗ"
+  "RSE": "ЖАЗ",
+  "Remote sensing of the earth": "Жерди алыстан зонддоо"
 }

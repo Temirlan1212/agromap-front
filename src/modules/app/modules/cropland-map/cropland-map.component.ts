@@ -142,7 +142,7 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
       type: 'radio',
     },
     {
-      title: 'AI',
+      title: 'RSE',
       name: 'agromap_store_ai',
       layer: tileLayer.wms('https://geoserver.24mycrm.com/agromap/wms', {
         layers: 'agromap:agromap_store_ai',

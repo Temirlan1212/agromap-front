@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
 import { ApiService } from 'src/modules/api/api.service';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-login',
@@ -20,7 +20,7 @@ export class LoginComponent {
     }),
   });
 
-  constructor(private api: ApiService, private router: Router) {}
+  constructor(private api: ApiService, private location: Location) {}
 
   async handleFormSubmit(): Promise<void> {
     const state = this.api.form.getState(this.form);
@@ -32,7 +32,7 @@ export class LoginComponent {
 
     try {
       await this.api.user.logIn(state.value);
-      await this.router.navigate(['']);
+      this.location.back();
     } catch (e: any) {
       this.api.form.setError({ 'user-data': 'Incorrect user data' }, this.form);
     }
