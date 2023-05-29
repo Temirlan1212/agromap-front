@@ -35,7 +35,7 @@ export class CultureStatsComponent implements AfterViewInit, OnDestroy {
   mode: FormControl = new FormControl<string | null>(null);
 
   aiBaseRadioOptions: any = [
-    { name: 'AI', value: 'agromap_store_ai' },
+    { name: 'RSE', value: 'agromap_store_ai' },
     { name: 'Base', value: 'agromap_store' },
   ];
 

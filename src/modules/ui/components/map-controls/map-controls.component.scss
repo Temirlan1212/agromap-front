@@ -61,6 +61,10 @@ $tabDisabledColor: rgba(165, 178, 188, 0.7);
   &.primary {
     z-index: 999;
   }
+
+  &.w-100 {
+    width: 100%;
+  }
 }
 
 .rightPanel {

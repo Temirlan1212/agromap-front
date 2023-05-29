@@ -142,7 +142,7 @@
   "Soil class": "Soil class",
   "Elevation": "Elevation",
   "m. above sea level": "m. above sea level",
-  "AI determination error": "AI determination error",
+  "RSE determination error": "RSE determination error",
   "Roll up": "Roll up",
   "Country": "Country",
   "Pasture (productivity area)": "Pasture (productivity area)",
@@ -206,5 +206,6 @@
   "Incorrect user data": "Incorrect user data",
   "Incorrect phone number": "Incorrect phone number",
   "Go back": "Go back",
-  "RSE": "RSE"
+  "RSE": "RSE",
+  "Remote sensing of the earth": "Remote sensing of the earth"
 }

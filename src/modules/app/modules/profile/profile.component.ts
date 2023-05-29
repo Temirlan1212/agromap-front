@@ -1,9 +1,9 @@
 import { Component, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
 import { ApiService } from 'src/modules/api/api.service';
 import { IUser } from '../../../api/models/user.model';
 import { ToggleButtonComponent } from '../../../ui/components/toggle-button/toggle-button.component';
 import { SidePanelComponent } from '../../../ui/components/side-panel/side-panel.component';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-profile',
@@ -15,17 +15,13 @@ export class ProfileComponent {
   @ViewChild('sidePanel') sidePanel!: SidePanelComponent;
   currentUser!: IUser | null;
 
-  constructor(
-    private api: ApiService,
-    private router: Router,
-    private route: ActivatedRoute
-  ) {
+  constructor(private api: ApiService, private location: Location) {
     this.currentUser = this.api.user.getLoggedInUser();
   }
 
   async handleLogoutClick(): Promise<void> {
     await this.api.user.logOut();
-    this.router.navigate(['']);
+    this.location.back();
   }
 
   handleLinkClick() {
