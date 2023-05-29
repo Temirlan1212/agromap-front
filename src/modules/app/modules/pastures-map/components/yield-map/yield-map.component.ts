@@ -20,19 +20,17 @@ import {
   OnDestroy,
   OnInit,
   Output,
+  QueryList,
   SimpleChanges,
   ViewChild,
+  ViewChildren,
 } from '@angular/core';
 import { ApiService } from 'src/modules/api/api.service';
 import {
   IVegIndexOption,
   IVegSatelliteDate,
 } from 'src/modules/api/models/veg-indexes.model';
-import {
-  MapData,
-  MapLayerFeature,
-  MapMove,
-} from 'src/modules/ui/models/map.model';
+import { MapData, MapLayerFeature } from 'src/modules/ui/models/map.model';
 import { MapService } from '../../../../../ui/services/map.service';
 import { MessagesService } from '../../../../../ui/services/messages.service';
 import { ActualVegQuery } from '../../../../../api/classes/veg-indexes';
@@ -44,7 +42,6 @@ import { MapComponent } from '../../../../../ui/components/map/map.component';
 import { Subscription } from 'rxjs';
 import { ActualVegIndexes } from 'src/modules/api/models/actual-veg-indexes';
 import { ITileLayer } from 'src/modules/ui/models/map.model';
-import { QuestionDialogComponent } from '../../../../../ui/components/question-dialog/question-dialog.component';
 import { IRegion } from 'src/modules/api/models/region.model';
 import { ContourFiltersQuery } from 'src/modules/api/models/contour.model';
 import {
@@ -69,8 +66,9 @@ export class YieldMapComponent
 {
   @ViewChild('featurePopup') featurePopup!: ElementRef<HTMLElement>;
   @ViewChild('map') mapComponent!: MapComponent;
-  @ViewChild('contourDetails') contourDetails!: ContourDetailsComponent;
   @ViewChild('mapControls') mapControls!: MapControlLayersSwitchComponent;
+  @ViewChildren(ContourDetailsComponent)
+  contourDetailsComponents!: QueryList<ContourDetailsComponent>;
   @Input() mapId: string = 'map';
   @Input() storageName: string = '';
   @Input() showActiveContourInfo: boolean = true;
@@ -84,6 +82,7 @@ export class YieldMapComponent
   width: string = '100%';
 
   @Output() featureClick = new EventEmitter<any>();
+  @Output() onDateSelect = new EventEmitter<any>();
 
   mode!: string;
   pastureLayerProductivityTooltip: Tooltip | null = null;
@@ -304,7 +303,9 @@ export class YieldMapComponent
   }
 
   async handleFeatureClick(layerFeature: MapLayerFeature): Promise<void> {
-    if (this.contourDetails) this.contourDetails.isHidden = false;
+    this.contourDetailsComponents.map((c) => {
+      if (c) c.isHidden = false;
+    });
     if (this.layerFeature) {
       this.selectedLayer.remove();
     }
@@ -345,7 +346,9 @@ export class YieldMapComponent
       this.selectedLayer.remove();
     }
     this.activeContour = null;
-    if (this.contourDetails) this.contourDetails.ngOnDestroy();
+    this.contourDetailsComponents.map((c) => {
+      if (c) c.ngOnDestroy();
+    });
     if (this.mapData?.map) this.mapService.invalidateSize(this.mapData.map);
   }
 

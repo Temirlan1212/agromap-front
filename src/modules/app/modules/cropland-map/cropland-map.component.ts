@@ -14,7 +14,9 @@ import {
   ElementRef,
   OnDestroy,
   OnInit,
+  QueryList,
   ViewChild,
+  ViewChildren,
 } from '@angular/core';
 import { ApiService } from 'src/modules/api/api.service';
 import {
@@ -61,9 +63,11 @@ import { IUser } from 'src/modules/api/models/user.model';
 export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('featurePopup') featurePopup!: ElementRef<HTMLElement>;
   @ViewChild('map') mapComponent!: MapComponent;
-  @ViewChild('contourDetails') contourDetails!: ContourDetailsComponent;
   @ViewChild('mapControls') mapControls!: MapControlLayersSwitchComponent;
   @ViewChild('toggleBtn') toggleBtn!: ToggleButtonComponent;
+  @ViewChildren(ContourDetailsComponent)
+  contourDetailsComponents!: QueryList<ContourDetailsComponent>;
+
   mode!: string;
   user: IUser | null = this.api.user.getLoggedInUser();
 
@@ -212,10 +216,9 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
         }
 
         if (this.mapData?.map && !isChildRoute && this.mapData?.geoJson) {
-          const data =
-            this.store.getItem<Record<string, LatLngBounds | number>>(
-              'HomeComponent'
-            );
+          const data = this.store.getItem<
+            Record<string, LatLngBounds | number>
+          >('ArableLandComponent');
 
           const layersLength = this.mapData.geoJson.getLayers().length;
           const zoom = data?.['mapZoom'] as number;
@@ -311,7 +314,9 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   async handleFeatureClick(layerFeature: MapLayerFeature): Promise<void> {
-    this.contourDetails.isHidden = false;
+    this.contourDetailsComponents.map((c) => {
+      if (c) c.isHidden = false;
+    });
     if (this.layerFeature) {
       this.selectedLayer.remove();
     }
@@ -349,7 +354,9 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
       this.selectedLayer.remove();
     }
     this.activeContour = null;
-    this.contourDetails.ngOnDestroy();
+    this.contourDetailsComponents.map((c) => {
+      if (c) c.ngOnDestroy();
+    });
     if (this.mapData?.map) this.mapService.invalidateSize(this.mapData.map);
   }
 
@@ -363,6 +370,12 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
     } catch (e: any) {
       this.messages.error(e.error?.message ?? e.message);
     }
+  }
+
+  hanldeVegIndexesDateSelect() {
+    this.contourDetailsComponents.map((c) => {
+      if (c) c.isHidden = true;
+    });
   }
 
   async getContourData(id: number) {
