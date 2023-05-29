@@ -136,6 +136,8 @@ export class ContourEditComponent implements OnInit, OnDestroy {
       this.isPolygonChanged = true;
     });
 
+    this.layer.on('pm:change', (e: any) => (this.isPolygonChanged = true));
+
     this.triggerPmControlBtnClick('.leaflet-pm-icon-edit');
 
     const finishEditButton = document?.querySelector('.action-finishMode');
@@ -149,26 +151,24 @@ export class ContourEditComponent implements OnInit, OnDestroy {
     this.handleSetSidePanelState(false);
   }
 
-  async handleSaveClick(form: ContourFormComponent) {
+  async handleSaveClick(contourForm: ContourFormComponent) {
     const formValueNames =
       this.mode === 'agromap_store_ai'
         ? ['district', 'conton']
         : ['district', 'conton', 'code_soato', 'ink'];
 
     formValueNames.forEach((controlName) => {
-      const control = form.form.get(controlName) as FormControl;
+      const control = contourForm.form.get(controlName) as FormControl;
       control.setValidators([Validators.required]);
       control.updateValueAndValidity();
     });
 
-    const formState = form.getState();
-    const { region, district, ...rest } = formState.value;
-    const contour: Partial<IContour> = {
-      ...rest,
-      polygon: this.polygon,
-    };
+    const formState = contourForm.getState();
+
     if (!formState.touched && !this.isPolygonChanged) {
       this.messages.warning(this.translate.transform('No changes in form'));
+      contourForm.form.markAsUntouched();
+
       return;
     }
     if (!formState.valid) {
@@ -183,6 +183,11 @@ export class ContourEditComponent implements OnInit, OnDestroy {
     }
 
     this.mapInstance.pm.disableGlobalEditMode();
+    const { region, district, ...rest } = formState.value;
+    const contour: Partial<IContour> = {
+      ...rest,
+      polygon: this.polygon,
+    };
 
     try {
       if (this.mode === 'agromap_store_ai') {

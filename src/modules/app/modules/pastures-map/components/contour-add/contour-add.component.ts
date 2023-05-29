@@ -134,8 +134,8 @@ export class ContourAddComponent implements OnInit, OnDestroy {
     }
   }
 
-  async handleSaveClick(form: ContourFormComponent) {
-    const formState = form.getState();
+  async handleSaveClick(contourForm: ContourFormComponent) {
+    const formState = contourForm.getState();
     const { region, district, ...rest } = formState.value;
     const contour: Partial<IContour> = {
       ...rest,

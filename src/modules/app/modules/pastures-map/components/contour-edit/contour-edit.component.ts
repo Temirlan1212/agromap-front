@@ -8,9 +8,8 @@ import { MessagesService } from '../../../../../ui/services/messages.service';
 import { MapService } from '../../../../../ui/services/map.service';
 import { Subscription } from 'rxjs';
 import { MapData } from '../../../../../ui/models/map.model';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { StoreService } from '../../../../../ui/services/store.service';
-import * as L from 'leaflet';
 
 @Component({
   selector: 'app-contour-edit',
@@ -84,7 +83,7 @@ export class ContourEditComponent implements OnInit, OnDestroy {
 
   handleEditShape() {
     this.mapService.contourEditingMode.next(true);
-    if (this.mapGeo.getLayers().length > 1) {
+    if (this.mapGeo.getLayers().length > 0) {
       this.mapGeo.clearLayers();
     }
 
@@ -108,6 +107,8 @@ export class ContourEditComponent implements OnInit, OnDestroy {
       this.layer.pm.disable();
       this.isPolygonChanged = true;
     });
+
+    this.layer.on('pm:change', (e: any) => (this.isPolygonChanged = true));
 
     this.triggerPmControlBtnClick('.leaflet-pm-icon-edit');
     const finishEditButton = document?.querySelector('.action-finishMode');
@@ -141,15 +142,13 @@ export class ContourEditComponent implements OnInit, OnDestroy {
     this.handleSetSidePanelState(false);
   }
 
-  async handleSaveClick(form: ContourFormComponent) {
-    const formState = form.getState();
-    const { region, district, ...rest } = formState.value;
-    const contour: Partial<IContour> = {
-      ...rest,
-      polygon: this.polygon,
-    };
+  async handleSaveClick(contourForm: ContourFormComponent) {
+    const formState = contourForm.getState();
+
     if (!formState.touched && !this.isPolygonChanged) {
       this.messages.warning(this.translate.transform('No changes in form'));
+      contourForm.form.markAsUntouched();
+
       return;
     }
     if (!formState.valid) {
@@ -164,6 +163,12 @@ export class ContourEditComponent implements OnInit, OnDestroy {
     }
 
     this.mapInstance.pm.disableGlobalEditMode();
+    const { region, district, ...rest } = formState.value;
+    const contour: Partial<IContour> = {
+      ...rest,
+      polygon: this.polygon,
+    };
+
     try {
       await this.api.contour.update(this.contour.id, contour);
       this.messages.success(
