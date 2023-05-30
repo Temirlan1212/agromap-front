@@ -14,7 +14,7 @@ import { Subject, delay, filter, fromEvent, takeUntil } from 'rxjs';
   styleUrls: ['./tooltip.component.scss'],
 })
 export class TooltipComponent implements AfterViewInit, OnDestroy {
-  @HostBinding('class.active')
+  @HostBinding('class.visible')
   isShow: boolean = false;
 
   @HostBinding('class')

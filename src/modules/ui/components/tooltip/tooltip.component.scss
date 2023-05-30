@@ -61,7 +61,7 @@ $arrowSize: 8px;
     }
   }
 
-  &.active {
+  &.visible {
     transform: translate(0px);
     opacity: 1;
     pointer-events: initial;
