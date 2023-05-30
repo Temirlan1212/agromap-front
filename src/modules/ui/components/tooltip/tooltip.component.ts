@@ -12,6 +12,7 @@ import { Subject, delay, filter, fromEvent, takeUntil } from 'rxjs';
   selector: 'app-tooltip',
   templateUrl: './tooltip.component.html',
   styleUrls: ['./tooltip.component.scss'],
+  standalone: true,
 })
 export class TooltipComponent implements AfterViewInit, OnDestroy {
   @HostBinding('class.visible')
