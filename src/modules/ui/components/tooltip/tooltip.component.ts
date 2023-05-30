@@ -4,106 +4,104 @@ import {
   ElementRef,
   HostBinding,
   Input,
+  OnDestroy,
 } from '@angular/core';
+import { Subject, delay, filter, fromEvent, takeUntil } from 'rxjs';
 
 @Component({
-  selector: 'tooltip-component',
+  selector: 'app-tooltip',
   templateUrl: './tooltip.component.html',
   styleUrls: ['./tooltip.component.scss'],
-  standalone: true,
 })
-export class TooltipComponent implements AfterViewInit {
+export class TooltipComponent implements AfterViewInit, OnDestroy {
+  @HostBinding('class.active')
+  isShow: boolean = false;
+
   @HostBinding('class')
   @Input()
-  placement: 'top' | 'right' | 'bottom' | 'left' = 'right';
-  @Input() top: string = '';
+  placement: 'top' | 'right' | 'bottom' | 'left' = 'left';
+
+  @Input() delay: number = 300;
 
   element: HTMLElement;
   parentElement: HTMLElement | null;
-  showTimeout?: number;
-  componentRef: any;
+  destroy$: Subject<boolean> = new Subject<boolean>();
 
-  constructor(private elRef: ElementRef) {
-    this.element = this.elRef.nativeElement;
+  constructor(private elementRef: ElementRef) {
+    this.element = this.elementRef.nativeElement;
     this.parentElement = this.element.parentElement;
   }
 
-  ngAfterViewInit() {
-    this.parentElement?.addEventListener('mouseenter', () => {
-      this.closeTooltip();
-      this.showTimeout = window.setTimeout(this.showTooltip.bind(this), 0);
-    });
-
-    this.parentElement?.addEventListener('mouseleave', () => {
-      this.closeTooltip();
-      window.clearInterval(this.showTimeout);
-    });
-  }
-
-  closeTooltip() {
-    const eRect = this.element.getBoundingClientRect();
-    const pRect = this.parentElement?.getBoundingClientRect();
-    const arrowSize = 8;
-
+  private adjustPlacement(
+    eRect: DOMRect,
+    pRect: DOMRect
+  ): { top: number; left: number } {
+    const arrowSize = 15;
     let top = 0;
     let left = 0;
 
-    if (pRect !== undefined && this.placement === 'top') {
-      top = pRect.top - eRect.height - arrowSize - 20;
-      left = pRect.left + pRect.width / 2 - eRect.width / 2;
-    }
-
-    if (pRect !== undefined && this.placement === 'right') {
-      top = pRect.top + arrowSize - eRect.height / 8;
-      left = pRect.right + arrowSize - 20;
-    }
-
-    if (pRect !== undefined && this.placement === 'bottom') {
-      top = pRect.bottom + arrowSize + 20;
-      left = pRect.left + pRect.width / 2 - eRect.width / 2;
-    }
-
-    if (pRect !== undefined && this.placement === 'left') {
-      top = pRect.top + arrowSize - eRect.height / 2;
-      left = pRect.left - eRect.width - arrowSize + 20;
-    }
-
-    this.element.style.top = `${top + +this.top}px`;
-    this.element.style.left = `${left}px`;
-    this.element.style.opacity = `0`;
-  }
-
-  showTooltip() {
-    const eRect = this.element.getBoundingClientRect();
-    const pRect = this.parentElement?.getBoundingClientRect();
-    const arrowSize = 8;
-
-    let top = 0;
-    let left = 0;
-
-    if (pRect !== undefined && this.placement === 'top') {
+    if (this.placement === 'top') {
       top = pRect.top - eRect.height - arrowSize;
       left = pRect.left + pRect.width / 2 - eRect.width / 2;
     }
 
-    if (pRect !== undefined && this.placement === 'right') {
-      top = pRect.top + arrowSize - eRect.height / 8;
+    if (this.placement === 'right') {
+      top = pRect.top + arrowSize - eRect.height / 2 + 7;
       left = pRect.right + arrowSize;
     }
 
-    if (pRect !== undefined && this.placement === 'bottom') {
+    if (this.placement === 'bottom') {
       top = pRect.bottom + arrowSize;
       left = pRect.left + pRect.width / 2 - eRect.width / 2;
     }
 
-    if (pRect !== undefined && this.placement === 'left') {
-      top = pRect.top + arrowSize - eRect.height / 2;
+    if (this.placement === 'left') {
+      top = pRect.top + arrowSize - eRect.height / 2 + 7;
       left = pRect.left - eRect.width - arrowSize;
     }
 
-    this.element.style.top = `${top + +this.top}px`;
-    this.element.style.left = `${left}px`;
-    this.element.style.opacity = `1`;
-    this.element.style.transition = 'all 300ms';
+    return { top, left };
+  }
+
+  private show() {
+    const eRect = this.element.getBoundingClientRect();
+    const pRect = this.parentElement?.getBoundingClientRect();
+
+    if (pRect != undefined && !this.isShow) {
+      const { left, top } = this.adjustPlacement(eRect, pRect);
+      this.element.style.top = `${top}px`;
+      this.element.style.left = `${left}px`;
+      this.isShow = true;
+    }
+  }
+
+  private hide() {
+    this.isShow = false;
+  }
+
+  ngAfterViewInit() {
+    if (this.parentElement) {
+      const mouseenter = fromEvent(this.parentElement, 'mouseenter');
+      const mouseleave = fromEvent(this.parentElement, 'mouseleave');
+
+      mouseenter
+        .pipe(
+          delay(this.delay),
+          takeUntil(this.destroy$),
+          filter(() => !this.isShow)
+        )
+        .subscribe(this.show.bind(this));
+
+      mouseleave
+        .pipe(
+          takeUntil(this.destroy$),
+          filter(() => this.isShow)
+        )
+        .subscribe(this.hide.bind(this));
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.complete();
   }
 }
