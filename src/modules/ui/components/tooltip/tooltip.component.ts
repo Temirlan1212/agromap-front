@@ -21,7 +21,7 @@ export class TooltipComponent implements AfterViewInit, OnDestroy {
   @Input()
   placement: 'top' | 'right' | 'bottom' | 'left' = 'left';
 
-  @Input() delay: number = 300;
+  @Input() delay: number = 0;
 
   element: HTMLElement;
   parentElement: HTMLElement | null;
