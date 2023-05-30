@@ -94,6 +94,7 @@ export class TooltipComponent implements AfterViewInit, OnDestroy {
 
       mouseleave
         .pipe(
+          delay(this.delay),
           takeUntil(this.destroy$),
           filter(() => this.isShow)
         )
