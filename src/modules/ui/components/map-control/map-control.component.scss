@@ -1,17 +1,16 @@
 @import "constants";
 
-$transitionDelay: 0.2s;
 :host {
-  background-color: $tabBgColor;
-  border-radius: $tabBorderRadius;
-  padding: $tabPaddings;
-  color: $tabColor;
-  transition: all $transitionDelay;
+  background-color: $mapControlBgColor;
+  border-radius: $mapControlBorderRadius;
+  padding: $mapControlPaddings;
+  color: $mapControlColor;
+  transition: all $mapControlTransitionDelay;
   cursor: pointer;
 
   &.disabled {
-    color: $tabDisabledColor;
-    background-color: $tabDisabledBgColor;
+    color: $mapControlDisabledColor;
+    background-color: $mapControlDisabledBgColor;
     pointer-events: none;
   }
 
@@ -20,14 +19,14 @@ $transitionDelay: 0.2s;
   }
 
   &:hover {
-    background-color: $tabBgHoverColor;
+    background-color: $mapControlBgHoverColor;
   }
 
   &.active {
-    background-color: $tabActiveBgColor;
-    color: $tabActiveColor;
+    background-color: $mapControlActiveBgColor;
+    color: $mapControlActiveColor;
     &:hover {
-      background-color: $tabActiveBgHoverColor;
+      background-color: $mapControlActiveBgHoverColor;
     }
   }
 

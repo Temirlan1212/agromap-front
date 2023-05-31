@@ -14,7 +14,7 @@ import { TooltipComponent } from '../tooltip/tooltip.component';
   templateUrl: './map-control.component.html',
   styleUrls: ['./map-control.component.scss'],
   standalone: true,
-  host: { class: 'tab' },
+  host: { class: 'map-control' },
   imports: [SvgIconComponent, TooltipComponent],
 })
 export class MapControlComponent {
