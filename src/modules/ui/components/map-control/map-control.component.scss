@@ -1,0 +1,68 @@
+@import "constants";
+
+// base
+$basePaddings: 10px;
+$baseGap: 5px;
+$baseTransitionDelay: 0.2s;
+$baseHeight: 100%;
+// $baseHeight: auto;
+
+// tab
+$tabBgColor: $darkColor;
+$tabPaddings: 13.5px;
+$tabColor: $lightColor;
+$tabBorderRadius: 50%;
+$tabBgHoverColor: rgb(24, 23, 23);
+
+// tab-active
+$tabActiveBgColor: rgb(231, 231, 231);
+$tabActiveColor: $darkColor;
+$tabActiveBgHoverColor: $lightColor;
+
+//tab-disabled
+$tabDisabledBgColor: #5f5f5fea;
+$tabDisabledColor: rgba(165, 178, 188, 0.7);
+
+:host {
+  background-color: $tabBgColor;
+  border-radius: $tabBorderRadius;
+  padding: $tabPaddings;
+  color: $tabColor;
+  transition: all $baseTransitionDelay;
+  cursor: pointer;
+
+  &.disabled {
+    color: $tabDisabledColor;
+    background-color: $tabDisabledBgColor;
+    pointer-events: none;
+  }
+
+  .icon {
+    margin: auto;
+  }
+
+  &:hover {
+    background-color: $tabBgHoverColor;
+  }
+
+  &.active {
+    background-color: $tabActiveBgColor;
+    color: $tabActiveColor;
+    &:hover {
+      background-color: $tabActiveBgHoverColor;
+    }
+  }
+
+  &.transparent {
+    background-color: transparent;
+    padding: 0;
+  }
+
+  &.primary {
+    z-index: 999;
+  }
+
+  &.w-100 {
+    width: 100%;
+  }
+}
