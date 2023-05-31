@@ -1,3 +1,4 @@
+@import "constants";
 $arrowSize: 8px;
 
 :host {
@@ -8,10 +9,10 @@ $arrowSize: 8px;
   padding: 8px 16px 8px 16px;
   border-radius: 4px;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.200691);
-  background-color: #171923;
-  color: #fff;
-  font-size: 16px;
-  font-weight: 400;
+  background-color: $darkColor;
+  backdrop-filter: blur(30px);
+  color: $lightColor;
+  transition: all $fieldsGroupTransitionDelay ease;
   opacity: 0;
   pointer-events: none;
 
@@ -24,34 +25,44 @@ $arrowSize: 8px;
   }
 
   &.top {
+    transform: translate(0px, -10px);
     &::before {
       bottom: -$arrowSize * 2;
       right: calc(50% - $arrowSize);
-      border-top-color: #171923;
+      border-top-color: $darkColor;
     }
   }
 
   &.right {
+    transform: translate(10px, 0px);
     &::before {
       top: calc(50% - $arrowSize);
       right: 100%;
-      border-right-color: #171923;
+      border-right-color: $darkColor;
     }
   }
 
   &.bottom {
+    transform: translate(0px, 10px);
     &::before {
       top: -$arrowSize * 2;
       right: calc(50% - $arrowSize);
-      border-bottom-color: #171923;
+      border-bottom-color: $darkColor;
     }
   }
 
   &.left {
+    transform: translate(-10px, 0px);
     &::before {
       top: calc(50% - $arrowSize);
       right: -#{$arrowSize * 2};
-      border-left-color: #171923;
+      border-left-color: $darkColor;
     }
+  }
+
+  &.visible {
+    transform: translate(0px);
+    opacity: 1;
+    pointer-events: initial;
   }
 }
