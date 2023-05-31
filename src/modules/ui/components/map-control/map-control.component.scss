@@ -1,0 +1,45 @@
+@import "constants";
+
+:host {
+  background-color: $mapControlBgColor;
+  border-radius: $mapControlBorderRadius;
+  padding: $mapControlPaddings;
+  color: $mapControlColor;
+  transition: all $mapControlTransitionDelay;
+  cursor: pointer;
+
+  &.disabled {
+    color: $mapControlDisabledColor;
+    background-color: $mapControlDisabledBgColor;
+    pointer-events: none;
+  }
+
+  .icon {
+    margin: auto;
+  }
+
+  &:hover {
+    background-color: $mapControlBgHoverColor;
+  }
+
+  &.active {
+    background-color: $mapControlActiveBgColor;
+    color: $mapControlActiveColor;
+    &:hover {
+      background-color: $mapControlActiveBgHoverColor;
+    }
+  }
+
+  &.transparent {
+    background-color: transparent;
+    padding: 0;
+  }
+
+  &.primary {
+    z-index: 999;
+  }
+
+  &.w-100 {
+    width: 100%;
+  }
+}

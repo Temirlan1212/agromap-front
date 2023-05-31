@@ -88,3 +88,20 @@ $fieldsGroupTransitionDelay: 0.25s;
 // Mobile
 $mobileBottomNavHeight: 80px;
 $mobileNavMarginBottom: 5px;
+
+// mapControl
+$mapControlBgColor: $darkColor;
+$mapControlPaddings: 13.5px;
+$mapControlColor: $lightColor;
+$mapControlBorderRadius: 50%;
+$mapControlBgHoverColor: rgb(24, 23, 23);
+$mapControlTransitionDelay: 0.25s;
+
+// mapControl-active
+$mapControlActiveBgColor: rgb(231, 231, 231);
+$mapControlActiveColor: $darkColor;
+$mapControlActiveBgHoverColor: $lightColor;
+
+//mapControl-disabled
+$mapControlDisabledBgColor: #5f5f5fea;
+$mapControlDisabledColor: rgba(165, 178, 188, 0.7);
