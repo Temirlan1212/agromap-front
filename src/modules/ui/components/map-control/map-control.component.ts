@@ -7,6 +7,7 @@ import {
   Input,
 } from '@angular/core';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
+import { TooltipComponent } from '../tooltip/tooltip.component';
 
 @Component({
   selector: 'app-map-control',
@@ -14,10 +15,11 @@ import { SvgIconComponent } from '../svg-icon/svg-icon.component';
   styleUrls: ['./map-control.component.scss'],
   standalone: true,
   host: { class: 'tab' },
-  imports: [SvgIconComponent],
+  imports: [SvgIconComponent, TooltipComponent],
 })
 export class MapControlComponent {
   @Input() iconName: string = '';
+  @Input() tooltipTitle: string = '';
   @Output() onClick = new EventEmitter<boolean>();
 
   @HostBinding('class.active')

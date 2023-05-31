@@ -1,34 +1,12 @@
 @import "constants";
 
-// base
-$basePaddings: 10px;
-$baseGap: 5px;
-$baseTransitionDelay: 0.2s;
-$baseHeight: 100%;
-// $baseHeight: auto;
-
-// tab
-$tabBgColor: $darkColor;
-$tabPaddings: 13.5px;
-$tabColor: $lightColor;
-$tabBorderRadius: 50%;
-$tabBgHoverColor: rgb(24, 23, 23);
-
-// tab-active
-$tabActiveBgColor: rgb(231, 231, 231);
-$tabActiveColor: $darkColor;
-$tabActiveBgHoverColor: $lightColor;
-
-//tab-disabled
-$tabDisabledBgColor: #5f5f5fea;
-$tabDisabledColor: rgba(165, 178, 188, 0.7);
-
+$transitionDelay: 0.2s;
 :host {
   background-color: $tabBgColor;
   border-radius: $tabBorderRadius;
   padding: $tabPaddings;
   color: $tabColor;
-  transition: all $baseTransitionDelay;
+  transition: all $transitionDelay;
   cursor: pointer;
 
   &.disabled {

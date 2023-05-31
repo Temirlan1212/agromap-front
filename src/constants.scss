@@ -88,3 +88,19 @@ $fieldsGroupTransitionDelay: 0.25s;
 // Mobile
 $mobileBottomNavHeight: 80px;
 $mobileNavMarginBottom: 5px;
+
+// tab
+$tabBgColor: $darkColor;
+$tabPaddings: 13.5px;
+$tabColor: $lightColor;
+$tabBorderRadius: 50%;
+$tabBgHoverColor: rgb(24, 23, 23);
+
+// tab-active
+$tabActiveBgColor: rgb(231, 231, 231);
+$tabActiveColor: $darkColor;
+$tabActiveBgHoverColor: $lightColor;
+
+//tab-disabled
+$tabDisabledBgColor: #5f5f5fea;
+$tabDisabledColor: rgba(165, 178, 188, 0.7);
