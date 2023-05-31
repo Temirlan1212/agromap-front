@@ -1,72 +1,5 @@
 @import "constants";
 
-// base
-$basePaddings: 10px;
-$baseGap: 5px;
-$baseTransitionDelay: 0.2s;
-$baseHeight: 100%;
-// $baseHeight: auto;
-
-// tab
-$tabBgColor: $darkColor;
-$tabPaddings: 13.5px;
-$tabColor: $lightColor;
-$tabBorderRadius: 50%;
-$tabBgHoverColor: rgb(24, 23, 23);
-
-// tab-active
-$tabActiveBgColor: rgb(231, 231, 231);
-$tabActiveColor: $darkColor;
-$tabActiveBgHoverColor: $lightColor;
-
-//tab-disabled
-$tabDisabledBgColor: #5f5f5fea;
-$tabDisabledColor: rgba(165, 178, 188, 0.7);
-
-.tab {
-  background-color: $tabBgColor;
-  border-radius: $tabBorderRadius;
-  padding: $tabPaddings;
-  color: $tabColor;
-  transition: all $baseTransitionDelay;
-  cursor: pointer;
-
-  &.disabled {
-    color: $tabDisabledColor;
-    background-color: $tabDisabledBgColor;
-    pointer-events: none;
-  }
-
-  .icon {
-    margin: auto;
-  }
-
-  &:hover {
-    background-color: $tabBgHoverColor;
-  }
-
-  &.active {
-    background-color: $tabActiveBgColor;
-    color: $tabActiveColor;
-    &:hover {
-      background-color: $tabActiveBgHoverColor;
-    }
-  }
-
-  &.transparent {
-    background-color: transparent;
-    padding: 0;
-  }
-
-  &.primary {
-    z-index: 999;
-  }
-
-  &.w-100 {
-    width: 100%;
-  }
-}
-
 .rightPanel {
   z-index: 401;
   position: absolute;
@@ -80,9 +13,6 @@ $tabDisabledColor: rgba(165, 178, 188, 0.7);
   ::ng-deep {
     div[rightPanel] {
       display: contents;
-    }
-    .tab {
-      @extend .tab;
     }
   }
 }
@@ -107,8 +37,7 @@ $tabDisabledColor: rgba(165, 178, 188, 0.7);
       z-index: 402;
       pointer-events: initial;
     }
-    .tab {
-      @extend .tab;
+    .map-control {
       position: relative;
       display: inline-block;
       z-index: 400;
@@ -130,8 +59,7 @@ $tabDisabledColor: rgba(165, 178, 188, 0.7);
   align-items: flex-start;
 
   ::ng-deep {
-    .tab {
-      @extend .tab;
+    .map-control {
       position: relative;
       z-index: 401;
       pointer-events: initial;
