@@ -6,7 +6,8 @@ import {
   Input,
   OnDestroy,
 } from '@angular/core';
-import { Subject, delay, filter, fromEvent, takeUntil } from 'rxjs';
+import { fromEvent, Subject } from 'rxjs';
+import { delay, filter, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-tooltip',
@@ -16,90 +17,79 @@ import { Subject, delay, filter, fromEvent, takeUntil } from 'rxjs';
 })
 export class TooltipComponent implements AfterViewInit, OnDestroy {
   @HostBinding('class.visible')
-  isShow: boolean = false;
+  isShow = false;
 
   @HostBinding('class')
   @Input()
   placement: 'top' | 'right' | 'bottom' | 'left' = 'left';
 
-  @Input() delay: number = 0;
+  @HostBinding('style.width')
+  @Input()
+  width = '';
 
-  element: HTMLElement;
-  parentElement: HTMLElement | null;
-  destroy$: Subject<boolean> = new Subject<boolean>();
+  @Input() delay = 0;
 
-  constructor(private elementRef: ElementRef) {
-    this.element = this.elementRef.nativeElement;
-    this.parentElement = this.element.parentElement;
-  }
+  destroy$ = new Subject<void>();
 
-  private adjustPlacement(
-    eRect: DOMRect,
-    pRect: DOMRect
-  ): { top: number; left: number } {
-    const arrowSize = 15;
-    let top = 0;
-    let left = 0;
-
-    if (this.placement === 'top') {
-      top = pRect.top - eRect.height - arrowSize;
-      left = pRect.left + pRect.width / 2 - eRect.width / 2;
-    }
-
-    if (this.placement === 'right') {
-      top = pRect.top + arrowSize - eRect.height / 2 + 7;
-      left = pRect.right + arrowSize;
-    }
-
-    if (this.placement === 'bottom') {
-      top = pRect.bottom + arrowSize;
-      left = pRect.left + pRect.width / 2 - eRect.width / 2;
-    }
-
-    if (this.placement === 'left') {
-      top = pRect.top + arrowSize - eRect.height / 2 + 7;
-      left = pRect.left - eRect.width - arrowSize;
-    }
-
-    return { top, left };
-  }
+  constructor(private elementRef: ElementRef) {}
 
   private show() {
-    const eRect = this.element.getBoundingClientRect();
-    const pRect = this.parentElement?.getBoundingClientRect();
+    const eRect = this.elementRef.nativeElement.getBoundingClientRect();
+    const pRect =
+      this.elementRef.nativeElement.parentElement?.getBoundingClientRect();
 
-    if (pRect != undefined && !this.isShow) {
-      const { left, top } = this.adjustPlacement(eRect, pRect);
-      this.element.style.top = `${top}px`;
-      this.element.style.left = `${left}px`;
+    if (pRect && !this.isShow) {
       this.isShow = true;
+      const arrowSize = 15;
+      let top = 0;
+      let left = 0;
+
+      switch (this.placement) {
+        case 'top':
+          top = pRect.top - eRect.height - arrowSize;
+          left = pRect.left + pRect.width / 2 - eRect.width / 2;
+          break;
+        case 'right':
+          top = pRect.top + arrowSize - eRect.height / 2 + 7;
+          left = pRect.right + arrowSize;
+          break;
+        case 'bottom':
+          top = pRect.bottom + arrowSize;
+          left = pRect.left + pRect.width / 2 - eRect.width / 2;
+          break;
+        case 'left':
+          top = pRect.top + arrowSize - eRect.height / 2 + 7;
+          left = pRect.left - eRect.width - arrowSize;
+          break;
+      }
+
+      this.elementRef.nativeElement.style.top = `${top}px`;
+      this.elementRef.nativeElement.style.left = `${left}px`;
     }
   }
 
   private hide() {
-    this.isShow = false;
+    if (this.isShow) this.isShow = false;
   }
 
   ngAfterViewInit() {
-    if (this.parentElement) {
-      const mouseenter = fromEvent(this.parentElement, 'mouseenter');
-      const mouseleave = fromEvent(this.parentElement, 'mouseleave');
-
-      mouseenter
+    const parentElement = this.elementRef.nativeElement.parentElement;
+    if (parentElement) {
+      fromEvent(parentElement, 'mouseenter')
         .pipe(
           delay(this.delay),
           takeUntil(this.destroy$),
           filter(() => !this.isShow)
         )
-        .subscribe(this.show.bind(this));
+        .subscribe(() => this.show());
 
-      mouseleave
+      fromEvent(parentElement, 'mouseleave')
         .pipe(
           delay(this.delay),
           takeUntil(this.destroy$),
           filter(() => this.isShow)
         )
-        .subscribe(this.hide.bind(this));
+        .subscribe(() => this.hide());
     }
   }
 
