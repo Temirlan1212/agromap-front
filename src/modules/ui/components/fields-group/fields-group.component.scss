@@ -29,14 +29,16 @@
   .body {
     max-height: 100%;
     overflow: hidden;
-    transition: max-height $fieldsGroupTransitionDelay;
+    transition: all $fieldsGroupTransitionDelay;
 
     .content {
       padding: $fieldsGroupContentPadding;
     }
 
     &.closed {
-      max-height: 0;
+      opacity: 0;
+      transform: translate(0px, -10px);
+      pointer-events: none;
     }
   }
 }
