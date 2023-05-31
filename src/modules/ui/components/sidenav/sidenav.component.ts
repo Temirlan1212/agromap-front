@@ -16,6 +16,7 @@ import {
 } from 'src/modules/ui/models/language.model';
 import { StoreService } from 'src/modules/ui/services/store.service';
 import { INotification } from '../../../api/models/notification.model';
+import { TooltipComponent } from '../tooltip/tooltip.component';
 
 @Component({
   selector: 'app-sidenav',
@@ -27,6 +28,7 @@ import { INotification } from '../../../api/models/notification.model';
     RouterLinkActive,
     SvgIconComponent,
     TranslateModule,
+    TooltipComponent,
   ],
   templateUrl: './sidenav.component.html',
   styleUrls: ['./sidenav.component.scss'],

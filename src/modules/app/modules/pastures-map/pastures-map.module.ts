@@ -46,6 +46,7 @@ import { ToggleButtonComponent } from '../../../ui/components/toggle-button/togg
 import { ColorLegendComponent } from 'src/modules/ui/components/color-legend/color-legend.component';
 import { MapComparisonComponent } from './components/map-comparison/map-comparison.component';
 import { YieldMapComponent } from './components/yield-map/yield-map.component';
+import { TooltipComponent } from 'src/modules/ui/components/tooltip/tooltip.component';
 
 @NgModule({
   declarations: [
@@ -98,6 +99,7 @@ import { YieldMapComponent } from './components/yield-map/yield-map.component';
     TabComponent,
     ToggleButtonComponent,
     ColorLegendComponent,
+    TooltipComponent,
   ],
   providers: [MapService, TranslatePipe],
 })

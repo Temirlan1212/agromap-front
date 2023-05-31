@@ -25,35 +25,56 @@
   >
     <app-map-controls controls>
       <div rightPanel>
-        <app-map-control-split-map
-          routerLink="split-map"
-          *ngIf="layerFeature"
-          [isActive]="currentRouterPathname.includes('split-map')"
-        >
-        </app-map-control-split-map>
+        <div>
+          <app-map-control-split-map
+            routerLink="split-map"
+            *ngIf="layerFeature"
+            [isActive]="currentRouterPathname.includes('split-map')"
+          >
+          </app-map-control-split-map>
+          <app-tooltip
+            width="130px"
+            [textContent]="'Comparison of images' | translate"
+          ></app-tooltip>
+        </div>
+
         <ng-container rightPanel>
           <app-map-control-zoom
             *ngIf="mapData"
             [map]="mapData.map"
           ></app-map-control-zoom>
-          <app-map-control-layers-switch
-            [hidden]="
-              currentRouterPathname.includes('contour-add') ||
-              currentRouterPathname.includes('contour-edit')
-            "
-            #mapControls
-            [mode]="mode"
-            *ngIf="mapData"
-            [map]="mapData.map"
-            [baseLayers]="baseLayers"
-            [wmsLayers]="wmsLayers"
-            [wmsSelectedStatusLayers]="wmsSelectedStatusLayers"
-            (wmsLayerChanged)="handleWmsLayerChanged($event)"
-          ></app-map-control-layers-switch>
-          <app-map-control-locate
-            *ngIf="mapData && !layerFeature"
-            [map]="mapData.map"
-          ></app-map-control-locate>
+
+          <div>
+            <app-map-control-layers-switch
+              [hidden]="
+                currentRouterPathname.includes('contour-add') ||
+                currentRouterPathname.includes('contour-edit')
+              "
+              #mapControls
+              [mode]="mode"
+              *ngIf="mapData"
+              [map]="mapData.map"
+              [baseLayers]="baseLayers"
+              [wmsLayers]="wmsLayers"
+              [wmsSelectedStatusLayers]="wmsSelectedStatusLayers"
+              (wmsLayerChanged)="handleWmsLayerChanged($event)"
+            ></app-map-control-layers-switch>
+            <app-tooltip
+              [textContent]="'Layers' | translate"
+              *ngIf="mapControls && !mapControls.isCollapsed"
+            ></app-tooltip>
+          </div>
+
+          <div>
+            <app-map-control-locate
+              *ngIf="mapData && !layerFeature"
+              [map]="mapData.map"
+            ></app-map-control-locate>
+            <app-tooltip
+              width="150px"
+              [textContent]="'My location' | translate"
+            ></app-tooltip>
+          </div>
 
           <div
             *ngIf="
@@ -68,6 +89,10 @@
             "
           >
             <app-svg-icon name="add-layer" size="14"></app-svg-icon>
+            <app-tooltip
+              width="100px"
+              [textContent]="'Add contour' | translate"
+            ></app-tooltip>
           </div>
         </ng-container>
       </div>
@@ -90,6 +115,7 @@
         ></app-map-control-veg-indexes>
 
         <app-map-control-statistics
+          [tooltipTitle]="'Land area statistics' | translate"
           *ngIf="!activeContour"
           [collapseOnChanges]="
             contourPastureStatisticsProductivityTableItems ||

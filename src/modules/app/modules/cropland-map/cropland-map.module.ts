@@ -44,6 +44,7 @@ import { ContourInfoComponent } from './components/contour-info/contour-info.com
 import { ContourDetailsComponent } from './components/contour-details/contour-details.component';
 import { ToggleButtonComponent } from '../../../ui/components/toggle-button/toggle-button.component';
 import { ColorLegendComponent } from 'src/modules/ui/components/color-legend/color-legend.component';
+import { TooltipComponent } from 'src/modules/ui/components/tooltip/tooltip.component';
 
 @NgModule({
   declarations: [
@@ -94,6 +95,7 @@ import { ColorLegendComponent } from 'src/modules/ui/components/color-legend/col
     TabComponent,
     ToggleButtonComponent,
     ColorLegendComponent,
+    TooltipComponent,
   ],
   providers: [MapService, TranslatePipe],
 })
