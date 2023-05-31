@@ -7,33 +7,31 @@
   [featureTitle]="'Vegetative indexes' | translate"
 >
   <app-map-controls controls>
-    <div rightPanel>
-      <ng-container rightPanel>
-        <app-map-control-zoom
-          *ngIf="mapData"
-          [map]="mapData.map"
-        ></app-map-control-zoom>
-        <app-map-control-layers-switch
-          [hidden]="
-            currentRouterPathname.includes('contour-add') ||
-            currentRouterPathname.includes('contour-edit')
-          "
-          #mapControls
-          [mode]="mode"
-          *ngIf="mapData"
-          [map]="mapData.map"
-          [baseLayers]="baseLayers"
-          [wmsLayers]="wmsLayers"
-          [wmsSelectedStatusLayers]="wmsSelectedStatusLayers"
-          (wmsLayerChanged)="handleWmsLayerChanged($event)"
-          [storageName]="storageName"
-        ></app-map-control-layers-switch>
-        <app-map-control-locate
-          *ngIf="mapData && !layerFeature"
-          [map]="mapData.map"
-        ></app-map-control-locate>
-      </ng-container>
-    </div>
+    <ng-container rightPanel>
+      <app-map-control-zoom
+        *ngIf="mapData"
+        [map]="mapData.map"
+      ></app-map-control-zoom>
+      <app-map-control-layers-switch
+        [hidden]="
+          currentRouterPathname.includes('contour-add') ||
+          currentRouterPathname.includes('contour-edit')
+        "
+        #mapControls
+        [mode]="mode"
+        *ngIf="mapData"
+        [map]="mapData.map"
+        [baseLayers]="baseLayers"
+        [wmsLayers]="wmsLayers"
+        [wmsSelectedStatusLayers]="wmsSelectedStatusLayers"
+        (wmsLayerChanged)="handleWmsLayerChanged($event)"
+        [storageName]="storageName"
+      ></app-map-control-layers-switch>
+      <app-map-control-locate
+        *ngIf="mapData && !layerFeature"
+        [map]="mapData.map"
+      ></app-map-control-locate>
+    </ng-container>
 
     <ng-container
       topPanel
@@ -42,12 +40,12 @@
         !currentRouterPathname.includes('contour-edit')
       "
     >
-      <div
-        class="tab transparent w-100"
+      <app-map-control
+        class="transparent w-100"
         *ngIf="title && !activeContour && !layerFeature"
       >
         <h3 class="title" [textContent]="title"></h3>
-      </div>
+      </app-map-control>
 
       <app-map-control-veg-indexes
         *ngIf="layerFeature && mapData"
@@ -94,7 +92,7 @@
         </app-content-tabs>
       </app-map-control-statistics>
 
-      <div class="tab transparent d-xs-none">
+      <app-map-control class="transparent d-xs-none">
         <app-contour-details
           [hidden]="map?.['feautureCollapse']"
           #contourDetails
@@ -103,12 +101,12 @@
           (onCancelClick)="map.handleFeatureClose()"
           *ngIf="showActiveContourInfo"
         >
-        </app-contour-details>
-      </div>
+        </app-contour-details
+      ></app-map-control>
 
-      <div
+      <app-map-control
         *ngIf="activeContourSmall && !(layerFeature && activeContour)"
-        class="tab transparent d-xs-none"
+        class="transparent d-xs-none"
       >
         <app-contour-details
           #contourDetails
@@ -117,11 +115,11 @@
           (onCancelClick)="map.handleFeatureClose()"
         >
         </app-contour-details>
-      </div>
+      </app-map-control>
     </ng-container>
 
     <ng-container leftBottomPanel>
-      <div class="tab transparent">
+      <app-map-control class="transparent">
         <app-color-legend
           [hidden]="
             currentRouterPathname.includes('contour-add') ||
@@ -130,10 +128,13 @@
           *ngIf="pasturesMapControlLayersSwitch['ndvi_heat_map']?.['name'] && (!map?.['feautureCollapse'] || !map?.['featureOpen'])"
           [maxHeight]="'200px'"
           [items]="wmsProductivityLayerColorLegend"
-        ></app-color-legend>
-      </div>
+        ></app-color-legend
+      ></app-map-control>
 
-      <div class="tab transparent" *ngIf="showLegends['productivityStatus']">
+      <app-map-control
+        class="transparent"
+        *ngIf="showLegends['productivityStatus']"
+      >
         <app-color-legend
           [hidden]="
             currentRouterPathname.includes('contour-add') ||
@@ -145,8 +146,8 @@
             { label: 'Productive' | translate, color: '#1BA87D' },
             { label: 'Unproductive' | translate, color: '#B3EC84' }
           ]"
-        ></app-color-legend>
-      </div>
+        ></app-color-legend
+      ></app-map-control>
     </ng-container>
   </app-map-controls>
 

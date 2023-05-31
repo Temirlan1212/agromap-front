@@ -1,28 +1,25 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { SvgIconComponent } from '../svg-icon/svg-icon.component'
+import { SvgIconComponent } from '../svg-icon/svg-icon.component';
+import { MapControlComponent } from '../map-control/map-control.component';
 
 @Component({
   selector: 'app-map-control-zoom',
   templateUrl: './map-control-zoom.component.html',
   styleUrls: ['./map-control-zoom.component.scss'],
   standalone: true,
-  imports: [
-    SvgIconComponent,
-  ],
+  imports: [SvgIconComponent, MapControlComponent],
 })
-
 export class MapControlZoomComponent implements OnInit {
   @Input() map!: L.Map;
 
   isZoomInControlDisabled = false;
   isZoomOutControlDisabled = false;
-  
+
   zoomLevel = 0;
   minZoom = 0;
   maxZoom = 0;
 
-  constructor() {
-  }
+  constructor() {}
 
   handleZoomInClick() {
     this.zoomLevel = this.map.getZoom();
@@ -42,11 +39,11 @@ export class MapControlZoomComponent implements OnInit {
   ngOnInit() {
     this.maxZoom = this.map.getMaxZoom();
     this.minZoom = this.map.getMinZoom();
-    this.checkIsDisabledZoomControls()
-   
-    this.map.on("zoom", () => {
+    this.checkIsDisabledZoomControls();
+
+    this.map.on('zoom', () => {
       this.zoomLevel = this.map.getZoom();
-      this.checkIsDisabledZoomControls()
-    })
+      this.checkIsDisabledZoomControls();
+    });
   }
 }

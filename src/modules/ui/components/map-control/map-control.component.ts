@@ -1,13 +1,13 @@
 import {
   Component,
   EventEmitter,
-  HostBinding,
   HostListener,
   Output,
   Input,
 } from '@angular/core';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
 import { TooltipComponent } from '../tooltip/tooltip.component';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-map-control',
@@ -15,19 +15,18 @@ import { TooltipComponent } from '../tooltip/tooltip.component';
   styleUrls: ['./map-control.component.scss'],
   standalone: true,
   host: { class: 'map-control' },
-  imports: [SvgIconComponent, TooltipComponent],
+  imports: [SvgIconComponent, TooltipComponent, CommonModule],
 })
 export class MapControlComponent {
   @Input() iconName: string = '';
   @Input() tooltipTitle: string = '';
+  @Input() tooltipPlacement: 'top' | 'right' | 'bottom' | 'left' = 'left';
   @Output() onClick = new EventEmitter<boolean>();
 
-  @HostBinding('class.active')
   public isSelected = false;
 
   @HostListener('click', ['$event'])
   public click() {
-    this.isSelected = !this.isSelected;
-    this.onClick.emit(this.isSelected);
+    this.onClick.emit((this.isSelected = !this.isSelected));
   }
 }

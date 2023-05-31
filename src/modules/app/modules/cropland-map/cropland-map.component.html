@@ -24,53 +24,51 @@
     [featureTitle]="'Vegetative indexes' | translate"
   >
     <app-map-controls controls>
-      <div rightPanel>
-        <app-map-control-split-map
+      <ng-container rightPanel>
+        <app-map-control
           routerLink="split-map"
           *ngIf="layerFeature"
-          [isActive]="currentRouterPathname.includes('split-map')"
-        >
-        </app-map-control-split-map>
-        <ng-container rightPanel>
-          <app-map-control-zoom
-            *ngIf="mapData"
-            [map]="mapData.map"
-          ></app-map-control-zoom>
-          <app-map-control-layers-switch
-            [hidden]="
-              currentRouterPathname.includes('contour-add') ||
-              currentRouterPathname.includes('contour-edit')
-            "
-            #mapControls
-            [mode]="mode"
-            *ngIf="mapData"
-            [map]="mapData.map"
-            [baseLayers]="baseLayers"
-            [wmsLayers]="wmsLayers"
-            [wmsSelectedStatusLayers]="wmsSelectedStatusLayers"
-            (wmsLayerChanged)="handleWmsLayerChanged($event)"
-          ></app-map-control-layers-switch>
-          <app-map-control-locate
-            *ngIf="mapData && !layerFeature"
-            [map]="mapData.map"
-          ></app-map-control-locate>
+          iconName="split-screen"
+          [class.active]="currentRouterPathname.includes('split-map')"
+        ></app-map-control>
 
-          <div
-            *ngIf="
-              user != null && !currentRouterPathname.includes('contour-edit')
-            "
-            class="tab"
-            [class.active]="currentRouterPathname.includes('contour-add')"
-            [routerLink]="
-              currentRouterPathname.includes('contour-add')
-                ? '/cropland-map'
-                : 'contour-add'
-            "
-          >
-            <app-svg-icon name="add-layer" size="14"></app-svg-icon>
-          </div>
-        </ng-container>
-      </div>
+        <app-map-control-zoom
+          *ngIf="mapData"
+          [map]="mapData.map"
+        ></app-map-control-zoom>
+        <app-map-control-layers-switch
+          [hidden]="
+            currentRouterPathname.includes('contour-add') ||
+            currentRouterPathname.includes('contour-edit')
+          "
+          #mapControls
+          [mode]="mode"
+          *ngIf="mapData"
+          [map]="mapData.map"
+          [baseLayers]="baseLayers"
+          [wmsLayers]="wmsLayers"
+          [wmsSelectedStatusLayers]="wmsSelectedStatusLayers"
+          (wmsLayerChanged)="handleWmsLayerChanged($event)"
+        ></app-map-control-layers-switch>
+        <app-map-control-locate
+          *ngIf="mapData && !layerFeature"
+          [map]="mapData.map"
+        ></app-map-control-locate>
+
+        <app-map-control
+          *ngIf="
+            user != null && !currentRouterPathname.includes('contour-edit')
+          "
+          [class.active]="currentRouterPathname.includes('contour-add')"
+          [routerLink]="
+            currentRouterPathname.includes('contour-add')
+              ? '/cropland-map'
+              : 'contour-add'
+          "
+          iconName="add-layer"
+        ></app-map-control>
+      </ng-container>
+
       <ng-container
         topPanel
         *ngIf="
@@ -143,8 +141,8 @@
           </app-content-tabs>
         </app-map-control-statistics>
 
-        <div
-          class="tab transparent d-xs-none"
+        <app-map-control
+          class="transparent d-xs-none"
           *ngIf="!map?.['feautureCollapse']"
         >
           <app-contour-details
@@ -155,11 +153,11 @@
             (onCancelClick)="map.handleFeatureClose()"
           >
           </app-contour-details>
-        </div>
+        </app-map-control>
 
-        <div
+        <app-map-control
           *ngIf="activeContourSmall && !(layerFeature && activeContour)"
-          class="tab transparent d-xs-none"
+          class="transparent d-xs-none"
         >
           <app-contour-details
             [hidden]="currentRouterPathname.includes('split-map')"
@@ -169,11 +167,11 @@
             (onCancelClick)="map.handleFeatureClose()"
           >
           </app-contour-details>
-        </div>
+        </app-map-control>
       </ng-container>
 
       <ng-container leftBottomPanel>
-        <div class="tab transparent">
+        <app-map-control class="transparent">
           <app-color-legend
             [hidden]="
               currentRouterPathname.includes('contour-add') ||
@@ -183,7 +181,7 @@
             [maxHeight]="'200px'"
             [items]="wmsProductivityLayerColorLegend"
           ></app-color-legend>
-        </div>
+        </app-map-control>
       </ng-container>
     </app-map-controls>
 
@@ -248,7 +246,8 @@
       : 'filter'
   "
 ></app-toggle-button>
-<div
+
+<app-map-control
   class="tab transparent d-none d-xs-block"
   *ngIf="!map?.['feautureCollapse']"
 >
@@ -259,5 +258,5 @@
     [activeContour]="activeContour"
     (onCancelClick)="map.handleFeatureClose()"
   >
-  </app-contour-details>
-</div>
+  </app-contour-details
+></app-map-control>

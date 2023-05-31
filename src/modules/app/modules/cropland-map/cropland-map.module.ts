@@ -26,7 +26,6 @@ import { MapControlLayersSwitchComponent } from 'src/modules/ui/components/map-c
 import { MapControlVegIndexesComponent } from 'src/modules/ui/components/map-control-veg-indexes/map-control-veg-indexes.component';
 import { ContourEditComponent } from './components/contour-edit/contour-edit.component';
 import { QuestionDialogComponent } from '../../../ui/components/question-dialog/question-dialog.component';
-import { MapControlSplitMapComponent } from 'src/modules/ui/components/map-control-split-map/map-control-split-map.component';
 import { SplitMapSidebarComponent } from './components/split-map-sidebar/split-map-sidebar.component';
 import { SplitMapComponent } from 'src/modules/ui/components/split-map/split-map.component';
 import { LoadingComponent } from 'src/modules/ui/components/loading/loading.component';
@@ -44,6 +43,7 @@ import { ContourInfoComponent } from './components/contour-info/contour-info.com
 import { ContourDetailsComponent } from './components/contour-details/contour-details.component';
 import { ToggleButtonComponent } from '../../../ui/components/toggle-button/toggle-button.component';
 import { ColorLegendComponent } from 'src/modules/ui/components/color-legend/color-legend.component';
+import { MapControlComponent } from 'src/modules/ui/components/map-control/map-control.component';
 
 @NgModule({
   declarations: [
@@ -79,7 +79,6 @@ import { ColorLegendComponent } from 'src/modules/ui/components/color-legend/col
     MapControlZoomComponent,
     MapControlLayersSwitchComponent,
     QuestionDialogComponent,
-    MapControlSplitMapComponent,
     SplitMapComponent,
     LoadingComponent,
     UnitPipe,
@@ -94,6 +93,7 @@ import { ColorLegendComponent } from 'src/modules/ui/components/color-legend/col
     TabComponent,
     ToggleButtonComponent,
     ColorLegendComponent,
+    MapControlComponent,
   ],
   providers: [MapService, TranslatePipe],
 })

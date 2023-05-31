@@ -3,13 +3,14 @@ import { Component, Inject, Input, OnInit } from '@angular/core';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
 import * as L from 'leaflet';
 import 'leaflet.locatecontrol';
+import { MapControlComponent } from '../map-control/map-control.component';
 
 @Component({
   selector: 'app-map-control-locate',
   templateUrl: './map-control-locate.component.html',
   styleUrls: ['./map-control-locate.component.scss'],
   standalone: true,
-  imports: [CommonModule, SvgIconComponent],
+  imports: [CommonModule, SvgIconComponent, MapControlComponent],
 })
 export class MapControlLocateComponent implements OnInit {
   @Input() map!: L.Map;

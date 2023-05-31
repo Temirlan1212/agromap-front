@@ -1,14 +1,11 @@
-<div
-  class="tab"
+<app-map-control
   [class.disabled]="isZoomInControlDisabled"
-  (click)="handleZoomInClick()"
->
-  <app-svg-icon name="plus" class="icon" size="16px"></app-svg-icon>
-</div>
-<div
-  class="tab"
+  iconName="plus"
+  (onClick)="handleZoomInClick()"
+></app-map-control>
+
+<app-map-control
   [class.disabled]="isZoomOutControlDisabled"
-  (click)="handleZoomOutClick()"
->
-  <app-svg-icon name="minus" class="icon" size="16px"></app-svg-icon>
-</div>
+  iconName="minus"
+  (onClick)="handleZoomOutClick()"
+></app-map-control>
