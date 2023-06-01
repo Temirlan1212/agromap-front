@@ -17,7 +17,7 @@ import {
 } from 'src/modules/ui/models/map.model';
 import { YieldMapComponent } from '../yield-map/yield-map.component';
 import { Subscription } from 'rxjs';
-import { LatLngBounds, tileLayer } from 'leaflet';
+import { LatLngBounds } from 'leaflet';
 import { StoreService } from 'src/modules/ui/services/store.service';
 import { GeoJSON } from 'geojson';
 
@@ -35,12 +35,6 @@ export class MapComparisonComponent
   subscriptions: Subscription[] = [];
   maps: ILeafletMap[] = [];
   polygons!: GeoJSON;
-
-  wmsLayersOptions = {
-    format: 'image/png',
-    transparent: true,
-    zIndex: 500,
-  };
 
   @Output() clickBack = new EventEmitter<boolean>(false);
   @Output() onDestroy = new EventEmitter();
@@ -104,6 +98,46 @@ export class MapComparisonComponent
     component.handleFeatureClose();
   }
 
+  handleFeatureMouseOver(
+    component: YieldMapComponent,
+    layerFeature: MapLayerFeature
+  ) {
+    component.mapComponent.geoJson.getLayers().some((layer: any) => {
+      const id = layerFeature.feature.properties?.['id'];
+      const currId = layer.feature.properties.id;
+      if (id === currId) {
+        layer.setStyle({
+          color: '#fff',
+          weight: 3,
+        });
+      }
+    });
+
+    component.activeContourSmall = {
+      culture: layerFeature?.feature?.properties?.['culture'],
+      area_ha: layerFeature?.feature?.properties?.['area_ha'],
+      contour_id: layerFeature?.feature?.properties?.['id'],
+    };
+  }
+
+  handleFeatureMouseLeave(
+    component: YieldMapComponent,
+    layerFeature: MapLayerFeature
+  ) {
+    component.mapComponent.geoJson.getLayers().some((layer: any) => {
+      const id = layerFeature.feature.properties?.['id'];
+      const currId = layer.feature.properties.id;
+      if (id === currId) {
+        layer.setStyle({
+          color: 'rgba(51,136,255,0.5)',
+          weight: 1,
+        });
+      }
+    });
+
+    component.activeContourSmall = null;
+  }
+
   async handleMapMove(mapMove: MapMove): Promise<void> {
     this.store.setItem<Record<string, LatLngBounds | number>>('HomeComponent', {
       mapBounds: mapMove.bounds,
@@ -148,11 +182,11 @@ export class MapComparisonComponent
           (mapLayerFeature: MapLayerFeature) =>
             refs.forEach((ref) => this.onEachFeature(mapLayerFeature, ref))
         ),
-        mapComponent.featureHover.subscribe((layerFeature: MapLayerFeature) =>
-          refs.forEach((ref) => ref.handleFeatureMouseOver(layerFeature))
-        ),
+        mapComponent.featureHover.subscribe((layerFeature: MapLayerFeature) => {
+          refs.forEach((ref) => this.handleFeatureMouseOver(ref, layerFeature));
+        }),
         mapComponent.featureUnhover.subscribe((layerFeature: MapLayerFeature) =>
-          refs.forEach((ref) => ref.handleFeatureMouseLeave(layerFeature))
+          refs.forEach((ref) => this.handleFeatureMouseLeave(ref, layerFeature))
         ),
         ref.onDateSelect?.subscribe(() => {
           refs.first.contourDetailsComponents.map((c) => (c.isHidden = true));
