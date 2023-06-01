@@ -17,7 +17,7 @@ import {
 } from 'src/modules/ui/models/map.model';
 import { YieldMapComponent } from '../yield-map/yield-map.component';
 import { Subscription } from 'rxjs';
-import { LatLngBounds } from 'leaflet';
+import { LatLngBounds, tileLayer } from 'leaflet';
 import { StoreService } from 'src/modules/ui/services/store.service';
 import { GeoJSON } from 'geojson';
 
@@ -35,6 +35,12 @@ export class MapComparisonComponent
   subscriptions: Subscription[] = [];
   maps: ILeafletMap[] = [];
   polygons!: GeoJSON;
+
+  wmsLayersOptions = {
+    format: 'image/png',
+    transparent: true,
+    zIndex: 500,
+  };
 
   @Output() clickBack = new EventEmitter<boolean>(false);
   @Output() onDestroy = new EventEmitter();

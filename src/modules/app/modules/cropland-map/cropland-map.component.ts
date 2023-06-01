@@ -189,6 +189,7 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
   mapControlLayersSwitch: Record<string, any> = {};
   filterFormValues!: any;
   sidePanelData: Record<string, any> = {};
+  activeVegIndexId: number | null = null;
 
   constructor(
     private api: ApiService,
@@ -336,8 +337,8 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
       });
     await this.getContour(Number(cid));
 
-    if (this.vegIndexOptionsList[0]?.id) {
-      this.getVegSatelliteDates(cid, this.vegIndexOptionsList[0].id);
+    if (this.activeVegIndexId != null) {
+      this.getVegSatelliteDates(cid, this.activeVegIndexId);
     }
     this.store.setItem<Feature>('selectedLayerFeature', layerFeature.feature);
     const bounds = geoJSON(layerFeature.feature).getBounds();
@@ -565,16 +566,18 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
     try {
       this.vegIndexOptionsList =
         (await this.api.vegIndexes.getVegIndexList()) as IVegIndexOption[];
+      this.activeVegIndexId = this.vegIndexOptionsList[0].id;
     } catch (e: any) {
       this.messages.error(e.error?.message ?? e.message);
     }
   }
 
   handleVegIndexOptionClick(vegIndexOption: IVegIndexOption) {
+    this.activeVegIndexId = vegIndexOption.id;
     this.getVegSatelliteDates(
       this.layerFeature?.feature?.properties?.['contour_id'] ??
         this.layerFeature?.feature?.properties?.['id'],
-      vegIndexOption.id
+      this.activeVegIndexId
     );
   }
 

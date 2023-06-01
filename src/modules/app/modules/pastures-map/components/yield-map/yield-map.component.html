@@ -13,25 +13,38 @@
           *ngIf="mapData"
           [map]="mapData.map"
         ></app-map-control-zoom>
-        <app-map-control-layers-switch
-          [hidden]="
-            currentRouterPathname.includes('contour-add') ||
-            currentRouterPathname.includes('contour-edit')
-          "
-          #mapControls
-          [mode]="mode"
-          *ngIf="mapData"
-          [map]="mapData.map"
-          [baseLayers]="baseLayers"
-          [wmsLayers]="wmsLayers"
-          [wmsSelectedStatusLayers]="wmsSelectedStatusLayers"
-          (wmsLayerChanged)="handleWmsLayerChanged($event)"
-          [storageName]="storageName"
-        ></app-map-control-layers-switch>
-        <app-map-control-locate
-          *ngIf="mapData && !layerFeature"
-          [map]="mapData.map"
-        ></app-map-control-locate>
+        <div>
+          <app-map-control-layers-switch
+            [hidden]="
+              currentRouterPathname.includes('contour-add') ||
+              currentRouterPathname.includes('contour-edit')
+            "
+            #mapControls
+            [mode]="mode"
+            *ngIf="mapData"
+            [map]="mapData.map"
+            [baseLayers]="baseLayers"
+            [wmsLayers]="wmsLayers"
+            [wmsSelectedStatusLayers]="wmsSelectedStatusLayers"
+            (wmsLayerChanged)="handleWmsLayerChanged($event)"
+            [storageName]="storageName"
+          ></app-map-control-layers-switch>
+          <app-tooltip
+            [textContent]="'Layers' | translate"
+            *ngIf="mapControls && !mapControls.isCollapsed"
+          ></app-tooltip>
+        </div>
+
+        <div>
+          <app-map-control-locate
+            *ngIf="mapData && !layerFeature"
+            [map]="mapData.map"
+          ></app-map-control-locate>
+          <app-tooltip
+            width="150px"
+            [textContent]="'My location' | translate"
+          ></app-tooltip>
+        </div>
       </ng-container>
     </div>
 

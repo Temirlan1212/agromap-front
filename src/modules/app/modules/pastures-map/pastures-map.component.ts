@@ -200,6 +200,7 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
   filterFormValues!: any;
   filterFormResetValues!: any;
   isChildRoute: boolean = false;
+  activeVegIndexId: number | null = null;
 
   constructor(
     private api: ApiService,
@@ -342,8 +343,8 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
       });
     await this.getContour(Number(cid));
 
-    if (this.vegIndexOptionsList[0]?.id) {
-      this.getVegSatelliteDates(cid, this.vegIndexOptionsList[0].id);
+    if (this.activeVegIndexId != null) {
+      this.getVegSatelliteDates(cid, this.activeVegIndexId);
     }
     this.store.setItem<Feature>(
       'PasturesMapSelectedLayerFeature',
@@ -589,16 +590,18 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
     try {
       this.vegIndexOptionsList =
         (await this.api.vegIndexes.getVegIndexList()) as IVegIndexOption[];
+      this.activeVegIndexId = this.vegIndexOptionsList[0].id;
     } catch (e: any) {
       console.log(e);
     }
   }
 
   handleVegIndexOptionClick(vegIndexOption: IVegIndexOption) {
+    this.activeVegIndexId = vegIndexOption.id;
     this.getVegSatelliteDates(
       this.layerFeature?.feature?.properties?.['contour_id'] ??
         this.layerFeature?.feature?.properties?.['id'],
-      vegIndexOption.id
+      this.activeVegIndexId
     );
   }
 

@@ -78,6 +78,8 @@ export class YieldMapComponent
     productivityStatus: true,
   };
 
+  @Input() baseAgromapGeoserverName: string = 'agromap:agromap_store';
+
   @HostBinding('style.width')
   @Input()
   width: string = '100%';
@@ -207,6 +209,7 @@ export class YieldMapComponent
   sidePanelData: Record<string, any> = {};
   pasturesMapControlLayersSwitch: Record<string, any> = {};
   filterFormValues!: any;
+  activeVegIndexId: number | null = null;
 
   constructor(
     private api: ApiService,
@@ -238,6 +241,18 @@ export class YieldMapComponent
           this.pasturesMapControlLayersSwitch = v;
         }),
       ];
+    }
+
+    if (changes['baseAgromapGeoserverName']) {
+      this.wmsLayers[0] = {
+        title: 'Base',
+        name: 'agromap_store',
+        layer: tileLayer.wms('https://geoserver.24mycrm.com/agromap/wms', {
+          layers: this.baseAgromapGeoserverName,
+          ...this.wmsLayersOptions,
+        }),
+        type: 'radio',
+      };
     }
   }
 
@@ -324,9 +339,10 @@ export class YieldMapComponent
         weight: 5,
         color: '#f6ab39',
       });
+
     await this.getContour(Number(cid));
-    if (this.vegIndexOptionsList[0]?.id) {
-      this.getVegSatelliteDates(cid, this.vegIndexOptionsList[0].id);
+    if (this.activeVegIndexId != null) {
+      this.getVegSatelliteDates(cid, this.activeVegIndexId);
     }
     this.store.setItem<Feature>(
       this.storageName + 'Feature',
@@ -561,10 +577,11 @@ export class YieldMapComponent
   }
 
   handleVegIndexOptionClick(vegIndexOption: IVegIndexOption) {
+    this.activeVegIndexId = vegIndexOption.id;
     this.getVegSatelliteDates(
       this.layerFeature?.feature?.properties?.['contour_id'] ??
         this.layerFeature?.feature?.properties?.['id'],
-      vegIndexOption.id
+      this.activeVegIndexId
     );
   }
 
@@ -720,7 +737,8 @@ export class YieldMapComponent
 
     await this.getLandTypes();
 
-    this.getVegIndexList();
+    await this.getVegIndexList();
+    this.activeVegIndexId = this.vegIndexOptionsList[0]?.id;
 
     this.wmsCQLFilter = `ltype=${String(this.landTypes[0].id)}`;
     this.setWmsParams();
