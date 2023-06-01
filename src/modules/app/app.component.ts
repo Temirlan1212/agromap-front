@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivationEnd, NavigationEnd, Router, Routes } from '@angular/router';
 import { delay, Subject, Subscription, switchMap } from 'rxjs';
 import { ApiService } from '../api/api.service';
@@ -41,6 +41,12 @@ export class AppComponent implements OnInit, OnDestroy {
         this.notifications
       );
     }),
+
+    this.store.watchItem('AppComponent').subscribe((res) => {
+      this.notifications = res;
+
+      this.cd.detectChanges();
+    }),
   ];
 
   constructor(
@@ -50,7 +56,8 @@ export class AppComponent implements OnInit, OnDestroy {
     private titleService: Title,
     private store: StoreService,
     private language: LanguageService,
-    private messages: MessagesService
+    private messages: MessagesService,
+    private cd: ChangeDetectorRef
   ) {}
 
   private initLang(): void {
@@ -87,6 +94,10 @@ export class AppComponent implements OnInit, OnDestroy {
   async getNotifications() {
     try {
       this.notifications = await this.api.user.getNotifications();
+      this.notifications = this.notifications.map((n) => {
+        if (!n.read) return { ...n, read: false };
+        return n;
+      });
       this.store.setItem<INotification[] | null>(
         'AppComponent',
         this.notifications

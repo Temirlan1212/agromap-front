@@ -44,6 +44,10 @@ export class NotificationsComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.list = this.store.getItem('AppComponent') ?? [];
+    const readed = this.list.map((n: INotification) => {
+      return { ...n, read: true };
+    });
+    this.store.setItem<INotification[] | null>('AppComponent', readed);
   }
 
   ngOnDestroy() {

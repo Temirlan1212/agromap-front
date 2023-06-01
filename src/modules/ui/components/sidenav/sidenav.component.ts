@@ -95,7 +95,7 @@ export class SidenavComponent implements OnChanges {
       this.chunkRoutes(this.routes);
     }
     if (changes['notifications']) {
-      this.indicator = this.notifications?.length > 0;
+      this.indicator = this.notifications.every((n) => !n.read);
     }
   }
 

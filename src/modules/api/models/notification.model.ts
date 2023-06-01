@@ -5,4 +5,5 @@ export interface INotification {
   text_ky: string;
   text_en: string;
   user: number;
+  read: boolean;
 }
