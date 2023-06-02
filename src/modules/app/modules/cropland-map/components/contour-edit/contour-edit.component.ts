@@ -200,16 +200,20 @@ export class ContourEditComponent implements OnInit, OnDestroy {
       );
       this.router.navigate(['../..'], { relativeTo: this.route });
     } catch (e: any) {
-      const errors =
-        typeof e.error === 'object' ? Object.values<string>(e.error || {}) : '';
-
-      if (errors.length > 0 && errors) {
-        for (const value of errors) {
-          this.messages.error(value);
+      const formErrLength = Object.keys(e.error).length;
+      if (!e.error?.message && formErrLength > 0) {
+        let flattenedObjOfErrors: any = {};
+        for (let key in e.error) {
+          if (e.error.hasOwnProperty(key) && Array.isArray(e.error[key])) {
+            flattenedObjOfErrors[key] = { error: e.error[key][0] };
+          }
         }
-      } else {
-        this.messages.error(e.message);
+
+        this.api.form.setError(flattenedObjOfErrors, contourForm.form);
+        return;
       }
+
+      this.messages.error(e.error?.message ?? e.message);
     }
   }
 
