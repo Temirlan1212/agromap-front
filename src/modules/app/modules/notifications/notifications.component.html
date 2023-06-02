@@ -12,7 +12,6 @@
     ]"
     *ngIf="list?.length > 0; else noItems"
     (actionClick)="handleTableActionClick($event)"
-    [actions]="true"
   ></app-table>
   <ng-template #noItems>
     <app-loading [loading]="loading">

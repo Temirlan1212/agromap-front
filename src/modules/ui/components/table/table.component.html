@@ -25,7 +25,7 @@
       <th
         [title]="'Actions' | translate"
         [textContent]="'Actions' | translate"
-        *ngIf="actions && (actionEdit || actionDelete)"
+        *ngIf="actions || actionEdit || actionDelete"
       ></th>
     </tr>
 
@@ -41,7 +41,7 @@
       <th
         [title]="'Actions' | translate"
         [textContent]="'Actions' | translate"
-        *ngIf="actions && (actionEdit || actionDelete)"
+        *ngIf="actions || actionEdit || actionDelete"
       ></th>
     </tr>
   </thead>
@@ -79,7 +79,7 @@
       </ng-template>
 
       <td
-        *ngIf="actions && (actionEdit || actionDelete)"
+        *ngIf="actions || actionEdit || actionDelete"
         [attr.data-label]="'Actions' | translate"
       >
         <div class="actions">
