@@ -8,6 +8,7 @@ import {
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
 import { TooltipComponent } from '../tooltip/tooltip.component';
 import { CommonModule } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-map-control',
@@ -15,10 +16,11 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./map-control.component.scss'],
   standalone: true,
   host: { class: 'map-control' },
-  imports: [SvgIconComponent, TooltipComponent, CommonModule],
+  imports: [SvgIconComponent, TooltipComponent, CommonModule, TranslateModule],
 })
 export class MapControlComponent {
   @Input() iconName: string = '';
+  @Input() width: string = '';
   @Input() tooltipTitle: string = '';
   @Input() tooltipPlacement: 'top' | 'right' | 'bottom' | 'left' = 'left';
   @Output() onClick = new EventEmitter<boolean>();
