@@ -2,6 +2,7 @@
   [class.active]="isCollapsed"
   iconName="layer"
   (onClick)="this.isCollapsed = !this.isCollapsed"
+  [tooltipTitle]="isCollapsed ? '' : 'Layers'"
 ></app-map-control>
 
 <div class="dialog" [class.collapsed]="isCollapsed" #dialog>

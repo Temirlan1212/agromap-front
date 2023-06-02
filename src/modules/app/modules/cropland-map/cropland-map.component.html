@@ -26,6 +26,8 @@
     <app-map-controls controls>
       <ng-container rightPanel>
         <app-map-control
+          tooltipTitle="Comparison of images"
+          width="140px"
           routerLink="split-map"
           *ngIf="layerFeature"
           iconName="split-screen"
@@ -66,6 +68,8 @@
               : 'contour-add'
           "
           iconName="add-layer"
+          tooltipTitle="Add contour"
+          width="140px"
         ></app-map-control>
       </ng-container>
 

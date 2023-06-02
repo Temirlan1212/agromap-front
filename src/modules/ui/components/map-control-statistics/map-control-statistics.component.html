@@ -3,6 +3,8 @@
     *ngIf="!isCollapsed"
     iconName="info"
     (onClick)="toggle()"
+    tooltipTitle="Land area statistics"
+    tooltipPlacement="right"
   ></app-map-control>
   <div class="container" [class.isCollapsed]="isCollapsed">
     <header>

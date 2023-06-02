@@ -1,7 +1,8 @@
 <app-svg-icon *ngIf="iconName" [name]="iconName" size="14"></app-svg-icon>
 <app-tooltip
   *ngIf="tooltipTitle"
-  [textContent]="tooltipTitle"
+  [textContent]="tooltipTitle | translate"
   [placement]="tooltipPlacement"
+  [width]="width"
 ></app-tooltip>
 <ng-content></ng-content>
