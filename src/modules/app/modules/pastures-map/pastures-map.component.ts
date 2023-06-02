@@ -213,7 +213,7 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
     private route: ActivatedRoute,
     private cd: ChangeDetectorRef
   ) {
-    this.router.events.subscribe((event: Event) => {
+    const rotuerEvent = this.router.events.subscribe((event: Event) => {
       if (event instanceof NavigationEnd) {
         this.currentRouterPathname = router.url;
         this.isChildRoute = this.route.firstChild !== null;
@@ -241,6 +241,8 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
         }
       }
     });
+
+    // this.subscriptions.push(rotuerEvent);
   }
 
   subscriptions: Subscription[] = [

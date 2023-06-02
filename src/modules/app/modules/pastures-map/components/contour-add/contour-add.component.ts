@@ -143,6 +143,7 @@ export class ContourAddComponent implements OnInit, OnDestroy {
     };
     if (!formState.touched) {
       this.messages.warning(this.translate.transform('No changes in form'));
+      contourForm.form.markAsUntouched();
       return;
     }
     if (!formState.valid) {
@@ -172,6 +173,8 @@ export class ContourAddComponent implements OnInit, OnDestroy {
         for (const value of errors) {
           this.messages.error(value);
         }
+        console.log(errors[0]);
+        this.api.form.setError({ year: errors[0] }, contourForm.form);
       } else {
         this.messages.error(e.message);
       }

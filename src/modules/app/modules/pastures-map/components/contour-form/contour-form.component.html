@@ -64,6 +64,13 @@
         [required]="year.required"
       >
       </app-input>
+
+      <div class="field-error" *ngIf="form.errors != null">
+        <span
+          *ngIf="form.getError('year') != null"
+          [textContent]="form.getError('year') | translate"
+        ></span>
+      </div>
     </app-form-field>
 
     <app-form-field name="code_soato" #code_soato>
