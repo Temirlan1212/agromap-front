@@ -69,6 +69,7 @@ export class YieldMapComponent
   @ViewChild('mapControls') mapControls!: MapControlLayersSwitchComponent;
   @ViewChildren(ContourDetailsComponent)
   contourDetailsComponents!: QueryList<ContourDetailsComponent>;
+
   @Input() title: string | null = null;
   @Input() mapId: string = 'map';
   @Input() storageName: string = '';
@@ -88,6 +89,28 @@ export class YieldMapComponent
   mode!: string;
   pastureLayerProductivityTooltip: Tooltip | null = null;
   user: IUser | null = this.api.user.getLoggedInUser();
+  landTypes: ILandType[] = [];
+  mapData: MapData | null = null;
+  layerFeature: MapLayerFeature | null = null;
+  selectedLayer: any;
+  contourData: IChartData[] = [];
+  currentLang: string = this.translateSvc.currentLang;
+  currentRouterPathname: string = '';
+  isWmsAiActive: boolean = false;
+  productivity: string | null = null;
+  contourPastureStatisticsProductivityTableItems: ITableItem[][] = [];
+  wmsSelectedStatusLayers: Record<string, string> | null = null;
+  selectedContourId!: number;
+  activeContourLoading: boolean = false;
+  activeContour!: any;
+  activeContourSmall: any;
+  sidePanelData: Record<string, any> = {};
+  pasturesMapControlLayersSwitch: Record<string, any> = {};
+  filterFormValues!: any;
+  vegIndexesData: IVegSatelliteDate[] = [];
+  vegIndexOptionsList: IVegIndexOption[] = [];
+  loadingSatelliteDates: boolean = false;
+  activeVegIndexOption: IVegIndexOption | null = null;
 
   wmsProductivityLayerColorLegend: Record<string, any>[] = [
     { label: '-1', color: '#000000' },
@@ -188,26 +211,6 @@ export class YieldMapComponent
     },
   ];
 
-  landTypes: ILandType[] = [];
-
-  mapData: MapData | null = null;
-  layerFeature: MapLayerFeature | null = null;
-  selectedLayer: any;
-  contourData: IChartData[] = [];
-  currentLang: string = this.translateSvc.currentLang;
-  currentRouterPathname: string = '';
-  isWmsAiActive: boolean = false;
-  productivity: string | null = null;
-  contourPastureStatisticsProductivityTableItems: ITableItem[][] = [];
-  wmsSelectedStatusLayers: Record<string, string> | null = null;
-  selectedContourId!: number;
-  activeContourLoading: boolean = false;
-  activeContour!: any;
-  activeContourSmall: any;
-  sidePanelData: Record<string, any> = {};
-  pasturesMapControlLayersSwitch: Record<string, any> = {};
-  filterFormValues!: any;
-
   constructor(
     private api: ApiService,
     private messages: MessagesService,
@@ -253,10 +256,6 @@ export class YieldMapComponent
       this.cd.detectChanges();
     }),
   ];
-
-  vegIndexesData: IVegSatelliteDate[] = [];
-  vegIndexOptionsList: IVegIndexOption[] = [];
-  loadingSatelliteDates: boolean = false;
 
   contourPastureStatisticsOnLangChange() {
     const translateHa = this.translateSvc.translations[this.currentLang]['ha'];
@@ -325,8 +324,8 @@ export class YieldMapComponent
         color: '#f6ab39',
       });
     await this.getContour(Number(cid));
-    if (this.vegIndexOptionsList[0]?.id) {
-      this.getVegSatelliteDates(cid, this.vegIndexOptionsList[0].id);
+    if (this.activeVegIndexOption?.id) {
+      this.getVegSatelliteDates(cid, this.activeVegIndexOption.id);
     }
     this.store.setItem<Feature>(
       this.storageName + 'Feature',
@@ -347,6 +346,7 @@ export class YieldMapComponent
       this.selectedLayer.remove();
     }
     this.activeContour = null;
+    this.activeVegIndexOption = this.vegIndexOptionsList[0];
     this.contourDetailsComponents.map((c) => {
       if (c) c.ngOnDestroy();
     });
@@ -561,11 +561,14 @@ export class YieldMapComponent
   }
 
   handleVegIndexOptionClick(vegIndexOption: IVegIndexOption) {
-    this.getVegSatelliteDates(
+    this.activeVegIndexOption = vegIndexOption;
+    const contourId =
       this.layerFeature?.feature?.properties?.['contour_id'] ??
-        this.layerFeature?.feature?.properties?.['id'],
-      vegIndexOption.id
-    );
+      this.layerFeature?.feature?.properties?.['id'];
+
+    if (this.activeVegIndexOption?.id && contourId) {
+      this.getVegSatelliteDates(contourId, this.activeVegIndexOption.id);
+    }
   }
 
   handleWmsLayerChanged(layer: ITileLayer | null): void {
@@ -719,8 +722,8 @@ export class YieldMapComponent
     this.wmsSelectedStatusLayers = data;
 
     await this.getLandTypes();
-
-    this.getVegIndexList();
+    await this.getVegIndexList();
+    this.activeVegIndexOption = this.vegIndexOptionsList[0];
 
     this.wmsCQLFilter = `ltype=${String(this.landTypes[0].id)}`;
     this.setWmsParams();
