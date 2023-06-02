@@ -148,7 +148,6 @@ export class ContourEditComponent implements OnInit, OnDestroy {
     if (!formState.touched && !this.isPolygonChanged) {
       this.messages.warning(this.translate.transform('No changes in form'));
       contourForm.form.markAsUntouched();
-
       return;
     }
     if (!formState.valid) {
@@ -176,16 +175,20 @@ export class ContourEditComponent implements OnInit, OnDestroy {
       );
       this.router.navigate(['../..']);
     } catch (e: any) {
-      const errors =
-        typeof e.error === 'object' ? Object.values<string>(e.error || {}) : '';
-
-      if (errors.length > 0 && errors) {
-        for (const value of errors) {
-          this.messages.error(value);
+      const formErrLength = Object.keys(e.error).length;
+      if (!e.error?.message && formErrLength > 0) {
+        let flattenedObjOfErrors: any = {};
+        for (let key in e.error) {
+          if (e.error.hasOwnProperty(key) && Array.isArray(e.error[key])) {
+            flattenedObjOfErrors[key] = { error: e.error[key][0] };
+          }
         }
-      } else {
-        this.messages.error(e.message);
+
+        this.api.form.setError(flattenedObjOfErrors, contourForm.form);
+        return;
       }
+
+      this.messages.error(e.error?.message ?? e.message);
     }
   }
 

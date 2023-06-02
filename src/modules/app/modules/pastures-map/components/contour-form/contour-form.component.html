@@ -9,6 +9,12 @@
         [required]="region.required"
       >
       </app-input-select>
+
+      <span
+        class="field-error"
+        *ngIf="form.get('region')?.getError('error') != null"
+        [textContent]="form.get('region')?.getError('error') | translate"
+      ></span>
     </app-form-field>
 
     <app-form-field name="district" #district>
@@ -20,6 +26,12 @@
         [required]="district.required"
       >
       </app-input-select>
+
+      <span
+        class="field-error"
+        *ngIf="form.get('district')?.getError('error') != null"
+        [textContent]="form.get('district')?.getError('error') | translate"
+      ></span>
     </app-form-field>
 
     <app-form-field name="conton" #conton>
@@ -31,6 +43,12 @@
         formControlName="conton"
       >
       </app-input-select>
+
+      <span
+        class="field-error"
+        *ngIf="form.get('conton')?.getError('error') != null"
+        [textContent]="form.get('conton')?.getError('error') | translate"
+      ></span>
     </app-form-field>
 
     <app-form-field name="culture" #culture>
@@ -64,6 +82,12 @@
         [required]="year.required"
       >
       </app-input>
+
+      <span
+        class="field-error"
+        *ngIf="form.get('year')?.getError('error') != null"
+        [textContent]="form.get('year')?.getError('error') | translate"
+      ></span>
     </app-form-field>
 
     <app-form-field name="code_soato" #code_soato>
@@ -74,6 +98,12 @@
         [required]="code_soato.required"
       >
       </app-input>
+
+      <span
+        class="field-error"
+        *ngIf="form.get('code_soato')?.getError('error') != null"
+        [textContent]="form.get('code_soato')?.getError('error') | translate"
+      ></span>
     </app-form-field>
 
     <app-form-field name="ink" #ink>
@@ -84,6 +114,12 @@
         [required]="ink.required"
       >
       </app-input>
+
+      <span
+        class="field-error"
+        *ngIf="form.get('ink')?.getError('error') != null"
+        [textContent]="form.get('ink')?.getError('error') | translate"
+      ></span>
     </app-form-field>
 
     <div class="actions">
