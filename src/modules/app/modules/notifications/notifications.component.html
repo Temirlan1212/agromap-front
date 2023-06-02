@@ -4,8 +4,12 @@
 <div class="list">
   <app-table
     [actionDelete]="true"
+    [actionEdit]="false"
     [items]="list"
-    [fields]="[{ title: 'Name' | translate, field: 'text_' + currentLang }]"
+    [fields]="[
+      { title: 'Name' | translate, field: 'text_' + currentLang },
+      { title: 'Date' | translate, field: 'date' }
+    ]"
     *ngIf="list?.length > 0; else noItems"
     (actionClick)="handleTableActionClick($event)"
   ></app-table>
