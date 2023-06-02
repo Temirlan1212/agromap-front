@@ -78,6 +78,7 @@ export class YieldMapComponent
   @Input() showLegends: Record<string, boolean> = {
     productivityStatus: true,
   };
+  @Input() baseWmsLayerLayersName: string | null = null;
 
   @HostBinding('style.width')
   @Input()
@@ -241,6 +242,18 @@ export class YieldMapComponent
           this.pasturesMapControlLayersSwitch = v;
         }),
       ];
+    }
+
+    if (changes['baseWmsLayerLayersName']) {
+      if (this.baseWmsLayerLayersName) {
+        this.wmsLayers[0].layer = tileLayer.wms(
+          'https://geoserver.24mycrm.com/agromap/wms',
+          {
+            layers: this.baseWmsLayerLayersName,
+            ...this.wmsLayersOptions,
+          }
+        );
+      }
     }
   }
 
