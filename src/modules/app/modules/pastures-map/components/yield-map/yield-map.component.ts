@@ -280,28 +280,6 @@ export class YieldMapComponent
     this.mapService.map.next(mapData);
   }
 
-  async handleFeatureMouseOver(layerFeature: MapLayerFeature) {
-    const l = layerFeature.layer as any;
-    l.setStyle({
-      color: '#fff',
-      weight: 3,
-    });
-    this.activeContourSmall = {
-      culture: layerFeature?.feature?.properties?.['culture'],
-      area_ha: layerFeature?.feature?.properties?.['area_ha'],
-      contour_id: layerFeature?.feature?.properties?.['id'],
-    };
-  }
-
-  handleFeatureMouseLeave(layerFeature: MapLayerFeature) {
-    const l = layerFeature.layer as any;
-    l.setStyle({
-      color: 'rgba(51,136,255,0.5)',
-      weight: 1,
-    });
-    this.activeContourSmall = null;
-  }
-
   async handleFeatureClick(layerFeature: MapLayerFeature): Promise<void> {
     this.contourDetailsComponents.map((c) => {
       if (c) c.isHidden = false;
