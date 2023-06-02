@@ -84,7 +84,7 @@
       >
         <div class="actions">
           <button
-            *ngIf="actionEdit"
+            *ngIf="actions || actionEdit"
             type="button"
             class="transparent"
             (click)="handleActionClick('edit', item)"
@@ -93,7 +93,7 @@
             <app-svg-icon name="edit" size="18"></app-svg-icon>
           </button>
           <button
-            *ngIf="actionDelete"
+            *ngIf="actions || actionDelete"
             type="button"
             class="transparent"
             (click)="handleActionClick('delete', item)"
