@@ -70,6 +70,29 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
 
   mode!: string;
   user: IUser | null = this.api.user.getLoggedInUser();
+  landTypes: ILandType[] = [];
+  mapData: MapData | null = null;
+  layerFeature: MapLayerFeature | null = null;
+  selectedLayer: any;
+  contourData: IChartData[] = [];
+  currentLang: string = this.translateSvc.currentLang;
+  currentRouterPathname: string = '';
+  isWmsAiActive: boolean = false;
+  productivity: string | null = null;
+  contourPastureStatisticsProductivityTableItems: ITableItem[][] = [];
+  contourCultureStatisticsProductivityTableItems: ITableItem[] = [];
+  wmsSelectedStatusLayers: Record<string, string> | null = null;
+  selectedContourId!: number;
+  loading: boolean = false;
+  activeContour!: any;
+  activeContourSmall: any;
+  mapControlLayersSwitch: Record<string, any> = {};
+  filterFormValues!: any;
+  sidePanelData: Record<string, any> = {};
+  vegIndexesData: IVegSatelliteDate[] = [];
+  vegIndexOptionsList: IVegIndexOption[] = [];
+  loadingSatelliteDates: boolean = false;
+  activeVegIndexOption: IVegIndexOption | null = null;
 
   wmsProductivityLayerColorLegend: Record<string, any>[] = [
     { label: '-1', color: '#000000' },
@@ -170,26 +193,6 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
     },
   ];
 
-  landTypes: ILandType[] = [];
-  mapData: MapData | null = null;
-  layerFeature: MapLayerFeature | null = null;
-  selectedLayer: any;
-  contourData: IChartData[] = [];
-  currentLang: string = this.translateSvc.currentLang;
-  currentRouterPathname: string = '';
-  isWmsAiActive: boolean = false;
-  productivity: string | null = null;
-  contourPastureStatisticsProductivityTableItems: ITableItem[][] = [];
-  contourCultureStatisticsProductivityTableItems: ITableItem[] = [];
-  wmsSelectedStatusLayers: Record<string, string> | null = null;
-  selectedContourId!: number;
-  loading: boolean = false;
-  activeContour!: any;
-  activeContourSmall: any;
-  mapControlLayersSwitch: Record<string, any> = {};
-  filterFormValues!: any;
-  sidePanelData: Record<string, any> = {};
-
   constructor(
     private api: ApiService,
     private mapService: MapService,
@@ -282,10 +285,6 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
     }),
   ];
 
-  vegIndexesData: IVegSatelliteDate[] = [];
-  vegIndexOptionsList: IVegIndexOption[] = [];
-  loadingSatelliteDates: boolean = false;
-
   handleMapData(mapData: MapData): void {
     this.mapData = mapData;
     this.mapService.map.next(mapData);
@@ -336,8 +335,8 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
       });
     await this.getContour(Number(cid));
 
-    if (this.vegIndexOptionsList[0]?.id) {
-      this.getVegSatelliteDates(cid, this.vegIndexOptionsList[0].id);
+    if (this.activeVegIndexOption?.id) {
+      this.getVegSatelliteDates(cid, this.activeVegIndexOption.id);
     }
     this.store.setItem<Feature>('selectedLayerFeature', layerFeature.feature);
     const bounds = geoJSON(layerFeature.feature).getBounds();
@@ -354,6 +353,7 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
       this.selectedLayer.remove();
     }
     this.activeContour = null;
+    this.activeVegIndexOption = this.vegIndexOptionsList[0];
     this.contourDetailsComponents.map((c) => {
       if (c) c.ngOnDestroy();
     });
@@ -571,11 +571,14 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   handleVegIndexOptionClick(vegIndexOption: IVegIndexOption) {
-    this.getVegSatelliteDates(
+    this.activeVegIndexOption = vegIndexOption;
+    const contourId =
       this.layerFeature?.feature?.properties?.['contour_id'] ??
-        this.layerFeature?.feature?.properties?.['id'],
-      vegIndexOption.id
-    );
+      this.layerFeature?.feature?.properties?.['id'];
+
+    if (this.activeVegIndexOption?.id && contourId) {
+      this.getVegSatelliteDates(contourId, this.activeVegIndexOption.id);
+    }
   }
 
   handleModeChange(mode: string | null) {
@@ -783,7 +786,9 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
     this.wmsSelectedStatusLayers = data;
 
     await this.getLandTypes();
-    this.getVegIndexList();
+    await this.getVegIndexList();
+    this.activeVegIndexOption = this.vegIndexOptionsList[0];
+
     this.store
       .watchItem<ContourFiltersQuery | null>('ContourFilterComponent')
       .subscribe((v) => {

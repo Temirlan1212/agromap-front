@@ -72,12 +72,37 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChildren(ContourDetailsComponent)
   contourDetailsComponents!: QueryList<ContourDetailsComponent>;
 
+  @HostBinding('class.isComparisonMapsActivated')
+  isComparisonMapsActivated: boolean = false;
+
   mode!: string;
   pastureLayerProductivityTooltip: Tooltip | null = null;
   user: IUser | null = this.api.user.getLoggedInUser();
-
-  @HostBinding('class.isComparisonMapsActivated')
-  isComparisonMapsActivated: boolean = false;
+  landTypes: ILandType[] = [];
+  mapData: MapData | null = null;
+  layerFeature: MapLayerFeature | null = null;
+  selectedLayer: any;
+  contourData: IChartData[] = [];
+  currentLang: string = this.translateSvc.currentLang;
+  currentRouterPathname: string = '';
+  isWmsAiActive: boolean = false;
+  productivity: string | null = null;
+  contourPastureStatisticsProductivityTableItems: ITableItem[][] = [];
+  wmsSelectedStatusLayers: Record<string, string> | null = null;
+  selectedContourId!: number;
+  loading: boolean = false;
+  activeContourLoading: boolean = false;
+  activeContour!: any;
+  activeContourSmall: any;
+  sidePanelData: Record<string, any> = {};
+  pasturesMapControlLayersSwitch: Record<string, any> = {};
+  filterFormValues!: any;
+  filterFormResetValues!: any;
+  isChildRoute: boolean = false;
+  vegIndexesData: IVegSatelliteDate[] = [];
+  vegIndexOptionsList: IVegIndexOption[] = [];
+  loadingSatelliteDates: boolean = false;
+  activeVegIndexOption: IVegIndexOption | null = null;
 
   wmsProductivityLayerColorLegend: Record<string, any>[] = [
     { label: '-1', color: '#000000' },
@@ -178,29 +203,6 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
     },
   ];
 
-  landTypes: ILandType[] = [];
-
-  mapData: MapData | null = null;
-  layerFeature: MapLayerFeature | null = null;
-  selectedLayer: any;
-  contourData: IChartData[] = [];
-  currentLang: string = this.translateSvc.currentLang;
-  currentRouterPathname: string = '';
-  isWmsAiActive: boolean = false;
-  productivity: string | null = null;
-  contourPastureStatisticsProductivityTableItems: ITableItem[][] = [];
-  wmsSelectedStatusLayers: Record<string, string> | null = null;
-  selectedContourId!: number;
-  loading: boolean = false;
-  activeContourLoading: boolean = false;
-  activeContour!: any;
-  activeContourSmall: any;
-  sidePanelData: Record<string, any> = {};
-  pasturesMapControlLayersSwitch: Record<string, any> = {};
-  filterFormValues!: any;
-  filterFormResetValues!: any;
-  isChildRoute: boolean = false;
-
   constructor(
     private api: ApiService,
     private mapService: MapService,
@@ -288,10 +290,6 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
     }),
   ];
 
-  vegIndexesData: IVegSatelliteDate[] = [];
-  vegIndexOptionsList: IVegIndexOption[] = [];
-  loadingSatelliteDates: boolean = false;
-
   handleMapData(mapData: MapData): void {
     this.mapData = mapData;
     this.mapService.map.next(mapData);
@@ -342,8 +340,8 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
       });
     await this.getContour(Number(cid));
 
-    if (this.vegIndexOptionsList[0]?.id) {
-      this.getVegSatelliteDates(cid, this.vegIndexOptionsList[0].id);
+    if (this.activeVegIndexOption?.id) {
+      this.getVegSatelliteDates(cid, this.activeVegIndexOption.id);
     }
     this.store.setItem<Feature>(
       'PasturesMapSelectedLayerFeature',
@@ -364,6 +362,7 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
       this.selectedLayer.remove();
     }
     this.activeContour = null;
+    this.activeVegIndexOption = this.vegIndexOptionsList[0];
     this.contourDetailsComponents.map((c) => {
       if (c) c.ngOnDestroy();
     });
@@ -573,11 +572,7 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
       };
 
       let res: IVegSatelliteDate[];
-      if (this.isWmsAiActive) {
-        res = await this.api.vegIndexes.getVegSatelliteDatesAi(query);
-      } else {
-        res = await this.api.vegIndexes.getVegSatelliteDates(query);
-      }
+      res = await this.api.vegIndexes.getVegSatelliteDates(query);
       this.vegIndexesData = res;
     } catch (e: any) {
       console.log(e);
@@ -595,11 +590,14 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   handleVegIndexOptionClick(vegIndexOption: IVegIndexOption) {
-    this.getVegSatelliteDates(
+    this.activeVegIndexOption = vegIndexOption;
+    const contourId =
       this.layerFeature?.feature?.properties?.['contour_id'] ??
-        this.layerFeature?.feature?.properties?.['id'],
-      vegIndexOption.id
-    );
+      this.layerFeature?.feature?.properties?.['id'];
+
+    if (this.activeVegIndexOption?.id && contourId) {
+      this.getVegSatelliteDates(contourId, this.activeVegIndexOption.id);
+    }
   }
 
   handleEditClick() {
@@ -728,8 +726,8 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
     this.wmsSelectedStatusLayers = data;
 
     await this.getLandTypes();
-
-    this.getVegIndexList();
+    await this.getVegIndexList();
+    this.activeVegIndexOption = this.vegIndexOptionsList[0];
 
     this.filterFormValues = {
       land_type: String(this.landTypes[0].id),
