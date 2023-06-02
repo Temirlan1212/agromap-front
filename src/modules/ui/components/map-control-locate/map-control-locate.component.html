@@ -1,7 +1,5 @@
-<div
-  class="tab"
+<app-map-control
   [class.active]="isLocateControlActive"
-  (click)="handleLocateClick()"
->
-  <app-svg-icon name="location" class="icon" size="16px"></app-svg-icon>
-</div>
+  iconName="location"
+  (onClick)="handleLocateClick()"
+></app-map-control>

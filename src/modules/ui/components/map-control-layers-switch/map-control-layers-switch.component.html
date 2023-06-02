@@ -1,10 +1,8 @@
-<div
-  class="tab"
+<app-map-control
   [class.active]="isCollapsed"
-  (click)="handleCollapseClick($event)"
->
-  <app-svg-icon name="layer" class="icon" size="16px"></app-svg-icon>
-</div>
+  iconName="layer"
+  (onClick)="this.isCollapsed = !this.isCollapsed"
+></app-map-control>
 
 <div class="dialog" [class.collapsed]="isCollapsed" #dialog>
   <h5>{{ "MapSettings" | translate }}</h5>

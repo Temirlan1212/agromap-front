@@ -1,12 +1,9 @@
 <div class="wrapper">
-  <div
+  <app-map-control
     *ngIf="!isCollapsed"
-    class="tab"
-    (click)="toggle()"
-    [class.isCollapsed]="isCollapsed"
-  >
-    <app-svg-icon name="info" class="icon" size="14px"></app-svg-icon>
-  </div>
+    iconName="info"
+    (onClick)="toggle()"
+  ></app-map-control>
   <div class="container" [class.isCollapsed]="isCollapsed">
     <header>
       <app-svg-icon

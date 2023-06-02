@@ -20,6 +20,7 @@ import { InputRadioComponent } from '../input-radio/input-radio.component';
 import { StoreService } from '../../services/store.service';
 import { InputCheckboxComponent } from '../input-checkbox/input-checkbox.component';
 import { InputRangeComponent } from '../input-range/input-range.component';
+import { MapControlComponent } from '../map-control/map-control.component';
 
 @Component({
   selector: 'app-map-control-layers-switch',
@@ -33,6 +34,7 @@ import { InputRangeComponent } from '../input-range/input-range.component';
     InputRadioComponent,
     InputCheckboxComponent,
     InputRangeComponent,
+    MapControlComponent,
   ],
 })
 export class MapControlLayersSwitchComponent
@@ -116,10 +118,6 @@ export class MapControlLayersSwitchComponent
     if (!clickInside) {
       this.isCollapsed = false;
     }
-  }
-
-  handleCollapseClick(e: Event) {
-    this.isCollapsed = !this.isCollapsed;
   }
 
   handleWmsRadioButtonLayerChange(layerName: string | number): void {

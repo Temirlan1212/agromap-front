@@ -26,7 +26,6 @@ import { MapControlLayersSwitchComponent } from 'src/modules/ui/components/map-c
 import { MapControlVegIndexesComponent } from 'src/modules/ui/components/map-control-veg-indexes/map-control-veg-indexes.component';
 import { ContourEditComponent } from './components/contour-edit/contour-edit.component';
 import { QuestionDialogComponent } from '../../../ui/components/question-dialog/question-dialog.component';
-import { MapControlSplitMapComponent } from 'src/modules/ui/components/map-control-split-map/map-control-split-map.component';
 import { SplitMapSidebarComponent } from './components/split-map-sidebar/split-map-sidebar.component';
 import { SplitMapComponent } from 'src/modules/ui/components/split-map/split-map.component';
 import { LoadingComponent } from 'src/modules/ui/components/loading/loading.component';
@@ -46,6 +45,7 @@ import { ToggleButtonComponent } from '../../../ui/components/toggle-button/togg
 import { ColorLegendComponent } from 'src/modules/ui/components/color-legend/color-legend.component';
 import { MapComparisonComponent } from './components/map-comparison/map-comparison.component';
 import { YieldMapComponent } from './components/yield-map/yield-map.component';
+import { MapControlComponent } from 'src/modules/ui/components/map-control/map-control.component';
 
 @NgModule({
   declarations: [
@@ -83,7 +83,6 @@ import { YieldMapComponent } from './components/yield-map/yield-map.component';
     MapControlZoomComponent,
     MapControlLayersSwitchComponent,
     QuestionDialogComponent,
-    MapControlSplitMapComponent,
     SplitMapComponent,
     LoadingComponent,
     UnitPipe,
@@ -98,6 +97,7 @@ import { YieldMapComponent } from './components/yield-map/yield-map.component';
     TabComponent,
     ToggleButtonComponent,
     ColorLegendComponent,
+    MapControlComponent,
   ],
   providers: [MapService, TranslatePipe],
 })
