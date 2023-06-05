@@ -43,12 +43,6 @@ import { ITileLayer } from 'src/modules/ui/models/map.model';
 import { QuestionDialogComponent } from '../../../ui/components/question-dialog/question-dialog.component';
 import { IRegion } from 'src/modules/api/models/region.model';
 import { ContourFiltersQuery } from 'src/modules/api/models/contour.model';
-import {
-  IContourStatisticsProductivity,
-  IContourStatisticsProductivityQuery,
-  ICulutreStatisticsQuery,
-} from 'src/modules/api/models/statistics.model';
-import { ITableItem } from 'src/modules/ui/models/table.model';
 import { ContourDetailsComponent } from './components/contour-details/contour-details.component';
 import { ToggleButtonComponent } from '../../../ui/components/toggle-button/toggle-button.component';
 import { MapControlLayersSwitchComponent } from '../../../ui/components/map-control-layers-switch/map-control-layers-switch.component';
@@ -67,7 +61,6 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('toggleBtn') toggleBtn!: ToggleButtonComponent;
   @ViewChildren(ContourDetailsComponent)
   contourDetailsComponents!: QueryList<ContourDetailsComponent>;
-
   mode!: string;
   user: IUser | null = this.api.user.getLoggedInUser();
   landTypes: ILandType[] = [];
@@ -79,8 +72,6 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
   currentRouterPathname: string = '';
   isWmsAiActive: boolean = false;
   productivity: string | null = null;
-  contourPastureStatisticsProductivityTableItems: ITableItem[][] = [];
-  contourCultureStatisticsProductivityTableItems: ITableItem[] = [];
   wmsSelectedStatusLayers: Record<string, string> | null = null;
   selectedContourId!: number;
   loading: boolean = false;
@@ -237,10 +228,9 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   subscriptions: Subscription[] = [
-    this.translateSvc.onLangChange.subscribe((res) => {
-      this.currentLang = res.lang;
-      this.contourPastureStatisticsOnLangChange();
-    }),
+    this.translateSvc.onLangChange.subscribe(
+      (res) => (this.currentLang = res.lang)
+    ),
 
     this.mapService.contourEditingMode.subscribe((res) => {
       if (res) {
@@ -368,18 +358,6 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   handleFilterFormReset(): void {
-    this.filterFormValues = { year: 2022 };
-
-    if (this.landTypes[0]?.id) {
-      this.filterFormValues.land_type = String(this.landTypes[0].id);
-      this.getPastureStatisticsProductivity(this.filterFormValues);
-    }
-
-    if (this.landTypes[1]?.id) {
-      this.filterFormValues.land_type = String(this.landTypes[1].id);
-      this.getCultureStatisticsProductivity(this.filterFormValues);
-    }
-
     this.wmsCQLFilter = null;
     this.setWmsParams();
     if (this.mapComponent) this.mapComponent.handleFeatureClose();
@@ -402,16 +380,6 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
         if (layersLength > 0) this.mapData.geoJson.clearLayers();
         if (zoom >= 12) this.addPolygonsInScreenToMap(bounds);
       }
-    }
-
-    if (this.landTypes[0]?.id) {
-      this.filterFormValues.land_type = String(this.landTypes[0].id);
-      this.getPastureStatisticsProductivity(this.filterFormValues);
-    }
-
-    if (this.landTypes[1]?.id) {
-      this.filterFormValues.land_type = String(this.landTypes[1].id);
-      this.getCultureStatisticsProductivity(this.filterFormValues);
     }
 
     this.store.setItem('SidePanelComponent', { state: false });
@@ -655,107 +623,6 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  private async getPastureStatisticsProductivity(
-    query: IContourStatisticsProductivityQuery
-  ): Promise<void> {
-    this.contourPastureStatisticsProductivityTableItems = [];
-    if (this.isWmsAiActive) query.ai = this.isWmsAiActive;
-
-    try {
-      let res: IContourStatisticsProductivity;
-      res = await this.api.statistics.getContourStatisticsProductivity(query);
-
-      if (!res.type) {
-        this.contourPastureStatisticsProductivityTableItems = [];
-        return;
-      }
-
-      this.contourPastureStatisticsProductivityTableItems.push([
-        {
-          areaType: res?.type,
-          areaName_en: res?.[`name_en`],
-          areaName_ky: res?.[`name_ky`],
-          areaName_ru: res?.[`name_ru`],
-          productive: `${res?.Productive?.ha} ${this.translate.transform(
-            'ha'
-          )}`,
-          unproductive: `${res?.Unproductive?.ha} ${this.translate.transform(
-            'ha'
-          )}`,
-        },
-      ]);
-
-      if (Array.isArray(res?.Children) && res?.Children?.length > 0) {
-        this.contourPastureStatisticsProductivityTableItems.push(
-          res?.Children.map((child) => ({
-            areaType: child?.type,
-            areaName_en: child?.[`name_en`],
-            areaName_ky: child?.[`name_ky`],
-            areaName_ru: child?.[`name_ru`],
-            productive: `${child?.Productive?.ha} ${this.translate.transform(
-              'ha'
-            )}`,
-            unproductive: `${
-              child?.Unproductive?.ha
-            } ${this.translate.transform('ha')}`,
-          }))
-        );
-      }
-    } catch (e: any) {
-      this.messages.error(e.error?.message ?? e.message);
-    }
-  }
-
-  private async getCultureStatisticsProductivity(
-    query: ICulutreStatisticsQuery
-  ): Promise<void> {
-    this.contourCultureStatisticsProductivityTableItems = [];
-    if (this.isWmsAiActive) query.ai = this.isWmsAiActive;
-
-    try {
-      const res = await this.api.statistics.getCultureStatistics(query);
-
-      this.contourCultureStatisticsProductivityTableItems = res.map(
-        (element) => ({
-          ...element,
-          area_ha: `${element?.area_ha} ${this.translate.transform('ha')}`,
-        })
-      ) as unknown as ITableItem[];
-    } catch (e: any) {
-      this.messages.error(e.error?.message ?? e.message);
-    }
-  }
-
-  private contourPastureStatisticsOnLangChange() {
-    const translateHa = this.translateSvc.translations[this.currentLang]['ha'];
-
-    this.contourPastureStatisticsProductivityTableItems =
-      this.contourPastureStatisticsProductivityTableItems.map((arr) =>
-        arr.map((element) => ({
-          ...element,
-          productive: `${String(element?.['productive']).replace(
-            /га|ha/gi,
-            translateHa
-          )}`,
-          unproductive: `${String(element?.['unproductive']).replace(
-            /га|ha/gi,
-            translateHa
-          )}`,
-        }))
-      );
-
-    this.contourCultureStatisticsProductivityTableItems =
-      this.contourCultureStatisticsProductivityTableItems.map((element) => {
-        return {
-          ...element,
-          area_ha: `${String(element?.['area_ha']).replace(
-            /га|ha/gi,
-            translateHa
-          )}`,
-        };
-      });
-  }
-
   private setWmsParams(): void {
     if (this.isWmsAiActive) {
       const finded = this.wmsLayers.find(
@@ -850,18 +717,6 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
 
     await this.getLandTypes();
     await this.getVegIndexList();
-
-    this.filterFormValues = { year: 2022 };
-
-    if (this.landTypes[0]?.id) {
-      this.filterFormValues.land_type = String(this.landTypes[1].id);
-      this.getCultureStatisticsProductivity(this.filterFormValues);
-    }
-
-    if (this.landTypes[1]?.id) {
-      this.filterFormValues.land_type = String(this.landTypes[0].id);
-      this.getPastureStatisticsProductivity(this.filterFormValues);
-    }
 
     this.buildWmsCQLFilter();
   }

@@ -46,10 +46,6 @@ import { ITileLayer } from 'src/modules/ui/models/map.model';
 import { QuestionDialogComponent } from '../../../ui/components/question-dialog/question-dialog.component';
 import { IRegion } from 'src/modules/api/models/region.model';
 import { ContourFiltersQuery } from 'src/modules/api/models/contour.model';
-import {
-  IContourStatisticsProductivity,
-  IContourStatisticsProductivityQuery,
-} from 'src/modules/api/models/statistics.model';
 import { ITableItem } from 'src/modules/ui/models/table.model';
 import { ContourDetailsComponent } from './components/contour-details/contour-details.component';
 import { ToggleButtonComponent } from '../../../ui/components/toggle-button/toggle-button.component';
@@ -247,10 +243,9 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   subscriptions: Subscription[] = [
-    this.translateSvc.onLangChange.subscribe((res) => {
-      this.currentLang = res.lang;
-      this.contourPastureStatisticsOnLangChange();
-    }),
+    this.translateSvc.onLangChange.subscribe(
+      (res) => (this.currentLang = res.lang)
+    ),
 
     this.mapService.contourEditingMode.subscribe((res) => {
       if (res) {
@@ -433,15 +428,7 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   handleFilterFormReset(): void {
-    if (this.landTypes[0]?.id) {
-      this.filterFormValues = {
-        land_type: String(this.landTypes[0].id),
-        year: 2022,
-      };
-    }
-
     this.wmsCQLFilter = null;
-    this.getPastureStatisticsProductivity(this.filterFormValues);
     this.setWmsParams();
     if (this.mapComponent) this.mapComponent.handleFeatureClose();
   }
@@ -465,7 +452,6 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
       }
     }
 
-    this.getPastureStatisticsProductivity(this.filterFormValues);
     this.store.setItem('PasturesMapSidePanelComponent', { state: false });
     this.toggleBtn.isContentToggled = false;
   }
@@ -594,14 +580,14 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
   private async addPolygonsInScreenToMap(mapBounds: LatLngBounds) {
     this.loading = true;
     try {
-      const landTypeParam = this.landTypes[0]?.['id'];
+      const landType = this.landTypes.find((l) => l.id === 2);
 
-      if (this.mapData?.map != null && landTypeParam) {
+      if (this.mapData?.map != null && landType?.id) {
         let polygons: GeoJSON;
 
         polygons = await this.api.map.getPolygonsInScreen({
           latLngBounds: mapBounds,
-          land_type: landTypeParam,
+          land_type: landType.id,
         });
 
         this.mapData.geoJson.options.snapIgnore = true;
@@ -643,76 +629,6 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
     } catch (e: any) {
       this.messages.error(e.message);
     }
-  }
-
-  private async getPastureStatisticsProductivity(
-    query: IContourStatisticsProductivityQuery
-  ): Promise<void> {
-    this.contourPastureStatisticsProductivityTableItems = [];
-    if (this.isWmsAiActive) query.ai = this.isWmsAiActive;
-
-    try {
-      let res: IContourStatisticsProductivity;
-      res = await this.api.statistics.getContourStatisticsProductivity(query);
-
-      if (!res.type) {
-        this.contourPastureStatisticsProductivityTableItems = [];
-        return;
-      }
-
-      this.contourPastureStatisticsProductivityTableItems.push([
-        {
-          areaType: res?.type,
-          areaName_en: res?.[`name_en`],
-          areaName_ky: res?.[`name_ky`],
-          areaName_ru: res?.[`name_ru`],
-          productive: `${res?.Productive?.ha} ${this.translate.transform(
-            'ha'
-          )}`,
-          unproductive: `${res?.Unproductive?.ha} ${this.translate.transform(
-            'ha'
-          )}`,
-        },
-      ]);
-
-      if (Array.isArray(res?.Children) && res?.Children?.length > 0) {
-        this.contourPastureStatisticsProductivityTableItems.push(
-          res?.Children.map((child) => ({
-            areaType: child?.type,
-            areaName_en: child?.[`name_en`],
-            areaName_ky: child?.[`name_ky`],
-            areaName_ru: child?.[`name_ru`],
-            productive: `${child?.Productive?.ha} ${this.translate.transform(
-              'ha'
-            )}`,
-            unproductive: `${
-              child?.Unproductive?.ha
-            } ${this.translate.transform('ha')}`,
-          }))
-        );
-      }
-    } catch (e: any) {
-      this.messages.error(e.message);
-    }
-  }
-
-  private contourPastureStatisticsOnLangChange() {
-    const translateHa = this.translateSvc.translations[this.currentLang]['ha'];
-
-    this.contourPastureStatisticsProductivityTableItems =
-      this.contourPastureStatisticsProductivityTableItems.map((arr) =>
-        arr.map((element) => ({
-          ...element,
-          productive: `${String(element?.['productive']).replace(
-            /га|ha/gi,
-            translateHa
-          )}`,
-          unproductive: `${String(element?.['unproductive']).replace(
-            /га|ha/gi,
-            translateHa
-          )}`,
-        }))
-      );
   }
 
   private async getLandTypes() {
@@ -807,17 +723,11 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
     await this.getVegIndexList();
     this.activeVegIndexOption = this.vegIndexOptionsList[0];
 
-    if (this.landTypes[0]?.id) {
-      this.filterFormValues = {
-        land_type: String(this.landTypes[0].id),
-        year: 2022,
-      };
-      this.wmsCQLFilter = `ltype=${String(this.landTypes[0].id)}`;
-    }
+    const landType = this.landTypes.find((l) => l.id === 2);
+    if (landType?.id) this.wmsCQLFilter = `ltype=${landType.id}`;
 
     this.setWmsParams();
     this.buildWmsCQLFilter();
-    this.getPastureStatisticsProductivity(this.filterFormValues);
   }
 
   ngAfterViewInit(): void {

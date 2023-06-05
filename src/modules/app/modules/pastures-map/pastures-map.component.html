@@ -4,6 +4,7 @@
     (onEditClick)="map.handleFeatureClose()"
     (onFormSubmit)="handleFilterFormSubmit($event)"
     (onFormReset)="handleFilterFormReset()"
+    #contourFilter
   >
   </app-contour-filter>
   <router-outlet></router-outlet>
@@ -110,38 +111,11 @@
           (onDateSelect)="hanldeVegIndexesDateSelect()"
         ></app-map-control-veg-indexes>
 
-        <app-map-control-statistics
-          *ngIf="!activeContour"
-          [collapseOnChanges]="contourPastureStatisticsProductivityTableItems"
-          [title]="'Roll up' | translate"
-        >
-          <app-content-tabs>
-            <app-tab [title]="'Pasture (productivity area)' | translate">
-              <app-table
-                *ngFor="
-                  let item of contourPastureStatisticsProductivityTableItems
-                "
-                [items]="item"
-                [border]="false"
-                mode="dark"
-                [fields]="[
-                  {
-                    title: item[0]['areaType'].toString() | translate,
-                    field: 'areaName_' + currentLang
-                  },
-                  {
-                    title: 'Productive' | translate | truncate : 10,
-                    field: 'productive'
-                  },
-                  {
-                    title: 'Unproductive' | translate | truncate : 10,
-                    field: 'unproductive'
-                  }
-                ]"
-              ></app-table>
-            </app-tab>
-          </app-content-tabs>
-        </app-map-control-statistics>
+        <app-statistics
+          [contourFilterComponent]="contourFilter"
+          *ngIf="!activeContour && landTypes.length > 0"
+          [landTypes]="[landTypes[0]]"
+        ></app-statistics>
 
         <app-map-control class="transparent d-xs-none">
           <app-contour-details
