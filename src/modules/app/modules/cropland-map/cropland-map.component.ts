@@ -377,7 +377,7 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
 
     if (this.landTypes[1]?.id) {
       this.filterFormValues.land_type = String(this.landTypes[1].id);
-      this.getPastureStatisticsProductivity(this.filterFormValues);
+      this.getCultureStatisticsProductivity(this.filterFormValues);
     }
 
     this.wmsCQLFilter = null;
@@ -404,8 +404,16 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
       }
     }
 
-    this.getPastureStatisticsProductivity(this.filterFormValues);
-    this.getCultureStatisticsProductivity(this.filterFormValues);
+    if (this.landTypes[0]?.id) {
+      this.filterFormValues.land_type = String(this.landTypes[0].id);
+      this.getPastureStatisticsProductivity(this.filterFormValues);
+    }
+
+    if (this.landTypes[1]?.id) {
+      this.filterFormValues.land_type = String(this.landTypes[1].id);
+      this.getCultureStatisticsProductivity(this.filterFormValues);
+    }
+
     this.store.setItem('SidePanelComponent', { state: false });
     this.toggleBtn.isContentToggled = false;
   }
@@ -651,57 +659,50 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
     query: IContourStatisticsProductivityQuery
   ): Promise<void> {
     this.contourPastureStatisticsProductivityTableItems = [];
-    const landTypeId = String(this.landTypes[1]?.id);
-    if (!query.land_type.split(',').includes(landTypeId)) return;
     if (this.isWmsAiActive) query.ai = this.isWmsAiActive;
 
-    if (landTypeId) {
-      try {
-        let res: IContourStatisticsProductivity;
-        res = await this.api.statistics.getContourStatisticsProductivity({
-          ...query,
-          land_type: landTypeId,
-        });
+    try {
+      let res: IContourStatisticsProductivity;
+      res = await this.api.statistics.getContourStatisticsProductivity(query);
 
-        if (!res.type) {
-          this.contourPastureStatisticsProductivityTableItems = [];
-          return;
-        }
-
-        this.contourPastureStatisticsProductivityTableItems.push([
-          {
-            areaType: res?.type,
-            areaName_en: res?.[`name_en`],
-            areaName_ky: res?.[`name_ky`],
-            areaName_ru: res?.[`name_ru`],
-            productive: `${res?.Productive?.ha} ${this.translate.transform(
-              'ha'
-            )}`,
-            unproductive: `${res?.Unproductive?.ha} ${this.translate.transform(
-              'ha'
-            )}`,
-          },
-        ]);
-
-        if (Array.isArray(res?.Children) && res?.Children?.length > 0) {
-          this.contourPastureStatisticsProductivityTableItems.push(
-            res?.Children.map((child) => ({
-              areaType: child?.type,
-              areaName_en: child?.[`name_en`],
-              areaName_ky: child?.[`name_ky`],
-              areaName_ru: child?.[`name_ru`],
-              productive: `${child?.Productive?.ha} ${this.translate.transform(
-                'ha'
-              )}`,
-              unproductive: `${
-                child?.Unproductive?.ha
-              } ${this.translate.transform('ha')}`,
-            }))
-          );
-        }
-      } catch (e: any) {
-        this.messages.error(e.error?.message ?? e.message);
+      if (!res.type) {
+        this.contourPastureStatisticsProductivityTableItems = [];
+        return;
       }
+
+      this.contourPastureStatisticsProductivityTableItems.push([
+        {
+          areaType: res?.type,
+          areaName_en: res?.[`name_en`],
+          areaName_ky: res?.[`name_ky`],
+          areaName_ru: res?.[`name_ru`],
+          productive: `${res?.Productive?.ha} ${this.translate.transform(
+            'ha'
+          )}`,
+          unproductive: `${res?.Unproductive?.ha} ${this.translate.transform(
+            'ha'
+          )}`,
+        },
+      ]);
+
+      if (Array.isArray(res?.Children) && res?.Children?.length > 0) {
+        this.contourPastureStatisticsProductivityTableItems.push(
+          res?.Children.map((child) => ({
+            areaType: child?.type,
+            areaName_en: child?.[`name_en`],
+            areaName_ky: child?.[`name_ky`],
+            areaName_ru: child?.[`name_ru`],
+            productive: `${child?.Productive?.ha} ${this.translate.transform(
+              'ha'
+            )}`,
+            unproductive: `${
+              child?.Unproductive?.ha
+            } ${this.translate.transform('ha')}`,
+          }))
+        );
+      }
+    } catch (e: any) {
+      this.messages.error(e.error?.message ?? e.message);
     }
   }
 
@@ -709,15 +710,10 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
     query: ICulutreStatisticsQuery
   ): Promise<void> {
     this.contourCultureStatisticsProductivityTableItems = [];
-    const landTypeId = String(this.landTypes[0]?.id);
-    if (!query.land_type.split(',').includes(landTypeId)) return;
     if (this.isWmsAiActive) query.ai = this.isWmsAiActive;
 
     try {
-      const res = await this.api.statistics.getCultureStatistics({
-        ...query,
-        land_type: landTypeId,
-      });
+      const res = await this.api.statistics.getCultureStatistics(query);
 
       this.contourCultureStatisticsProductivityTableItems = res.map(
         (element) => ({
@@ -858,12 +854,12 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
     this.filterFormValues = { year: 2022 };
 
     if (this.landTypes[0]?.id) {
-      this.filterFormValues.land_type = String(this.landTypes[0].id);
-      this.getPastureStatisticsProductivity(this.filterFormValues);
+      this.filterFormValues.land_type = String(this.landTypes[1].id);
+      this.getCultureStatisticsProductivity(this.filterFormValues);
     }
 
     if (this.landTypes[1]?.id) {
-      this.filterFormValues.land_type = String(this.landTypes[1].id);
+      this.filterFormValues.land_type = String(this.landTypes[0].id);
       this.getPastureStatisticsProductivity(this.filterFormValues);
     }
 

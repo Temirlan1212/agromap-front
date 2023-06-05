@@ -465,7 +465,7 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
       }
     }
 
-    this.getPastureStatisticsProductivity(formValue['value']);
+    this.getPastureStatisticsProductivity(this.filterFormValues);
     this.store.setItem('PasturesMapSidePanelComponent', { state: false });
     this.toggleBtn.isContentToggled = false;
   }
@@ -649,16 +649,11 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
     query: IContourStatisticsProductivityQuery
   ): Promise<void> {
     this.contourPastureStatisticsProductivityTableItems = [];
-    const landTypeId = String(this.landTypes[1]?.id);
-    if (!query.land_type.split(',').includes(landTypeId)) return;
     if (this.isWmsAiActive) query.ai = this.isWmsAiActive;
 
     try {
       let res: IContourStatisticsProductivity;
-      res = await this.api.statistics.getContourStatisticsProductivity({
-        ...query,
-        land_type: landTypeId,
-      });
+      res = await this.api.statistics.getContourStatisticsProductivity(query);
 
       if (!res.type) {
         this.contourPastureStatisticsProductivityTableItems = [];
