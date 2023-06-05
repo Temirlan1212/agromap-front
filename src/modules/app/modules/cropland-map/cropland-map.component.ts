@@ -204,7 +204,7 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
     private route: ActivatedRoute,
     private cd: ChangeDetectorRef
   ) {
-    this.router.events.subscribe((event: Event) => {
+    const routerEventSub = this.router.events.subscribe((event: Event) => {
       if (event instanceof NavigationEnd) {
         this.currentRouterPathname = router.url;
         const isChildRoute = this.route.firstChild !== null;
@@ -232,39 +232,14 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
         }
       }
     });
+
+    this.subscriptions.push(routerEventSub);
   }
 
   subscriptions: Subscription[] = [
     this.translateSvc.onLangChange.subscribe((res) => {
       this.currentLang = res.lang;
-      const translateHa =
-        this.translateSvc.translations[this.currentLang]['ha'];
-
-      this.contourPastureStatisticsProductivityTableItems =
-        this.contourPastureStatisticsProductivityTableItems.map((arr) =>
-          arr.map((element) => ({
-            ...element,
-            productive: `${String(element?.['productive']).replace(
-              /га|ha/gi,
-              translateHa
-            )}`,
-            unproductive: `${String(element?.['unproductive']).replace(
-              /га|ha/gi,
-              translateHa
-            )}`,
-          }))
-        );
-
-      this.contourCultureStatisticsProductivityTableItems =
-        this.contourCultureStatisticsProductivityTableItems.map((element) => {
-          return {
-            ...element,
-            area_ha: `${String(element?.['area_ha']).replace(
-              /га|ha/gi,
-              translateHa
-            )}`,
-          };
-        });
+      this.contourPastureStatisticsOnLangChange();
     }),
 
     this.mapService.contourEditingMode.subscribe((res) => {
@@ -360,53 +335,10 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.mapData?.map) this.mapService.invalidateSize(this.mapData.map);
   }
 
-  async getContour(id: number): Promise<void> {
-    try {
-      if (this.isWmsAiActive) {
-        this.activeContour = await this.api.aiContour.getOne(id);
-      } else {
-        this.activeContour = await this.api.contour.getOne(id);
-      }
-    } catch (e: any) {
-      this.messages.error(e.error?.message ?? e.message);
-    }
-  }
-
   hanldeVegIndexesDateSelect() {
     this.contourDetailsComponents.map((c) => {
       if (c) c.isHidden = true;
     });
-  }
-
-  async getContourData(id: number) {
-    const query: ActualVegQuery = { contour_id: id };
-    try {
-      let res: ActualVegIndexes[];
-      if (this.isWmsAiActive) {
-        res = await this.api.vegIndexes.getActualVegIndexesAi(query);
-      } else {
-        res = await this.api.vegIndexes.getActualVegIndexes(query);
-      }
-
-      const data = res?.reduce((acc: any, i: any) => {
-        if (!acc[i.index.id]) {
-          acc[i.index.id] = {};
-          acc[i.index.id]['name'] = i.index[`name_${this.currentLang}`];
-          acc[i.index.id]['data'] = [];
-          acc[i.index.id]['dates'] = [];
-          acc[i.index.id]['data'].push(i.average_value);
-          acc[i.index.id]['dates'].push(i.date);
-        } else {
-          acc[i.index.id]['data'].push(i.average_value);
-          acc[i.index.id]['dates'].push(i.date);
-        }
-        return acc;
-      }, {});
-      this.contourData = data ? Object.values(data) : [];
-    } catch (e: any) {
-      this.messages.error(e.error?.message ?? e.message);
-      this.contourData = [];
-    }
   }
 
   handleSidePanelToggle(isOpened: boolean) {
@@ -435,83 +367,18 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  async addPolygonsInScreenToMap(mapBounds: LatLngBounds) {
-    this.loading = true;
-    try {
-      if (this.mapData?.map != null) {
-        const landTypeParam =
-          this.filterFormValues?.['land_type'] ??
-          this.landTypes.map((l: ILandType) => l['id']).join(',');
-
-        let polygons: GeoJSON;
-        if (this.isWmsAiActive) {
-          polygons = await this.api.map.getPolygonsInScreenAi({
-            latLngBounds: mapBounds,
-            land_type: landTypeParam,
-          });
-        } else {
-          polygons = await this.api.map.getPolygonsInScreen({
-            latLngBounds: mapBounds,
-            land_type: landTypeParam,
-          });
-        }
-        this.mapData.geoJson.options.snapIgnore = true;
-        this.mapData.geoJson.options.pmIgnore = true;
-        this.mapData.geoJson.options.style = {
-          fillOpacity: 0,
-          weight: 0.4,
-        };
-
-        this.mapData.geoJson.setZIndex(400);
-        this.mapData.geoJson.options.interactive = true;
-        this.mapData.geoJson.addData(polygons);
-      }
-    } catch (e: any) {
-      this.messages.error(e.error?.message ?? e.message);
-    } finally {
-      this.loading = false;
-    }
-  }
-
-  async getLandTypes() {
-    try {
-      this.landTypes = await this.api.dictionary.getLandType();
-    } catch (e: any) {
-      this.messages.error(e.error?.message ?? e.message);
-    }
-  }
-
-  async getRegionsPolygon() {
-    try {
-      let polygons: IRegion[];
-      polygons = await this.api.dictionary.getRegions({
-        polygon: true,
-      });
-
-      polygons.map((polygon) => {
-        if (this.mapData?.map != null) {
-          this.mapData.geoJsonStatic.options.snapIgnore = true;
-          this.mapData.geoJsonStatic.options.pmIgnore = true;
-          this.mapData.geoJsonStatic.options.style = { fillOpacity: 0 };
-          this.mapData.geoJsonStatic.options.interactive = false;
-          this.mapData.geoJsonStatic.addData(polygon.polygon);
-        }
-      });
-    } catch (e: any) {
-      this.messages.error(e.error?.message ?? e.message);
-    }
-  }
-
   handleFilterFormReset(): void {
-    this.getPastureStatisticsProductivity({
-      land_type: '2',
-      year: 2022,
-    });
+    this.filterFormValues = { year: 2022 };
 
-    this.getCultureStatisticsProductivity({
-      land_type: '1',
-      year: 2022,
-    });
+    if (this.landTypes[0]?.id) {
+      this.filterFormValues.land_type = String(this.landTypes[0].id);
+      this.getPastureStatisticsProductivity(this.filterFormValues);
+    }
+
+    if (this.landTypes[1]?.id) {
+      this.filterFormValues.land_type = String(this.landTypes[1].id);
+      this.getPastureStatisticsProductivity(this.filterFormValues);
+    }
 
     this.wmsCQLFilter = null;
     this.setWmsParams();
@@ -523,11 +390,17 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
 
     if (this.mapData?.map) {
       this.mapData.geoJson.clearLayers();
-      const data = this.store.getItem<Record<string, LatLngBounds>>(
+      const data = this.store.getItem<Record<string, LatLngBounds | number>>(
         'ArableLandComponent'
       );
-      if (data?.['mapBounds']) {
-        this.addPolygonsInScreenToMap(data?.['mapBounds']);
+
+      const bounds = data?.['mapBounds'] as LatLngBounds;
+      const zoom = data?.['mapZoom'] as number;
+
+      if (bounds) {
+        const layersLength = this.mapData.geoJson.getLayers().length;
+        if (layersLength > 0) this.mapData.geoJson.clearLayers();
+        if (zoom >= 12) this.addPolygonsInScreenToMap(bounds);
       }
     }
 
@@ -535,39 +408,6 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
     this.getCultureStatisticsProductivity(this.filterFormValues);
     this.store.setItem('SidePanelComponent', { state: false });
     this.toggleBtn.isContentToggled = false;
-  }
-
-  async getVegSatelliteDates(
-    contoruId: number,
-    vegIndexId: number
-  ): Promise<void> {
-    this.loadingSatelliteDates = true;
-    try {
-      const query = {
-        contourId: contoruId,
-        vegIndexId: vegIndexId,
-      };
-
-      let res: IVegSatelliteDate[];
-      if (this.isWmsAiActive) {
-        res = await this.api.vegIndexes.getVegSatelliteDatesAi(query);
-      } else {
-        res = await this.api.vegIndexes.getVegSatelliteDates(query);
-      }
-      this.vegIndexesData = res;
-    } catch (e: any) {
-      this.messages.error(e.error?.message ?? e.message);
-    }
-    this.loadingSatelliteDates = false;
-  }
-
-  async getVegIndexList() {
-    try {
-      this.vegIndexOptionsList =
-        (await this.api.vegIndexes.getVegIndexList()) as IVegIndexOption[];
-    } catch (e: any) {
-      this.messages.error(e.error?.message ?? e.message);
-    }
   }
 
   handleVegIndexOptionClick(vegIndexOption: IVegIndexOption) {
@@ -614,12 +454,11 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
         this.mapComponent.handleFeatureClose();
       }
 
-      if (bounds) {
-        if (zoom >= 12 && this.landTypes.length > 0) {
-          this.mapData?.geoJson.clearLayers();
-          this.addPolygonsInScreenToMap(bounds);
-          this.cd.detectChanges();
-        }
+      if (bounds && this.mapData && this.landTypes.length > 0) {
+        const layersLength = this.mapData.geoJson.getLayers().length;
+        if (layersLength > 0) this.mapData.geoJson.clearLayers();
+        if (zoom >= 12) this.addPolygonsInScreenToMap(bounds);
+        this.cd.detectChanges();
       }
     }
   }
@@ -665,72 +504,219 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  async getPastureStatisticsProductivity(
-    query: IContourStatisticsProductivityQuery
-  ): Promise<void> {
-    this.contourPastureStatisticsProductivityTableItems = [];
-    if (!query.land_type.split(',').includes('2')) return;
-    if (this.isWmsAiActive) query.ai = this.isWmsAiActive;
-
+  private async getContour(id: number): Promise<void> {
     try {
-      let res: IContourStatisticsProductivity;
-      res = await this.api.statistics.getContourStatisticsProductivity({
-        ...query,
-        land_type: '2',
-      });
-
-      if (!res.type) {
-        this.contourPastureStatisticsProductivityTableItems = [];
-        return;
-      }
-
-      this.contourPastureStatisticsProductivityTableItems.push([
-        {
-          areaType: res?.type,
-          areaName_en: res?.[`name_en`],
-          areaName_ky: res?.[`name_ky`],
-          areaName_ru: res?.[`name_ru`],
-          productive: `${res?.Productive?.ha} ${this.translate.transform(
-            'ha'
-          )}`,
-          unproductive: `${res?.Unproductive?.ha} ${this.translate.transform(
-            'ha'
-          )}`,
-        },
-      ]);
-
-      if (Array.isArray(res?.Children) && res?.Children?.length > 0) {
-        this.contourPastureStatisticsProductivityTableItems.push(
-          res?.Children.map((child) => ({
-            areaType: child?.type,
-            areaName_en: child?.[`name_en`],
-            areaName_ky: child?.[`name_ky`],
-            areaName_ru: child?.[`name_ru`],
-            productive: `${child?.Productive?.ha} ${this.translate.transform(
-              'ha'
-            )}`,
-            unproductive: `${
-              child?.Unproductive?.ha
-            } ${this.translate.transform('ha')}`,
-          }))
-        );
+      if (this.isWmsAiActive) {
+        this.activeContour = await this.api.aiContour.getOne(id);
+      } else {
+        this.activeContour = await this.api.contour.getOne(id);
       }
     } catch (e: any) {
       this.messages.error(e.error?.message ?? e.message);
     }
   }
 
-  async getCultureStatisticsProductivity(
+  private async getContourData(id: number) {
+    const query: ActualVegQuery = { contour_id: id };
+    try {
+      let res: ActualVegIndexes[];
+      if (this.isWmsAiActive) {
+        res = await this.api.vegIndexes.getActualVegIndexesAi(query);
+      } else {
+        res = await this.api.vegIndexes.getActualVegIndexes(query);
+      }
+
+      const data = res?.reduce((acc: any, i: any) => {
+        if (!acc[i.index.id]) {
+          acc[i.index.id] = {};
+          acc[i.index.id]['name'] = i.index[`name_${this.currentLang}`];
+          acc[i.index.id]['data'] = [];
+          acc[i.index.id]['dates'] = [];
+          acc[i.index.id]['data'].push(i.average_value);
+          acc[i.index.id]['dates'].push(i.date);
+        } else {
+          acc[i.index.id]['data'].push(i.average_value);
+          acc[i.index.id]['dates'].push(i.date);
+        }
+        return acc;
+      }, {});
+      this.contourData = data ? Object.values(data) : [];
+    } catch (e: any) {
+      this.messages.error(e.error?.message ?? e.message);
+      this.contourData = [];
+    }
+  }
+
+  private async addPolygonsInScreenToMap(mapBounds: LatLngBounds) {
+    this.loading = true;
+    try {
+      const landTypeParam =
+        this.filterFormValues?.['land_type'] ??
+        this.landTypes.map((l: ILandType) => l['id']).join(',');
+
+      if (this.mapData?.map != null && landTypeParam) {
+        let polygons: GeoJSON;
+        if (this.isWmsAiActive) {
+          polygons = await this.api.map.getPolygonsInScreenAi({
+            latLngBounds: mapBounds,
+            land_type: landTypeParam,
+          });
+        } else {
+          polygons = await this.api.map.getPolygonsInScreen({
+            latLngBounds: mapBounds,
+            land_type: landTypeParam,
+          });
+        }
+        this.mapData.geoJson.options.snapIgnore = true;
+        this.mapData.geoJson.options.pmIgnore = true;
+        this.mapData.geoJson.options.style = {
+          fillOpacity: 0,
+          weight: 0.4,
+        };
+
+        this.mapData.geoJson.setZIndex(400);
+        this.mapData.geoJson.options.interactive = true;
+        this.mapData.geoJson.addData(polygons);
+      }
+    } catch (e: any) {
+      this.messages.error(e.error?.message ?? e.message);
+    } finally {
+      this.loading = false;
+    }
+  }
+
+  private async getLandTypes() {
+    try {
+      this.landTypes = await this.api.dictionary.getLandType();
+    } catch (e: any) {
+      this.messages.error(e.error?.message ?? e.message);
+    }
+  }
+
+  private async getRegionsPolygon() {
+    try {
+      let polygons: IRegion[];
+      polygons = await this.api.dictionary.getRegions({
+        polygon: true,
+      });
+
+      polygons.map((polygon) => {
+        if (this.mapData?.map != null) {
+          this.mapData.geoJsonStatic.options.snapIgnore = true;
+          this.mapData.geoJsonStatic.options.pmIgnore = true;
+          this.mapData.geoJsonStatic.options.style = { fillOpacity: 0 };
+          this.mapData.geoJsonStatic.options.interactive = false;
+          this.mapData.geoJsonStatic.addData(polygon.polygon);
+        }
+      });
+    } catch (e: any) {
+      this.messages.error(e.error?.message ?? e.message);
+    }
+  }
+
+  private async getVegSatelliteDates(
+    contoruId: number,
+    vegIndexId: number
+  ): Promise<void> {
+    this.loadingSatelliteDates = true;
+    try {
+      const query = {
+        contourId: contoruId,
+        vegIndexId: vegIndexId,
+      };
+
+      let res: IVegSatelliteDate[];
+      if (this.isWmsAiActive) {
+        res = await this.api.vegIndexes.getVegSatelliteDatesAi(query);
+      } else {
+        res = await this.api.vegIndexes.getVegSatelliteDates(query);
+      }
+      this.vegIndexesData = res;
+    } catch (e: any) {
+      this.messages.error(e.error?.message ?? e.message);
+    }
+    this.loadingSatelliteDates = false;
+  }
+
+  private async getVegIndexList() {
+    try {
+      this.vegIndexOptionsList =
+        (await this.api.vegIndexes.getVegIndexList()) as IVegIndexOption[];
+    } catch (e: any) {
+      this.messages.error(e.error?.message ?? e.message);
+    }
+  }
+
+  private async getPastureStatisticsProductivity(
+    query: IContourStatisticsProductivityQuery
+  ): Promise<void> {
+    this.contourPastureStatisticsProductivityTableItems = [];
+    const landTypeId = String(this.landTypes[1]?.id);
+    if (!query.land_type.split(',').includes(landTypeId)) return;
+    if (this.isWmsAiActive) query.ai = this.isWmsAiActive;
+
+    if (landTypeId) {
+      try {
+        let res: IContourStatisticsProductivity;
+        res = await this.api.statistics.getContourStatisticsProductivity({
+          ...query,
+          land_type: landTypeId,
+        });
+
+        if (!res.type) {
+          this.contourPastureStatisticsProductivityTableItems = [];
+          return;
+        }
+
+        this.contourPastureStatisticsProductivityTableItems.push([
+          {
+            areaType: res?.type,
+            areaName_en: res?.[`name_en`],
+            areaName_ky: res?.[`name_ky`],
+            areaName_ru: res?.[`name_ru`],
+            productive: `${res?.Productive?.ha} ${this.translate.transform(
+              'ha'
+            )}`,
+            unproductive: `${res?.Unproductive?.ha} ${this.translate.transform(
+              'ha'
+            )}`,
+          },
+        ]);
+
+        if (Array.isArray(res?.Children) && res?.Children?.length > 0) {
+          this.contourPastureStatisticsProductivityTableItems.push(
+            res?.Children.map((child) => ({
+              areaType: child?.type,
+              areaName_en: child?.[`name_en`],
+              areaName_ky: child?.[`name_ky`],
+              areaName_ru: child?.[`name_ru`],
+              productive: `${child?.Productive?.ha} ${this.translate.transform(
+                'ha'
+              )}`,
+              unproductive: `${
+                child?.Unproductive?.ha
+              } ${this.translate.transform('ha')}`,
+            }))
+          );
+        }
+      } catch (e: any) {
+        this.messages.error(e.error?.message ?? e.message);
+      }
+    }
+  }
+
+  private async getCultureStatisticsProductivity(
     query: ICulutreStatisticsQuery
   ): Promise<void> {
     this.contourCultureStatisticsProductivityTableItems = [];
-    if (!query.land_type.split(',').includes('1')) return;
+    const landTypeId = String(this.landTypes[0]?.id);
+    if (!query.land_type.split(',').includes(landTypeId)) return;
     if (this.isWmsAiActive) query.ai = this.isWmsAiActive;
 
     try {
       const res = await this.api.statistics.getCultureStatistics({
         ...query,
-        land_type: '1',
+        land_type: landTypeId,
       });
 
       this.contourCultureStatisticsProductivityTableItems = res.map(
@@ -742,6 +728,36 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
     } catch (e: any) {
       this.messages.error(e.error?.message ?? e.message);
     }
+  }
+
+  private contourPastureStatisticsOnLangChange() {
+    const translateHa = this.translateSvc.translations[this.currentLang]['ha'];
+
+    this.contourPastureStatisticsProductivityTableItems =
+      this.contourPastureStatisticsProductivityTableItems.map((arr) =>
+        arr.map((element) => ({
+          ...element,
+          productive: `${String(element?.['productive']).replace(
+            /га|ha/gi,
+            translateHa
+          )}`,
+          unproductive: `${String(element?.['unproductive']).replace(
+            /га|ha/gi,
+            translateHa
+          )}`,
+        }))
+      );
+
+    this.contourCultureStatisticsProductivityTableItems =
+      this.contourCultureStatisticsProductivityTableItems.map((element) => {
+        return {
+          ...element,
+          area_ha: `${String(element?.['area_ha']).replace(
+            /га|ha/gi,
+            translateHa
+          )}`,
+        };
+      });
   }
 
   private setWmsParams(): void {
@@ -768,27 +784,7 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  async ngOnInit(): Promise<void> {
-    this.getPastureStatisticsProductivity({
-      land_type: '2',
-      year: 2022,
-    });
-
-    this.getCultureStatisticsProductivity({
-      land_type: '1',
-      year: 2022,
-    });
-
-    this.wmsSelectedStatusLayers = this.store.getItem(
-      'MapControlLayersSwitchComponent'
-    );
-    const data = this.store.getItem('MapControlLayersSwitchComponent');
-    this.wmsSelectedStatusLayers = data;
-
-    await this.getLandTypes();
-    await this.getVegIndexList();
-    this.activeVegIndexOption = this.vegIndexOptionsList[0];
-
+  private buildWmsCQLFilter() {
     this.store
       .watchItem<ContourFiltersQuery | null>('ContourFilterComponent')
       .subscribe((v) => {
@@ -845,6 +841,33 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
           this.setWmsParams();
         }
       });
+  }
+
+  async ngOnInit(): Promise<void> {
+    this.wmsSelectedStatusLayers = this.store.getItem(
+      'MapControlLayersSwitchComponent'
+    );
+    const data = this.store.getItem('MapControlLayersSwitchComponent');
+    this.wmsSelectedStatusLayers = data;
+
+    this.activeVegIndexOption = this.vegIndexOptionsList[0];
+
+    await this.getLandTypes();
+    await this.getVegIndexList();
+
+    this.filterFormValues = { year: 2022 };
+
+    if (this.landTypes[0]?.id) {
+      this.filterFormValues.land_type = String(this.landTypes[0].id);
+      this.getPastureStatisticsProductivity(this.filterFormValues);
+    }
+
+    if (this.landTypes[1]?.id) {
+      this.filterFormValues.land_type = String(this.landTypes[1].id);
+      this.getPastureStatisticsProductivity(this.filterFormValues);
+    }
+
+    this.buildWmsCQLFilter();
   }
 
   ngAfterViewInit(): void {

@@ -242,6 +242,7 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
         }
       }
     });
+
     this.subscriptions.push(routerEventSub);
   }
 
@@ -274,25 +275,6 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
       this.cd.detectChanges();
     }),
   ];
-
-  contourPastureStatisticsOnLangChange() {
-    const translateHa = this.translateSvc.translations[this.currentLang]['ha'];
-
-    this.contourPastureStatisticsProductivityTableItems =
-      this.contourPastureStatisticsProductivityTableItems.map((arr) =>
-        arr.map((element) => ({
-          ...element,
-          productive: `${String(element?.['productive']).replace(
-            /га|ha/gi,
-            translateHa
-          )}`,
-          unproductive: `${String(element?.['unproductive']).replace(
-            /га|ha/gi,
-            translateHa
-          )}`,
-        }))
-      );
-  }
 
   handleMapData(mapData: MapData): void {
     this.mapData = mapData;
@@ -451,19 +433,37 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   handleFilterFormReset(): void {
-    this.filterFormResetValues = {
-      land_type: '2',
-      year: 2022,
-    };
+    if (this.landTypes[0]?.id) {
+      this.filterFormValues = {
+        land_type: String(this.landTypes[0].id),
+        year: 2022,
+      };
+    }
 
-    this.getPastureStatisticsProductivity(this.filterFormResetValues);
     this.wmsCQLFilter = null;
+    this.getPastureStatisticsProductivity(this.filterFormValues);
     this.setWmsParams();
     if (this.mapComponent) this.mapComponent.handleFeatureClose();
   }
 
   handleFilterFormSubmit(formValue: Record<string, any>) {
     this.filterFormValues = formValue['value'];
+
+    if (this.mapData?.map) {
+      const data =
+        this.store.getItem<Record<string, LatLngBounds | number>>(
+          'HomeComponent'
+        );
+
+      const bounds = data?.['mapBounds'] as LatLngBounds;
+      const zoom = data?.['mapZoom'] as number;
+
+      if (bounds && this.mapData) {
+        const layersLength = this.mapData.geoJson.getLayers().length;
+        if (layersLength > 0) this.mapData.geoJson.clearLayers();
+        if (zoom >= 12) this.addPolygonsInScreenToMap(bounds);
+      }
+    }
 
     this.getPastureStatisticsProductivity(formValue['value']);
     this.store.setItem('PasturesMapSidePanelComponent', { state: false });
@@ -649,14 +649,15 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
     query: IContourStatisticsProductivityQuery
   ): Promise<void> {
     this.contourPastureStatisticsProductivityTableItems = [];
-    if (!query.land_type.split(',').includes('2')) return;
+    const landTypeId = String(this.landTypes[1]?.id);
+    if (!query.land_type.split(',').includes(landTypeId)) return;
     if (this.isWmsAiActive) query.ai = this.isWmsAiActive;
 
     try {
       let res: IContourStatisticsProductivity;
       res = await this.api.statistics.getContourStatisticsProductivity({
         ...query,
-        land_type: '2',
+        land_type: landTypeId,
       });
 
       if (!res.type) {
@@ -698,6 +699,25 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
     } catch (e: any) {
       this.messages.error(e.message);
     }
+  }
+
+  private contourPastureStatisticsOnLangChange() {
+    const translateHa = this.translateSvc.translations[this.currentLang]['ha'];
+
+    this.contourPastureStatisticsProductivityTableItems =
+      this.contourPastureStatisticsProductivityTableItems.map((arr) =>
+        arr.map((element) => ({
+          ...element,
+          productive: `${String(element?.['productive']).replace(
+            /га|ha/gi,
+            translateHa
+          )}`,
+          unproductive: `${String(element?.['unproductive']).replace(
+            /га|ha/gi,
+            translateHa
+          )}`,
+        }))
+      );
   }
 
   private async getLandTypes() {
