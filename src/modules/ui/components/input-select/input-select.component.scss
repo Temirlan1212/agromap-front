@@ -104,8 +104,8 @@
       max-height: 200px;
       .search {
         position: absolute;
-        left: 0px;
-        right: 6px;
+        left: 2px;
+        right: 2px;
       }
     }
 
@@ -143,8 +143,13 @@
   }
 
   &.ng-touched.ng-invalid {
-    div:first-child {
+    .container {
       border: 1px solid $dangerColor;
+    }
+    .options {
+      &.collapsed {
+        border: 1px solid $dangerColor;
+      }
     }
   }
 }

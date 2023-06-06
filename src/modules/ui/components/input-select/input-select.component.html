@@ -1,4 +1,8 @@
-<div (click)="handleSelectToggle($event)" [class.active]="opened">
+<div
+  (click)="handleSelectToggle($event)"
+  [class.active]="opened"
+  class="container"
+>
   <span
     class="placeholder"
     [class.required]="required"
