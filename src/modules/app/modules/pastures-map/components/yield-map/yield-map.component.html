@@ -60,9 +60,10 @@
 
       <app-statistics
         class="primary"
-        *ngIf="!activeContour && landTypes.length > 0 && showControlStatistics"
+        *ngIf="landTypes.length > 0 && showControlStatistics"
         [landTypes]="[landTypes[0]]"
         [filterFormValues]="filterFormValues"
+        [hidden]="activeContour"
       ></app-statistics>
 
       <app-map-control class="transparent d-xs-none">

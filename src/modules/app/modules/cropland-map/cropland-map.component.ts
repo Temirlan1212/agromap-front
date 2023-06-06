@@ -362,6 +362,11 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
     this.filterFormValues = null;
     this.setWmsParams();
     if (this.mapComponent) this.mapComponent.handleFeatureClose();
+    this.handleSetSidePanelState(false);
+  }
+
+  handleSetSidePanelState(state: boolean) {
+    this.store.setItem('SidePanelComponent', { state });
   }
 
   handleFilterFormSubmit(formValue: Record<string, any>) {
@@ -385,6 +390,7 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.store.setItem('SidePanelComponent', { state: false });
     this.toggleBtn.isContentToggled = false;
+    this.handleSetSidePanelState(false);
   }
 
   handleVegIndexOptionClick(vegIndexOption: IVegIndexOption) {

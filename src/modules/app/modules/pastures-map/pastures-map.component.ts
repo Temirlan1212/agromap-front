@@ -93,7 +93,6 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
   sidePanelData: Record<string, any> = {};
   pasturesMapControlLayersSwitch: Record<string, any> = {};
   filterFormValues!: any;
-  filterFormResetValues!: any;
   isChildRoute: boolean = false;
   vegIndexesData: IVegSatelliteDate[] = [];
   vegIndexOptionsList: IVegIndexOption[] = [];
@@ -432,6 +431,11 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
     this.setWmsParams();
     if (this.mapComponent) this.mapComponent.handleFeatureClose();
     this.filterFormValues = null;
+    this.handleSetSidePanelState(false);
+  }
+
+  handleSetSidePanelState(state: boolean) {
+    this.store.setItem('PasturesMapSidePanelComponent', { state });
   }
 
   handleFilterFormSubmit(formValue: Record<string, any>) {
@@ -455,6 +459,7 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.store.setItem('PasturesMapSidePanelComponent', { state: false });
     this.toggleBtn.isContentToggled = false;
+    this.handleSetSidePanelState(false);
   }
 
   async getVegSatelliteDates(
