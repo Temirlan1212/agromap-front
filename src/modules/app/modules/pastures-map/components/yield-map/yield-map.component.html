@@ -59,6 +59,7 @@
       ></app-map-control-veg-indexes>
 
       <app-statistics
+        class="primary"
         *ngIf="!activeContour && landTypes.length > 0 && showControlStatistics"
         [landTypes]="[landTypes[0]]"
         [filterFormValues]="filterFormValues"
