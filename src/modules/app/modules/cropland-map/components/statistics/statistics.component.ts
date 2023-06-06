@@ -79,6 +79,9 @@ export class StatisticsComponent
 
   handleSelectedTab(selectedTab: TabComponent) {
     this.activeTab = selectedTab;
+    if (this.filterFormValues != null) {
+      this.handleFilterFormSubmit({ value: this.filterFormValues });
+    }
   }
 
   public getLandTypeItem(item: any): string {
@@ -100,26 +103,19 @@ export class StatisticsComponent
   }
 
   private handleFilterFormSubmit(formValue: Record<string, any>) {
-    const params = formValue['value'];
+    let params = formValue['value'];
+    if (this.activeTab?.id) params.land_type = this.activeTab.id;
 
     this.pastureStatsProdTableItems = [];
     this.cultureStatsProdTableItems = [];
 
-    if (String(params.land_type).includes('1')) {
-      this.getCultureStatisticsProductivity({
-        ...params,
-        land_type: this.activeTab.id,
-      });
+    if (String(params?.land_type).includes('1')) {
+      this.getCultureStatisticsProductivity(params);
     }
 
-    if (String(params.land_type).includes('2')) {
-      this.getPastureStatisticsProductivity({
-        ...params,
-        land_type: this.activeTab.id,
-      });
+    if (String(params?.land_type).includes('2')) {
+      this.getPastureStatisticsProductivity(params);
     }
-
-    this.filterFormValues = formValue['value'];
   }
 
   private async getPastureStatisticsProductivity(
