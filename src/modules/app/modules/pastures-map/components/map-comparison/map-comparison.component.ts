@@ -39,21 +39,19 @@ export class MapComparisonComponent
   @Output() clickBack = new EventEmitter<boolean>(false);
   @Output() onDestroy = new EventEmitter();
   @Input() filterFormValues: any;
-  @Input() filterFormResetValues: any;
 
   constructor(private store: StoreService) {}
 
   ngOnChanges(changes: SimpleChanges): void {
-    if ('filterFormResetValues' in changes) {
-      this.filterFormValues = changes['filterFormResetValues'].currentValue;
-
-      if (this.yieldMapComponents) {
-        this.yieldMapComponents.map((ref) => this.handleFilterFormReset(ref));
-      }
-    }
     if ('filterFormValues' in changes) {
       this.filterFormValues = changes['filterFormValues'].currentValue;
-      this.handleFilterFormSubmit();
+      if (this.filterFormValues == null) {
+        if (this.yieldMapComponents) {
+          this.yieldMapComponents.map((ref) => this.handleFilterFormReset(ref));
+        }
+      } else {
+        this.handleFilterFormSubmit();
+      }
     }
   }
 

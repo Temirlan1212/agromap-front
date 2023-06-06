@@ -79,7 +79,6 @@ export class YieldMapComponent
     productivityStatus: true,
   };
   @Input() baseWmsLayerLayersName: string | null = null;
-
   @HostBinding('style.width')
   @Input()
   width: string = '100%';
@@ -258,35 +257,15 @@ export class YieldMapComponent
   }
 
   subscriptions: Subscription[] = [
-    this.translateSvc.onLangChange.subscribe((res) => {
-      this.currentLang = res.lang;
-
-      this.contourPastureStatisticsOnLangChange();
-    }),
+    this.translateSvc.onLangChange.subscribe(
+      (res) => (this.currentLang = res.lang)
+    ),
 
     this.store.watchItem('PasturesMapSidePanelComponent').subscribe((v) => {
       this.sidePanelData = v;
       this.cd.detectChanges();
     }),
   ];
-
-  contourPastureStatisticsOnLangChange() {
-    const translateHa = this.translateSvc.translations[this.currentLang]['ha'];
-    this.contourPastureStatisticsProductivityTableItems =
-      this.contourPastureStatisticsProductivityTableItems.map((arr) =>
-        arr.map((element) => ({
-          ...element,
-          productive: `${String(element?.['productive']).replace(
-            /га|ha/gi,
-            translateHa
-          )}`,
-          unproductive: `${String(element?.['unproductive']).replace(
-            /га|ha/gi,
-            translateHa
-          )}`,
-        }))
-      );
-  }
 
   handleMapData(mapData: MapData): void {
     this.mapData = mapData;
@@ -503,7 +482,6 @@ export class YieldMapComponent
 
   handleFilterFormReset(formValue: Record<string, any>): void {
     this.filterFormValues = formValue;
-    this.getPastureStatisticsProductivity(this.filterFormValues);
     this.wmsCQLFilter = null;
     this.setWmsParams();
     if (this.mapComponent) this.mapComponent.handleFeatureClose();
@@ -512,7 +490,6 @@ export class YieldMapComponent
   handleFilterFormSubmit(formValue: Record<string, any>) {
     if (this.showControlStatistics) {
       this.filterFormValues = formValue;
-      this.getPastureStatisticsProductivity(this.filterFormValues);
       this.store.setItem('PasturesMapSidePanelComponent', { state: false });
     }
   }
@@ -569,60 +546,6 @@ export class YieldMapComponent
         this.isWmsAiActive = true;
       } else {
         this.isWmsAiActive = false;
-      }
-    }
-  }
-
-  async getPastureStatisticsProductivity(
-    query: IContourStatisticsProductivityQuery
-  ): Promise<void> {
-    if (this.showControlStatistics) {
-      this.contourPastureStatisticsProductivityTableItems = [];
-      if (this.isWmsAiActive) query.ai = this.isWmsAiActive;
-      try {
-        let res: IContourStatisticsProductivity;
-        res = await this.api.statistics.getContourStatisticsProductivity({
-          ...query,
-        });
-
-        if (!res.type) {
-          this.contourPastureStatisticsProductivityTableItems = [];
-          return;
-        }
-
-        this.contourPastureStatisticsProductivityTableItems.push([
-          {
-            areaType: res?.type,
-            areaName_en: res?.[`name_en`],
-            areaName_ky: res?.[`name_ky`],
-            areaName_ru: res?.[`name_ru`],
-            productive: `${res?.Productive?.ha} ${this.translate.transform(
-              'ha'
-            )}`,
-            unproductive: `${res?.Unproductive?.ha} ${this.translate.transform(
-              'ha'
-            )}`,
-          },
-        ]);
-
-        if (Array.isArray(res?.Children) && res?.Children?.length > 0) {
-          this.contourPastureStatisticsProductivityTableItems.push(
-            res?.Children.map((child) => ({
-              areaType: child?.type,
-              areaName_en: child?.[`name_en`],
-              areaName_ky: child?.[`name_ky`],
-              areaName_ru: child?.[`name_ru`],
-              productive: `${child?.Productive?.ha} ${this.translate.transform(
-                'ha'
-              )}`,
-              unproductive: `${
-                child?.Unproductive?.ha
-              } ${this.translate.transform('ha')}`,
-            }))
-          );
-        }
-      } catch (e: any) {
-        this.messages.error(e.message);
       }
     }
   }

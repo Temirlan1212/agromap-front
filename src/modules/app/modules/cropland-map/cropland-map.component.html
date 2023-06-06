@@ -5,7 +5,6 @@
     (onModeChanged)="handleModeChange($event)"
     (onFormSubmit)="handleFilterFormSubmit($event)"
     (onFormReset)="handleFilterFormReset()"
-    #contourFilter
   >
   </app-contour-filter>
   <router-outlet></router-outlet>
@@ -93,7 +92,7 @@
         ></app-map-control-veg-indexes>
 
         <app-statistics
-          [contourFilterComponent]="contourFilter"
+          [filterFormValues]="filterFormValues"
           *ngIf="!activeContour && landTypes.length > 0"
           [landTypes]="landTypes"
         ></app-statistics>

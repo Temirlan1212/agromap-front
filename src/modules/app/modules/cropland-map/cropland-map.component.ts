@@ -359,6 +359,7 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
 
   handleFilterFormReset(): void {
     this.wmsCQLFilter = null;
+    this.filterFormValues = null;
     this.setWmsParams();
     if (this.mapComponent) this.mapComponent.handleFeatureClose();
   }

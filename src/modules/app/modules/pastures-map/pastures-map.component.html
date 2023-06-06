@@ -4,7 +4,6 @@
     (onEditClick)="map.handleFeatureClose()"
     (onFormSubmit)="handleFilterFormSubmit($event)"
     (onFormReset)="handleFilterFormReset()"
-    #contourFilter
   >
   </app-contour-filter>
   <router-outlet></router-outlet>
@@ -21,7 +20,6 @@
     *ngIf="isComparisonMapsActivated && !isChildRoute"
     (clickBack)="isComparisonMapsActivated = $event"
     [filterFormValues]="filterFormValues"
-    [filterFormResetValues]="filterFormResetValues"
   ></app-map-comparison>
 
   <app-map
@@ -112,7 +110,7 @@
         ></app-map-control-veg-indexes>
 
         <app-statistics
-          [contourFilterComponent]="contourFilter"
+          [filterFormValues]="filterFormValues"
           *ngIf="!activeContour && landTypes.length > 0"
           [landTypes]="[landTypes[0]]"
         ></app-statistics>

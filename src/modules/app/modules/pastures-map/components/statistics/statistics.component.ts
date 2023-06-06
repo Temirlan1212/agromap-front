@@ -1,16 +1,22 @@
-import { AfterViewInit, Component, Input } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  Input,
+  OnChanges,
+  OnDestroy,
+  SimpleChanges,
+} from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { ApiService } from 'src/modules/api/api.service';
 import { ILandType } from 'src/modules/api/models/land-type.model';
 import {
   IContourStatisticsProductivity,
   IContourStatisticsProductivityQuery,
-  ICulutreStatisticsQuery,
 } from 'src/modules/api/models/statistics.model';
 import { TabComponent } from 'src/modules/ui/components/content-tabs/tab/tab.component';
 import { ITableItem } from 'src/modules/ui/models/table.model';
 import { MessagesService } from 'src/modules/ui/services/messages.service';
-import { ContourFilterComponent } from '../contour-filter/contour-filter.component';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -18,78 +24,55 @@ import { Subscription } from 'rxjs';
   templateUrl: './statistics.component.html',
   styleUrls: ['./statistics.component.scss'],
 })
-export class StatisticsComponent implements AfterViewInit {
+export class StatisticsComponent
+  implements AfterViewInit, OnChanges, OnDestroy
+{
   @Input() isWmsAiActive: boolean = false;
   @Input() landTypes: ILandType[] = [];
-  @Input() contourFilterComponent!: ContourFilterComponent;
+  @Input() filterFormValues: any;
   pastureStatsProdTableItems: ITableItem[][] = [];
-  cultureStatsProdTableItems: ITableItem[] = [];
   currentLang: string = this.translateSvc.currentLang;
   activeTab!: TabComponent;
   subscriptions: Subscription[] = [];
-  filterFormValues!: any;
 
   constructor(
     private api: ApiService,
     private messages: MessagesService,
     private translate: TranslatePipe,
-    private translateSvc: TranslateService
+    private translateSvc: TranslateService,
+    private cd: ChangeDetectorRef
   ) {}
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if ('filterFormValues' in changes) {
+      this.filterFormValues = changes['filterFormValues'].currentValue;
+      if (this.filterFormValues == null) {
+        this.handleFilterFormReset();
+      } else {
+        this.handleFilterFormSubmit({ value: this.filterFormValues });
+      }
+    }
+  }
+
   ngAfterViewInit(): void {
-    if (this.contourFilterComponent != null) {
-      this.subscriptions = [
-        this.contourFilterComponent.onFormReset.subscribe(() =>
-          this.handleFilterFormReset()
-        ),
-        this.contourFilterComponent.onFormSubmit.subscribe((formValue) =>
-          this.handleFilterFormSubmit(formValue)
-        ),
-        this.translateSvc.onLangChange.subscribe((res) => {
-          this.currentLang = res.lang;
-          this.contourPastureStatisticsOnLangChange();
-        }),
-      ];
-    }
+    this.subscriptions = [
+      this.translateSvc.onLangChange.subscribe((res) => {
+        this.currentLang = res.lang;
+        this.contourPastureStatisticsOnLangChange();
+      }),
+    ];
 
     this.pastureStatsProdTableItems = [];
-    this.cultureStatsProdTableItems = [];
-    let params = { year: 2022, land_type: String(this.activeTab.id) };
-    this.getPastureStatisticsProductivity(params);
-    this.getCultureStatisticsProductivity(params);
+    if (this.activeTab?.id) {
+      let params = { year: 2022, land_type: String(this.activeTab.id) };
+      this.getPastureStatisticsProductivity(params);
+    }
+
+    this.cd.detectChanges();
   }
 
-  private handleFilterFormReset() {
-    this.pastureStatsProdTableItems = [];
-    this.cultureStatsProdTableItems = [];
-    this.filterFormValues = { year: 2022 };
-    this.filterFormValues['land_type'] = String(this.activeTab.id);
-    this.getPastureStatisticsProductivity(this.filterFormValues);
-    this.getCultureStatisticsProductivity(this.filterFormValues);
-    this.filterFormValues = null;
-  }
-
-  private handleFilterFormSubmit(formValue: Record<string, any>) {
-    const params = formValue['value'];
-
-    this.pastureStatsProdTableItems = [];
-    this.cultureStatsProdTableItems = [];
-
-    if (String(params.land_type).includes('1')) {
-      this.getCultureStatisticsProductivity({
-        ...params,
-        land_type: this.activeTab.id,
-      });
-    }
-
-    if (String(params.land_type).includes('2')) {
-      this.getPastureStatisticsProductivity({
-        ...params,
-        land_type: this.activeTab.id,
-      });
-    }
-
-    this.filterFormValues = formValue['value'];
+  ngOnDestroy(): void {
+    this.subscriptions.map((s) => s.unsubscribe());
   }
 
   handleSelectedTab(selectedTab: TabComponent) {
@@ -99,6 +82,28 @@ export class StatisticsComponent implements AfterViewInit {
   public getLandTypeItem(item: any): string {
     const propertyName = 'name_' + this.currentLang;
     return item[propertyName];
+  }
+
+  private handleFilterFormReset() {
+    this.pastureStatsProdTableItems = [];
+    if (this.activeTab?.id) {
+      this.filterFormValues = { year: 2022 };
+      this.filterFormValues['land_type'] = String(this.activeTab.id);
+      this.getPastureStatisticsProductivity(this.filterFormValues);
+      this.filterFormValues = null;
+    }
+  }
+
+  private handleFilterFormSubmit(formValue: Record<string, any>) {
+    const params = formValue['value'];
+
+    this.pastureStatsProdTableItems = [];
+
+    this.getPastureStatisticsProductivity({
+      ...params,
+      land_type: this.activeTab.id,
+    });
+    this.filterFormValues = formValue['value'];
   }
 
   private async getPastureStatisticsProductivity(
@@ -151,23 +156,6 @@ export class StatisticsComponent implements AfterViewInit {
     }
   }
 
-  private async getCultureStatisticsProductivity(
-    query: ICulutreStatisticsQuery
-  ): Promise<void> {
-    if (this.isWmsAiActive) query.ai = this.isWmsAiActive;
-
-    try {
-      const res = await this.api.statistics.getCultureStatistics(query);
-
-      this.cultureStatsProdTableItems = res.map((element) => ({
-        ...element,
-        area_ha: `${element?.area_ha} ${this.translate.transform('ha')}`,
-      })) as unknown as ITableItem[];
-    } catch (e: any) {
-      this.messages.error(e.error?.message ?? e.message);
-    }
-  }
-
   private contourPastureStatisticsOnLangChange() {
     const translateHa = this.translateSvc.translations[this.currentLang]['ha'];
     this.pastureStatsProdTableItems = this.pastureStatsProdTableItems.map(
@@ -183,17 +171,6 @@ export class StatisticsComponent implements AfterViewInit {
             translateHa
           )}`,
         }))
-    );
-    this.cultureStatsProdTableItems = this.cultureStatsProdTableItems.map(
-      (element) => {
-        return {
-          ...element,
-          area_ha: `${String(element?.['area_ha']).replace(
-            /га|ha/gi,
-            translateHa
-          )}`,
-        };
-      }
     );
   }
 }

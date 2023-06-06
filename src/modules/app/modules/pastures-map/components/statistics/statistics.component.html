@@ -1,5 +1,5 @@
 <app-map-control-statistics
-  [collapseOnChanges]="pastureStatsProdTableItems || cultureStatsProdTableItems"
+  [collapseOnChanges]="pastureStatsProdTableItems"
   [title]="'Roll up' | translate"
 >
   <app-content-tabs
@@ -29,29 +29,6 @@
             {
               title: 'Unproductive' | translate | truncate : 10,
               field: 'unproductive'
-            }
-          ]"
-        ></app-table>
-      </app-tab>
-
-      <app-tab
-        [title]="getLandTypeItem(ltype)"
-        [id]="ltype.id"
-        *ngIf="ltype.id === 1"
-      >
-        <app-table
-          [items]="cultureStatsProdTableItems"
-          mode="dark"
-          [border]="false"
-          [fields]="[
-            {
-              title: 'Name' | translate,
-              field: 'culture_name_' + currentLang
-            },
-            { title: 'Area' | translate, field: 'area_ha' },
-            {
-              title: 'Territory' | translate,
-              field: 'territory_' + currentLang
             }
           ]"
         ></app-table>

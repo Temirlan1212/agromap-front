@@ -431,6 +431,7 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
     this.wmsCQLFilter = null;
     this.setWmsParams();
     if (this.mapComponent) this.mapComponent.handleFeatureClose();
+    this.filterFormValues = null;
   }
 
   handleFilterFormSubmit(formValue: Record<string, any>) {
