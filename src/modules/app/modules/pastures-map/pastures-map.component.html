@@ -20,7 +20,6 @@
     *ngIf="isComparisonMapsActivated && !isChildRoute"
     (clickBack)="isComparisonMapsActivated = $event"
     [filterFormValues]="filterFormValues"
-    [filterFormResetValues]="filterFormResetValues"
   ></app-map-comparison>
 
   <app-map
@@ -110,38 +109,12 @@
           (onDateSelect)="hanldeVegIndexesDateSelect()"
         ></app-map-control-veg-indexes>
 
-        <app-map-control-statistics
-          *ngIf="!activeContour"
-          [collapseOnChanges]="contourPastureStatisticsProductivityTableItems"
-          [title]="'Roll up' | translate"
-        >
-          <app-content-tabs>
-            <app-tab [title]="'Pasture (productivity area)' | translate">
-              <app-table
-                *ngFor="
-                  let item of contourPastureStatisticsProductivityTableItems
-                "
-                [items]="item"
-                [border]="false"
-                mode="dark"
-                [fields]="[
-                  {
-                    title: item[0]['areaType'].toString() | translate,
-                    field: 'areaName_' + currentLang
-                  },
-                  {
-                    title: 'Productive' | translate | truncate : 10,
-                    field: 'productive'
-                  },
-                  {
-                    title: 'Unproductive' | translate | truncate : 10,
-                    field: 'unproductive'
-                  }
-                ]"
-              ></app-table>
-            </app-tab>
-          </app-content-tabs>
-        </app-map-control-statistics>
+        <app-statistics
+          [filterFormValues]="filterFormValues"
+          *ngIf="landTypes.length > 0"
+          [hidden]="activeContour"
+          [landTypes]="[landTypes[0]]"
+        ></app-statistics>
 
         <app-map-control class="transparent d-xs-none">
           <app-contour-details

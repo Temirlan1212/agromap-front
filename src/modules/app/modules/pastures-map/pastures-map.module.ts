@@ -46,6 +46,7 @@ import { ColorLegendComponent } from 'src/modules/ui/components/color-legend/col
 import { MapComparisonComponent } from './components/map-comparison/map-comparison.component';
 import { YieldMapComponent } from './components/yield-map/yield-map.component';
 import { MapControlComponent } from 'src/modules/ui/components/map-control/map-control.component';
+import { StatisticsComponent } from './components/statistics/statistics.component';
 
 @NgModule({
   declarations: [
@@ -60,6 +61,7 @@ import { MapControlComponent } from 'src/modules/ui/components/map-control/map-c
     ContourDetailsComponent,
     MapComparisonComponent,
     YieldMapComponent,
+    StatisticsComponent,
   ],
   imports: [
     CommonModule,

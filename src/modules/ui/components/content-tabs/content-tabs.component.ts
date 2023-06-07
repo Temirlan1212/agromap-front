@@ -2,6 +2,8 @@ import {
   AfterContentInit,
   Component,
   ContentChildren,
+  EventEmitter,
+  Output,
   QueryList,
 } from '@angular/core';
 import { TabComponent } from './tab/tab.component';
@@ -16,6 +18,7 @@ import { CommonModule } from '@angular/common';
 })
 export class ContentTabsComponent implements AfterContentInit {
   @ContentChildren(TabComponent) tabs!: QueryList<TabComponent>;
+  @Output() onSelected = new EventEmitter<TabComponent>();
 
   ngAfterContentInit() {
     const activeTabs = this.tabs.filter((tab) => tab.active);
@@ -31,5 +34,6 @@ export class ContentTabsComponent implements AfterContentInit {
     });
 
     tab.active = true;
+    this.onSelected.emit(tab);
   }
 }

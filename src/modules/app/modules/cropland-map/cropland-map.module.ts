@@ -44,6 +44,7 @@ import { ContourDetailsComponent } from './components/contour-details/contour-de
 import { ToggleButtonComponent } from '../../../ui/components/toggle-button/toggle-button.component';
 import { ColorLegendComponent } from 'src/modules/ui/components/color-legend/color-legend.component';
 import { MapControlComponent } from 'src/modules/ui/components/map-control/map-control.component';
+import { StatisticsComponent } from './components/statistics/statistics.component';
 
 @NgModule({
   declarations: [
@@ -56,6 +57,7 @@ import { MapControlComponent } from 'src/modules/ui/components/map-control/map-c
     ContourEditComponent,
     ContourInfoComponent,
     ContourDetailsComponent,
+    StatisticsComponent,
   ],
   imports: [
     CommonModule,

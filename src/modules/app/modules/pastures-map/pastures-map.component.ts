@@ -46,10 +46,6 @@ import { ITileLayer } from 'src/modules/ui/models/map.model';
 import { QuestionDialogComponent } from '../../../ui/components/question-dialog/question-dialog.component';
 import { IRegion } from 'src/modules/api/models/region.model';
 import { ContourFiltersQuery } from 'src/modules/api/models/contour.model';
-import {
-  IContourStatisticsProductivity,
-  IContourStatisticsProductivityQuery,
-} from 'src/modules/api/models/statistics.model';
 import { ITableItem } from 'src/modules/ui/models/table.model';
 import { ContourDetailsComponent } from './components/contour-details/contour-details.component';
 import { ToggleButtonComponent } from '../../../ui/components/toggle-button/toggle-button.component';
@@ -97,7 +93,6 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
   sidePanelData: Record<string, any> = {};
   pasturesMapControlLayersSwitch: Record<string, any> = {};
   filterFormValues!: any;
-  filterFormResetValues!: any;
   isChildRoute: boolean = false;
   vegIndexesData: IVegSatelliteDate[] = [];
   vegIndexOptionsList: IVegIndexOption[] = [];
@@ -214,7 +209,7 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
     private route: ActivatedRoute,
     private cd: ChangeDetectorRef
   ) {
-    this.router.events.subscribe((event: Event) => {
+    const routerEventSub = this.router.events.subscribe((event: Event) => {
       if (event instanceof NavigationEnd) {
         this.currentRouterPathname = router.url;
         this.isChildRoute = this.route.firstChild !== null;
@@ -242,29 +237,14 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
         }
       }
     });
+
+    this.subscriptions.push(routerEventSub);
   }
 
   subscriptions: Subscription[] = [
-    this.translateSvc.onLangChange.subscribe((res) => {
-      this.currentLang = res.lang;
-      const translateHa =
-        this.translateSvc.translations[this.currentLang]['ha'];
-
-      this.contourPastureStatisticsProductivityTableItems =
-        this.contourPastureStatisticsProductivityTableItems.map((arr) =>
-          arr.map((element) => ({
-            ...element,
-            productive: `${String(element?.['productive']).replace(
-              /га|ha/gi,
-              translateHa
-            )}`,
-            unproductive: `${String(element?.['unproductive']).replace(
-              /га|ha/gi,
-              translateHa
-            )}`,
-          }))
-        );
-    }),
+    this.translateSvc.onLangChange.subscribe(
+      (res) => (this.currentLang = res.lang)
+    ),
 
     this.mapService.contourEditingMode.subscribe((res) => {
       if (res) {
@@ -369,17 +349,6 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.mapData?.map) this.mapService.invalidateSize(this.mapData.map);
   }
 
-  async getContour(id: number): Promise<void> {
-    try {
-      this.activeContourLoading = true;
-      this.activeContour = await this.api.contour.getOne(id);
-    } catch (e) {
-      console.log(e);
-    } finally {
-      this.activeContourLoading = false;
-    }
-  }
-
   hanldeVegIndexesDateSelect() {
     this.contourDetailsComponents.map((c) => {
       if (c) c.isHidden = true;
@@ -388,37 +357,6 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
 
   handleSidePanelToggle(isOpened: boolean) {
     this.store.setItem('PasturesMapSidePanelComponent', { state: isOpened });
-  }
-
-  async getContourData(id: number) {
-    const query: ActualVegQuery = { contour_id: id };
-    try {
-      let res: ActualVegIndexes[];
-      if (this.isWmsAiActive) {
-        res = await this.api.vegIndexes.getActualVegIndexesAi(query);
-      } else {
-        res = await this.api.vegIndexes.getActualVegIndexes(query);
-      }
-
-      const data = res?.reduce((acc: any, i: any) => {
-        if (!acc[i.index.id]) {
-          acc[i.index.id] = {};
-          acc[i.index.id]['name'] = i.index[`name_${this.currentLang}`];
-          acc[i.index.id]['data'] = [];
-          acc[i.index.id]['dates'] = [];
-          acc[i.index.id]['data'].push(i.average_value);
-          acc[i.index.id]['dates'].push(i.date);
-        } else {
-          acc[i.index.id]['data'].push(i.average_value);
-          acc[i.index.id]['dates'].push(i.date);
-        }
-        return acc;
-      }, {});
-      this.contourData = data ? Object.values(data) : [];
-    } catch (e: any) {
-      this.messages.error(e.message);
-      this.contourData = [];
-    }
   }
 
   async handleMapClick(e: LeafletMouseEvent) {
@@ -488,76 +426,40 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  async addPolygonsInScreenToMap(mapBounds: LatLngBounds) {
-    this.loading = true;
-    try {
-      if (this.mapData?.map != null) {
-        const landTypeParam = this.landTypes[0]?.['id'];
-
-        let polygons: GeoJSON;
-
-        polygons = await this.api.map.getPolygonsInScreen({
-          latLngBounds: mapBounds,
-          land_type: landTypeParam,
-        });
-
-        this.mapData.geoJson.options.snapIgnore = true;
-        this.mapData.geoJson.options.pmIgnore = true;
-        this.mapData.geoJson.options.style = {
-          fillOpacity: 0,
-          weight: 0.4,
-        };
-
-        this.mapData.geoJson.setZIndex(400);
-        this.mapData.geoJson.options.interactive = true;
-        this.mapData.geoJson.addData(polygons);
-      }
-    } catch (e: any) {
-      this.messages.error(e.error?.message ?? e.message);
-    } finally {
-      this.loading = false;
-    }
-  }
-
-  async getRegionsPolygon() {
-    try {
-      let polygons: IRegion[];
-      polygons = await this.api.dictionary.getRegions({
-        polygon: true,
-      });
-
-      polygons.map((polygon) => {
-        if (this.mapData?.map != null) {
-          this.mapData.geoJsonStatic.options.snapIgnore = true;
-          this.mapData.geoJsonStatic.options.pmIgnore = true;
-          this.mapData.geoJsonStatic.options.style = { fillOpacity: 0 };
-          this.mapData.geoJsonStatic.options.interactive = false;
-          this.mapData.geoJsonStatic.addData(polygon.polygon);
-        }
-      });
-    } catch (e: any) {
-      console.log(e);
-    }
-  }
-
   handleFilterFormReset(): void {
-    this.filterFormResetValues = {
-      land_type: '2',
-      year: 2022,
-    };
-
-    this.getPastureStatisticsProductivity(this.filterFormResetValues);
     this.wmsCQLFilter = null;
     this.setWmsParams();
     if (this.mapComponent) this.mapComponent.handleFeatureClose();
+    this.filterFormValues = null;
+    this.handleSetSidePanelState(false);
+  }
+
+  handleSetSidePanelState(state: boolean) {
+    this.store.setItem('PasturesMapSidePanelComponent', { state });
   }
 
   handleFilterFormSubmit(formValue: Record<string, any>) {
     this.filterFormValues = formValue['value'];
 
-    this.getPastureStatisticsProductivity(formValue['value']);
+    if (this.mapData?.map) {
+      const data =
+        this.store.getItem<Record<string, LatLngBounds | number>>(
+          'HomeComponent'
+        );
+
+      const bounds = data?.['mapBounds'] as LatLngBounds;
+      const zoom = data?.['mapZoom'] as number;
+
+      if (bounds && this.mapData) {
+        const layersLength = this.mapData.geoJson.getLayers().length;
+        if (layersLength > 0) this.mapData.geoJson.clearLayers();
+        if (zoom >= 12) this.addPolygonsInScreenToMap(bounds);
+      }
+    }
+
     this.store.setItem('PasturesMapSidePanelComponent', { state: false });
     this.toggleBtn.isContentToggled = false;
+    this.handleSetSidePanelState(false);
   }
 
   async getVegSatelliteDates(
@@ -606,6 +508,10 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.mapComponent) this.mapComponent.handleFeatureClose();
   }
 
+  mapComparisonOnDestroy() {
+    this.mapData && this.mapService.map.next(this.mapData);
+  }
+
   async handleDeleteSubmitted(dialog: QuestionDialogComponent): Promise<void> {
     await this.deleteItem();
     dialog.close();
@@ -625,7 +531,101 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  async deleteItem(): Promise<void> {
+  private async getContourData(id: number) {
+    const query: ActualVegQuery = { contour_id: id };
+    try {
+      let res: ActualVegIndexes[];
+      if (this.isWmsAiActive) {
+        res = await this.api.vegIndexes.getActualVegIndexesAi(query);
+      } else {
+        res = await this.api.vegIndexes.getActualVegIndexes(query);
+      }
+
+      const data = res?.reduce((acc: any, i: any) => {
+        if (!acc[i.index.id]) {
+          acc[i.index.id] = {};
+          acc[i.index.id]['name'] = i.index[`name_${this.currentLang}`];
+          acc[i.index.id]['data'] = [];
+          acc[i.index.id]['dates'] = [];
+          acc[i.index.id]['data'].push(i.average_value);
+          acc[i.index.id]['dates'].push(i.date);
+        } else {
+          acc[i.index.id]['data'].push(i.average_value);
+          acc[i.index.id]['dates'].push(i.date);
+        }
+        return acc;
+      }, {});
+      this.contourData = data ? Object.values(data) : [];
+    } catch (e: any) {
+      this.messages.error(e.message);
+      this.contourData = [];
+    }
+  }
+
+  private async getRegionsPolygon() {
+    try {
+      let polygons: IRegion[];
+      polygons = await this.api.dictionary.getRegions({
+        polygon: true,
+      });
+
+      polygons.map((polygon) => {
+        if (this.mapData?.map != null) {
+          this.mapData.geoJsonStatic.options.snapIgnore = true;
+          this.mapData.geoJsonStatic.options.pmIgnore = true;
+          this.mapData.geoJsonStatic.options.style = { fillOpacity: 0 };
+          this.mapData.geoJsonStatic.options.interactive = false;
+          this.mapData.geoJsonStatic.addData(polygon.polygon);
+        }
+      });
+    } catch (e: any) {
+      console.log(e);
+    }
+  }
+
+  private async addPolygonsInScreenToMap(mapBounds: LatLngBounds) {
+    this.loading = true;
+    try {
+      const landType = this.landTypes.find((l) => l.id === 2);
+
+      if (this.mapData?.map != null && landType?.id) {
+        let polygons: GeoJSON;
+
+        polygons = await this.api.map.getPolygonsInScreen({
+          latLngBounds: mapBounds,
+          land_type: landType.id,
+        });
+
+        this.mapData.geoJson.options.snapIgnore = true;
+        this.mapData.geoJson.options.pmIgnore = true;
+        this.mapData.geoJson.options.style = {
+          fillOpacity: 0,
+          weight: 0.4,
+        };
+
+        this.mapData.geoJson.setZIndex(400);
+        this.mapData.geoJson.options.interactive = true;
+        this.mapData.geoJson.addData(polygons);
+      }
+    } catch (e: any) {
+      this.messages.error(e.error?.message ?? e.message);
+    } finally {
+      this.loading = false;
+    }
+  }
+
+  private async getContour(id: number): Promise<void> {
+    try {
+      this.activeContourLoading = true;
+      this.activeContour = await this.api.contour.getOne(id);
+    } catch (e) {
+      console.log(e);
+    } finally {
+      this.activeContourLoading = false;
+    }
+  }
+
+  private async deleteItem(): Promise<void> {
     const id = this.layerFeature?.feature?.properties?.['id'];
     try {
       await this.api.contour.remove(Number(id));
@@ -637,56 +637,9 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  async getPastureStatisticsProductivity(
-    query: IContourStatisticsProductivityQuery
-  ): Promise<void> {
-    this.contourPastureStatisticsProductivityTableItems = [];
-    if (!query.land_type.split(',').includes('2')) return;
-    if (this.isWmsAiActive) query.ai = this.isWmsAiActive;
-
+  private async getLandTypes() {
     try {
-      let res: IContourStatisticsProductivity;
-      res = await this.api.statistics.getContourStatisticsProductivity({
-        ...query,
-        land_type: '2',
-      });
-
-      if (!res.type) {
-        this.contourPastureStatisticsProductivityTableItems = [];
-        return;
-      }
-
-      this.contourPastureStatisticsProductivityTableItems.push([
-        {
-          areaType: res?.type,
-          areaName_en: res?.[`name_en`],
-          areaName_ky: res?.[`name_ky`],
-          areaName_ru: res?.[`name_ru`],
-          productive: `${res?.Productive?.ha} ${this.translate.transform(
-            'ha'
-          )}`,
-          unproductive: `${res?.Unproductive?.ha} ${this.translate.transform(
-            'ha'
-          )}`,
-        },
-      ]);
-
-      if (Array.isArray(res?.Children) && res?.Children?.length > 0) {
-        this.contourPastureStatisticsProductivityTableItems.push(
-          res?.Children.map((child) => ({
-            areaType: child?.type,
-            areaName_en: child?.[`name_en`],
-            areaName_ky: child?.[`name_ky`],
-            areaName_ru: child?.[`name_ru`],
-            productive: `${child?.Productive?.ha} ${this.translate.transform(
-              'ha'
-            )}`,
-            unproductive: `${
-              child?.Unproductive?.ha
-            } ${this.translate.transform('ha')}`,
-          }))
-        );
-      }
+      this.landTypes = await this.api.dictionary.getLandType();
     } catch (e: any) {
       this.messages.error(e.message);
     }
@@ -705,39 +658,7 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  async getLandTypes() {
-    try {
-      this.landTypes = await this.api.dictionary.getLandType();
-    } catch (e: any) {
-      this.messages.error(e.message);
-    }
-  }
-
-  mapComparisonOnDestroy() {
-    this.mapData && this.mapService.map.next(this.mapData);
-  }
-
-  async ngOnInit(): Promise<void> {
-    const data = this.store.getItem('PasturesMapControlLayersSwitchComponent');
-    if (!data) {
-      this.mode = 'agromap_store';
-    }
-
-    this.wmsSelectedStatusLayers = data;
-
-    await this.getLandTypes();
-    await this.getVegIndexList();
-    this.activeVegIndexOption = this.vegIndexOptionsList[0];
-
-    this.filterFormValues = {
-      land_type: String(this.landTypes[0].id),
-      year: 2022,
-    };
-    this.getPastureStatisticsProductivity(this.filterFormValues);
-
-    this.wmsCQLFilter = `ltype=${String(this.landTypes[0].id)}`;
-    this.setWmsParams();
-
+  private buildWmsCQLFilter() {
     this.store
       .watchItem<ContourFiltersQuery | null>('ContourFilterComponent')
       .subscribe((v) => {
@@ -794,6 +715,25 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
           this.setWmsParams();
         }
       });
+  }
+
+  async ngOnInit(): Promise<void> {
+    const data = this.store.getItem('PasturesMapControlLayersSwitchComponent');
+    if (!data) {
+      this.mode = 'agromap_store';
+    }
+
+    this.wmsSelectedStatusLayers = data;
+
+    await this.getLandTypes();
+    await this.getVegIndexList();
+    this.activeVegIndexOption = this.vegIndexOptionsList[0];
+
+    const landType = this.landTypes.find((l) => l.id === 2);
+    if (landType?.id) this.wmsCQLFilter = `ltype=${landType.id}`;
+
+    this.setWmsParams();
+    this.buildWmsCQLFilter();
   }
 
   ngAfterViewInit(): void {

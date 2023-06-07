@@ -1,0 +1,38 @@
+<app-map-control-statistics
+  [collapseOnChanges]="pastureStatsProdTableItems"
+  [title]="'Roll up' | translate"
+>
+  <app-content-tabs
+    (onSelected)="handleSelectedTab($event)"
+    *ngIf="landTypes.length > 0"
+  >
+    <ng-container *ngFor="let ltype of landTypes">
+      <app-tab
+        [title]="getLandTypeItem(ltype)"
+        *ngIf="ltype.id === 2"
+        [id]="ltype.id"
+      >
+        <app-table
+          *ngFor="let item of pastureStatsProdTableItems"
+          [items]="item"
+          [border]="false"
+          mode="dark"
+          [fields]="[
+            {
+              title: item[0]['areaType'].toString() | translate,
+              field: 'areaName_' + currentLang
+            },
+            {
+              title: 'Productive' | translate | truncate : 10,
+              field: 'productive'
+            },
+            {
+              title: 'Unproductive' | translate | truncate : 10,
+              field: 'unproductive'
+            }
+          ]"
+        ></app-table>
+      </app-tab>
+    </ng-container>
+  </app-content-tabs>
+</app-map-control-statistics>
