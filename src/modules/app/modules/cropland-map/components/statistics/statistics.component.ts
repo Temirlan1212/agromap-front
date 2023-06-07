@@ -103,7 +103,7 @@ export class StatisticsComponent
   }
 
   private handleFilterFormSubmit(formValue: Record<string, any>) {
-    let params = formValue['value'];
+    let params = { ...formValue['value'] };
     if (this.activeTab?.id) params.land_type = this.activeTab.id;
 
     this.pastureStatsProdTableItems = [];

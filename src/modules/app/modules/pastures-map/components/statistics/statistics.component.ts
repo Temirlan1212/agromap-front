@@ -95,7 +95,7 @@ export class StatisticsComponent
   }
 
   private handleFilterFormSubmit(formValue: Record<string, any>) {
-    const params = formValue['value'];
+    const params = { ...formValue['value'] };
 
     this.pastureStatsProdTableItems = [];
 
@@ -103,7 +103,7 @@ export class StatisticsComponent
       ...params,
       land_type: this.activeTab.id,
     });
-    this.filterFormValues = formValue['value'];
+    this.filterFormValues = params;
   }
 
   private async getPastureStatisticsProductivity(
