@@ -49,7 +49,7 @@ export class StatisticsComponent
       if (this.filterFormValues == null) {
         this.handleFilterFormReset();
       } else {
-        this.handleFilterFormSubmit({ value: this.filterFormValues });
+        this.handleFilterFormSubmit(this.filterFormValues);
       }
     }
   }
@@ -94,16 +94,15 @@ export class StatisticsComponent
     }
   }
 
-  private handleFilterFormSubmit(formValue: Record<string, any>) {
-    const params = formValue['value'];
-
+  private handleFilterFormSubmit(
+    formValue: IContourStatisticsProductivityQuery
+  ) {
     this.pastureStatsProdTableItems = [];
-
     this.getPastureStatisticsProductivity({
-      ...params,
-      land_type: this.activeTab.id,
+      ...formValue,
+      land_type: String(this.activeTab.id),
     });
-    this.filterFormValues = formValue['value'];
+    this.filterFormValues = formValue;
   }
 
   private async getPastureStatisticsProductivity(
