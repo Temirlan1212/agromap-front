@@ -105,16 +105,15 @@ export class StatisticsComponent
   private handleFilterFormSubmit(
     formValue: IContourStatisticsProductivityQuery | ICulutreStatisticsQuery
   ) {
-    let params = formValue;
     this.pastureStatsProdTableItems = [];
     this.cultureStatsProdTableItems = [];
 
-    if (String(params?.['land_type']).includes('1')) {
-      this.getCultureStatisticsProductivity({ ...params, land_type: '1' });
+    if (String(formValue?.['land_type']).includes('1')) {
+      this.getCultureStatisticsProductivity({ ...formValue, land_type: '1' });
     }
 
-    if (String(params?.['land_type']).includes('2')) {
-      this.getPastureStatisticsProductivity({ ...params, land_type: '2' });
+    if (String(formValue?.['land_type']).includes('2')) {
+      this.getPastureStatisticsProductivity({ ...formValue, land_type: '2' });
     }
   }
 

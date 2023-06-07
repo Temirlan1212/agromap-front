@@ -97,14 +97,12 @@ export class StatisticsComponent
   private handleFilterFormSubmit(
     formValue: IContourStatisticsProductivityQuery
   ) {
-    const params = formValue;
     this.pastureStatsProdTableItems = [];
-
     this.getPastureStatisticsProductivity({
-      ...params,
+      ...formValue,
       land_type: String(this.activeTab.id),
     });
-    this.filterFormValues = params;
+    this.filterFormValues = formValue;
   }
 
   private async getPastureStatisticsProductivity(

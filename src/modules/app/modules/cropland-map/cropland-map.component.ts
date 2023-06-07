@@ -388,8 +388,6 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
       }
     }
 
-    console.log(this.filterFormValues);
-
     this.store.setItem('SidePanelComponent', { state: false });
     this.toggleBtn.isContentToggled = false;
     this.handleSetSidePanelState(false);
