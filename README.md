@@ -32,5 +32,5 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 * [Filtration](https://github.com/giprozem/AgroMap-Front/wiki/Filtration)
 * [GeoJSON (Geographic JSON)](https://github.com/giprozem/AgroMap-Front/wiki/GeoJSON (Geographic JSON))
 * [Layers](https://github.com/giprozem/AgroMap-Front/wiki/Layers)
-* [The architecture of the AIS application](https://github.com/giprozem/AgroMap-Front/wiki/The architecture of the AIS application)
+* [The architecture of ...](https://github.com/giprozem/AgroMap-Front/wiki/The architecture of the AIS application)
 
