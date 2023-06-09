@@ -30,7 +30,7 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 * [Tools used in the project](https://github.com/giprozem/AgroMap-Front/wiki/Tools-used-in-the-project)
 * [Create a contour](https://github.com/giprozem/AgroMap-Front/wiki/Create-a-contour)
 * [Filtration](https://github.com/giprozem/AgroMap-Front/wiki/Filtration)
-* [GeoJSON (Geographic JSON)](https://github.com/giprozem/AgroMap-Front/wiki/GeoJSON-(Geographic JSON))
+* [GeoJSON (Geographic JSON)](https://github.com/giprozem/AgroMap-Front/wiki/GeoJSON-(Geographic-JSON))
 * [Layers](https://github.com/giprozem/AgroMap-Front/wiki/Layers)
 * [The architecture of the AIS application.](https://github.com/giprozem/AgroMap-Front/wiki/The-architecture-of-the-AIS-application.)
 
