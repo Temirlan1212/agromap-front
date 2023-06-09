@@ -27,4 +27,4 @@ Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To u
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
 
 ## Documentation
-Here is the link - https://docs.google.com/document/d/e/2PACX-1vTRM5V7VGWYD7apypESFSM6Uwfd8kI-l3KZYWz5Bef07UGy3JZ_r-v-C9zOg3IAvv0cbXLOMW3vvgXR/pub
+Here is the link - https://github.com/giprozem/AgroMap-Front/wiki/documentation
