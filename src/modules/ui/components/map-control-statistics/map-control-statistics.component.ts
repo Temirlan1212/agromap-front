@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
@@ -17,23 +17,15 @@ import { MapControlComponent } from '../map-control/map-control.component';
     MapControlComponent,
   ],
 })
-export class MapControlStatisticsComponent implements OnChanges {
-  isCollapsed: boolean = true;
-
+export class MapControlStatisticsComponent {
+  @Input() isCollapsed: boolean = true;
   @Input() title = '';
-  @Input() collapseOnChanges: any;
+  @Output() onToggle = new EventEmitter<boolean>();
 
   constructor(translate: LanguageService) {}
 
   toggle() {
     this.isCollapsed = !this.isCollapsed;
-  }
-
-  ngOnInit(): void {}
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['collapseOnChanges']) {
-      this.isCollapsed = true;
-    }
+    this.onToggle.next(this.isCollapsed);
   }
 }
