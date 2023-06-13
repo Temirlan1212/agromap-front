@@ -111,7 +111,7 @@
 
         <app-statistics
           [filterFormValues]="filterFormValues"
-          *ngIf="landTypes.length > 0"
+          *ngIf="landTypes.length > 0 && !layerFeature"
           [hidden]="activeContour"
           [landTypes]="[landTypes[0]]"
         ></app-statistics>
