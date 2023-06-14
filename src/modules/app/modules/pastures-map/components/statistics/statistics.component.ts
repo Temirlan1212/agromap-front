@@ -18,6 +18,7 @@ import { TabComponent } from 'src/modules/ui/components/content-tabs/tab/tab.com
 import { ITableItem } from 'src/modules/ui/models/table.model';
 import { MessagesService } from 'src/modules/ui/services/messages.service';
 import { Subscription } from 'rxjs';
+import { StoreService } from 'src/modules/ui/services/store.service';
 
 @Component({
   selector: 'app-statistics',
@@ -34,13 +35,15 @@ export class StatisticsComponent
   currentLang: string = this.translateSvc.currentLang;
   activeTab!: TabComponent;
   subscriptions: Subscription[] = [];
+  mapControlStatsToggleState: boolean = true;
 
   constructor(
     private api: ApiService,
     private messages: MessagesService,
     private translate: TranslatePipe,
     private translateSvc: TranslateService,
-    private cd: ChangeDetectorRef
+    private cd: ChangeDetectorRef,
+    private store: StoreService
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -68,6 +71,11 @@ export class StatisticsComponent
       this.getPastureStatisticsProductivity(params);
     }
 
+    const pasturesMapStats = this.store.getItem('PasturesMapStats');
+    if (pasturesMapStats != null) {
+      this.mapControlStatsToggleState = pasturesMapStats?.isCollapsed;
+    }
+
     this.cd.detectChanges();
   }
 
@@ -77,6 +85,12 @@ export class StatisticsComponent
 
   handleSelectedTab(selectedTab: TabComponent) {
     this.activeTab = selectedTab;
+  }
+  handleMapControlStatsToggle(toggleState: boolean) {
+    this.mapControlStatsToggleState = toggleState;
+    this.store.setItem('PasturesMapStats', {
+      isCollapsed: this.mapControlStatsToggleState,
+    });
   }
 
   public getLandTypeItem(item: any): string {

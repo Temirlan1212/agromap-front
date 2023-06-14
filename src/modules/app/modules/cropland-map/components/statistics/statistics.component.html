@@ -1,6 +1,7 @@
 <app-map-control-statistics
-  [collapseOnChanges]="pastureStatsProdTableItems || cultureStatsProdTableItems"
   [title]="'Roll up' | translate"
+  (onToggle)="handleMapControlStatsToggle($event)"
+  [isCollapsed]="mapControlStatsToggleState"
 >
   <app-content-tabs
     (onSelected)="handleSelectedTab($event)"
