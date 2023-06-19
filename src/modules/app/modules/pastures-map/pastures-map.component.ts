@@ -427,7 +427,7 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   handleFilterFormReset(): void {
-    this.wmsCQLFilter = null;
+    this.wmsCQLFilter = 'year' + new Date().getFullYear();
     this.setWmsParams();
     if (this.mapComponent) this.mapComponent.handleFeatureClose();
     this.filterFormValues = null;
@@ -652,6 +652,7 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
 
     if (finded != null) {
       delete finded.layer.wmsParams.cql_filter;
+
       if (this.wmsCQLFilter != null) {
         finded.layer?.setParams({ cql_filter: this.wmsCQLFilter });
       }
@@ -688,11 +689,7 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
               this.wmsCQLFilter += '&&';
             }
             if (typeof val === 'string' && val.split(',').length > 1) {
-              this.wmsCQLFilter += val
-                .split(',')
-                .reduce((acc, i) => (acc += 'clt=' + i + ' OR '), '')
-                .slice(0, -3)
-                .trim();
+              this.wmsCQLFilter += `clt in (${val})`;
             } else {
               this.wmsCQLFilter += 'clt=' + v.culture;
             }
@@ -703,14 +700,18 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
               this.wmsCQLFilter += '&&';
             }
             if (typeof val === 'string' && val.split(',').length > 1) {
-              this.wmsCQLFilter += val
-                .split(',')
-                .reduce((acc, i) => (acc += 'ltype=' + i + ' OR '), '')
-                .slice(0, -3)
-                .trim();
+              this.wmsCQLFilter += `ltype in (${val})`;
             } else {
               this.wmsCQLFilter += 'ltype=' + v.land_type;
             }
+          }
+          if (v.year) {
+            const val = v.year;
+            if (this.wmsCQLFilter.length > 0) {
+              this.wmsCQLFilter += '&&';
+            }
+
+            this.wmsCQLFilter += 'year=' + v.year;
           }
           this.setWmsParams();
         }

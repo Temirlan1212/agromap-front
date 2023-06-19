@@ -26,7 +26,9 @@ export class LandTypeFormComponent implements OnInit, OnDestroy {
     region: new FormControl<number | null>(null),
     district: new FormControl<string | null>({ value: null, disabled: true }),
     conton: new FormControl<string | null>({ value: null, disabled: true }),
-    year: new FormControl<string | null>('2022', { nonNullable: true }),
+    year: new FormControl<number | null>(new Date().getFullYear(), {
+      nonNullable: true,
+    }),
     land_type: new FormControl<number | null>(null),
     culture: new FormControl<number | null>(null),
   });
