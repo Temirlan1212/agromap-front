@@ -67,7 +67,10 @@ export class StatisticsComponent
 
     this.pastureStatsProdTableItems = [];
     if (this.activeTab?.id) {
-      let params = { year: 2022, land_type: String(this.activeTab.id) };
+      let params = {
+        year: new Date().getFullYear(),
+        land_type: String(this.activeTab.id),
+      };
       this.getPastureStatisticsProductivity(params);
     }
 
@@ -101,7 +104,7 @@ export class StatisticsComponent
   private handleFilterFormReset() {
     this.pastureStatsProdTableItems = [];
     if (this.activeTab?.id) {
-      this.filterFormValues = { year: 2022 };
+      this.filterFormValues = { year: new Date().getFullYear() };
       this.filterFormValues['land_type'] = String(this.activeTab.id);
       this.getPastureStatisticsProductivity(this.filterFormValues);
       this.filterFormValues = null;

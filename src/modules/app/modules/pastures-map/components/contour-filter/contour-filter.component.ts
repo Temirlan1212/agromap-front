@@ -70,7 +70,7 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
       validators: Validators.required,
     }),
     culture: new FormControl<string | null>(null, { nonNullable: true }),
-    year: new FormControl<number | null>(2022, {
+    year: new FormControl<number | null>(new Date().getFullYear(), {
       nonNullable: true,
       validators: Validators.required,
     }),
@@ -118,6 +118,8 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
     await this.getRegions();
     await this.getCultures();
     this.loading = false;
+
+    this.handleFormSubmit();
 
     if (this.landTypes[0]?.id) {
       this.form.get('land_type')?.setValue(String(this.landTypes[0].id));
