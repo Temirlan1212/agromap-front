@@ -67,7 +67,10 @@ export class StatisticsComponent
 
     this.pastureStatsProdTableItems = [];
     if (this.activeTab?.id) {
-      let params = { year: 2022, land_type: String(this.activeTab.id) };
+      let params = {
+        year: new Date().getFullYear(),
+        land_type: String(this.activeTab.id),
+      };
       this.getPastureStatisticsProductivity(params);
     }
 
