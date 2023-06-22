@@ -215,7 +215,6 @@ export class MapComparisonComponent
       this.subscriptions.push(...subscriptions);
     });
 
-    console.log(refs);
     refs?.first.handleFilterFormSubmit(this.filterFormValues);
 
     this.subscriptions.push(
