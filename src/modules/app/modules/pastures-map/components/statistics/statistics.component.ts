@@ -117,7 +117,7 @@ export class StatisticsComponent
     this.pastureStatsProdTableItems = [];
     this.getPastureStatisticsProductivity({
       ...formValue,
-      land_type: String(this.activeTab.id),
+      land_type: String(this.activeTab?.id ?? 2),
     });
     this.filterFormValues = formValue;
   }

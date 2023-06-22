@@ -533,21 +533,27 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
   private async addPolygonsInScreenToMap(mapBounds: LatLngBounds) {
     this.loading = true;
     try {
-      const landTypeParam =
+      const year = this.filterFormValues?.['year'] ?? new Date().getFullYear();
+      const culture = this.filterFormValues?.['culture'] ?? null;
+      const land_type =
         this.filterFormValues?.['land_type'] ??
         this.landTypes.map((l: ILandType) => l['id']).join(',');
 
-      if (this.mapData?.map != null && landTypeParam) {
+      if (this.mapData?.map != null && land_type) {
         let polygons: GeoJSON;
         if (this.isWmsAiActive) {
           polygons = await this.api.map.getPolygonsInScreenAi({
             latLngBounds: mapBounds,
-            land_type: landTypeParam,
+            land_type,
+            year,
+            culture,
           });
         } else {
           polygons = await this.api.map.getPolygonsInScreen({
             latLngBounds: mapBounds,
-            land_type: landTypeParam,
+            land_type,
+            year,
+            culture,
           });
         }
         this.mapData.geoJson.options.snapIgnore = true;
@@ -706,7 +712,7 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
               this.wmsCQLFilter += '&&';
             }
 
-            this.wmsCQLFilter += 'year=' + v.year;
+            this.wmsCQLFilter += 'year=' + val;
           }
           this.setWmsParams();
         }
