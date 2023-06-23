@@ -586,14 +586,18 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
   private async addPolygonsInScreenToMap(mapBounds: LatLngBounds) {
     this.loading = true;
     try {
-      const landType = this.landTypes.find((l) => l.id === 2);
+      const land_type = this.landTypes.find((l) => l.id === 2);
+      const year = this.filterFormValues?.['year'] ?? new Date().getFullYear();
+      const culture = this.filterFormValues?.['culture'] ?? null;
 
-      if (this.mapData?.map != null && landType?.id) {
+      if (this.mapData?.map != null && land_type?.id) {
         let polygons: GeoJSON;
 
         polygons = await this.api.map.getPolygonsInScreen({
           latLngBounds: mapBounds,
-          land_type: landType.id,
+          land_type: land_type.id,
+          year,
+          culture,
         });
 
         this.mapData.geoJson.options.snapIgnore = true;
@@ -711,7 +715,7 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
               this.wmsCQLFilter += '&&';
             }
 
-            this.wmsCQLFilter += 'year=' + v.year;
+            this.wmsCQLFilter += 'year=' + val;
           }
           this.setWmsParams();
         }

@@ -32,7 +32,7 @@
     display: flex;
     gap: 5px;
     flex-wrap: wrap;
-
+    padding: 10px;
     app-svg-icon {
       color: $lightColor;
     }
@@ -74,13 +74,20 @@
 
   .options {
     max-height: 0;
-    overflow-y: auto;
     box-shadow: 0px 3px 6px -4px rgba(0, 0, 0, 0.12),
       0px 6px 16px rgba(0, 0, 0, 0.08), 0px 9px 28px 8px rgba(0, 0, 0, 0.05);
     border-radius: $inputBorderRadius;
     padding: 0;
     margin: 0;
     transition: max-height 0.1s linear;
+    position: relative;
+    overflow-y: auto;
+
+    .search {
+      position: sticky;
+      top: 0;
+      padding: 10px;
+    }
 
     .option {
       list-style: none;
@@ -97,16 +104,10 @@
 
     .options-list {
       padding: 0;
-      margin-top: 60px;
     }
 
     &.collapsed {
       max-height: 200px;
-      .search {
-        position: absolute;
-        left: 2px;
-        right: 2px;
-      }
     }
 
     &::-webkit-scrollbar-track {
@@ -125,7 +126,6 @@
     }
 
     & > div {
-      padding: 10px;
       background-color: $primaryBackgroundColor;
 
       input {

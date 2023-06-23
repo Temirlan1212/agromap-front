@@ -33,4 +33,6 @@ export interface IGetFeatureInfoQuery {
 export interface IPolygonsInScreenQuery {
   latLngBounds: LatLngBounds;
   land_type: string | number;
+  year: string | number;
+  culture: string | number;
 }

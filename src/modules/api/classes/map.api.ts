@@ -10,10 +10,13 @@ export class MapApi {
   constructor(private http: HttpClient) {}
 
   async getPolygonsInScreen(query: IPolygonsInScreenQuery): Promise<GeoJSON> {
-    const { latLngBounds, land_type } = query;
+    const { latLngBounds, land_type, year, culture } = query;
+    const params: any = { land_type, year };
+    if (culture != null) params.culture = culture;
+
     const response = await firstValueFrom(
       this.http.post<GeoJSON>('gip/polygons-in-screen', latLngBounds, {
-        params: { land_type },
+        params,
       })
     );
 
@@ -21,10 +24,13 @@ export class MapApi {
   }
 
   async getPolygonsInScreenAi(query: IPolygonsInScreenQuery): Promise<GeoJSON> {
-    const { latLngBounds, land_type } = query;
+    const { latLngBounds, land_type, year, culture } = query;
+    const params: any = { land_type, year };
+    if (culture != null) params.culture = culture;
+
     const response = await firstValueFrom(
       this.http.post<GeoJSON>('ai/contour-in-screen', latLngBounds, {
-        params: { land_type },
+        params,
       })
     );
 

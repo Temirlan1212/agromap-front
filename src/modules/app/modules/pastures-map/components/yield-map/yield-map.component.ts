@@ -44,10 +44,6 @@ import { ActualVegIndexes } from 'src/modules/api/models/actual-veg-indexes';
 import { ITileLayer } from 'src/modules/ui/models/map.model';
 import { IRegion } from 'src/modules/api/models/region.model';
 import { ContourFiltersQuery } from 'src/modules/api/models/contour.model';
-import {
-  IContourStatisticsProductivity,
-  IContourStatisticsProductivityQuery,
-} from 'src/modules/api/models/statistics.model';
 import { ITableItem } from 'src/modules/ui/models/table.model';
 import { MapControlLayersSwitchComponent } from '../../../../../ui/components/map-control-layers-switch/map-control-layers-switch.component';
 import { ILandType } from 'src/modules/api/models/land-type.model';
@@ -424,12 +420,16 @@ export class YieldMapComponent
   }
 
   async getPolygonsInScreen(mapMove: LatLngBounds) {
-    const landTypeParam = this.landTypes[0]?.['id'];
+    const year = this.filterFormValues?.['year'] ?? new Date().getFullYear();
+    const culture = this.filterFormValues?.['culture'] ?? null;
+    const land_type = this.landTypes[0]?.['id'];
     let polygons: GeoJSON;
 
     polygons = await this.api.map.getPolygonsInScreen({
       latLngBounds: mapMove,
-      land_type: landTypeParam,
+      land_type,
+      year,
+      culture,
     });
 
     return polygons;
@@ -563,7 +563,7 @@ export class YieldMapComponent
     }
   }
 
-  private buildWmsCQLFilter(v: ContourFiltersQuery | null) {
+  public buildWmsCQLFilter(v: ContourFiltersQuery | null) {
     if (v != null) {
       this.wmsCQLFilter = '';
       if (v.region) {
@@ -590,11 +590,7 @@ export class YieldMapComponent
           this.wmsCQLFilter += '&&';
         }
         if (typeof val === 'string' && val.split(',').length > 1) {
-          this.wmsCQLFilter += val
-            .split(',')
-            .reduce((acc, i) => (acc += 'clt=' + i + ' OR '), '')
-            .slice(0, -3)
-            .trim();
+          this.wmsCQLFilter += `clt in (${val})`;
         } else {
           this.wmsCQLFilter += 'clt=' + v.culture;
         }
@@ -605,14 +601,18 @@ export class YieldMapComponent
           this.wmsCQLFilter += '&&';
         }
         if (typeof val === 'string' && val.split(',').length > 1) {
-          this.wmsCQLFilter += val
-            .split(',')
-            .reduce((acc, i) => (acc += 'ltype=' + i + ' OR '), '')
-            .slice(0, -3)
-            .trim();
+          this.wmsCQLFilter += `ltype in (${val})`;
         } else {
           this.wmsCQLFilter += 'ltype=' + v.land_type;
         }
+      }
+      if (v.year) {
+        const val = v.year;
+        if (this.wmsCQLFilter.length > 0) {
+          this.wmsCQLFilter += '&&';
+        }
+
+        this.wmsCQLFilter += 'year=' + val;
       }
       this.setWmsParams();
     }
@@ -640,7 +640,6 @@ export class YieldMapComponent
     this.activeVegIndexOption = this.vegIndexOptionsList[0];
 
     this.wmsCQLFilter = `ltype=${String(this.landTypes[0].id)}`;
-    this.setWmsParams();
 
     this.store
       .watchItem<ContourFiltersQuery | null>('ContourFilterComponent')

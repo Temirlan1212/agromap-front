@@ -42,20 +42,6 @@
 </div>
 
 <div class="options" [class.collapsed]="opened" *ngIf="items.length > 0">
-  <div
-    class="selected-items"
-    *ngIf="selectedItems && selectedItems.length !== 0 && multi"
-  >
-    <div class="item" *ngFor="let item of selectedItems">
-      <span [textContent]="item[nameField]"></span>
-      <app-svg-icon
-        name="clear"
-        size="10"
-        (click)="handleRemoveItem($event, item)"
-      ></app-svg-icon>
-    </div>
-  </div>
-
   <div class="search">
     <input
       #input
@@ -65,30 +51,45 @@
     />
   </div>
 
-  <div class="options-list">
-    <ng-container *ngIf="!groupField">
-      <ng-container
-        *ngFor="let item of localItems"
-        [ngTemplateOutlet]="option"
-        [ngTemplateOutletContext]="{item}"
-      >
-      </ng-container>
-    </ng-container>
-
-    <ng-container *ngIf="groupField">
-      <div *ngFor="let group of groups">
-        <p>{{ group }}</p>
-
-        <div *ngFor="let item of localItems">
-          <ng-container
-            *ngIf="item[groupField] === group"
-            [ngTemplateOutlet]="option"
-            [ngTemplateOutletContext]="{item}"
-          >
-          </ng-container>
-        </div>
+  <div>
+    <div
+      class="selected-items"
+      *ngIf="selectedItems && selectedItems.length !== 0 && multi"
+    >
+      <div class="item" *ngFor="let item of selectedItems">
+        <span [textContent]="item[nameField]"></span>
+        <app-svg-icon
+          name="clear"
+          size="10"
+          (click)="handleRemoveItem($event, item)"
+        ></app-svg-icon>
       </div>
-    </ng-container>
+    </div>
+    <div class="options-list">
+      <ng-container *ngIf="!groupField">
+        <ng-container
+          *ngFor="let item of localItems"
+          [ngTemplateOutlet]="option"
+          [ngTemplateOutletContext]="{item}"
+        >
+        </ng-container>
+      </ng-container>
+
+      <ng-container *ngIf="groupField">
+        <div *ngFor="let group of groups">
+          <p>{{ group }}</p>
+
+          <div *ngFor="let item of localItems">
+            <ng-container
+              *ngIf="item[groupField] === group"
+              [ngTemplateOutlet]="option"
+              [ngTemplateOutletContext]="{item}"
+            >
+            </ng-container>
+          </div>
+        </div>
+      </ng-container>
+    </div>
   </div>
 </div>
 
