@@ -10,6 +10,7 @@ import { VegIndexesApi } from './classes/veg-indexes';
 import { AiContourApi } from './classes/ai-contour.api';
 import { StatisticsApi } from './classes/statistics.api';
 import { AiMiscApi } from './classes/ai-misc.api';
+import { ContactsApi } from './classes/contacts.api';
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {
@@ -23,6 +24,7 @@ export class ApiService {
   public readonly aiContour: AiContourApi;
   public readonly statistics: StatisticsApi;
   public readonly ai: AiMiscApi;
+  public readonly contacts: ContactsApi;
 
   constructor(private http: HttpClient) {
     this.form = new FormApi();
@@ -35,5 +37,6 @@ export class ApiService {
     this.aiContour = new AiContourApi(this.http);
     this.statistics = new StatisticsApi(this.http);
     this.ai = new AiMiscApi(this.http);
+    this.contacts = new ContactsApi(this.http);
   }
 }

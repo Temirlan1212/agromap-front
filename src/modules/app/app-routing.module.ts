@@ -68,6 +68,15 @@ const routes: Routes = [
       ),
   },
   {
+    title: 'Contacts',
+    path: 'contacts',
+    data: { position: 'top', icon: 'contacts' },
+    loadChildren: () =>
+      import('./modules/contacts/contacts.module').then(
+        (m) => m.ContactsModule
+      ),
+  },
+  {
     title: 'About system',
     path: 'about',
     data: { position: 'top', icon: 'info' },
