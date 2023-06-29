@@ -1,0 +1,41 @@
+@import "constants";
+
+a {
+  text-decoration: none;
+  color: $primaryColor;
+}
+
+:host {
+  padding: 10px;
+  display: flex;
+  height: max-content;
+  cursor: pointer;
+  border-radius: 12px;
+  background-color: rgb(247, 251, 255);
+
+  ul {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    .title {
+      margin: 0 0 10px 0;
+    }
+
+    li {
+      list-style-type: none;
+      display: flex;
+      align-items: center;
+      gap: 0 10px;
+      p {
+        margin: 0;
+      }
+    }
+  }
+
+  .icon {
+    width: 20px !important;
+    height: 20px !important;
+  }
+}

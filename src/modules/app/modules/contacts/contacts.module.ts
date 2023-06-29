@@ -5,6 +5,7 @@ import { ContactsComponent } from './contacts.component';
 import { TranslateModule, TranslatePipe } from '@ngx-translate/core';
 import { ContactsRoutingModule } from './contacts-routing.module';
 import { SidePanelComponent } from 'src/modules/ui/components/side-panel/side-panel.component';
+import { SvgIconComponent } from 'src/modules/ui/components/svg-icon/svg-icon.component';
 
 @NgModule({
   declarations: [ContactsComponent],
@@ -13,6 +14,7 @@ import { SidePanelComponent } from 'src/modules/ui/components/side-panel/side-pa
     ContactsRoutingModule,
     TranslateModule,
     SidePanelComponent,
+    SvgIconComponent,
   ],
   providers: [TranslatePipe],
 })
