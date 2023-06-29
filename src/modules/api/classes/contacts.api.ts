@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
-import { IDepartment } from '../models/contacts.model';
+import { IContactInformation, IDepartment } from '../models/contacts.model';
 
 export class ContactsApi {
   constructor(private http: HttpClient) {}
@@ -9,9 +9,11 @@ export class ContactsApi {
     return await firstValueFrom(this.http.get<IDepartment[]>(`gip/department`));
   }
 
-  async getContactInformation(id: string | number): Promise<IDepartment[]> {
+  async getContactInformation(
+    id: string | number
+  ): Promise<IContactInformation[]> {
     return await firstValueFrom(
-      this.http.get<IDepartment[]>(`gip/contact-information`, {
+      this.http.get<IContactInformation[]>(`gip/contact-information`, {
         params: { department: id },
       })
     );

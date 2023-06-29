@@ -1,0 +1,22 @@
+<ul *ngIf="contactInformation">
+  <h5 class="title" *ngIf="contactInformation.title">
+    {{ contactInformation.title }}
+  </h5>
+
+  <li *ngIf="contactInformation.fullname">
+    <app-svg-icon name="credentials" class="icon" size="20"></app-svg-icon>
+    <p>{{ contactInformation.fullname }}</p>
+  </li>
+  <li *ngIf="contactInformation.address">
+    <app-svg-icon name="location" class="icon" size="20"></app-svg-icon>
+    <p>{{ contactInformation.address }}</p>
+  </li>
+  <li *ngIf="contactInformation.mail">
+    <app-svg-icon name="email" class="icon" size="20"></app-svg-icon>
+    <p>{{ contactInformation.mail }}</p>
+  </li>
+  <li *ngIf="contactInformation.phone">
+    <app-svg-icon name="phone" class="icon" size="18"></app-svg-icon>
+    <p>{{ contactInformation.phone }}</p>
+  </li>
+</ul>
