@@ -30,11 +30,5 @@ export class ContactsComponent implements OnInit {
     this.sidePanelData['state'] = false;
   }
 
-  async handleDeparmentClick(id: string) {
-    const contactInformation = await this.api.contacts.getContactInformation(
-      id
-    );
-
-    console.log(contactInformation);
-  }
+  async handleDeparmentClick(id: string) {}
 }
