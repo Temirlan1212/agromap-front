@@ -1,0 +1,13 @@
+<app-side-panel [isOpened]="sidePanelData['state']">
+  <div class="contacts-list">
+    <h4>{{ "Contacts" | translate }}</h4>
+    <nav>
+      <a
+        *ngFor="let item of departmentList"
+        (click)="handleDeparmentClick(item.id)"
+        routerLinkActive="active"
+        >{{ item.name | translate }}</a
+      >
+    </nav>
+  </div>
+</app-side-panel>
