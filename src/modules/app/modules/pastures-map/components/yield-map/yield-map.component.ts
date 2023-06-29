@@ -437,7 +437,7 @@ export class YieldMapComponent
 
   async addPolygonsInScreenToMap(polygons: GeoJSON) {
     try {
-      if (this.mapData?.map != null) {
+      if (this.mapData?.map != null && polygons != null) {
         const zoom = this.mapData.map.getZoom();
 
         if (zoom >= 12) {
