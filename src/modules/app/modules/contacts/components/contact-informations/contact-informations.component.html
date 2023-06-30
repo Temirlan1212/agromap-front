@@ -1,0 +1,14 @@
+<div class="contact-information-list" *ngIf="contactInformations.length > 0">
+  <ng-container *ngIf="!isLoading">
+    <app-contact-information
+      *ngFor="let item of contactInformations"
+      (click)="handleContactInformationClick(item)"
+      [contactInformation]="item"
+      [class.active]="
+        activeContactInformation && activeContactInformation?.id === item?.id
+      "
+    ></app-contact-information>
+  </ng-container>
+  <app-loading [loading]="isLoading"></app-loading>
+</div>
+<app-map (mapData)="handleMapData($event)"></app-map>

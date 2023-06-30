@@ -1,12 +1,23 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { ContactsComponent } from './contacts.component';
+import { ContactInformationsComponent } from './components/contact-informations/contact-informations.component';
 
 const routes: Routes = [
   {
     path: '',
     component: ContactsComponent,
-    children: [],
+    children: [
+      {
+        path: '',
+        redirectTo: '0',
+        pathMatch: 'full',
+      },
+      {
+        path: ':id',
+        component: ContactInformationsComponent,
+      },
+    ],
   },
 ];
 

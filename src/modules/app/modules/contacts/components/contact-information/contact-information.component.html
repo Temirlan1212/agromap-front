@@ -9,7 +9,7 @@
   </li>
   <li *ngIf="contactInformation.address">
     <app-svg-icon name="location" class="icon" size="20"></app-svg-icon>
-    <p>{{ contactInformation.address }}</p>
+    <p>{{ handleGetContactInformationField(contactInformation, "address") }}</p>
   </li>
   <li *ngIf="contactInformation.mail">
     <app-svg-icon name="email" class="icon" size="20"></app-svg-icon>

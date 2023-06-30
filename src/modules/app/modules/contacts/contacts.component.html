@@ -4,10 +4,15 @@
     <nav>
       <a
         *ngFor="let item of departmentList"
-        (click)="handleDeparmentClick(item.id)"
         routerLinkActive="active"
-        >{{ item.name | translate }}</a
+        [routerLink]="item.id"
+        (click)="activeDepartment = item"
+        >{{ handleGetDepartmentName(item) }}</a
       >
     </nav>
   </div>
 </app-side-panel>
+
+<div class="content">
+  <router-outlet></router-outlet>
+</div>
