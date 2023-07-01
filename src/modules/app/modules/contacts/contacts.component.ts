@@ -16,11 +16,28 @@ import { ToggleButtonComponent } from 'src/modules/ui/components/toggle-button/t
 export class ContactsComponent implements OnInit, OnDestroy {
   @ViewChild('toggleBtn') toggleBtn!: ToggleButtonComponent;
   sidePanelData: Record<string, any> = {};
-  departmentList: IDepartment[] = [];
+  departmentList: IDepartment[] = [
+    {
+      id: '1',
+      unique_code: '1',
+      name: 'Департамент по экспертизе сельскохозяйственных культур',
+      name_ru: 'Департамент по экспертизе сельскохозяйственных культур',
+      name_ky: 'Айыл чарба өсүмдүктөрүн экспертизалоо бөлүмү',
+      name_en: 'Department for Expertise of Agricultural Crops',
+    },
+    {
+      id: '2',
+      unique_code: '2',
+      name: 'Департамент по экспертизе сельскохозяйственных культур',
+      name_ru: 'Департамент по экспертизе сельскохозяйственных культур',
+      name_ky: 'Айыл чарба өсүмдүктөрүн экспертизалоо бөлүмү',
+      name_en: 'Department for Expertise of Agricultural Crops',
+    },
+  ];
   contactInformations: IContactInformation[] = [];
-  activeDepartment: IDepartment | null = null;
   currLang: string = this.translateSrvc.currentLang;
   subs: Subscription[] = [];
+  isLoading: boolean = false;
 
   constructor(
     private translate: TranslatePipe,
@@ -29,8 +46,11 @@ export class ContactsComponent implements OnInit, OnDestroy {
   ) {}
 
   async ngOnInit(): Promise<void> {
+    this.isLoading = true;
     const departmentList = await this.api.contacts.getDepartmentList();
-    this.departmentList = departmentList;
+    this.isLoading = false;
+    // this.departmentList = departmentList;
+    // console.log(this.departmentList);
 
     const sub = this.translateSrvc.onLangChange.subscribe(
       (lang: Record<string, any>) => {

@@ -11,6 +11,7 @@ import { ContactInformationComponent } from './components/contact-information/co
 import { LoadingComponent } from 'src/modules/ui/components/loading/loading.component';
 import { MapComponent } from 'src/modules/ui/components/map/map.component';
 import { MapService } from 'src/modules/ui/services/map.service';
+import { ToggleButtonComponent } from 'src/modules/ui/components/toggle-button/toggle-button.component';
 
 @NgModule({
   declarations: [
@@ -26,6 +27,7 @@ import { MapService } from 'src/modules/ui/services/map.service';
     SvgIconComponent,
     LoadingComponent,
     MapComponent,
+    ToggleButtonComponent,
   ],
   providers: [TranslatePipe, MapService],
 })

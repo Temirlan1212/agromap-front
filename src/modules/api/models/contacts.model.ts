@@ -4,6 +4,7 @@ export interface IDepartment {
   name_ru: string;
   name_en: string;
   name_ky: string;
+  unique_code: string;
 }
 
 export interface IContactInformation {

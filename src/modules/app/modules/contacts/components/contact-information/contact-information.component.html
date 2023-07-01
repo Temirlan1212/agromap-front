@@ -1,6 +1,6 @@
 <ul *ngIf="contactInformation">
   <h5 class="title" *ngIf="contactInformation.title">
-    {{ contactInformation.title }}
+    {{ handleGetContactInformationField(contactInformation, "title") }}
   </h5>
 
   <li *ngIf="contactInformation.fullname">

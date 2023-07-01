@@ -1,18 +1,25 @@
 <app-side-panel [isOpened]="sidePanelData['state']">
-  <div class="contacts-list">
+  <div class="dictionary-list">
     <h4>{{ "Contacts" | translate }}</h4>
-    <nav>
+    <nav *ngIf="!isLoading">
       <a
         *ngFor="let item of departmentList"
         routerLinkActive="active"
-        [routerLink]="item.id"
-        (click)="activeDepartment = item"
+        [routerLink]="item.unique_code"
+        (click)="handleLinkClick()"
         >{{ handleGetDepartmentName(item) }}</a
       >
     </nav>
+    <app-loading [loading]="isLoading"></app-loading>
   </div>
 </app-side-panel>
 
 <div class="content">
   <router-outlet></router-outlet>
 </div>
+
+<app-toggle-button
+  #toggleBtn
+  iconName="hamburger"
+  (onClick)="handleSidePanelToggle(sidePanelData['state'])"
+></app-toggle-button>
