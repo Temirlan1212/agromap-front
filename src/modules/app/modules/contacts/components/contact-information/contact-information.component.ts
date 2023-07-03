@@ -23,8 +23,8 @@ export class ContactInformationComponent implements OnDestroy {
     this.subs = [...this.subs, sub];
   }
 
-  handleGetContactInformationField(item: IContactInformation, field: string) {
-    return item[(field + '_' + this.currLang) as TContactInfoTranslationFields];
+  getField(key: string): string | undefined {
+    return (this.contactInformation as any)[key];
   }
 
   ngOnDestroy(): void {
