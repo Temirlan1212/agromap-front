@@ -4,6 +4,9 @@ a {
   text-decoration: none;
   color: $primaryColor;
 }
+p {
+  overflow-wrap: anywhere;
+}
 
 :host {
   padding: 10px;
@@ -11,7 +14,17 @@ a {
   height: max-content;
   cursor: pointer;
   border-radius: 12px;
-  background-color: rgb(247, 251, 255);
+  background-color: $lightColor;
+  backdrop-filter: blur(30px);
+  transition: all 0.2s;
+
+  &:hover {
+    background-color: rgba($lightColor, 0.2);
+  }
+
+  &.active {
+    background-color: $sideNavMenuBgColor;
+  }
 
   ul {
     margin: 0;
