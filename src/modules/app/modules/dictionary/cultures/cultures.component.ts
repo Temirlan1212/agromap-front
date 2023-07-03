@@ -46,6 +46,7 @@ export class CulturesComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
+    console.log(this.user);
     this.getList();
   }
 
