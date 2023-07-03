@@ -1,4 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 
 @Pipe({
   name: 'translateField',
@@ -6,7 +7,9 @@ import { Pipe, PipeTransform } from '@angular/core';
   pure: true,
 })
 export class TranslateFieldPipe implements PipeTransform {
-  transform(value: any, field: string): any {
-    return value[field];
+  constructor(private translate: TranslateService) {}
+
+  transform(value: Record<string, any>, field: string): string {
+    return value[`${field}_${this.translate.currentLang}`];
   }
 }
