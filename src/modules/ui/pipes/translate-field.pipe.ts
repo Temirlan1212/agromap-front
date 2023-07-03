@@ -10,7 +10,6 @@ export class TranslateFieldPipe implements PipeTransform {
   constructor(private translate: TranslateService) {}
 
   transform(value: Record<string, any>, field: string): string {
-    console.log(this.translate.currentLang);
-    return value[field];
+    return value[`${field}_${this.translate.currentLang}`];
   }
 }
