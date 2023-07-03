@@ -12,6 +12,7 @@ import { LoadingComponent } from 'src/modules/ui/components/loading/loading.comp
 import { MapComponent } from 'src/modules/ui/components/map/map.component';
 import { MapService } from 'src/modules/ui/services/map.service';
 import { ToggleButtonComponent } from 'src/modules/ui/components/toggle-button/toggle-button.component';
+import { TranslateFieldPipe } from 'src/modules/ui/pipes/translate-field.pipe';
 
 @NgModule({
   declarations: [
@@ -28,6 +29,7 @@ import { ToggleButtonComponent } from 'src/modules/ui/components/toggle-button/t
     LoadingComponent,
     MapComponent,
     ToggleButtonComponent,
+    TranslateFieldPipe,
   ],
   providers: [TranslatePipe, MapService],
 })

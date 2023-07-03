@@ -1,6 +1,6 @@
 <ul *ngIf="contactInformation">
   <h5 class="title" *ngIf="contactInformation.title">
-    {{ getField("title_" + currLang) }}
+    {{ contactInformation | translateField : "title_" + currLang }}
   </h5>
 
   <li *ngIf="contactInformation.fullname">
@@ -10,7 +10,7 @@
   <li *ngIf="contactInformation.address">
     <app-svg-icon name="location" class="icon" size="20"></app-svg-icon>
     <p>
-      {{ getField("address_" + currLang) }}
+      {{ contactInformation | translateField : "address_" + currLang }}
     </p>
   </li>
   <li *ngIf="contactInformation.mail">
