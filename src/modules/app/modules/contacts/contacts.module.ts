@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
 import { ContactsComponent } from './contacts.component';
 import { TranslateModule, TranslatePipe } from '@ngx-translate/core';
 import { ContactsRoutingModule } from './contacts-routing.module';
