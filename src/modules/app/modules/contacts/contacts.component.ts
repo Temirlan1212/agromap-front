@@ -21,6 +21,7 @@ export class ContactsComponent implements OnInit, OnDestroy {
   currLang: string = this.translateSrvc.currentLang;
   subs: Subscription[] = [];
   isLoading: boolean = false;
+  activeDepartment: IDepartment | null = null;
 
   constructor(
     private translate: TranslatePipe,
@@ -33,6 +34,7 @@ export class ContactsComponent implements OnInit, OnDestroy {
     const departmentList = await this.api.contacts.getDepartmentList();
     this.isLoading = false;
     this.departmentList = departmentList;
+    this.activeDepartment = this.departmentList[0];
 
     const sub = this.translateSrvc.onLangChange.subscribe(
       (lang: Record<string, any>) => {
@@ -46,13 +48,11 @@ export class ContactsComponent implements OnInit, OnDestroy {
     this.sidePanelData['state'] = !isOpened;
   }
 
-  handleLinkClick() {
+  handleLinkClick(item: IDepartment) {
     this.toggleBtn.isContentToggled = false;
     this.sidePanelData['state'] = false;
-  }
 
-  handleGetDepartmentName(item: IDepartment) {
-    return item[('name_' + this.currLang) as 'name_ru' | 'name_ky' | 'name_en'];
+    this.activeDepartment = item;
   }
 
   ngOnDestroy(): void {

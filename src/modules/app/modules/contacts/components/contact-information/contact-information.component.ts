@@ -1,10 +1,7 @@
 import { Component, Input, OnDestroy } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
-import {
-  IContactInformation,
-  TContactInfoTranslationFields,
-} from 'src/modules/api/models/contacts.model';
+import { IContactInformation } from 'src/modules/api/models/contacts.model';
 
 @Component({
   selector: 'app-contact-information',
@@ -21,10 +18,6 @@ export class ContactInformationComponent implements OnDestroy {
       (lang: Record<string, any>) => (this.currLang = lang['lang'] as string)
     ) as Subscription;
     this.subs = [...this.subs, sub];
-  }
-
-  getField(key: string): string | undefined {
-    return (this.contactInformation as any)[key];
   }
 
   ngOnDestroy(): void {

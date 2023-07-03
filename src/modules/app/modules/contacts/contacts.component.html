@@ -2,20 +2,25 @@
   <div class="dictionary-list">
     <h4>{{ "Contacts" | translate }}</h4>
     <nav *ngIf="!isLoading">
-      <a
-        *ngFor="let item of departmentList"
-        routerLinkActive="active"
-        [routerLink]="item.unique_code"
-        (click)="handleLinkClick()"
-        >{{ handleGetDepartmentName(item) }}</a
-      >
+      <ng-container *ngIf="activeDepartment">
+        <a
+          *ngFor="let item of departmentList"
+          (click)="handleLinkClick(item)"
+          [class.active]="item.id === activeDepartment.id"
+        >
+          {{ item | translateField : "name" }}
+        </a>
+      </ng-container>
     </nav>
     <app-loading [loading]="isLoading"></app-loading>
   </div>
 </app-side-panel>
 
 <div class="content">
-  <router-outlet></router-outlet>
+  <app-contact-informations
+    *ngIf="activeDepartment"
+    [id]="activeDepartment.id"
+  ></app-contact-informations>
 </div>
 
 <app-toggle-button

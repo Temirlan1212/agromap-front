@@ -1,7 +1,6 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { icon, marker, tileLayer } from 'leaflet';
-import { Subscription } from 'rxjs';
 import { ApiService } from 'src/modules/api/api.service';
 import {
   IContactInformation,
@@ -14,10 +13,9 @@ import { MapData } from 'src/modules/ui/models/map.model';
   templateUrl: './contact-informations.component.html',
   styleUrls: ['./contact-informations.component.scss'],
 })
-export class ContactInformationsComponent implements OnInit, OnDestroy {
+export class ContactInformationsComponent implements OnChanges {
   contactInformations: IContactInformation[] = [];
   isLoading: boolean = false;
-  subs: Subscription[] = [];
   mapData: MapData | null = null;
   activeContactInformation: IContactInformation | null = null;
   tileLayer = tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -30,16 +28,16 @@ export class ContactInformationsComponent implements OnInit, OnDestroy {
     popupAnchor: [1, -34],
   });
 
+  @Input() id: string = '';
+
   constructor(private route: ActivatedRoute, private api: ApiService) {}
 
-  async ngOnInit(): Promise<void> {
-    const sub = this.route.paramMap.subscribe(async (param) => {
-      const id = param.get('id');
-
+  async ngOnChanges(changes: SimpleChanges) {
+    if (changes['id']) {
       this.isLoading = true;
-      if (id) {
+      if (this.id) {
         this.contactInformations =
-          await this.api.contacts.getContactInformation(id);
+          await this.api.contacts.getContactInformation(this.id);
       }
       this.isLoading = false;
       if (this.contactInformations && this.contactInformations.length > 0) {
@@ -53,9 +51,7 @@ export class ContactInformationsComponent implements OnInit, OnDestroy {
           }
         });
       }
-    });
-
-    this.subs = [...this.subs, sub];
+    }
   }
 
   handleMapData(mapData: MapData): void {
@@ -89,9 +85,5 @@ export class ContactInformationsComponent implements OnInit, OnDestroy {
   private renderMarker(coordinates: TLatLangCoordinates) {
     if (this.mapData?.map)
       marker(coordinates, { icon: this.customIcon }).addTo(this.mapData.map);
-  }
-
-  ngOnDestroy(): void {
-    this.subs.forEach((s) => s.unsubscribe());
   }
 }
