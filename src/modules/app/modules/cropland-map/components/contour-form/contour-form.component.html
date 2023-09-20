@@ -104,7 +104,7 @@
     <app-form-field
       name="code_soato"
       #code_soato
-      *ngIf="mode != 'agromap_store_ai'"
+      *ngIf="mode != 'contours_main_ai'"
     >
       <app-input
         type="text"
@@ -121,7 +121,7 @@
       ></span>
     </app-form-field>
 
-    <app-form-field name="ink" #ink *ngIf="mode != 'agromap_store_ai'">
+    <app-form-field name="ink" #ink *ngIf="mode != 'contours_main_ai'">
       <app-input
         type="text"
         [placeholder]="'INK' | translate"

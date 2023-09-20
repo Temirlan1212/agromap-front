@@ -46,7 +46,7 @@ export class ContourEditComponent implements OnInit, OnDestroy {
     const id = this.route.snapshot.paramMap.get('id');
     try {
       this.loading = true;
-      if (this.mode === 'agromap_store_ai') {
+      if (this.mode === 'contours_main_ai') {
         this.contour = await this.api.aiContour.getOne(Number(id));
       } else {
         this.contour = await this.api.contour.getOne(Number(id));
@@ -153,7 +153,7 @@ export class ContourEditComponent implements OnInit, OnDestroy {
 
   async handleSaveClick(contourForm: ContourFormComponent) {
     const formValueNames =
-      this.mode === 'agromap_store_ai'
+      this.mode === 'contours_main_ai'
         ? ['district', 'conton']
         : ['district', 'conton', 'code_soato', 'ink'];
 
@@ -190,7 +190,7 @@ export class ContourEditComponent implements OnInit, OnDestroy {
     };
 
     try {
-      if (this.mode === 'agromap_store_ai') {
+      if (this.mode === 'contours_main_ai') {
         await this.api.aiContour.update(this.contour.id, contour);
       } else {
         await this.api.contour.update(this.contour.id, contour);

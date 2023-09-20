@@ -171,9 +171,9 @@ export class YieldMapComponent
   wmsLayers: ITileLayer[] = [
     {
       title: 'Base',
-      name: 'agromap_store',
+      name: 'contours_main',
       layer: tileLayer.wms('https://geoserver.24mycrm.com/agromap/wms', {
-        layers: 'agromap:agromap_store',
+        layers: 'agromap:contours_main',
         ...this.wmsLayersOptions,
       }),
       type: 'radio',
@@ -542,7 +542,7 @@ export class YieldMapComponent
   handleWmsLayerChanged(layer: ITileLayer | null): void {
     if (layer != null) {
       const finded = this.wmsLayers.find((l) => l.name === layer.name);
-      if (finded != null && finded.name === 'agromap_store_ai') {
+      if (finded != null && finded.name === 'contours_main_ai') {
         this.isWmsAiActive = true;
       } else {
         this.isWmsAiActive = false;
@@ -552,7 +552,7 @@ export class YieldMapComponent
 
   private setWmsParams(): void {
     const finded = this.wmsLayers.find(
-      (w) => w.name === 'agromap_store'
+      (w) => w.name === 'contours_main'
     ) as any;
 
     if (finded != null) {
@@ -630,7 +630,7 @@ export class YieldMapComponent
     this.getRegionsPolygon();
     const data = this.store.getItem(this.storageName);
     if (!data) {
-      this.mode = 'agromap_store';
+      this.mode = 'contours_main';
     }
 
     this.wmsSelectedStatusLayers = data;
