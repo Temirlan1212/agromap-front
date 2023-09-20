@@ -162,9 +162,9 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
   wmsLayers: ITileLayer[] = [
     {
       title: 'Base',
-      name: 'agromap_store',
+      name: 'contours_main',
       layer: tileLayer.wms('https://geoserver.24mycrm.com/agromap/wms', {
-        layers: 'agromap:agromap_store',
+        layers: 'agromap:contours_main',
         ...this.wmsLayersOptions,
       }),
       type: 'radio',
@@ -651,7 +651,7 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private setWmsParams(): void {
     const finded = this.wmsLayers.find(
-      (w) => w.name === 'agromap_store'
+      (w) => w.name === 'contours_main'
     ) as any;
 
     if (finded != null) {
@@ -725,7 +725,7 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
   async ngOnInit(): Promise<void> {
     const data = this.store.getItem('PasturesMapControlLayersSwitchComponent');
     if (!data) {
-      this.mode = 'agromap_store';
+      this.mode = 'contours_main';
     }
 
     this.wmsSelectedStatusLayers = data;

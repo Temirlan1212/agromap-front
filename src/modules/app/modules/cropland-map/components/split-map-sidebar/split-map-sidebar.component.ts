@@ -172,7 +172,7 @@ export class SplitMapSidebarComponent implements OnDestroy, OnInit {
     const name = MapControlLayersSwitchComponent.filterControlLayerSwitch.name;
 
     if (name) {
-      if (name === 'agromap_store_ai') {
+      if (name === 'contours_main_ai') {
         this.isWmsAiActive = true;
       } else {
         this.isWmsAiActive = false;

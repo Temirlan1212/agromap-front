@@ -148,18 +148,18 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
   wmsLayers: ITileLayer[] = [
     {
       title: 'Base',
-      name: 'agromap_store',
+      name: 'contours_main',
       layer: tileLayer.wms('https://geoserver.24mycrm.com/agromap/wms', {
-        layers: 'agromap:agromap_store',
+        layers: 'agromap:contours_main',
         ...this.wmsLayersOptions,
       }),
       type: 'radio',
     },
     {
       title: 'RSE',
-      name: 'agromap_store_ai',
+      name: 'contours_main_ai',
       layer: tileLayer.wms('https://geoserver.24mycrm.com/agromap/wms', {
-        layers: 'agromap:agromap_store_ai',
+        layers: 'agromap:contours_main_ai',
         ...this.wmsLayersOptions,
       }),
       type: 'radio',
@@ -414,7 +414,7 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
   handleWmsLayerChanged(layer: ITileLayer | null): void {
     if (layer != null) {
       const finded = this.wmsLayers.find((l) => l.name === layer.name);
-      if (finded != null && finded.name === 'agromap_store_ai') {
+      if (finded != null && finded.name === 'contours_main_ai') {
         this.isWmsAiActive = true;
       } else {
         this.isWmsAiActive = false;
@@ -639,7 +639,7 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
   private setWmsParams(): void {
     if (this.isWmsAiActive) {
       const finded = this.wmsLayers.find(
-        (w) => w.name === 'agromap_store_ai'
+        (w) => w.name === 'contours_main_ai'
       ) as any;
       if (finded != null) {
         delete finded.layer.wmsParams.cql_filter;
@@ -649,7 +649,7 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
       }
     } else {
       const finded = this.wmsLayers.find(
-        (w) => w.name === 'agromap_store'
+        (w) => w.name === 'contours_main'
       ) as any;
       if (finded != null) {
         delete finded.layer.wmsParams.cql_filter;

@@ -46,8 +46,8 @@ export class ContourFormComponent implements OnInit, OnDestroy {
         year: v.year,
         code_soato: v.code_soato,
         ink: v.ink,
-        ...(this.mode == 'agromap_store_ai' && { district: v.district?.id }),
-        ...(this.mode == 'agromap_store_ai' && { region: v.region?.id }),
+        ...(this.mode == 'contours_main_ai' && { district: v.district?.id }),
+        ...(this.mode == 'contours_main_ai' && { region: v.region?.id }),
       });
     }
   }

@@ -43,8 +43,8 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
   selectedId: number | null = null;
   filtersQuery!: ContourFiltersQuery;
   radioOptions: any = [
-    { name: 'RSE', value: 'agromap_store_ai' },
-    { name: 'Base', value: 'agromap_store' },
+    { name: 'RSE', value: 'contours_main_ai' },
+    { name: 'Base', value: 'contours_main' },
   ];
   @Output() onCardClick = new EventEmitter<MapLayerFeature>();
   @Output() onEditClick = new EventEmitter<void>();
@@ -130,7 +130,7 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
       this.store.getItem('MapControlLayersSwitchComponent')
         ?.filterControlLayerSwitch?.name == null
     ) {
-      this.mode?.patchValue('agromap_store_ai');
+      this.mode?.patchValue('contours_main_ai');
     }
 
     this.loading = true;
@@ -224,7 +224,7 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
         land_type,
         culture,
         year,
-        ...(this.mode.value == 'agromap_store_ai' && { ai: true }),
+        ...(this.mode.value == 'contours_main_ai' && { ai: true }),
       };
 
       this.store.setItem<ContourFiltersQuery | null>(
