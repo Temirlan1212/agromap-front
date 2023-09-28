@@ -148,18 +148,18 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
   wmsLayers: ITileLayer[] = [
     {
       title: 'Base',
-      name: 'contours_main',
+      name: 'contours_dev',
       layer: tileLayer.wms('https://geoserver.24mycrm.com/agromap/wms', {
-        layers: 'agromap:contours_main',
+        layers: 'agromap:contours_dev',
         ...this.wmsLayersOptions,
       }),
       type: 'radio',
     },
     {
       title: 'RSE',
-      name: 'contours_main_ai',
+      name: 'contours_dev_ai',
       layer: tileLayer.wms('https://geoserver.24mycrm.com/agromap/wms', {
-        layers: 'agromap:contours_main_ai',
+        layers: 'agromap:contours_dev_ai',
         ...this.wmsLayersOptions,
       }),
       type: 'radio',
@@ -183,10 +183,64 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
       type: 'checkbox',
     },
     {
+      title: 'Forestry',
+      name: 'agromap:forestry',
+      layer: tileLayer.wms('https://geoserver.24mycrm.com/agromap/wms', {
+        layers: 'agromap:forestry',
+        ...this.wmsLayersOverlayOptions,
+      }),
+      type: 'checkbox',
+    },
+    {
+      title: 'On-farm channels',
+      name: 'agromap:Внутрихозяйственные_каналы',
+      layer: tileLayer.wms('https://geoserver.24mycrm.com/agromap/wms', {
+        layers: 'agromap:Внутрихозяйственные_каналы',
+        ...this.wmsLayersOverlayOptions,
+      }),
+      type: 'checkbox',
+    },
+    {
+      title: 'Inter-farm channels',
+      name: 'agromap:Межхозяйственные_каналы',
+      layer: tileLayer.wms('https://geoserver.24mycrm.com/agromap/wms', {
+        layers: 'agromap:Межхозяйственные_каналы',
+        ...this.wmsLayersOverlayOptions,
+      }),
+      type: 'checkbox',
+    },
+    {
       title: 'Tepke',
       name: 'agromap:Tepke_20cm(EPSG:7695)',
       layer: tileLayer.wms('https://geoserver.24mycrm.com/agromap/wms', {
         layers: 'agromap:Tepke_20cm(EPSG:7695)',
+        ...this.wmsLayersOverlayOptions,
+      }),
+      type: 'checkbox',
+    },
+    {
+      title: 'AWU',
+      name: 'agromap:АВП',
+      layer: tileLayer.wms('https://geoserver.24mycrm.com/agromap/wms', {
+        layers: 'agromap:АВП',
+        ...this.wmsLayersOverlayOptions,
+      }),
+      type: 'checkbox',
+    },
+    {
+      title: 'Regions borders',
+      name: 'kyrgyz:Oblast',
+      layer: tileLayer.wms('https://isul.forest.gov.kg/geoserver/kyrgyz/wms', {
+        layers: 'kyrgyz:Oblast',
+        ...this.wmsLayersOverlayOptions,
+      }),
+      type: 'checkbox',
+    },
+    {
+      title: 'Districts borders',
+      name: 'kyrgyz:Raion',
+      layer: tileLayer.wms('https://isul.forest.gov.kg/geoserver/kyrgyz/wms', {
+        layers: 'kyrgyz:Raion',
         ...this.wmsLayersOverlayOptions,
       }),
       type: 'checkbox',
