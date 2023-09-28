@@ -196,6 +196,15 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
       }),
       type: 'checkbox',
     },
+    {
+      title: 'Tepke',
+      name: 'agromap:Tepke_20cm(EPSG:7695)',
+      layer: tileLayer.wms('https://geoserver.24mycrm.com/agromap/wms', {
+        layers: 'agromap:Tepke_20cm(EPSG:7695)',
+        ...this.wmsLayersOverlayOptions,
+      }),
+      type: 'checkbox',
+    },
   ];
 
   constructor(
