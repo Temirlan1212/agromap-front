@@ -148,18 +148,18 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
   wmsLayers: ITileLayer[] = [
     {
       title: 'Base',
-      name: 'contours_dev',
+      name: 'contours_main',
       layer: tileLayer.wms('https://geoserver.24mycrm.com/agromap/wms', {
-        layers: 'agromap:contours_dev',
+        layers: 'agromap:contours_main',
         ...this.wmsLayersOptions,
       }),
       type: 'radio',
     },
     {
       title: 'RSE',
-      name: 'contours_dev_ai',
+      name: 'contours_main_ai',
       layer: tileLayer.wms('https://geoserver.24mycrm.com/agromap/wms', {
-        layers: 'agromap:contours_dev_ai',
+        layers: 'agromap:contours_main_ai',
         ...this.wmsLayersOptions,
       }),
       type: 'radio',

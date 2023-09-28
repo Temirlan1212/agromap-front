@@ -162,9 +162,9 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
   wmsLayers: ITileLayer[] = [
     {
       title: 'Base',
-      name: 'contours_dev',
+      name: 'contours_main',
       layer: tileLayer.wms('https://geoserver.24mycrm.com/agromap/wms', {
-        layers: 'agromap:contours_dev',
+        layers: 'agromap:contours_main',
         ...this.wmsLayersOptions,
       }),
       type: 'radio',
