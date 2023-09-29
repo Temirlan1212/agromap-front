@@ -245,6 +245,15 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
       }),
       type: 'checkbox',
     },
+    {
+      title: 'Karagana Suusamyr valley',
+      name: 'agromap:Karagana_Suusamyr_Valley2020',
+      layer: tileLayer.wms('https://geoserver.24mycrm.com/agromap/wms', {
+        layers: 'agromap:Karagana_Suusamyr_Valley2020',
+        ...this.wmsLayersOverlayOptions,
+      }),
+      type: 'checkbox',
+    },
   ];
 
   constructor(
