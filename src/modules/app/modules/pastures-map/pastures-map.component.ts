@@ -268,6 +268,15 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
       }),
       type: 'checkbox',
     },
+    {
+      title: 'Zemdoli',
+      name: 'agromap:zemdoli',
+      layer: tileLayer.wms('https://geoserver.24mycrm.com/agromap/wms', {
+        layers: 'agromap:zemdoli',
+        ...this.wmsLayersOverlayOptions,
+      }),
+      type: 'checkbox',
+    },
   ];
 
   constructor(
