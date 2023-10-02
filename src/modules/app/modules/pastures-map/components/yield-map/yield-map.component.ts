@@ -83,7 +83,7 @@ export class YieldMapComponent
   @Output() onDateSelect = new EventEmitter<any>();
 
   mode!: string;
-  pastureLayerProductivityTooltip: Tooltip | null = null;
+  wmsLayerInfoPopup: Tooltip | null = null;
   user: IUser | null = this.api.user.getLoggedInUser();
   landTypes: ILandType[] = [];
   mapData: MapData | null = null;
@@ -230,9 +230,9 @@ export class YieldMapComponent
       this.subscriptions = [
         ...this.subscriptions,
         this.store.watchItem(this.storageName).subscribe((v) => {
-          if (this.pastureLayerProductivityTooltip) {
-            this.mapData?.map.removeLayer(this.pastureLayerProductivityTooltip);
-            this.pastureLayerProductivityTooltip = null;
+          if (this.wmsLayerInfoPopup) {
+            this.mapData?.map.removeLayer(this.wmsLayerInfoPopup);
+            this.wmsLayerInfoPopup = null;
           }
           this.pasturesMapControlLayersSwitch = v;
         }),
@@ -369,34 +369,29 @@ export class YieldMapComponent
     if (this.mapComponent && this.activeContour != null) {
       this.mapComponent.handleFeatureClose();
     }
+    this.handleWmsLayerPopup(e);
   }
 
-  async handleMapMousemove(e: LeafletMouseEvent) {
-    if (this.pastureLayerProductivityTooltip) {
-      this.mapData?.map.removeLayer(this.pastureLayerProductivityTooltip);
-      this.pastureLayerProductivityTooltip = null;
-    }
-    if (this.pasturesMapControlLayersSwitch?.['productivity']?.name) {
+  async handleWmsLayerPopup(e: LeafletMouseEvent) {
+    const contolLayers = Object.values({
+      ...this.pasturesMapControlLayersSwitch,
+    });
+    const activeControlLayer = [...contolLayers]
+      .sort((a, b) => b?.updatedAt - a?.updatedAt)
+      .filter((item) => item?.name && item?.updatedAt && item?.layersName)?.[0];
+
+    if (activeControlLayer != null) {
+      const layers = activeControlLayer?.layersName;
+      if (layers == null) return;
+
       const { lat, lng } = e.latlng;
       const bbox = [lng - 0.1, lat - 0.1, lng + 0.1, lat + 0.1];
 
       try {
         const data = await this.api.map.getFeatureInfo({
-          service: 'WMS',
-          request: 'GetFeatureInfo',
-          srs: 'EPSG:4326',
-          styles: '',
-          format: 'image/png',
           bbox: bbox.join(','),
           layers: 'agromap:productivity',
           query_layers: 'agromap:productivity',
-          transparent: true,
-          width: 101,
-          height: 101,
-          x: 50,
-          y: 50,
-          version: '1.1.1',
-          info_format: 'application/json',
         });
 
         const gray_index = (
@@ -408,7 +403,7 @@ export class YieldMapComponent
             'Productivity'
           )}: ${gray_index}`;
 
-          this.pastureLayerProductivityTooltip = tooltip()
+          this.wmsLayerInfoPopup = tooltip()
             .setLatLng(e.latlng)
             .setContent(tooltipContent)
             .openOn(this.mapData.map);
@@ -418,6 +413,8 @@ export class YieldMapComponent
       }
     }
   }
+
+  async handleMapMousemove(e: LeafletMouseEvent) {}
 
   async getPolygonsInScreen(mapMove: LatLngBounds) {
     const year = this.filterFormValues?.['year'] ?? new Date().getFullYear();

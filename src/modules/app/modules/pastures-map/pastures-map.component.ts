@@ -7,6 +7,8 @@ import {
   LeafletMouseEvent,
   Tooltip,
   tooltip,
+  popup,
+  Popup,
 } from 'leaflet';
 import { GeoJSON, FeatureCollection } from 'geojson';
 import {
@@ -72,7 +74,7 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
   isComparisonMapsActivated: boolean = false;
 
   mode!: string;
-  pastureLayerProductivityTooltip: Tooltip | null = null;
+  wmsLayerInfoPopup: Popup | null = null;
   user: IUser | null = this.api.user.getLoggedInUser();
   landTypes: ILandType[] = [];
   mapData: MapData | null = null;
@@ -338,9 +340,9 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
     this.store
       .watchItem('PasturesMapControlLayersSwitchComponent')
       .subscribe((v) => {
-        if (this.pastureLayerProductivityTooltip) {
-          this.mapData?.map.removeLayer(this.pastureLayerProductivityTooltip);
-          this.pastureLayerProductivityTooltip = null;
+        if (this.wmsLayerInfoPopup) {
+          this.mapData?.map.removeLayer(this.wmsLayerInfoPopup);
+          this.wmsLayerInfoPopup = null;
         }
         this.pasturesMapControlLayersSwitch = v;
       }),
@@ -444,46 +446,56 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.mapComponent && this.activeContour != null) {
       this.mapComponent.handleFeatureClose();
     }
+    this.handleWmsLayerPopup(e);
   }
 
-  async handleMapMousemove(e: LeafletMouseEvent) {
-    if (this.pastureLayerProductivityTooltip) {
-      this.mapData?.map.removeLayer(this.pastureLayerProductivityTooltip);
-      this.pastureLayerProductivityTooltip = null;
-    }
-    if (this.pasturesMapControlLayersSwitch?.['productivity']?.name) {
+  async handleWmsLayerPopup(e: LeafletMouseEvent) {
+    const contolLayers = Object.values({
+      ...this.pasturesMapControlLayersSwitch,
+    });
+    const activeControlLayer = [...contolLayers]
+      .sort((a, b) => b?.updatedAt - a?.updatedAt)
+      .filter((item) => item?.name && item?.updatedAt && item?.layersName)?.[0];
+
+    if (activeControlLayer != null) {
+      const layers = activeControlLayer?.layersName;
+      if (layers == null) return;
+
       const { lat, lng } = e.latlng;
       const bbox = [lng - 0.1, lat - 0.1, lng + 0.1, lat + 0.1];
 
       try {
-        const data = await this.api.map.getFeatureInfo({
-          service: 'WMS',
-          request: 'GetFeatureInfo',
-          srs: 'EPSG:4326',
-          styles: '',
-          format: 'image/png',
-          bbox: bbox.join(','),
-          layers: 'agromap:productivity',
-          query_layers: 'agromap:productivity',
-          transparent: true,
-          width: 101,
-          height: 101,
-          x: 50,
-          y: 50,
-          version: '1.1.1',
-          info_format: 'application/json',
-        });
+        let data: any = null;
+        if (layers.includes('agromap')) {
+          data = await this.api.map.getFeatureInfo({
+            bbox: bbox.join(','),
+            layers: layers,
+            query_layers: layers,
+          });
+        }
 
-        const gray_index = (
-          data as FeatureCollection
-        )?.features?.[0]?.properties?.['GRAY_INDEX']?.toFixed(2);
+        const properties: any = data.features?.[0]?.properties;
 
-        if (this.mapData?.map && gray_index != null) {
-          const tooltipContent = `${this.translate.transform(
-            'Productivity'
-          )}: ${gray_index}`;
+        if (this.mapData?.map && properties != null) {
+          const tooltipContent = `
+          <div>
+            ${Object.entries(properties)
+              .map(([key, value]) => {
+                if (
+                  value &&
+                  (typeof value === typeof '' || typeof value === typeof 0)
+                ) {
+                  return `<p><strong>${key}:</strong>  ${value}</p> `;
+                }
+                return null;
+              })
+              .filter(Boolean)
+              .join('<hr>')}
+          </div>
+        `;
 
-          this.pastureLayerProductivityTooltip = tooltip()
+          const options = { maxHeight: 300, maxWidth: 300 };
+          this.wmsLayerInfoPopup = popup(options)
             .setLatLng(e.latlng)
             .setContent(tooltipContent)
             .openOn(this.mapData.map);
@@ -493,6 +505,8 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
       }
     }
   }
+
+  async handleMapMousemove(e: LeafletMouseEvent) {}
 
   async handleMapMove(mapMove: MapMove): Promise<void> {
     this.store.setItem<Record<string, LatLngBounds | number>>('HomeComponent', {
