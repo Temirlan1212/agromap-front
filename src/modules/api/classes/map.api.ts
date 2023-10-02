@@ -37,10 +37,27 @@ export class MapApi {
     return response;
   }
 
-  async getFeatureInfo(query: IGetFeatureInfoQuery): Promise<GeoJSON> {
+  async getFeatureInfo(
+    query: Pick<IGetFeatureInfoQuery, 'bbox' | 'layers' | 'query_layers'>
+  ): Promise<GeoJSON> {
+    const params: Partial<IGetFeatureInfoQuery> = {
+      service: 'WMS',
+      request: 'GetFeatureInfo',
+      srs: 'EPSG:4326',
+      styles: '',
+      format: 'image/png',
+      transparent: true,
+      width: 101,
+      height: 101,
+      x: 50,
+      y: 50,
+      version: '1.1.1',
+      info_format: 'application/json',
+      ...query,
+    };
     const response = await firstValueFrom(
       this.http.get<GeoJSON>(environment.geoserverUrl + '/agromap/wms', {
-        params: query as any,
+        params: params,
         context: new HttpContext().set(BYPASS_LOG, true),
       })
     );

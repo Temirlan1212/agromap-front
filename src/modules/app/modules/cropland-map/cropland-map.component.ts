@@ -5,6 +5,8 @@ import {
   Map,
   tileLayer,
   LeafletMouseEvent,
+  Popup,
+  popup,
 } from 'leaflet';
 import { GeoJSON } from 'geojson';
 import {
@@ -84,6 +86,7 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
   vegIndexOptionsList: IVegIndexOption[] = [];
   loadingSatelliteDates: boolean = false;
   activeVegIndexOption: IVegIndexOption | null = null;
+  wmsLayerInfoPopup: Popup | null = null;
 
   wmsProductivityLayerColorLegend: Record<string, any>[] = [
     { label: '-1', color: '#000000' },
@@ -322,6 +325,10 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
     }),
 
     this.store.watchItem('MapControlLayersSwitchComponent').subscribe((v) => {
+      if (this.wmsLayerInfoPopup) {
+        this.mapData?.map.removeLayer(this.wmsLayerInfoPopup);
+        this.wmsLayerInfoPopup = null;
+      }
       this.mapControlLayersSwitch = v;
     }),
 
@@ -419,6 +426,65 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
   handleMapClick(e: LeafletMouseEvent) {
     if (this.mapComponent && this.activeContour != null) {
       this.mapComponent.handleFeatureClose();
+    }
+
+    this.handleWmsLayerPopup(e);
+  }
+
+  async handleWmsLayerPopup(e: LeafletMouseEvent) {
+    const contolLayers = Object.values({
+      ...this.mapControlLayersSwitch,
+    });
+    const activeControlLayer = [...contolLayers]
+      .sort((a, b) => b?.updatedAt - a?.updatedAt)
+      .filter((item) => item?.name && item?.updatedAt && item?.layersName)?.[0];
+
+    if (activeControlLayer != null) {
+      const layers = activeControlLayer?.layersName;
+      if (layers == null) return;
+
+      const { lat, lng } = e.latlng;
+      const bbox = [lng - 0.1, lat - 0.1, lng + 0.1, lat + 0.1];
+
+      try {
+        let data: any = null;
+        if (layers.includes('agromap')) {
+          data = await this.api.map.getFeatureInfo({
+            bbox: bbox.join(','),
+            layers: layers,
+            query_layers: layers,
+          });
+        }
+
+        const properties: any = data.features?.[0]?.properties;
+
+        if (this.mapData?.map && properties != null) {
+          const tooltipContent = `
+          <div>
+            ${Object.entries(properties)
+              .map(([key, value]) => {
+                if (
+                  value &&
+                  (typeof value === typeof '' || typeof value === typeof 0)
+                ) {
+                  return `<p><strong>${key}:</strong>  ${value}</p> `;
+                }
+                return null;
+              })
+              .filter(Boolean)
+              .join('<hr>')}
+          </div>
+        `;
+
+          const options = { maxHeight: 300, maxWidth: 300 };
+          this.wmsLayerInfoPopup = popup(options)
+            .setLatLng(e.latlng)
+            .setContent(tooltipContent)
+            .openOn(this.mapData.map);
+        }
+      } catch (e) {
+        console.log(e);
+      }
     }
   }
 
