@@ -394,7 +394,7 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
     this.store.setItem<Feature>('selectedLayerFeature', layerFeature.feature);
     const bounds = geoJSON(layerFeature.feature).getBounds();
     if (this.mapData?.map) {
-      this.mapData.map.fitBounds(bounds);
+      this.mapData.map.fitBounds(bounds, { maxZoom: 15 });
       this.mapService.invalidateSize(this.mapData.map);
     }
   }
