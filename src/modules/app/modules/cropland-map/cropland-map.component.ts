@@ -165,7 +165,7 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
         layers: 'agromap:contours_main_ai',
         ...this.wmsLayersOptions,
       }),
-      type: 'radio',
+      type: 'checkbox',
     },
     {
       title: 'SoilLayer',
@@ -394,7 +394,7 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
     this.store.setItem<Feature>('selectedLayerFeature', layerFeature.feature);
     const bounds = geoJSON(layerFeature.feature).getBounds();
     if (this.mapData?.map) {
-      this.mapData.map.fitBounds(bounds, { maxZoom: 15 });
+      this.mapData.map.fitBounds(bounds, { maxZoom: 14 });
       this.mapService.invalidateSize(this.mapData.map);
     }
   }
