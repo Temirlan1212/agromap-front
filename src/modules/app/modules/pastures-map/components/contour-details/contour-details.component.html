@@ -105,6 +105,14 @@
           <span>{{ "Culture is not defined" | translate }}</span>
         </ng-template>
       </div>
+      <div>
+        {{ "INK" | translate }}
+        <span x>{{ activeContour?.ink ?? "-----" }}</span>
+      </div>
+      <div>
+        ENI-{{ ("Code" | translate).toLowerCase() }}
+        <span>{{ activeContour?.eni ?? "-----" }}</span>
+      </div>
     </div>
   </div>
   <ng-template #partial>

@@ -62,7 +62,6 @@
   "Cancel": "Жокко чыгаруу",
   "Culture": "Өсүмдүктүн түрү",
   "Code SOATO": "СОАТО коду",
-  "INK": "ИНК",
   "No changes in form": "Формада өзгөрүү болгон жок",
   "Form is invalid": "Форма туура эмес толтурулган",
   "Define a polygon on the map": "Определите полигон на карте",
@@ -224,5 +223,6 @@
   "Regions borders": "Региондордун чек аралары",
   "Districts borders": "Райондордун чек аралары",
   "Karagana Suusamyr valley": "Карагана Суусамыр өрөөнү",
-  "Land shares of the Chui region": "Чүй облусунун жер үлүштөрү"
+  "Land shares of the Chui region": "Чүй облусунун жер үлүштөрү",
+  "Code": "Код"
 }

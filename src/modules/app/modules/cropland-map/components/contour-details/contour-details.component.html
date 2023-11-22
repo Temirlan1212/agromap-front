@@ -107,7 +107,12 @@
       </div>
       <div>
         {{ "INK" | translate }}
-        <span *ngIf="activeContour?.eni">{{ activeContour.eni }}</span>
+        <span x>{{ activeContour?.ink ?? "-----" }}</span>
+      </div>
+
+      <div>
+        ENI-{{ ("Code" | translate).toLowerCase() }}
+        <span>{{ activeContour?.eni ?? "-----" }}</span>
       </div>
     </div>
   </div>
