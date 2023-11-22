@@ -683,7 +683,9 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
     this.loading = true;
     try {
       const land_type = this.landTypes.find((l) => l.id === 2);
-      const year = this.filterFormValues?.['year'] ?? new Date().getFullYear();
+      const year =
+        this.filterFormValues?.['year'] ??
+        this.mapService.filterDefaultValues.year;
       const culture = this.filterFormValues?.['culture'] ?? null;
 
       if (this.mapData?.map != null && land_type?.id) {
