@@ -681,7 +681,9 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
   private async addPolygonsInScreenToMap(mapBounds: LatLngBounds) {
     this.loading = true;
     try {
-      const year = this.filterFormValues?.['year'] ?? new Date().getFullYear();
+      const year =
+        this.filterFormValues?.['year'] ??
+        this.mapService.filterDefaultValues.year;
       const culture = this.filterFormValues?.['culture'] ?? null;
       const land_type =
         this.filterFormValues?.['land_type'] ??
