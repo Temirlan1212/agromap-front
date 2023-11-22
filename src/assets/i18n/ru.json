@@ -62,7 +62,6 @@
   "Cancel": "Отмена",
   "Culture": "Вид культуры",
   "Code SOATO": "Код СОАТО",
-  "INK": "ИНК",
   "No changes in form": "Нет изменений в форме",
   "Form is invalid": "Форма заполнена неверно",
   "Define a polygon on the map": "Определите полигон на карте",
@@ -224,5 +223,6 @@
   "Regions borders": "Границы регионов",
   "Districts borders": "Границы районов",
   "Karagana Suusamyr valley": "Карагана Суусамырская долина",
-  "Land shares of the Chui region": "Земельные доли Чуйской области"
+  "Land shares of the Chui region": "Земельные доли Чуйской области",
+  "Code": "Код"
 }
