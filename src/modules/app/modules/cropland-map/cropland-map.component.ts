@@ -505,7 +505,8 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   handleFilterFormReset(): void {
-    this.wmsCQLFilter = 'year' + new Date().getFullYear();
+    this.wmsCQLFilter =
+      'ltype in (1,2)&&year=' + this.mapService.filterDefaultValues.year;
     this.setWmsParams();
     if (this.mapComponent) this.mapComponent.handleFeatureClose();
     this.handleSetSidePanelState(false);

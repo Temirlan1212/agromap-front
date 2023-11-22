@@ -70,10 +70,13 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
       validators: Validators.required,
     }),
     culture: new FormControl<string | null>(null, { nonNullable: true }),
-    year: new FormControl<number | null>(2022, {
-      nonNullable: true,
-      validators: Validators.required,
-    }),
+    year: new FormControl<number | null>(
+      this.mapService.filterDefaultValues.year,
+      {
+        nonNullable: true,
+        validators: Validators.required,
+      }
+    ),
   });
 
   subscriptions: Subscription[] = [
