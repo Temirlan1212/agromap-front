@@ -70,7 +70,7 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
       validators: Validators.required,
     }),
     culture: new FormControl<string | null>(null, { nonNullable: true }),
-    year: new FormControl<number | null>(new Date().getFullYear(), {
+    year: new FormControl<number | null>(2022, {
       nonNullable: true,
       validators: Validators.required,
     }),
