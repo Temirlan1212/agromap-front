@@ -21,28 +21,11 @@
   display: none;
 }
 
-.toggler {
-  width: 100%;
-  border-radius: 0;
-
-  app-svg-icon {
-    display: inline-block;
-    transform: rotate(90deg);
-  }
-}
-
-.menu {
-  width: 100px;
-  position: relative;
-  z-index: 1;
-}
-
 .panel {
   height: 100%;
   width: $sidePanelContentWidth;
   background: $primaryBackgroundColor;
   padding: 24px 16px;
-  opacity: 1;
   transition: all 0.5s ease;
 }
 
