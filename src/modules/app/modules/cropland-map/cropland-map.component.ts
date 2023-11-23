@@ -696,7 +696,7 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
         this.landTypes.map((l: ILandType) => l['id']).join(',');
 
       if (this.mapData?.map != null && land_type) {
-        let polygons: any;
+        let polygons: GeoJSON;
         if (this.isWmsAiActive) {
           polygons = await this.api.map.getPolygonsInScreenAi({
             latLngBounds: mapBounds,
