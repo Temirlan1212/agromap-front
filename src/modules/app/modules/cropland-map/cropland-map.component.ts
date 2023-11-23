@@ -718,16 +718,6 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
         this.mapData.geoJson.setZIndex(400);
         this.mapData.geoJson.options.interactive = true;
         this.mapData.geoJson.addData(polygons);
-
-        this.mapData.geoJson.eachLayer(function (layer: any) {
-          const cadastre = !!layer?.feature?.properties?.cadastre;
-
-          layer.setStyle({
-            dashArray: cadastre ? '5 5' : '0',
-            fillOpacity: 0,
-            weight: 1,
-          });
-        });
       }
     } catch (e: any) {
       this.messages.error(e.error?.message ?? e.message);
