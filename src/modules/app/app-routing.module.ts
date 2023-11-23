@@ -28,6 +28,7 @@ const routes: Routes = [
       position: 'top',
       image: 'logo.png',
       class: 'homepage',
+      panel: true,
     },
     canActivate: [AuthGuard],
     loadChildren: () =>
@@ -38,7 +39,7 @@ const routes: Routes = [
   {
     title: 'Home',
     path: 'pastures-map',
-    data: { icon: 'home', class: 'homepage-mobile' },
+    data: { icon: 'home', class: 'homepage-mobile', panel: true },
     canActivate: [AuthGuard],
     loadChildren: () =>
       import('./modules/pastures-map/pastures-map.module').then(
@@ -48,7 +49,7 @@ const routes: Routes = [
   {
     title: 'Cropland',
     path: 'cropland-map',
-    data: { position: 'top', icon: 'agriculture' },
+    data: { position: 'top', icon: 'agriculture', panel: true },
     canActivate: [AuthGuard],
     loadChildren: () =>
       import('./modules/cropland-map/cropland-map.module').then(
@@ -66,7 +67,7 @@ const routes: Routes = [
   {
     title: 'Dictionary',
     path: 'dictionary',
-    data: { position: 'top', icon: 'dictionary' },
+    data: { position: 'top', icon: 'dictionary', panel: true },
     canActivate: [AuthGuard],
     loadChildren: () =>
       import('./modules/dictionary/dictionary.module').then(
@@ -76,7 +77,7 @@ const routes: Routes = [
   {
     title: 'Contacts',
     path: 'contacts',
-    data: { position: 'top', icon: 'contacts' },
+    data: { position: 'top', icon: 'contacts', panel: true },
     canActivate: [AuthGuard],
     loadChildren: () =>
       import('./modules/contacts/contacts.module').then(

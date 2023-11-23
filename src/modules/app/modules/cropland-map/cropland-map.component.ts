@@ -8,7 +8,7 @@ import {
   Popup,
   popup,
 } from 'leaflet';
-import { GeoJSON } from 'geojson';
+import { GeoJSON, Geometry } from 'geojson';
 import {
   AfterViewInit,
   ChangeDetectorRef,
@@ -330,6 +330,12 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
         this.wmsLayerInfoPopup = null;
       }
       this.mapControlLayersSwitch = v;
+    }),
+
+    this.store.watchItem('isSidePanelCollapsed').subscribe((v) => {
+      if (!!v && this.mapData?.map != null) {
+        this.mapService.invalidateSize(this.mapData.map);
+      }
     }),
 
     this.store.watchItem('SidePanelComponent').subscribe((v) => {
@@ -690,7 +696,7 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
         this.landTypes.map((l: ILandType) => l['id']).join(',');
 
       if (this.mapData?.map != null && land_type) {
-        let polygons: GeoJSON;
+        let polygons: any;
         if (this.isWmsAiActive) {
           polygons = await this.api.map.getPolygonsInScreenAi({
             latLngBounds: mapBounds,
@@ -706,16 +712,22 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
             culture,
           });
         }
+
         this.mapData.geoJson.options.snapIgnore = true;
         this.mapData.geoJson.options.pmIgnore = true;
-        this.mapData.geoJson.options.style = {
-          fillOpacity: 0,
-          weight: 0.4,
-        };
-
         this.mapData.geoJson.setZIndex(400);
         this.mapData.geoJson.options.interactive = true;
         this.mapData.geoJson.addData(polygons);
+
+        this.mapData.geoJson.eachLayer(function (layer: any) {
+          const cadastre = !!layer?.feature?.properties?.cadastre;
+
+          layer.setStyle({
+            dashArray: cadastre ? '5 5' : '0',
+            fillOpacity: 0,
+            weight: 1,
+          });
+        });
       }
     } catch (e: any) {
       this.messages.error(e.error?.message ?? e.message);

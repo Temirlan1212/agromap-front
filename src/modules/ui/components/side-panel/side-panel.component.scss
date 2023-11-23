@@ -2,10 +2,39 @@
 
 :host {
   z-index: 500;
+  &.collapsed {
+    .panel {
+      position: absolute;
+      left: -1000px;
+      opacity: 0;
+      pointer-events: none;
+      transition: all $sideNavTransitionDelay ease;
+    }
+
+    .toggler app-svg-icon {
+      transform: rotate(-90deg);
+    }
+  }
 }
 
 .panel-toggle-btn {
   display: none;
+}
+
+.toggler {
+  width: 100%;
+  border-radius: 0;
+
+  app-svg-icon {
+    display: inline-block;
+    transform: rotate(90deg);
+  }
+}
+
+.menu {
+  width: 100px;
+  position: relative;
+  z-index: 1;
 }
 
 .panel {
@@ -13,6 +42,8 @@
   width: $sidePanelContentWidth;
   background: $primaryBackgroundColor;
   padding: 24px 16px;
+  opacity: 1;
+  transition: all 0.5s ease;
 }
 
 @media only screen and (max-width: 992px) {

@@ -13,6 +13,20 @@
   background-color: $sideNavMenuBgColor;
   transition: width $sideNavTransitionDelay;
 
+  .top {
+    .hubmerger {
+      width: 100%;
+      padding: 10px;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+
+      &:hover {
+        background-color: $sideNavMenuItemHoverBgColor;
+      }
+    }
+  }
+
   &.open {
     width: $sideNavMenuOpenWidth;
 
@@ -46,6 +60,7 @@
       align-items: center;
       padding: $sideNavMenuItemPadding;
       text-decoration: none;
+      user-select: none;
       cursor: pointer;
 
       &:hover,
