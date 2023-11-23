@@ -76,6 +76,13 @@
 
 <div class="menu" [class.open]="opened">
   <nav class="top">
+    <div
+      class="hubmerger"
+      (click)="handleToggleSidePanel()"
+      *ngIf="!!activeNavItem?.['panel']"
+    >
+      <app-svg-icon name="hamburger" size="22"></app-svg-icon>
+    </div>
     <ng-container
       *ngFor="let route of topRoutes"
       [ngTemplateOutlet]="navItem"

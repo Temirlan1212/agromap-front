@@ -4,9 +4,18 @@ import {
   OnChanges,
   SimpleChanges,
   HostListener,
+  HostBinding,
+  OnDestroy,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink, RouterLinkActive, Routes } from '@angular/router';
+import {
+  Event,
+  Router,
+  RouterLink,
+  RouterLinkActive,
+  Routes,
+  RoutesRecognized,
+} from '@angular/router';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import {
@@ -17,6 +26,7 @@ import {
 import { StoreService } from 'src/modules/ui/services/store.service';
 import { INotification } from '../../../api/models/notification.model';
 import { TooltipComponent } from '../tooltip/tooltip.component';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-sidenav',
@@ -33,7 +43,7 @@ import { TooltipComponent } from '../tooltip/tooltip.component';
   templateUrl: './sidenav.component.html',
   styleUrls: ['./sidenav.component.scss'],
 })
-export class SidenavComponent implements OnChanges {
+export class SidenavComponent implements OnChanges, OnDestroy {
   @Input() routes: Routes = [];
   @Input() notifications!: INotification[];
   topRoutes: Routes = [];
@@ -44,11 +54,17 @@ export class SidenavComponent implements OnChanges {
   currentLang: ELanguageCode = ELanguageCode.ru;
   allLangs: ILanguage[] = [];
   indicator: boolean = false;
+  subs: Subscription[] = [];
+  activeNavItem: Record<string, any> | null = null;
 
   constructor(
     private translate: TranslateService,
-    private store: StoreService
+    private store: StoreService,
+    private router: Router
   ) {}
+
+  @HostBinding('class.collapsed')
+  collapsed: boolean = false;
 
   @HostListener('document:click', ['$event.target'])
   public onClick(target: any) {
@@ -62,6 +78,17 @@ export class SidenavComponent implements OnChanges {
       this.currentLang = languageStore.current;
       this.allLangs = languageStore.all;
     }
+
+    const sub = this.router.events.subscribe((event: Event) => {
+      if (event instanceof RoutesRecognized) {
+        this.activeNavItem = event.state.root.firstChild?.data ?? null;
+      }
+    });
+    this.subs.push(sub);
+  }
+
+  ngOnDestroy(): void {
+    this.subs.map((sub) => sub.unsubscribe());
   }
 
   handleLangClick(e: MouseEvent) {
@@ -111,6 +138,13 @@ export class SidenavComponent implements OnChanges {
       left: menuContainer.scrollLeft + 100,
       behavior: 'smooth',
     });
+  }
+
+  handleToggleSidePanel() {
+    this.store.setItem<boolean>(
+      'isSidePanelCollapsed',
+      !this.store.getItem<boolean>('isSidePanelCollapsed')
+    );
   }
 
   protected readonly top = top;

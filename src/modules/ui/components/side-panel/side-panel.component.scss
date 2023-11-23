@@ -2,6 +2,19 @@
 
 :host {
   z-index: 500;
+  &.collapsed {
+    .panel {
+      position: absolute;
+      left: -1000px;
+      opacity: 0;
+      pointer-events: none;
+      transition: all $sideNavTransitionDelay ease;
+    }
+
+    .toggler app-svg-icon {
+      transform: rotate(-90deg);
+    }
+  }
 }
 
 .panel-toggle-btn {
@@ -13,6 +26,7 @@
   width: $sidePanelContentWidth;
   background: $primaryBackgroundColor;
   padding: 24px 16px;
+  transition: all 0.5s ease;
 }
 
 @media only screen and (max-width: 992px) {

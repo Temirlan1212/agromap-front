@@ -8,7 +8,7 @@ import {
   Popup,
   popup,
 } from 'leaflet';
-import { GeoJSON } from 'geojson';
+import { GeoJSON, Geometry } from 'geojson';
 import {
   AfterViewInit,
   ChangeDetectorRef,
@@ -330,6 +330,12 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
         this.wmsLayerInfoPopup = null;
       }
       this.mapControlLayersSwitch = v;
+    }),
+
+    this.store.watchItem('isSidePanelCollapsed').subscribe((v) => {
+      if (!!v && this.mapData?.map != null) {
+        this.mapService.invalidateSize(this.mapData.map);
+      }
     }),
 
     this.store.watchItem('SidePanelComponent').subscribe((v) => {
@@ -706,6 +712,7 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
             culture,
           });
         }
+
         this.mapData.geoJson.options.snapIgnore = true;
         this.mapData.geoJson.options.pmIgnore = true;
         this.mapData.geoJson.options.style = {

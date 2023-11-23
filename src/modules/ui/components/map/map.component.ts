@@ -100,6 +100,7 @@ export class MapComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.cd.detectChanges();
     this.initMap();
+    if (this.map != null) this.mapService.invalidateSize(this.map);
   }
 
   initMap(): void {
