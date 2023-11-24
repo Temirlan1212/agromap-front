@@ -152,17 +152,6 @@ export class ContourEditComponent implements OnInit, OnDestroy {
   }
 
   async handleSaveClick(contourForm: ContourFormComponent) {
-    const formValueNames =
-      this.mode === 'contours_main_ai'
-        ? ['district', 'conton']
-        : ['district', 'conton', 'code_soato', 'ink'];
-
-    formValueNames.forEach((controlName) => {
-      const control = contourForm.form.get(controlName) as FormControl;
-      control.setValidators([Validators.required]);
-      control.updateValueAndValidity();
-    });
-
     const formState = contourForm.getState();
 
     if (!formState.touched && !this.isPolygonChanged) {
