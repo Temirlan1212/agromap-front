@@ -3,17 +3,24 @@
   <ng-content select="[controls]"></ng-content>
 </div>
 <div class="feature-content">
-  <div class="header">
+  <div class="header" (click)="handleFeatureCollapseToggle()">
     <h4>
       <span [textContent]="featureTitle"></span>
     </h4>
+
+    <div>
+      <button type="button" class="transparent arrow-down show-on-hover">
+        <app-svg-icon name="double-arrow-down" size="16"></app-svg-icon>
+      </button>
+    </div>
+
     <div class="actions-block">
       <ng-content select="[actions]"></ng-content>
 
       <button
         type="button"
         class="transparent arrow-down"
-        (click)="handleFeatureCollapseToggle()"
+        (click)="[$event.stopPropagation(), handleFeatureCollapseToggle()]"
       >
         <app-svg-icon name="arrow-down" size="16"></app-svg-icon>
       </button>
