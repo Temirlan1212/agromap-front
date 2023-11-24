@@ -2,7 +2,7 @@
 
 <div class="filters">
   <form [formGroup]="form">
-    <app-fields-group [title]="'Filter' | translate">
+    <app-fields-group>
       <div class="field-group">
         <ng-container *ngIf="!loading">
           <app-form-field name="region" #region>
