@@ -4,14 +4,14 @@
   <form [formGroup]="form">
     <app-fields-group [title]="'Filter' | translate">
       <div class="field-group">
-        <div class="radio-btns">
+        <!-- <div class="radio-btns">
           <app-input-radio
             [isResettable]="true"
             [options]="radioOptions"
             [formControl]="mode"
           >
           </app-input-radio>
-        </div>
+        </div> -->
 
         <ng-container *ngIf="!loading">
           <app-form-field name="region" #region>

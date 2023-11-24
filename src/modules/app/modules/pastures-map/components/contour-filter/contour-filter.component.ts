@@ -122,8 +122,6 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
     await this.getCultures();
     this.loading = false;
 
-    this.handleFormSubmit();
-
     if (this.landTypes[0]?.id) {
       this.form.get('land_type')?.setValue(String(this.landTypes[0].id));
     }
