@@ -100,6 +100,7 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
   vegIndexOptionsList: IVegIndexOption[] = [];
   loadingSatelliteDates: boolean = false;
   activeVegIndexOption: IVegIndexOption | null = null;
+  storageName = 'PasturesMapControlLayersSwitchComponent';
 
   wmsProductivityLayerColorLegend: Record<string, any>[] = [
     { label: '-1', color: '#000000' },
@@ -534,6 +535,7 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.mapComponent) this.mapComponent.handleFeatureClose();
     this.filterFormValues = null;
     this.handleSetSidePanelState(false);
+    this.mode = 'default';
   }
 
   handleSetSidePanelState(state: boolean) {
@@ -562,6 +564,7 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
     this.store.setItem('PasturesMapSidePanelComponent', { state: false });
     this.toggleBtn.isContentToggled = false;
     this.handleSetSidePanelState(false);
+    this.mode = 'contours_main';
   }
 
   async getVegSatelliteDates(
@@ -828,9 +831,7 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
 
   async ngOnInit(): Promise<void> {
     const data = this.store.getItem('PasturesMapControlLayersSwitchComponent');
-    if (!data) {
-      this.mode = 'contours_main';
-    }
+    this.mode = 'default';
 
     this.wmsSelectedStatusLayers = data;
 

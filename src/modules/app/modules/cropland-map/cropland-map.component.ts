@@ -87,6 +87,7 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
   loadingSatelliteDates: boolean = false;
   activeVegIndexOption: IVegIndexOption | null = null;
   wmsLayerInfoPopup: Popup | null = null;
+  storageName = 'MapControlLayersSwitchComponent';
 
   wmsProductivityLayerColorLegend: Record<string, any>[] = [
     { label: '-1', color: '#000000' },
@@ -515,7 +516,9 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
       'ltype in (1,2)&&year=' + this.mapService.filterDefaultValues.year;
     this.setWmsParams();
     if (this.mapComponent) this.mapComponent.handleFeatureClose();
+    this.filterFormValues = null;
     this.handleSetSidePanelState(false);
+    this.mode = 'default';
   }
 
   handleSetSidePanelState(state: boolean) {
@@ -544,6 +547,7 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
     this.store.setItem('SidePanelComponent', { state: false });
     this.toggleBtn.isContentToggled = false;
     this.handleSetSidePanelState(false);
+    this.mode = 'contours_main';
   }
 
   handleVegIndexOptionClick(vegIndexOption: IVegIndexOption) {
@@ -877,9 +881,6 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   async ngOnInit(): Promise<void> {
-    this.wmsSelectedStatusLayers = this.store.getItem(
-      'MapControlLayersSwitchComponent'
-    );
     const data = this.store.getItem('MapControlLayersSwitchComponent');
     this.wmsSelectedStatusLayers = data;
 

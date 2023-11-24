@@ -20,6 +20,7 @@ import { ITableItem } from 'src/modules/ui/models/table.model';
 import { MessagesService } from 'src/modules/ui/services/messages.service';
 import { Subscription } from 'rxjs';
 import { StoreService } from 'src/modules/ui/services/store.service';
+import { MapService } from 'src/modules/ui/services/map.service';
 
 @Component({
   selector: 'app-statistics',
@@ -45,7 +46,8 @@ export class StatisticsComponent
     private translate: TranslatePipe,
     private translateSvc: TranslateService,
     private cd: ChangeDetectorRef,
-    private store: StoreService
+    private store: StoreService,
+    private mapService: MapService
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -70,7 +72,7 @@ export class StatisticsComponent
     this.pastureStatsProdTableItems = [];
     this.cultureStatsProdTableItems = [];
     let params = {
-      year: new Date().getFullYear(),
+      year: this.mapService.filterDefaultValues.year,
       land_type: String(this.activeTab.id),
     };
     this.getPastureStatisticsProductivity(params);
@@ -112,7 +114,9 @@ export class StatisticsComponent
     this.cultureStatsProdTableItems = [];
 
     if (this.activeTab?.id) {
-      this.filterFormValues = { year: new Date().getFullYear() };
+      this.filterFormValues = {
+        year: this.mapService.filterDefaultValues.year,
+      };
       this.filterFormValues['land_type'] = String(this.activeTab.id);
       this.getPastureStatisticsProductivity(this.filterFormValues);
       this.getCultureStatisticsProductivity(this.filterFormValues);

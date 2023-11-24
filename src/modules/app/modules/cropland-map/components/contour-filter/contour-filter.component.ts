@@ -43,7 +43,7 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
   selectedId: number | null = null;
   filtersQuery!: ContourFiltersQuery;
   radioOptions: any = [
-    // { name: 'RSE', value: 'contours_main_ai' },
+    { name: 'RSE', value: 'contours_main_ai' },
     { name: 'Base', value: 'contours_main' },
   ];
   @Output() onCardClick = new EventEmitter<MapLayerFeature>();
@@ -129,20 +129,12 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
   ) {}
 
   async ngOnInit(): Promise<void> {
-    if (
-      this.store.getItem('MapControlLayersSwitchComponent')
-        ?.filterControlLayerSwitch?.name == null
-    ) {
-      this.mode?.patchValue('contours_main');
-    }
-
+    this.mode?.patchValue('default');
     this.loading = true;
     await this.getRegions();
     await this.getLandTypes();
     await this.getCultures();
     this.loading = false;
-
-    this.handleFormSubmit();
   }
 
   async getRegions(): Promise<void> {
