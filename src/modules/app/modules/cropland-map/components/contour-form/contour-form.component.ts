@@ -53,10 +53,10 @@ export class ContourFormComponent implements OnInit, OnDestroy {
   }
 
   form: FormGroup = new FormGroup({
-    region: new FormControl<number | null>(null, Validators.required),
+    region: new FormControl<number | null>(null),
     district: new FormControl<string | null>({ value: null, disabled: true }),
     conton: new FormControl<string | null>({ value: null, disabled: true }),
-    type: new FormControl<string | number | null>(null),
+    type: new FormControl<string | number | null>(null, Validators.required),
     culture: new FormControl<string | number | null>(null),
     productivity: new FormControl<number | null>(null),
     year: new FormControl<number | null>(null, Validators.required),
@@ -103,7 +103,6 @@ export class ContourFormComponent implements OnInit, OnDestroy {
     await this.getRegions();
     this.getDistricts();
     this.getContons();
-    this.form.get('type')?.setValue(String(this.landTypeList[0].id));
     this.loading = false;
   }
 

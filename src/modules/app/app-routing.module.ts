@@ -8,7 +8,7 @@ const routes: Routes = [
   {
     title: 'App',
     path: '',
-    redirectTo: 'pastures-map',
+    redirectTo: 'cropland-map',
     pathMatch: 'full',
   },
   {
@@ -21,31 +21,31 @@ const routes: Routes = [
         (m) => m.LoginModule
       ),
   },
-  {
-    title: 'GiproZem',
-    path: 'pastures-map',
-    data: {
-      position: 'top',
-      image: 'logo.png',
-      class: 'homepage',
-      panel: true,
-    },
-    canActivate: [AuthGuard],
-    loadChildren: () =>
-      import('./modules/pastures-map/pastures-map.module').then(
-        (m) => m.PasturesMapModule
-      ),
-  },
-  {
-    title: 'Home',
-    path: 'pastures-map',
-    data: { icon: 'home', class: 'homepage-mobile', panel: true },
-    canActivate: [AuthGuard],
-    loadChildren: () =>
-      import('./modules/pastures-map/pastures-map.module').then(
-        (m) => m.PasturesMapModule
-      ),
-  },
+  // {
+  //   title: 'GiproZem',
+  //   path: 'pastures-map',
+  //   data: {
+  //     position: 'top',
+  //     image: 'logo.png',
+  //     class: 'homepage',
+  //     panel: true,
+  //   },
+  //   canActivate: [AuthGuard],
+  //   loadChildren: () =>
+  //     import('./modules/pastures-map/pastures-map.module').then(
+  //       (m) => m.PasturesMapModule
+  //     ),
+  // },
+  // {
+  //   title: 'Home',
+  //   path: 'pastures-map',
+  //   data: { icon: 'home', class: 'homepage-mobile', panel: true },
+  //   canActivate: [AuthGuard],
+  //   loadChildren: () =>
+  //     import('./modules/pastures-map/pastures-map.module').then(
+  //       (m) => m.PasturesMapModule
+  //     ),
+  // },
   {
     title: 'Cropland',
     path: 'cropland-map',

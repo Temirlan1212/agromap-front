@@ -23,6 +23,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { QuestionDialogComponent } from '../../../../../ui/components/question-dialog/question-dialog.component';
 import { StoreService } from 'src/modules/ui/services/store.service';
 import { ICulture } from '../../../../../api/models/culture.model';
+import { SettingsService } from 'src/modules/ui/services/settings.service';
 
 @Component({
   selector: 'app-contour-filter',
@@ -42,6 +43,7 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
   currentLang: string = this.translateSvc.currentLang;
   selectedId: number | null = null;
   filtersQuery!: ContourFiltersQuery;
+  collapseOnApply = false;
   radioOptions: any = [
     { name: 'RSE', value: 'contours_main_ai' },
     { name: 'Base', value: 'contours_main' },
@@ -125,10 +127,17 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private translate: TranslatePipe,
     private translateSvc: TranslateService,
-    private store: StoreService
+    private store: StoreService,
+    private settingsService: SettingsService
   ) {}
 
   async ngOnInit(): Promise<void> {
+    this.collapseOnApply = this.settingsService.get('filter.collapseOnApply');
+    this.settingsService.watch(
+      (value) => (this.collapseOnApply = value),
+      'filter.collapseOnApply'
+    );
+
     this.mode?.patchValue('default');
     this.loading = true;
     await this.getRegions();
@@ -226,6 +235,10 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
         'ContourFilterComponent',
         this.filtersQuery
       );
+
+      if (this.collapseOnApply) {
+        this.store.setItem('isSidePanelCollapsed', true);
+      }
     } catch (e: any) {
       this.messages.error(e.error?.message ?? e.message);
     } finally {
