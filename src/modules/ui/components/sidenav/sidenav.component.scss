@@ -42,6 +42,10 @@
     nav a .title {
       display: inline-block;
     }
+    nav div .title {
+      font-weight: 600;
+      display: inline-block;
+    }
   }
 
   .toggler {
@@ -55,7 +59,8 @@
   }
 
   nav {
-    a {
+    a,
+    .switcher {
       display: flex;
       align-items: center;
       padding: $sideNavMenuItemPadding;
@@ -110,7 +115,7 @@
   overflow: auto;
 }
 
-.language-switcher {
+.switcher {
   position: relative;
 
   .title {
@@ -120,26 +125,11 @@
 
 .languages {
   min-width: 200px;
-  position: absolute;
-  bottom: 0;
-  right: -200px;
   display: flex;
   flex-direction: column;
   list-style: none;
   background-color: $lightColor;
-  box-shadow: 0px 3px 6px -4px rgba(0, 0, 0, 0.12),
-    0px 6px 16px rgba(0, 0, 0, 0.08), 0px 9px 28px 8px rgba(0, 0, 0, 0.05);
-  visibility: hidden;
-  opacity: 0;
-  transform: translateX(100px);
-  transition: all 0.2s ease;
   border-radius: 4px;
-
-  &.languages-opened {
-    visibility: visible;
-    transform: translateX(0);
-    opacity: 1;
-  }
 
   span {
     padding: 15px;
@@ -188,7 +178,8 @@
       width: fit-content;
       justify-content: space-between;
 
-      a {
+      a,
+      .switcher {
         text-decoration: none;
         font-size: 11px;
         display: flex;
@@ -241,13 +232,6 @@
     }
   }
 
-  .languages-mobile {
-    right: 10px;
-    position: fixed;
-    bottom: $mobileBottomNavHeight + $mobileNavMarginBottom;
-    z-index: 500;
-  }
-
   .content {
     left: 0;
     width: 100%;
@@ -256,8 +240,7 @@
 }
 
 @media only screen and (min-width: 576px) {
-  .mobile-menu,
-  .languages-mobile {
+  .mobile-menu {
     display: none !important;
   }
 }

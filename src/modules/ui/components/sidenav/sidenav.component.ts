@@ -3,7 +3,6 @@ import {
   Input,
   OnChanges,
   SimpleChanges,
-  HostListener,
   HostBinding,
   OnDestroy,
 } from '@angular/core';
@@ -27,6 +26,8 @@ import { StoreService } from 'src/modules/ui/services/store.service';
 import { INotification } from '../../../api/models/notification.model';
 import { TooltipComponent } from '../tooltip/tooltip.component';
 import { Subscription } from 'rxjs';
+import { SettingsComponent } from '../settings/settings.component';
+import { MenuComponent } from '../menu/menu.component';
 
 @Component({
   selector: 'app-sidenav',
@@ -39,6 +40,8 @@ import { Subscription } from 'rxjs';
     SvgIconComponent,
     TranslateModule,
     TooltipComponent,
+    SettingsComponent,
+    MenuComponent,
   ],
   templateUrl: './sidenav.component.html',
   styleUrls: ['./sidenav.component.scss'],
@@ -51,6 +54,7 @@ export class SidenavComponent implements OnChanges, OnDestroy {
   mobileRoutes: Routes = [];
   opened: boolean = false;
   langsOpened: boolean = false;
+  settingsOpened: boolean = false;
   currentLang: ELanguageCode = ELanguageCode.ru;
   allLangs: ILanguage[] = [];
   indicator: boolean = false;
@@ -65,11 +69,6 @@ export class SidenavComponent implements OnChanges, OnDestroy {
 
   @HostBinding('class.collapsed')
   collapsed: boolean = false;
-
-  @HostListener('document:click', ['$event.target'])
-  public onClick(target: any) {
-    this.langsOpened = false;
-  }
 
   ngOnInit(): void {
     const languageStore = this.store.getItem<ILanguageStore>('language');
@@ -91,18 +90,11 @@ export class SidenavComponent implements OnChanges, OnDestroy {
     this.subs.map((sub) => sub.unsubscribe());
   }
 
-  handleLangClick(e: MouseEvent) {
-    e.preventDefault();
-    e.stopPropagation();
-    this.langsOpened = !this.langsOpened;
-  }
-
   handleLangChange(e: MouseEvent, lang: ELanguageCode) {
     e.preventDefault();
     e.stopPropagation();
     this.translate.use(lang);
     this.currentLang = lang;
-    this.langsOpened = !this.langsOpened;
   }
 
   private chunkRoutes(routes: Routes): void {
