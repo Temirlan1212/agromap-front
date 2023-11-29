@@ -106,6 +106,18 @@
         </ng-template>
       </div>
       <div>
+        {{ "Culture" | translate }} ({{ "RSE" | translate }})
+        <span
+          *ngIf="activeContour.predicted_culture?.['name_' + currentLang]; else noCulture"
+          >{{
+          activeContour.predicted_culture?.['name_' + currentLang]
+          }}</span
+        >
+        <ng-template #noCulture>
+          <span>{{ "Culture is not defined" | translate }}</span>
+        </ng-template>
+      </div>
+      <div>
         {{ "INK" | translate }}
         <span x>{{ activeContour?.ink ?? "-----" }}</span>
       </div>
