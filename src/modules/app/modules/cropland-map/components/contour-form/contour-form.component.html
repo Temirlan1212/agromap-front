@@ -1,56 +1,5 @@
 <form class="content" [formGroup]="form">
   <div class="field-group" *ngIf="!loading">
-    <app-form-field name="region" #region>
-      <app-input-select
-        [items]="regionList"
-        [placeholder]="'Region' | translate"
-        [nameField]="'name_' + currentLang"
-        formControlName="region"
-        [required]="region.required"
-      >
-      </app-input-select>
-
-      <span
-        class="field-error"
-        *ngIf="form.get('region')?.getError('error') != null"
-        [textContent]="form.get('region')?.getError('error') | translate"
-      ></span>
-    </app-form-field>
-
-    <app-form-field name="district" #district>
-      <app-input-select
-        [items]="districtList"
-        [placeholder]="'District' | translate"
-        formControlName="district"
-        [nameField]="'name_' + currentLang"
-        [required]="district.required"
-      >
-      </app-input-select>
-
-      <span
-        class="field-error"
-        *ngIf="form.get('district')?.getError('error') != null"
-        [textContent]="form.get('district')?.getError('error') | translate"
-      ></span>
-    </app-form-field>
-
-    <app-form-field name="conton" #conton>
-      <app-input-select
-        [placeholder]="'Conton' | translate"
-        [items]="contonList"
-        [nameField]="'name_' + currentLang"
-        formControlName="conton"
-        [required]="district.required"
-      >
-      </app-input-select>
-
-      <span
-        class="field-error"
-        *ngIf="form.get('conton')?.getError('error') != null"
-        [textContent]="form.get('conton')?.getError('error') | translate"
-      ></span>
-    </app-form-field>
-
     <app-form-field name="type" #type>
       <app-input-select
         [items]="landTypeList"
@@ -60,6 +9,24 @@
         [required]="type.required"
       >
       </app-input-select>
+    </app-form-field>
+
+    <app-form-field name="year" #year>
+      <app-input
+        type="number"
+        [min]="2010"
+        [max]="2023"
+        [placeholder]="'Select a year' | translate"
+        formControlName="year"
+        [required]="year.required"
+      >
+      </app-input>
+
+      <span
+        class="field-error"
+        *ngIf="form.get('year')?.getError('error') != null"
+        [textContent]="form.get('year')?.getError('error') | translate"
+      ></span>
     </app-form-field>
 
     <app-form-field name="culture" #culture>
@@ -81,24 +48,6 @@
         [required]="productivity.required"
       >
       </app-input>
-    </app-form-field>
-
-    <app-form-field name="year" #year>
-      <app-input
-        type="number"
-        [min]="2010"
-        [max]="2023"
-        [placeholder]="'Select a year' | translate"
-        formControlName="year"
-        [required]="year.required"
-      >
-      </app-input>
-
-      <span
-        class="field-error"
-        *ngIf="form.get('year')?.getError('error') != null"
-        [textContent]="form.get('year')?.getError('error') | translate"
-      ></span>
     </app-form-field>
 
     <app-form-field
