@@ -160,6 +160,10 @@ button {
     color: $lightColor;
   }
 
+  &.disabled {
+    pointer-events: none;
+  }
+
   &.transparent {
     background-color: transparent;
   }

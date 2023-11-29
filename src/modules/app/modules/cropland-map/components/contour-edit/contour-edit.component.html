@@ -30,8 +30,8 @@
   </button>
   <button
     type="button"
-    disabled="isLoading"
     [class.danger]="!isLoading"
+    [class.disabled]="isLoading"
     routerLink="../.."
   >
     {{ "Cancel" | translate }}
