@@ -67,7 +67,6 @@ export class SidenavComponent implements OnChanges, OnDestroy {
     private router: Router
   ) {}
 
-  @HostBinding('class.collapsed')
   collapsed: boolean = false;
 
   ngOnInit(): void {
@@ -84,6 +83,12 @@ export class SidenavComponent implements OnChanges, OnDestroy {
       }
     });
     this.subs.push(sub);
+
+    this.store.watchItem<boolean>('isSidePanelCollapsed').subscribe((v) => {
+      this.collapsed = v;
+    });
+
+    this.collapsed = !!this.store.getItem('isSidePanelCollapsed');
   }
 
   ngOnDestroy(): void {

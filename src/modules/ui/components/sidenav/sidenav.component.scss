@@ -1,5 +1,13 @@
 @import "constants";
 
+.content {
+  &.isSidePanelOpened {
+    box-shadow: -2px 0 20px $sideNavMenuBgColor;
+    border-bottom-left-radius: 20px;
+    border-top-left-radius: 20px;
+  }
+}
+
 .menu {
   position: fixed;
   top: 0;
@@ -10,7 +18,7 @@
   z-index: 10;
   gap: $sideNavMenuGap;
   width: $sideNavMenuWidth;
-  background-color: $sideNavMenuBgColor;
+  // background-color: $sideNavMenuBgColor;
   transition: width $sideNavTransitionDelay;
 
   .top {
@@ -20,10 +28,6 @@
       cursor: pointer;
       display: flex;
       justify-content: center;
-
-      &:hover {
-        background-color: $sideNavMenuItemHoverBgColor;
-      }
     }
   }
 
@@ -149,6 +153,15 @@
 
     &:hover {
       background-color: $secondaryColor;
+    }
+  }
+}
+
+@media only screen and (max-width: 992px) {
+  .content {
+    &.isSidePanelOpened {
+      box-shadow: none;
+      border-radius: 0px;
     }
   }
 }
