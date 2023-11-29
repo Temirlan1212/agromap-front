@@ -163,7 +163,6 @@ export class ContourEditComponent implements OnInit, OnDestroy {
     }
     if (!formState.valid) {
       this.messages.error(this.translate.transform('Form is invalid'));
-      console.log(formState);
       return;
     }
     if (!this.polygon) {
