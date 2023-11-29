@@ -29,9 +29,20 @@
 </div>
 <div class="actions">
   <button type="button" class="success" (click)="handleSaveClick(form)">
-    {{ "Save" | translate }}
+    <div *ngIf="!isLoading">
+      {{ "Save" | translate }}
+    </div>
+    <app-loading
+      class="dynamic-color spinner"
+      [loading]="isLoading"
+    ></app-loading>
   </button>
-  <button type="button" class="danger" routerLink="..">
+  <button
+    type="button"
+    disabled="isLoading"
+    [class.danger]="!isLoading"
+    routerLink=".."
+  >
     {{ "Cancel" | translate }}
   </button>
 </div>
