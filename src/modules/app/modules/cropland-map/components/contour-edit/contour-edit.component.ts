@@ -179,6 +179,7 @@ export class ContourEditComponent implements OnInit, OnDestroy {
     };
 
     try {
+      this.mapInstance.pm.disableGlobalEditMode();
       this.isLoading = true;
       this.mapService.loading.next(this.isLoading);
       if (this.mode === 'contours_main_ai') {
@@ -192,6 +193,7 @@ export class ContourEditComponent implements OnInit, OnDestroy {
       this.router.navigate(['../..'], { relativeTo: this.route });
     } catch (e: any) {
       const formErrLength = Object.keys(e.error).length;
+      this.mapInstance.pm.enableGlobalEditMode();
       if (!e.error?.message && formErrLength > 0) {
         let flattenedObjOfErrors: any = {};
         for (let key in e.error) {
@@ -214,8 +216,6 @@ export class ContourEditComponent implements OnInit, OnDestroy {
       this.isLoading = false;
       this.mapService.loading.next(this.isLoading);
     }
-
-    this.mapInstance.pm.disableGlobalEditMode();
   }
 
   ngOnDestroy() {
