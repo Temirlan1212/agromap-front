@@ -20,6 +20,7 @@ export class MapService {
   contourEditingMode = new Subject<boolean>();
   splitMapQuantity = new BehaviorSubject<number>(2);
   maps = new BehaviorSubject<Record<string, L.Map | null>>({});
+  loading = new BehaviorSubject<boolean>(false);
   filterDefaultValues = {
     year: 2022,
   };

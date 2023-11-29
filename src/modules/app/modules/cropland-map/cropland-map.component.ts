@@ -325,6 +325,8 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
       }
     }),
 
+    this.mapService.loading.subscribe((loading) => (this.loading = loading)),
+
     this.store.watchItem('MapControlLayersSwitchComponent').subscribe((v) => {
       if (this.wmsLayerInfoPopup) {
         this.mapData?.map.removeLayer(this.wmsLayerInfoPopup);
