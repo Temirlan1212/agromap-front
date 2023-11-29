@@ -105,6 +105,14 @@ export class ContourAddComponent implements OnInit, OnDestroy {
           .toGeoJSON();
         this.polygon = geoJson['features'][0]['geometry'];
       }
+
+      this.layer?.on('pm:update', (e: any) => {
+        this.layer = e['layer'];
+        const geoJson: any = this.mapInstance.pm
+          .getGeomanLayers(true)
+          .toGeoJSON();
+        this.polygon = geoJson['features'][0]['geometry'];
+      });
     });
 
     this.mapInstance.on('pm:drawend', (e: LeafletEvent) => {
@@ -161,6 +169,7 @@ export class ContourAddComponent implements OnInit, OnDestroy {
     }
 
     try {
+      this.mapInstance.pm.disableGlobalEditMode();
       this.isLoading = true;
       this.mapService.loading.next(this.isLoading);
       await this.api.contour.create(contour);
@@ -170,6 +179,7 @@ export class ContourAddComponent implements OnInit, OnDestroy {
       this.router.navigate(['../'], { relativeTo: this.route });
     } catch (e: any) {
       const formErrLength = Object.keys(e.error).length;
+      this.mapInstance.pm.enableGlobalEditMode();
       if (!e.error?.message && formErrLength > 0) {
         let flattenedObjOfErrors: any = {};
         for (let key in e.error) {
@@ -192,8 +202,6 @@ export class ContourAddComponent implements OnInit, OnDestroy {
       this.isLoading = false;
       this.mapService.loading.next(this.isLoading);
     }
-
-    this.mapInstance.pm.disableGlobalEditMode();
   }
 
   handleDeletePolygon() {
