@@ -162,6 +162,7 @@ export class ContourAddComponent implements OnInit, OnDestroy {
 
     try {
       this.isLoading = true;
+      this.mapService.loading.next(this.isLoading);
       await this.api.contour.create(contour);
       this.messages.success(
         this.translate.transform('Polygon created successfully')
@@ -189,6 +190,7 @@ export class ContourAddComponent implements OnInit, OnDestroy {
       this.messages.error(e.error?.message ?? e.message);
     } finally {
       this.isLoading = false;
+      this.mapService.loading.next(this.isLoading);
     }
 
     this.mapInstance.pm.disableGlobalEditMode();

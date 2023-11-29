@@ -180,6 +180,7 @@ export class ContourEditComponent implements OnInit, OnDestroy {
 
     try {
       this.isLoading = true;
+      this.mapService.loading.next(this.isLoading);
       if (this.mode === 'contours_main_ai') {
         await this.api.aiContour.update(this.contour.id, contour);
       } else {
@@ -211,6 +212,7 @@ export class ContourEditComponent implements OnInit, OnDestroy {
       this.messages.error(e.error?.message ?? e.message);
     } finally {
       this.isLoading = false;
+      this.mapService.loading.next(this.isLoading);
     }
 
     this.mapInstance.pm.disableGlobalEditMode();
