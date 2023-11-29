@@ -10,7 +10,7 @@ import { Subscription } from 'rxjs';
 import { MapData } from '../../../../../ui/models/map.model';
 import { TranslatePipe } from '@ngx-translate/core';
 import { StoreService } from '../../../../../ui/services/store.service';
-import { FormControl, Validators } from '@angular/forms';
+import { FormControl, FormsModule, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-contour-edit',
@@ -27,6 +27,7 @@ export class ContourEditComponent implements OnInit, OnDestroy {
   polygon: GeoJSON.Polygon | null = null;
   isPolygonChanged: boolean = false;
   mode: string | null = null;
+  isLoading = false;
 
   constructor(
     private api: ApiService,
@@ -162,6 +163,7 @@ export class ContourEditComponent implements OnInit, OnDestroy {
     }
     if (!formState.valid) {
       this.messages.error(this.translate.transform('Form is invalid'));
+      console.log(formState);
       return;
     }
     if (!this.polygon) {
@@ -171,7 +173,6 @@ export class ContourEditComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.mapInstance.pm.disableGlobalEditMode();
     const { region, district, ...rest } = formState.value;
     const contour: Partial<IContour> = {
       ...rest,
@@ -179,6 +180,7 @@ export class ContourEditComponent implements OnInit, OnDestroy {
     };
 
     try {
+      this.isLoading = true;
       if (this.mode === 'contours_main_ai') {
         await this.api.aiContour.update(this.contour.id, contour);
       } else {
@@ -198,12 +200,21 @@ export class ContourEditComponent implements OnInit, OnDestroy {
           }
         }
 
-        this.api.form.setError(flattenedObjOfErrors, contourForm.form);
+        if (flattenedObjOfErrors.hasOwnProperty('polygon')) {
+          const message = flattenedObjOfErrors['polygon']?.error;
+          this.messages.error(message);
+        } else {
+          this.api.form.setError(flattenedObjOfErrors, contourForm.form);
+        }
         return;
       }
 
       this.messages.error(e.error?.message ?? e.message);
+    } finally {
+      this.isLoading = false;
     }
+
+    this.mapInstance.pm.disableGlobalEditMode();
   }
 
   ngOnDestroy() {

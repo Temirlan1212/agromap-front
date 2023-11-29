@@ -23,6 +23,7 @@ export class ContourAddComponent implements OnInit, OnDestroy {
   layer: Layer | null = null;
   polygon: GeoJSON.Polygon | null = null;
   mapGeo!: GeoJSON;
+  isLoading = false;
 
   constructor(
     private mapService: MapService,
@@ -159,8 +160,8 @@ export class ContourAddComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.mapInstance.pm.disableGlobalEditMode();
     try {
+      this.isLoading = true;
       await this.api.contour.create(contour);
       this.messages.success(
         this.translate.transform('Polygon created successfully')
@@ -176,12 +177,21 @@ export class ContourAddComponent implements OnInit, OnDestroy {
           }
         }
 
-        this.api.form.setError(flattenedObjOfErrors, contourForm.form);
+        if (flattenedObjOfErrors.hasOwnProperty('polygon')) {
+          const message = flattenedObjOfErrors['polygon']?.error;
+          this.messages.error(message);
+        } else {
+          this.api.form.setError(flattenedObjOfErrors, contourForm.form);
+        }
         return;
       }
 
       this.messages.error(e.error?.message ?? e.message);
+    } finally {
+      this.isLoading = false;
     }
+
+    this.mapInstance.pm.disableGlobalEditMode();
   }
 
   handleDeletePolygon() {
