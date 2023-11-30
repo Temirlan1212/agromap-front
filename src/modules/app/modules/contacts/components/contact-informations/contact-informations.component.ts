@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { icon, marker, tileLayer } from 'leaflet';
+import { Marker, icon, marker, tileLayer } from 'leaflet';
 import { ApiService } from 'src/modules/api/api.service';
 import {
   IContactInformation,
@@ -21,6 +21,7 @@ export class ContactInformationsComponent implements OnChanges {
   tileLayer = tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: 'Map data © OpenStreetMap contributors',
   });
+  markers: Marker[] = [];
   customIcon = icon({
     iconUrl: '../../../../../../assets/icons/marker-location.svg',
     iconSize: [25, 41],
@@ -40,6 +41,12 @@ export class ContactInformationsComponent implements OnChanges {
           await this.api.contacts.getContactInformation(this.id);
       }
       this.isLoading = false;
+
+      if (this.markers.length > 0 && this.mapData?.map != null) {
+        this.clearMarkers(this.markers);
+        this.markers = [];
+      }
+
       if (this.contactInformations && this.contactInformations.length > 0) {
         this.contactInformations.forEach((info) => {
           const coordinates = info.point?.coordinates;
@@ -47,6 +54,7 @@ export class ContactInformationsComponent implements OnChanges {
             const reversedCoordinates = [
               ...coordinates,
             ].reverse() as TLatLangCoordinates;
+
             this.renderMarker(reversedCoordinates);
           }
         });
@@ -82,8 +90,15 @@ export class ContactInformationsComponent implements OnChanges {
     this.activeContactInformation = item;
   }
 
+  private clearMarkers(markers: Marker[]) {
+    markers.forEach((marker) => this.mapData?.map.removeLayer(marker));
+  }
+
   private renderMarker(coordinates: TLatLangCoordinates) {
-    if (this.mapData?.map)
-      marker(coordinates, { icon: this.customIcon }).addTo(this.mapData.map);
+    if (this.mapData?.map) {
+      this.markers.push(
+        marker(coordinates, { icon: this.customIcon }).addTo(this.mapData.map)
+      );
+    }
   }
 }
