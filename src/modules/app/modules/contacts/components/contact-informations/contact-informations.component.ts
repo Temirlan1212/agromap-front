@@ -47,6 +47,8 @@ export class ContactInformationsComponent implements OnChanges {
         this.markers = [];
       }
 
+      this.mapData?.map.flyTo(this.mapData.map.getCenter(), 6);
+
       if (this.contactInformations && this.contactInformations.length > 0) {
         this.contactInformations.forEach((info) => {
           const coordinates = info.point?.coordinates;
