@@ -2,17 +2,16 @@
 
 :host {
   z-index: 500;
-  &.collapsed {
-    .panel {
-      position: absolute;
-      left: -1000px;
-      opacity: 0;
-      pointer-events: none;
-      transition: all $sideNavTransitionDelay ease;
-    }
 
-    .toggler app-svg-icon {
-      transform: rotate(-90deg);
+  @media only screen and (min-width: 992px) {
+    &.collapsed {
+      .panel {
+        position: absolute;
+        left: -1000px;
+        opacity: 0;
+        pointer-events: none;
+        transition: all $sideNavTransitionDelay ease;
+      }
     }
   }
 }
