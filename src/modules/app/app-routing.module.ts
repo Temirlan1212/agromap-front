@@ -47,9 +47,9 @@ const routes: Routes = [
   //     ),
   // },
   {
-    title: 'Cropland',
+    title: 'Map',
     path: 'cropland-map',
-    data: { position: 'top', icon: 'agriculture', panel: true },
+    data: { position: 'top', icon: 'map', panel: true },
     canActivate: [AuthGuard],
     loadChildren: () =>
       import('./modules/cropland-map/cropland-map.module').then(
