@@ -41,6 +41,7 @@ export class InputSelectComponent implements ControlValueAccessor, OnChanges {
 
   @Input() items: Record<string, any>[] = [];
   @Input() value: string | number | null = null;
+  @Input() absoluteDropdown: boolean = false;
 
   @Input() idField: string = 'id';
   @Input() nameField: string = 'name';

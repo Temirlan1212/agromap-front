@@ -10,14 +10,6 @@
     app-input {
       width: 300px;
     }
-
-    ::ng-deep {
-      .options {
-        position: absolute;
-        z-index: 100;
-        width: 100%;
-      }
-    }
   }
 
   @media only screen and (max-width: 576px) {
