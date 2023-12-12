@@ -10,7 +10,6 @@ import { ContourFilterComponent } from './components/contour-filter/contour-filt
 import { InputSelectComponent } from 'src/modules/ui/components/input-select/input-select.component';
 import { SvgIconComponent } from 'src/modules/ui/components/svg-icon/svg-icon.component';
 import { ContourAddComponent } from './components/contour-add/contour-add.component';
-import { FieldsGroupComponent } from 'src/modules/ui/components/fields-group/fields-group.component';
 import { SplineAreaChartComponent } from './components/spline-area-chart/spline-area-chart.component';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { ContourFormComponent } from './components/contour-form/contour-form.component';
@@ -68,7 +67,6 @@ import { StatisticsComponent } from './components/statistics/statistics.componen
     SidePanelComponent,
     InputSelectComponent,
     SvgIconComponent,
-    FieldsGroupComponent,
     NgApexchartsModule,
     InputComponent,
     CardAccordionComponent,
