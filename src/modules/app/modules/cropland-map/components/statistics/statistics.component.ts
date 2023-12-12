@@ -147,13 +147,14 @@ export class StatisticsComponent
     try {
       let res: IContourStatisticsProductivity;
       res = await this.api.statistics.getContourStatisticsProductivity(query);
+      const pastureStatsProdTableItems: ITableItem[][] = [];
 
       if (!res.type) {
-        this.pastureStatsProdTableItems = [];
+        this.pastureStatsProdTableItems = pastureStatsProdTableItems;
         return;
       }
 
-      this.pastureStatsProdTableItems.push([
+      pastureStatsProdTableItems.push([
         {
           areaType: res?.type,
           areaName_en: res?.[`name_en`],
@@ -169,7 +170,7 @@ export class StatisticsComponent
       ]);
 
       if (Array.isArray(res?.Children) && res?.Children?.length > 0) {
-        this.pastureStatsProdTableItems.push(
+        pastureStatsProdTableItems.push(
           res?.Children.map((child) => ({
             areaType: child?.type,
             areaName_en: child?.[`name_en`],
@@ -184,6 +185,8 @@ export class StatisticsComponent
           }))
         );
       }
+
+      this.pastureStatsProdTableItems = pastureStatsProdTableItems;
     } catch (e: any) {
       this.messages.error(e.error?.message ?? e.message);
     }
