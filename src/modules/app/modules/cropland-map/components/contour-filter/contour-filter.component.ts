@@ -248,6 +248,8 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
 
   async handleRegionChange(value: string | null) {
     const districtVal = this.form.get('district');
+    const contonVal = this.form.get('conton');
+
     const region = this.regions.find((r) => r.id == Number(value));
     region &&
       this.mapInstance.fitBounds(geoJson(region?.polygon).getBounds(), {
@@ -263,6 +265,9 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
       districtVal?.disable({ emitEvent: false });
       this.resetMapBounds();
     }
+
+    districtVal?.reset();
+    contonVal?.reset();
   }
 
   async handleDistrictChange(value: string | null) {
@@ -281,6 +286,8 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
       contonVal?.patchValue(null, { emitEvent: false });
       contonVal?.disable({ emitEvent: false });
     }
+
+    contonVal?.reset();
   }
 
   async handleContonChange(value: string | null) {
