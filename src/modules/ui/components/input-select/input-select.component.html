@@ -41,7 +41,12 @@
   </div>
 </div>
 
-<div class="options" [class.collapsed]="opened" *ngIf="items.length > 0">
+<div
+  class="options"
+  [class.collapsed]="opened"
+  [class.absolute]="absoluteDropdown"
+  *ngIf="items.length > 0"
+>
   <div class="search">
     <input
       #input
