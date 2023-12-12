@@ -3,7 +3,7 @@
     <li
       *ngFor="let tab of tabs"
       [class.active]="tab.active"
-      (click)="selectTab(tab)"
+      (click)="onSelectTab(tab)"
     >
       {{ tab.title }}
     </li>

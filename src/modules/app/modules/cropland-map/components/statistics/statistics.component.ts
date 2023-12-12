@@ -39,6 +39,9 @@ export class StatisticsComponent
   activeTab!: TabComponent;
   subscriptions: Subscription[] = [];
   mapControlStatsToggleState: boolean = true;
+  activeTabsId: null | string = null;
+  loading = false;
+  viewType: 'chart' | 'table' = 'table';
 
   constructor(
     private api: ApiService,
@@ -69,15 +72,6 @@ export class StatisticsComponent
       }),
     ];
 
-    this.pastureStatsProdTableItems = [];
-    this.cultureStatsProdTableItems = [];
-    let params = {
-      year: this.mapService.filterDefaultValues.year,
-      land_type: String(this.activeTab.id),
-    };
-    this.getPastureStatisticsProductivity(params);
-    this.getCultureStatisticsProductivity(params);
-
     const croplandMapStats = this.store.getItem('CroplandMapStats');
     if (croplandMapStats != null) {
       this.mapControlStatsToggleState = croplandMapStats?.isCollapsed;
@@ -99,9 +93,15 @@ export class StatisticsComponent
 
   handleSelectedTab(selectedTab: TabComponent) {
     this.activeTab = selectedTab;
+
     if (this.filterFormValues != null) {
       this.handleFilterFormSubmit(this.filterFormValues);
     }
+  }
+
+  public onSelectViewType(type: 'chart' | 'table') {
+    this.viewType = type;
+    this.cd.detectChanges();
   }
 
   public getLandTypeItem(item: any): string {
@@ -121,6 +121,7 @@ export class StatisticsComponent
       this.getPastureStatisticsProductivity(this.filterFormValues);
       this.getCultureStatisticsProductivity(this.filterFormValues);
       this.filterFormValues = null;
+      this.activeTabsId = null;
     }
   }
 
@@ -137,6 +138,8 @@ export class StatisticsComponent
     if (String(formValue?.['land_type']).includes('2')) {
       this.getPastureStatisticsProductivity({ ...formValue, land_type: '2' });
     }
+
+    this.activeTabsId = this.filterFormValues?.land_type;
   }
 
   private async getPastureStatisticsProductivity(
@@ -144,6 +147,7 @@ export class StatisticsComponent
   ): Promise<void> {
     if (this.isWmsAiActive) query.ai = this.isWmsAiActive;
 
+    this.loading = true;
     try {
       let res: IContourStatisticsProductivity;
       res = await this.api.statistics.getContourStatisticsProductivity(query);
@@ -189,6 +193,8 @@ export class StatisticsComponent
       this.pastureStatsProdTableItems = pastureStatsProdTableItems;
     } catch (e: any) {
       this.messages.error(e.error?.message ?? e.message);
+    } finally {
+      this.loading = false;
     }
   }
 
@@ -196,7 +202,7 @@ export class StatisticsComponent
     query: ICulutreStatisticsQuery
   ): Promise<void> {
     if (this.isWmsAiActive) query.ai = this.isWmsAiActive;
-
+    this.loading = true;
     try {
       const res = await this.api.statistics.getCultureStatistics(query);
 
@@ -206,6 +212,8 @@ export class StatisticsComponent
       })) as unknown as ITableItem[];
     } catch (e: any) {
       this.messages.error(e.error?.message ?? e.message);
+    } finally {
+      this.loading = false;
     }
   }
 
