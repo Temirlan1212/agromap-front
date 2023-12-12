@@ -71,7 +71,7 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
         nonNullable: true,
       }
     ),
-    land_type: new FormControl<string | null>('1,2', {
+    land_type: new FormControl<string | null>(null, {
       nonNullable: true,
       validators: Validators.required,
     }),
