@@ -15,6 +15,7 @@ import { LoadingComponent } from 'src/modules/ui/components/loading/loading.comp
 import { CultureStatsComponent } from './components/culture-stats/culture-stats.component';
 import { TableComponent } from 'src/modules/ui/components/table/table.component';
 import { InputRadioComponent } from 'src/modules/ui/components/input-radio/input-radio.component';
+import { MapService } from 'src/modules/ui/services/map.service';
 
 @NgModule({
   declarations: [
@@ -36,6 +37,6 @@ import { InputRadioComponent } from 'src/modules/ui/components/input-radio/input
     TableComponent,
     InputRadioComponent,
   ],
-  providers: [TranslatePipe],
+  providers: [TranslatePipe, MapService],
 })
 export class ReportsModule {}

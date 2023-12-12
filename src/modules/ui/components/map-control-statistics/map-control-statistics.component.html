@@ -8,13 +8,19 @@
   ></app-map-control>
   <div class="container" [class.isCollapsed]="isCollapsed">
     <header>
-      <app-svg-icon
-        (click)="toggle()"
-        name="clear"
-        class="icon"
-        size="16px"
-      ></app-svg-icon>
-      <h4>{{ title | translate }}</h4>
+      <div class="title">
+        <app-svg-icon
+          (click)="toggle()"
+          name="clear"
+          class="icon"
+          size="16px"
+        ></app-svg-icon>
+        <h4>{{ title | translate }}</h4>
+      </div>
+
+      <div class="header-content">
+        <ng-content select="[header]"></ng-content>
+      </div>
     </header>
     <div class="body">
       <ng-content></ng-content>

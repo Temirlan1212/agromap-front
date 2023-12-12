@@ -44,6 +44,7 @@ import { ToggleButtonComponent } from '../../../ui/components/toggle-button/togg
 import { ColorLegendComponent } from 'src/modules/ui/components/color-legend/color-legend.component';
 import { MapControlComponent } from 'src/modules/ui/components/map-control/map-control.component';
 import { StatisticsComponent } from './components/statistics/statistics.component';
+import { SimplePieChartComponent } from './components/simple-pie-chart/simple-pie-chart.component';
 
 @NgModule({
   declarations: [
@@ -57,6 +58,7 @@ import { StatisticsComponent } from './components/statistics/statistics.componen
     ContourInfoComponent,
     ContourDetailsComponent,
     StatisticsComponent,
+    SimplePieChartComponent,
   ],
   imports: [
     CommonModule,
