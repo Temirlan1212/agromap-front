@@ -505,7 +505,11 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
         mapZoom: mapMove.zoom,
       }
     );
-    if (this.mapData?.map != null && this.filterFormValues != null) {
+    if (
+      this.mapData?.map != null &&
+      this.filterFormValues != null &&
+      this.activeContour == null
+    ) {
       const layersLength = this.mapData.geoJson.getLayers().length;
       if (layersLength > 0) this.mapData.geoJson.clearLayers();
       if (mapMove.zoom >= 12) this.addPolygonsInScreenToMap(mapMove.bounds);
