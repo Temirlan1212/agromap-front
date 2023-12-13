@@ -183,12 +183,22 @@ export class InputSelectComponent implements ControlValueAccessor, OnChanges {
     if (obj == null) {
       this.selectedItemsObj = {};
     }
-    this.selectedItems = this.items.filter(
-      (i) => i[this.idField] === this.value
-    );
-    this.selectedItems.forEach(
-      (i) => (this.selectedItemsObj[i[this.idField]] = i[this.nameField])
-    );
+
+    if (this.multi) {
+      this.selectedItems = this.items.filter((i) =>
+        String(this.value).split(',').includes(String(i[this.idField]))
+      );
+      this.selectedItems.forEach(
+        (i) => (this.selectedItemsObj[i[this.idField]] = i[this.nameField])
+      );
+    } else {
+      this.selectedItems = this.items.filter(
+        (i) => i[this.idField] === this.value
+      );
+      this.selectedItems.forEach(
+        (i) => (this.selectedItemsObj[i[this.idField]] = i[this.nameField])
+      );
+    }
   }
 
   registerOnChange(fn: Function): void {

@@ -97,6 +97,18 @@
             [textContent]="'No data' | translate"
           ></div>
         </app-tab>
+
+        <app-tab
+          [title]="getLandTypeItem(ltype)"
+          [id]="ltype.id"
+          *ngIf="ltype.id === 3 && activeTabsId.split(',').includes('3')"
+        >
+          <div
+            class="no-data"
+            *ngIf="[].length < 1 && !loading"
+            [textContent]="'No data' | translate"
+          ></div>
+        </app-tab>
       </ng-container>
     </app-content-tabs>
   </ng-container>
@@ -168,6 +180,18 @@
           <div
             class="no-data"
             *ngIf="cultureStatsProdTableItems.length < 1 && !loading"
+            [textContent]="'No data' | translate"
+          ></div>
+        </app-tab>
+
+        <app-tab
+          [title]="getLandTypeItem(ltype)"
+          [id]="ltype.id"
+          *ngIf="ltype.id === 3 && activeTabsId.split(',').includes('3')"
+        >
+          <div
+            class="no-data"
+            *ngIf="[].length < 1 && !loading"
             [textContent]="'No data' | translate"
           ></div>
         </app-tab>
