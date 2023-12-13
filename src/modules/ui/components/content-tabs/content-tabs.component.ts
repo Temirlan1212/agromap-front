@@ -20,9 +20,9 @@ import { CommonModule } from '@angular/common';
 export class ContentTabsComponent implements AfterContentInit {
   @ContentChildren(TabComponent) tabs!: QueryList<TabComponent>;
   @Output() onSelected = new EventEmitter<TabComponent>();
-  @Input() set values(v: string[]) {
-    if (this.tabs != null && v != null && v.length === 1) {
-      this.selectTab(this.tabs.first);
+  @Input() set updatesOn(v: any) {
+    if (this.tabs != null && v != null) {
+      setTimeout(() => this.selectTab(this.tabs.first), 0);
     }
   }
 

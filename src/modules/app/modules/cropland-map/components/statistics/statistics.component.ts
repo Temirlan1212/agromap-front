@@ -171,14 +171,15 @@ export class StatisticsComponent
             ...formValue,
             land_type: id,
           });
-          this.handleItemsUpdate(id, data);
+          this.handleItemsUpdate(id, Array.isArray(data) ? data : []);
         }
       } else {
-        this.handleItemsUpdate(id, []);
+        delete this.items?.[id];
       }
     }
 
     this.activeTabsId = this.filterFormValues?.land_type;
+    this.cd.detectChanges();
   }
 
   private async getPastureStatisticsProductivity(
