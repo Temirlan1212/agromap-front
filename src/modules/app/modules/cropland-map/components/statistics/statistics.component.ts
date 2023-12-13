@@ -42,6 +42,13 @@ export class StatisticsComponent
   activeTabsId: null | string = null;
   loading = false;
   viewType: 'chart' | 'table' = 'table';
+  items: Record<
+    string,
+    {
+      value: ITableItem[] | ITableItem[][];
+      nested: boolean;
+    }
+  > = {};
 
   constructor(
     private api: ApiService,
@@ -125,18 +132,50 @@ export class StatisticsComponent
     }
   }
 
-  private handleFilterFormSubmit(
+  public getItem(id: number): any {
+    return this.items?.[String(id)] || { value: [], nested: false };
+  }
+
+  private handleItemsUpdate(
+    id: number | string,
+    value: ITableItem[] | ITableItem[][]
+  ) {
+    const isNestedValue = Array.isArray(value?.[0]);
+
+    this.items[id] = {
+      ...(this.items?.[id] ?? {}),
+      value: value,
+      nested: isNestedValue,
+    };
+  }
+
+  private async handleFilterFormSubmit(
     formValue: IContourStatisticsProductivityQuery | ICulutreStatisticsQuery
   ) {
-    this.pastureStatsProdTableItems = [];
-    this.cultureStatsProdTableItems = [];
+    const fetchList = {
+      1: async (params: IContourStatisticsProductivityQuery) =>
+        await this.getCultureStatisticsProductivity(params),
+      2: async (params: IContourStatisticsProductivityQuery) =>
+        await this.getPastureStatisticsProductivity(params),
+    };
 
-    if (String(formValue?.['land_type']).includes('1')) {
-      this.getCultureStatisticsProductivity({ ...formValue, land_type: '1' });
-    }
+    for (const type of this.landTypes || []) {
+      const id = String(type.id);
+      const method = (fetchList as any)?.[id];
 
-    if (String(formValue?.['land_type']).includes('2')) {
-      this.getPastureStatisticsProductivity({ ...formValue, land_type: '2' });
+      if (String(formValue?.['land_type']).includes(id)) {
+        if (!method) {
+          this.handleItemsUpdate(id, []);
+        } else {
+          const data = await method({
+            ...formValue,
+            land_type: id,
+          });
+          this.handleItemsUpdate(id, data);
+        }
+      } else {
+        this.handleItemsUpdate(id, []);
+      }
     }
 
     this.activeTabsId = this.filterFormValues?.land_type;
@@ -144,7 +183,7 @@ export class StatisticsComponent
 
   private async getPastureStatisticsProductivity(
     query: IContourStatisticsProductivityQuery
-  ): Promise<void> {
+  ): Promise<any> {
     if (this.isWmsAiActive) query.ai = this.isWmsAiActive;
 
     this.loading = true;
@@ -191,6 +230,7 @@ export class StatisticsComponent
       }
 
       this.pastureStatsProdTableItems = pastureStatsProdTableItems;
+      return this.pastureStatsProdTableItems;
     } catch (e: any) {
       this.messages.error(e.error?.message ?? e.message);
     } finally {
@@ -200,7 +240,7 @@ export class StatisticsComponent
 
   private async getCultureStatisticsProductivity(
     query: ICulutreStatisticsQuery
-  ): Promise<void> {
+  ): Promise<any> {
     if (this.isWmsAiActive) query.ai = this.isWmsAiActive;
     this.loading = true;
     try {
@@ -210,6 +250,8 @@ export class StatisticsComponent
         ...element,
         area_ha: `${element?.area_ha} ${this.translate.transform('ha')}`,
       })) as unknown as ITableItem[];
+
+      return this.cultureStatsProdTableItems;
     } catch (e: any) {
       this.messages.error(e.error?.message ?? e.message);
     } finally {
