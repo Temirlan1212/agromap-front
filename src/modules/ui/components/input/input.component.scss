@@ -21,6 +21,18 @@
 
       & + .placeholder {
         transform: scale(0.9) translateY(-25px);
+        &::after {
+          content: "";
+          position: absolute;
+          z-index: -1;
+          background-color: $primaryBackgroundColor;
+          width: 100%;
+          height: 2px;
+          top: 0;
+          bottom: 0;
+          right: 0;
+          margin: auto;
+        }
       }
     }
 
@@ -42,12 +54,23 @@
     top: $inputPlaceholderTop;
     left: 12px;
     color: #65656a;
-    background-color: $primaryBackgroundColor;
     padding: 0 5px;
     transition: all 0.2s ease;
 
     &.active {
       transform: scale(0.9) translateY(-25px);
+      &::after {
+        content: "";
+        position: absolute;
+        z-index: -1;
+        background-color: $primaryBackgroundColor;
+        width: 100%;
+        height: 2px;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        margin: auto;
+      }
     }
   }
 
