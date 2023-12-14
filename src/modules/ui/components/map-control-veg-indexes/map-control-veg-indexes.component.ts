@@ -56,6 +56,7 @@ export class MapControlVegIndexesComponent
   @Input() mapData: MapData | null = null;
   @Input() vegIndexesData: IVegSatelliteDate[] = [];
   @Input() vegIndexOptionsList: IVegIndexOption[] = [];
+  @Input() defaultYear: number | null = null;
 
   @Input() loadingSatelliteDates: boolean = false;
 
