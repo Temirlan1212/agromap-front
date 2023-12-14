@@ -48,9 +48,9 @@ export interface ICulutreStatisticsQuery {
 }
 
 export interface ICulutreStatistics {
-  culture_name_ru: string;
-  culture_name_ky: string;
-  culture_name_en: string;
+  predicted_culture_name_ru: string;
+  predicted_culture_name_ky: string;
+  predicted_culture_name_en: string;
   area_ha: number;
   territory_ru: string;
   territory_ky: string;
