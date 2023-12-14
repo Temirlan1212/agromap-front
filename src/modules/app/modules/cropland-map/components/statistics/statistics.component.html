@@ -36,32 +36,50 @@
         >
           <div class="productuvity">
             <div *ngIf="getItem(ltype.id)?.value?.length > 0 && !loading">
-              <ng-container *ngIf="getItem(ltype.id).nested && ltype.id === 2">
+              <div
+                class="view-type"
+                *ngIf="getItem(ltype.id).nested && ltype.id === 2"
+              >
                 <div
                   class="title"
-                  [textContent]="'Productive' | translate"
-                ></div>
-                <div *ngFor="let item of getItem(ltype.id).value" class="chart">
-                  <app-simple-pie-chart
-                    [series]="item"
-                    seriesFieldName="productive"
-                    [labels]="item"
-                    labelsFieldName="areaName"
-                  ></app-simple-pie-chart>
-                </div>
-
-                <div
-                  class="title"
+                  [class.active]="pastureViewType === 'productive'"
                   [textContent]="'Unproductive' | translate"
+                  (click)="pastureViewType = 'productive'"
                 ></div>
-                <div *ngFor="let item of getItem(ltype.id).value" class="chart">
-                  <app-simple-pie-chart
-                    [series]="item"
-                    seriesFieldName="unproductive"
-                    [labels]="item"
-                    labelsFieldName="areaName"
-                  ></app-simple-pie-chart>
-                </div>
+                <div
+                  class="title"
+                  [class.active]="pastureViewType === 'unproductive'"
+                  [textContent]="'Productive' | translate"
+                  (click)="pastureViewType = 'unproductive'"
+                ></div>
+              </div>
+              <ng-container *ngIf="getItem(ltype.id).nested && ltype.id === 2">
+                <ng-container *ngIf="pastureViewType === 'productive'">
+                  <div
+                    *ngFor="let item of getItem(ltype.id).value"
+                    class="chart"
+                  >
+                    <app-simple-pie-chart
+                      [series]="item"
+                      seriesFieldName="productive"
+                      [labels]="item"
+                      labelsFieldName="areaName"
+                    ></app-simple-pie-chart>
+                  </div>
+                </ng-container>
+                <ng-container *ngIf="pastureViewType === 'unproductive'">
+                  <div
+                    *ngFor="let item of getItem(ltype.id).value"
+                    class="chart"
+                  >
+                    <app-simple-pie-chart
+                      [series]="item"
+                      seriesFieldName="unproductive"
+                      [labels]="item"
+                      labelsFieldName="areaName"
+                    ></app-simple-pie-chart>
+                  </div>
+                </ng-container>
               </ng-container>
 
               <ng-container *ngIf="!getItem(ltype.id).nested">

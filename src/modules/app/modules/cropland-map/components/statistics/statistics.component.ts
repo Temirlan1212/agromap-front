@@ -42,6 +42,7 @@ export class StatisticsComponent
   activeTabsId: null | string = null;
   loading = false;
   viewType: 'chart' | 'table' = 'table';
+  pastureViewType: 'productive' | 'unproductive' = 'productive';
   items: Record<
     string,
     {

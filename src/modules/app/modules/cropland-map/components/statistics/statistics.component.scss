@@ -18,6 +18,25 @@
     color: $lightColor;
     margin: 0 10px 10px 10px;
   }
+  .view-type {
+    display: flex;
+    gap: 10px;
+    background-color: $lightColor;
+    width: fit-content;
+    padding: 5px;
+    margin: 5px 10px;
+    border-radius: 5px;
+
+    div {
+      color: $darkColor;
+      cursor: pointer;
+      margin: 0;
+      &:hover,
+      &.active {
+        color: $successColor;
+      }
+    }
+  }
 }
 
 .view-type {
