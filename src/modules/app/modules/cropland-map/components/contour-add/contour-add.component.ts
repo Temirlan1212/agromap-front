@@ -149,9 +149,12 @@ export class ContourAddComponent implements OnInit, OnDestroy {
     const formState = contourForm.getState();
     const { region, district, ...rest } = formState.value;
     const contour: Partial<IContour> = {
-      ...rest,
+      ...(Object.fromEntries(
+        Object.entries(rest ?? {}).filter(([_, value]) => value != null)
+      ) as typeof formState.value),
       polygon: this.polygon,
     };
+
     if (!formState.touched) {
       this.messages.warning(this.translate.transform('No changes in form'));
       contourForm.form.markAsUntouched();
