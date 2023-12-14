@@ -49,7 +49,9 @@
           [textContent]="activeContour.district?.['name_' + currentLang]"
         ></span>
       </div>
-      <div *ngIf="activeContour?.conton?.['name_' + currentLang]">
+      <div
+        *ngIf="activeContour?.conton?.['name_' + currentLang] && activeContour?.conton?.['name_' + currentLang]?.toLowerCase() !== 'none'"
+      >
         {{ "Conton" | translate }}
         <span
           [textContent]="activeContour.conton?.['name_' + currentLang]"
