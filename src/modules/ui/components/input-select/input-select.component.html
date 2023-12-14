@@ -44,7 +44,7 @@
 <div
   class="options"
   [class.collapsed]="opened"
-  [class.absolute]="absoluteDropdown"
+  [class.absolute]="dropdownType === 'default'"
   *ngIf="items.length > 0"
 >
   <div class="search">

@@ -4,7 +4,6 @@
     formControlName="land_type"
     [items]="land_types"
     [nameField]="'name_' + currLang"
-    [absoluteDropdown]="true"
   ></app-input-select>
 
   <app-input-select
@@ -13,7 +12,6 @@
     formControlName="culture"
     [items]="cultures"
     [nameField]="'name_' + currLang"
-    [absoluteDropdown]="true"
   ></app-input-select>
 
   <app-input-select
@@ -21,21 +19,18 @@
     formControlName="region"
     [items]="regions"
     [nameField]="'name_' + currLang"
-    [absoluteDropdown]="true"
   ></app-input-select>
   <app-input-select
     [placeholder]="'Select a district' | translate"
     formControlName="district"
     [items]="districts"
     [nameField]="'name_' + currLang"
-    [absoluteDropdown]="true"
   ></app-input-select>
   <app-input-select
     [placeholder]="'Select a conton' | translate"
     formControlName="conton"
     [items]="contons"
     [nameField]="'name_' + currLang"
-    [absoluteDropdown]="true"
   ></app-input-select>
 
   <app-input
