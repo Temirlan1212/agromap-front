@@ -43,13 +43,13 @@
                 <div
                   class="title"
                   [class.active]="pastureViewType === 'productive'"
-                  [textContent]="'Unproductive' | translate"
+                  [textContent]="'Productive' | translate"
                   (click)="pastureViewType = 'productive'"
                 ></div>
                 <div
                   class="title"
                   [class.active]="pastureViewType === 'unproductive'"
-                  [textContent]="'Productive' | translate"
+                  [textContent]="'Unproductive' | translate"
                   (click)="pastureViewType = 'unproductive'"
                 ></div>
               </div>
@@ -63,6 +63,7 @@
                       [series]="item"
                       seriesFieldName="productive"
                       [labels]="item"
+                      [dataLabelUnitOfMeasure]="'ha' | translate"
                       labelsFieldName="areaName"
                     ></app-simple-pie-chart>
                   </div>
@@ -77,22 +78,20 @@
                       seriesFieldName="unproductive"
                       [labels]="item"
                       labelsFieldName="areaName"
+                      [dataLabelUnitOfMeasure]="'ha' | translate"
                     ></app-simple-pie-chart>
                   </div>
                 </ng-container>
               </ng-container>
 
               <ng-container *ngIf="!getItem(ltype.id).nested">
-                <div
-                  class="title"
-                  [textContent]="'Productive' | translate"
-                ></div>
                 <div class="chart">
                   <app-simple-pie-chart
                     [series]="getItem(ltype.id).value"
                     seriesFieldName="area_ha"
                     [labels]="getItem(ltype.id).value"
                     labelsFieldName="culture_name"
+                    [dataLabelUnitOfMeasure]="'ha' | translate"
                   ></app-simple-pie-chart>
                 </div>
               </ng-container>
@@ -142,11 +141,11 @@
                   },
                   {
                     title: 'Productive' | translate | truncate : 10,
-                    field: 'productive'
+                    field: 'productive_' + currentLang
                   },
                   {
                     title: 'Unproductive' | translate | truncate : 10,
-                    field: 'unproductive'
+                    field: 'unproductive_' + currentLang
                   }
                 ]"
               ></app-table>
@@ -162,7 +161,10 @@
                     title: 'Name' | translate,
                     field: 'culture_name_' + currentLang
                   },
-                  { title: 'Area' | translate, field: 'area_ha' },
+                  {
+                    title: 'Area' | translate,
+                    field: 'area_ha_' + currentLang
+                  },
                   {
                     title: 'Territory' | translate,
                     field: 'territory_' + currentLang
