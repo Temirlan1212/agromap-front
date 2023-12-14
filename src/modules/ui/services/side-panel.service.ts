@@ -33,12 +33,12 @@ export class SidePanelService {
     return payload;
   }
 
-  set(v: boolean) {
+  set(v: boolean, page?: string) {
     const item = this.storeService.getItem(this.storageName);
     if (this.activeNavItemPath == null) return;
     const payload = {
       ...(item || {}),
-      [this.activeNavItemPath]: v,
+      [page ?? this.activeNavItemPath]: v,
     };
     this.storeService.setItem(this.storageName, payload);
     return payload;

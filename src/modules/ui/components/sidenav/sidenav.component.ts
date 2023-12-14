@@ -65,7 +65,7 @@ export class SidenavComponent implements OnChanges, OnDestroy {
     private translate: TranslateService,
     private store: StoreService,
     private router: Router,
-    private sidePanelService: SidePanelService
+    public sidePanelService: SidePanelService
   ) {}
 
   collapsed: boolean = false;
