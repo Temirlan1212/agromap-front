@@ -42,13 +42,11 @@ export class SimplePieChartComponent implements OnChanges {
   @Input() seriesFieldName: string = '';
   @Input() labels!: Record<string, any>[];
   @Input() labelsFieldName: string = '';
-  @Input() dataLabelUnitOfMeasure: string = '';
+  @Input() dataLabelUnitOfMeasure: string = 'га';
+  @Input() colors: string[] = [];
 
   chartOptions: ChartOptions = {
-    series: this.series?.map(
-      (item) =>
-        this.extractNumberFromString(item?.[this.seriesFieldName ?? '']) ?? 0
-    ),
+    series: this.series?.map((item) => item?.[this.seriesFieldName ?? ''] ?? 0),
     chart: {
       height: 400,
       type: 'pie',
@@ -95,22 +93,25 @@ export class SimplePieChartComponent implements OnChanges {
     legend: {
       position: 'bottom',
     },
-    colors: ['#1BA87D', '#B3EC84'],
+    colors: [
+      '#39afd1',
+      '#ffbc00',
+      '#e3eaef',
+      '#CAC13B',
+      '#A580A1',
+      '#0B9B7A',
+      '#85046B',
+      '#807F82',
+      '#63FF0F',
+      '#FF800F',
+    ],
   };
 
   constructor(private translate: TranslateService) {}
 
-  private extractNumberFromString(char: string) {
-    const string = char?.match(/\d+/);
-    if (string == null) return null;
-    const extractedNumber = parseFloat(string[0]);
-    return extractedNumber;
-  }
-
   ngOnChanges(changes: SimpleChanges) {
     const series = this.series?.map(
-      (item) =>
-        this.extractNumberFromString(item?.[this.seriesFieldName ?? '']) ?? 0
+      (item) => item?.[this.seriesFieldName ?? ''] ?? 0
     );
 
     const labels = this.labels.map(

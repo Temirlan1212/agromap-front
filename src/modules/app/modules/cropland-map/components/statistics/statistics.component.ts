@@ -205,12 +205,14 @@ export class StatisticsComponent
           areaName_en: res?.[`name_en`],
           areaName_ky: res?.[`name_ky`],
           areaName_ru: res?.[`name_ru`],
-          productive: `${res?.Productive?.ha} ${this.translate.transform(
-            'ha'
-          )}`,
-          unproductive: `${res?.Unproductive?.ha} ${this.translate.transform(
-            'ha'
-          )}`,
+          productive: res?.Productive?.ha,
+          productive_en: `${res?.Productive?.ha} ha`,
+          productive_ky: `${res?.Productive?.ha} га`,
+          productive_ru: `${res?.Productive?.ha} га`,
+          unproductive: res?.Unproductive?.ha,
+          unproductive_en: `${res?.Unproductive?.ha} ha`,
+          unproductive_ky: `${res?.Unproductive?.ha} га`,
+          unproductive_ru: `${res?.Unproductive?.ha} га`,
         },
       ]);
 
@@ -221,12 +223,14 @@ export class StatisticsComponent
             areaName_en: child?.[`name_en`],
             areaName_ky: child?.[`name_ky`],
             areaName_ru: child?.[`name_ru`],
-            productive: `${child?.Productive?.ha} ${this.translate.transform(
-              'ha'
-            )}`,
-            unproductive: `${
-              child?.Unproductive?.ha
-            } ${this.translate.transform('ha')}`,
+            productive: child?.Productive?.ha,
+            productive_en: `${child?.Productive?.ha} ha`,
+            productive_ky: `${child?.Productive?.ha} га`,
+            productive_ru: `${child?.Productive?.ha} га`,
+            unproductive: child?.Unproductive?.ha,
+            unproductive_en: `${child?.Unproductive?.ha} ha`,
+            unproductive_ky: `${child?.Unproductive?.ha} га`,
+            unproductive_ru: `${child?.Unproductive?.ha} га`,
           }))
         );
       }
@@ -250,7 +254,10 @@ export class StatisticsComponent
 
       this.cultureStatsProdTableItems = res.map((element) => ({
         ...element,
-        area_ha: `${element?.area_ha} ${this.translate.transform('ha')}`,
+        area_ha: element?.area_ha,
+        area_ha_en: `${element?.area_ha} ha`,
+        area_ha_ky: `${element?.area_ha} га`,
+        area_ha_ru: `${element?.area_ha} га`,
       })) as unknown as ITableItem[];
 
       return this.cultureStatsProdTableItems;

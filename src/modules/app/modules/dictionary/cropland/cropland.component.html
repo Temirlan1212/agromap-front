@@ -6,7 +6,7 @@
 <app-input-select
   [placeholder]="'Select a culture' | translate"
   [items]="cultures"
-  [nameField]="'name_ru'"
+  [nameField]="'name_' + currentLang"
   (onSelectItem)="handleSelectCulture($event)"
   [formControl]="cultureFormControl"
 ></app-input-select>
