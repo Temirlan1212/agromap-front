@@ -229,5 +229,17 @@
   "Close the sidebar when filtering": "Закрывать боковую панель при фильтрации",
   "Map": "Карта",
   "Close sidebar": "Закрыть боковую панель",
-  "Open sidebar": "Открыть боковую панель"
+  "Open sidebar": "Открыть боковую панель",
+  "apex-chart-toolbar": {
+    "exportToSVG": "Скачать SVG",
+    "exportToPNG": "Скачать PNG",
+    "exportToCSV": "Скачать CSV",
+    "menu": "Меню",
+    "selection": "Выбор",
+    "selectionZoom": "Масштаб выбора",
+    "zoomIn": "Увеличить",
+    "zoomOut": "Уменьшить",
+    "pan": "Перемещение",
+    "reset": "Сбросить масштаб"
+  }
 }
