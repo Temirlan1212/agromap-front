@@ -216,7 +216,13 @@ export class StatisticsComponent
         },
       ]);
 
-      if (Array.isArray(res?.Children) && res?.Children?.length > 0) {
+      if (
+        Array.isArray(res?.Children) &&
+        res?.Children?.length > 0 &&
+        !res?.Children?.some(
+          (child) => child?.type?.toLocaleLowerCase() === 'conton'
+        )
+      ) {
         pastureStatsProdTableItems.push(
           res?.Children.map((child) => ({
             areaType: child?.type,
