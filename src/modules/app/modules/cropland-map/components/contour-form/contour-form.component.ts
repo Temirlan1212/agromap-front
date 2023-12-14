@@ -35,8 +35,8 @@ export class ContourFormComponent implements OnInit, OnDestroy {
         culture: v.culture?.id,
         productivity: v.productivity,
         year: v.year,
-        // code_soato: v.code_soato,
-        // ink: v.ink,
+        code_soato: v.code_soato,
+        ink: v.ink,
       });
     }
   }
@@ -46,8 +46,8 @@ export class ContourFormComponent implements OnInit, OnDestroy {
     culture: new FormControl<string | number | null>(null),
     productivity: new FormControl<number | null>(null),
     year: new FormControl<number | null>(null, Validators.required),
-    // code_soato: new FormControl<string | null>(null),
-    // ink: new FormControl<string | null>(null),
+    code_soato: new FormControl<string | null>(null),
+    ink: new FormControl<string | null>(null),
   });
   @Output() onChange = new EventEmitter<any>();
 

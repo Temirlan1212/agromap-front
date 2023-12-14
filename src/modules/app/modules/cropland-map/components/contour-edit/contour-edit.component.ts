@@ -174,7 +174,9 @@ export class ContourEditComponent implements OnInit, OnDestroy {
 
     const { region, district, ...rest } = formState.value;
     const contour: Partial<IContour> = {
-      ...rest,
+      ...(Object.fromEntries(
+        Object.entries(rest ?? {}).filter(([_, value]) => value != null)
+      ) as typeof formState.value),
       polygon: this.polygon,
     };
 

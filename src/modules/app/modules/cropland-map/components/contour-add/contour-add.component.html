@@ -28,7 +28,12 @@
   </app-contour-form>
 </div>
 <div class="actions">
-  <button type="button" class="success" (click)="handleSaveClick(form)">
+  <button
+    type="button"
+    class="success"
+    [class.disabled]="isLoading"
+    (click)="handleSaveClick(form)"
+  >
     <div *ngIf="!isLoading">
       {{ "Save" | translate }}
     </div>
