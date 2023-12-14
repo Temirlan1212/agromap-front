@@ -42,7 +42,7 @@ export class CultureStatsComponent implements AfterViewInit, OnDestroy {
   columns = [
     {
       title: this.translate.transform('Name'),
-      field: 'culture_name_' + this.currLang,
+      field: 'predicted_culture_name_' + this.currLang,
     },
     { title: this.translate.transform('Area'), field: 'area_ha' },
     {

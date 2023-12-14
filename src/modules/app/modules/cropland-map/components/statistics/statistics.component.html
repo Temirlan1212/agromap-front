@@ -90,7 +90,7 @@
                     [series]="getItem(ltype.id).value"
                     seriesFieldName="area_ha"
                     [labels]="getItem(ltype.id).value"
-                    labelsFieldName="culture_name"
+                    labelsFieldName="predicted_culture_name"
                     [dataLabelUnitOfMeasure]="'ha' | translate"
                   ></app-simple-pie-chart>
                 </div>
@@ -159,7 +159,7 @@
                 [fields]="[
                   {
                     title: 'Name' | translate,
-                    field: 'culture_name_' + currentLang
+                    field: 'predicted_culture_name_' + currentLang
                   },
                   {
                     title: 'Area' | translate,
