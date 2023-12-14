@@ -43,6 +43,7 @@
     </div>
     <div class="dialog" [class.collapsed]="isCollapsedDateDialog">
       <app-date-picker
+        [defaultYear]="defaultYear"
         [filterDate]="activeDates"
         [selectedDate]="selectedDate"
         (selectedDateOutput)="handleCalendarDateClick($event)"

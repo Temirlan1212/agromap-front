@@ -83,6 +83,7 @@
       >
         <app-map-control-veg-indexes
           *ngIf="layerFeature && mapData"
+          [defaultYear]="filterFormValues?.year"
           [layer]="layerFeature"
           [mapData]="mapData"
           [vegIndexesData]="vegIndexesData"

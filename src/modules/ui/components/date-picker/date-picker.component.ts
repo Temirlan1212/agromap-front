@@ -34,6 +34,14 @@ export class DatePickerComponent implements OnInit {
   }
 
   @Input() selectedDate: string | null = null;
+  @Input() set defaultYear(v: number | null) {
+    if (v != null && !isNaN(v)) {
+      this.date = new Date(v, 0, 1);
+      this.year = this.date.getFullYear();
+      this.month = this.date.getMonth();
+    }
+    this.update();
+  }
 
   days: IDateLocal[] = [];
   date = new Date();
@@ -65,10 +73,14 @@ export class DatePickerComponent implements OnInit {
     }
   }
 
-  ngOnInit(): void {
+  update() {
     this.renderCalendar();
     this.years = this.getYears(2015);
     this.toggleDisableArrowBtns();
+  }
+
+  ngOnInit(): void {
+    this.update();
   }
 
   handleNextPrevClick(type: string) {
