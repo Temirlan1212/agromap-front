@@ -216,9 +216,13 @@ export class StatisticsComponent
         },
       ]);
 
-      if (Array.isArray(res?.Children) && res?.Children?.length > 0) {
+      const children = res?.Children?.filter(
+        (child) => child?.type?.toLocaleLowerCase() !== 'conton'
+      );
+
+      if (Array.isArray(children) && children.length > 0) {
         pastureStatsProdTableItems.push(
-          res?.Children.map((child) => ({
+          children.map((child) => ({
             areaType: child?.type,
             areaName_en: child?.[`name_en`],
             areaName_ky: child?.[`name_ky`],
