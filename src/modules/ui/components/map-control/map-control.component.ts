@@ -23,6 +23,7 @@ export class MapControlComponent {
   @Input() width: string = '';
   @Input() tooltipTitle: string = '';
   @Input() tooltipPlacement: 'top' | 'right' | 'bottom' | 'left' = 'left';
+  @Input() tooltipClass = '';
   @Output() onClick = new EventEmitter<boolean>();
 
   public isSelected = false;

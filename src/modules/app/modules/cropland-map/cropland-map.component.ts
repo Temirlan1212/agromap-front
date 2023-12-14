@@ -50,6 +50,7 @@ import { ToggleButtonComponent } from '../../../ui/components/toggle-button/togg
 import { MapControlLayersSwitchComponent } from '../../../ui/components/map-control-layers-switch/map-control-layers-switch.component';
 import { ILandType } from 'src/modules/api/models/land-type.model';
 import { IUser } from 'src/modules/api/models/user.model';
+import { SidePanelService } from 'src/modules/ui/services/side-panel.service';
 
 @Component({
   selector: 'app-cropland-map',
@@ -278,7 +279,8 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
     private router: Router,
     private translate: TranslatePipe,
     private route: ActivatedRoute,
-    private cd: ChangeDetectorRef
+    private cd: ChangeDetectorRef,
+    public sidePanelService: SidePanelService
   ) {
     const routerEventSub = this.router.events.subscribe((event: Event) => {
       if (event instanceof NavigationEnd) {
@@ -333,12 +335,6 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
         this.wmsLayerInfoPopup = null;
       }
       this.mapControlLayersSwitch = v;
-    }),
-
-    this.store.watchItem('isSidePanelCollapsed').subscribe((v) => {
-      if (!!v && this.mapData?.map != null) {
-        this.mapService.invalidateSize(this.mapData.map);
-      }
     }),
 
     this.store.watchItem('SidePanelComponent').subscribe((v) => {
@@ -887,6 +883,11 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   async ngOnInit(): Promise<void> {
+    this.sidePanelService.watch((v) => {
+      if (!!v && this.mapData?.map != null) {
+        this.mapService.invalidateSize(this.mapData.map);
+      }
+    });
     const data = this.store.getItem('MapControlLayersSwitchComponent');
     this.wmsSelectedStatusLayers = data;
 

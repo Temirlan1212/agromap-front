@@ -49,7 +49,7 @@ const routes: Routes = [
   {
     title: 'Map',
     path: 'cropland-map',
-    data: { position: 'top', icon: 'map', panel: true },
+    data: { position: 'top', icon: 'map', panel: true, toggle: true },
     canActivate: [AuthGuard],
     loadChildren: () =>
       import('./modules/cropland-map/cropland-map.module').then(

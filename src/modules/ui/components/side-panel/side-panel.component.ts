@@ -6,8 +6,8 @@ import {
   OnInit,
 } from '@angular/core';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
-import { StoreService } from '../../services/store.service';
 import { Subscription } from 'rxjs';
+import { SidePanelService } from '../../services/side-panel.service';
 
 @Component({
   selector: 'app-side-panel',
@@ -28,17 +28,11 @@ export class SidePanelComponent implements OnInit, OnDestroy {
     return this.isOpened;
   }
 
-  constructor(private store: StoreService) {}
+  constructor(private sidePanelService: SidePanelService) {}
 
   ngOnInit() {
-    const sub = this.store
-      .watchItem<boolean>('isSidePanelCollapsed')
-      .subscribe((v) => {
-        this.collapsed = v;
-      });
-
-    this.collapsed = !!this.store.getItem('isSidePanelCollapsed');
-    this.subs.push(sub);
+    this.sidePanelService.watch((v) => (this.collapsed = v));
+    this.collapsed = !!this.sidePanelService.get();
   }
 
   ngOnDestroy(): void {

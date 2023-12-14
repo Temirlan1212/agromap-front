@@ -10,33 +10,7 @@
   z-index: 10;
   gap: $sideNavMenuGap;
   width: $sideNavMenuWidth;
-  // background-color: $sideNavMenuBgColor;
   transition: width $sideNavTransitionDelay;
-
-  .top {
-    .hubmerger {
-      width: 100%;
-      padding: 10px;
-      cursor: pointer;
-      display: flex;
-      justify-content: center;
-      .arrow {
-        transform: rotate(180deg);
-        transition: transform $sideNavTransitionDelay;
-      }
-
-      &.collapsed .arrow {
-        transform: rotate(-0deg);
-        margin-left: -5px;
-        transition: transform $sideNavTransitionDelay;
-      }
-
-      &.disabled {
-        opacity: 0.3;
-        pointer-events: none;
-      }
-    }
-  }
 
   &.open {
     width: $sideNavMenuOpenWidth;
@@ -125,12 +99,6 @@
   transition: all $sideNavTransitionDelay;
   overflow: auto;
   box-shadow: -2px 0 20px $sideNavMenuBgColor;
-  border-bottom-left-radius: 20px;
-  border-top-left-radius: 20px;
-
-  &.collapsed {
-    border-radius: 0px;
-  }
 }
 
 .switcher {

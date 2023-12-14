@@ -3,7 +3,6 @@ import {
   Input,
   OnChanges,
   SimpleChanges,
-  HostBinding,
   OnDestroy,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -28,6 +27,7 @@ import { TooltipComponent } from '../tooltip/tooltip.component';
 import { Subscription } from 'rxjs';
 import { SettingsComponent } from '../settings/settings.component';
 import { MenuComponent } from '../menu/menu.component';
+import { SidePanelService } from '../../services/side-panel.service';
 
 @Component({
   selector: 'app-sidenav',
@@ -64,7 +64,8 @@ export class SidenavComponent implements OnChanges, OnDestroy {
   constructor(
     private translate: TranslateService,
     private store: StoreService,
-    private router: Router
+    private router: Router,
+    private sidePanelService: SidePanelService
   ) {}
 
   collapsed: boolean = false;
@@ -83,12 +84,6 @@ export class SidenavComponent implements OnChanges, OnDestroy {
       }
     });
     this.subs.push(sub);
-
-    this.store.watchItem<boolean>('isSidePanelCollapsed').subscribe((v) => {
-      this.collapsed = v;
-    });
-
-    this.collapsed = !!this.store.getItem('isSidePanelCollapsed');
   }
 
   ngOnDestroy(): void {
@@ -135,13 +130,6 @@ export class SidenavComponent implements OnChanges, OnDestroy {
       left: menuContainer.scrollLeft + 100,
       behavior: 'smooth',
     });
-  }
-
-  handleToggleSidePanel() {
-    this.store.setItem<boolean>(
-      'isSidePanelCollapsed',
-      !this.store.getItem<boolean>('isSidePanelCollapsed')
-    );
   }
 
   protected readonly top = top;
