@@ -37,25 +37,25 @@
         {{ "Area" | translate }}
         <span>{{ activeContour.area_ha }} {{ "ha" | translate }}</span>
       </div>
-      <div *ngIf="activeContour?.region">
+      <div *ngIf="activeContour?.region?.['name_' + currentLang]">
         {{ "Region" | translate }}
         <span
           [textContent]="activeContour.region?.['name_' + currentLang]"
         ></span>
       </div>
-      <div *ngIf="activeContour?.district">
+      <div *ngIf="activeContour?.district?.['name_' + currentLang]">
         {{ "District" | translate }}
         <span
           [textContent]="activeContour.district?.['name_' + currentLang]"
         ></span>
       </div>
-      <div *ngIf="activeContour?.conton">
+      <div *ngIf="activeContour?.conton?.['name_' + currentLang]">
         {{ "Conton" | translate }}
         <span
           [textContent]="activeContour.conton?.['name_' + currentLang]"
         ></span>
       </div>
-      <div *ngIf="activeContour?.type">
+      <div *ngIf="activeContour?.type?.['name_' + currentLang]">
         {{ "Land type" | translate }}
         <span
           [textContent]="activeContour.type?.['name_' + currentLang]"
@@ -88,12 +88,21 @@
         {{ "RSE determination error" | translate
         }}<span>{{ activeContour.percent * 100 }} % </span>
       </div>
-      <div *ngIf="activeContour?.soil_class">
+      <div *ngIf="activeContour?.soil_class?.['name_' + currentLang]">
         {{ "Soil class" | translate }}
         <span
           >ID {{ activeContour.soil_class?.ID }} -
           {{ activeContour.soil_class?.['name_' + currentLang] }}
         </span>
+      </div>
+      <div *ngIf="!!activeContour?.ink">
+        {{ "INK" | translate }}
+        <span>{{ activeContour.ink }}</span>
+      </div>
+
+      <div *ngIf="!!activeContour?.eni">
+        ENI-{{ ("Code" | translate).toLowerCase() }}
+        <span>{{ activeContour.eni }}</span>
       </div>
       <div>
         {{ "Culture" | translate }}
@@ -116,15 +125,6 @@
         <ng-template #noCulture>
           <span>{{ "Culture is not defined" | translate }}</span>
         </ng-template>
-      </div>
-      <div>
-        {{ "INK" | translate }}
-        <span x>{{ activeContour?.ink ?? "-----" }}</span>
-      </div>
-
-      <div>
-        ENI-{{ ("Code" | translate).toLowerCase() }}
-        <span>{{ activeContour?.eni ?? "-----" }}</span>
       </div>
     </div>
   </div>
