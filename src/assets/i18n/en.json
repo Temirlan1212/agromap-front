@@ -227,5 +227,7 @@
   "Code": "Code",
   "Settings": "Settings",
   "Close the sidebar when filtering": "Close the sidebar when filtering",
-  "Map": "Map"
+  "Map": "Map",
+  "Close sidebar": "Close sidebar",
+  "Open sidebar": "Open sidebar"
 }

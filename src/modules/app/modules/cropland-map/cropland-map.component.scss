@@ -26,3 +26,60 @@ app-loading {
 app-side-panel {
   z-index: 999;
 }
+
+.sidebar-toggler {
+  padding: 10px;
+
+  div:first-child,
+  div:last-child {
+    background-color: $grayColor;
+    width: 5px;
+    height: 15px;
+  }
+  div:first-child {
+    border-top-right-radius: 10px;
+    border-top-left-radius: 10px;
+  }
+
+  div:last-child {
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+  }
+
+  &:hover,
+  &.collapsed {
+    div:first-child {
+      transform: rotate(20deg);
+      margin-bottom: -2px;
+      background-color: $lightColor;
+    }
+
+    div:last-child {
+      transform: rotate(-20deg);
+      margin-top: -2px;
+      background-color: $lightColor;
+    }
+  }
+
+  &.collapsed {
+    div:first-child {
+      transform: rotate(-20deg);
+      background-color: $grayColor;
+    }
+
+    div:last-child {
+      transform: rotate(20deg);
+      background-color: $grayColor;
+    }
+
+    &:hover {
+      div:first-child {
+        background-color: $lightColor;
+      }
+
+      div:last-child {
+        background-color: $lightColor;
+      }
+    }
+  }
+}

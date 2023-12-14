@@ -130,6 +130,32 @@
         </app-map-control>
       </ng-container>
 
+      <ng-container
+        topCenterPanel
+        *ngIf="
+          !currentRouterPathname.includes('contour-add') &&
+          !currentRouterPathname.includes('contour-edit')
+        "
+      >
+        <app-map-control
+          tooltipPlacement="right"
+          [tooltipTitle]="
+            !sidePanelService.get() ? 'Close sidebar' : 'Open sidebar'
+          "
+          tooltipClass="delay-none"
+          class="d-xs-none d-sm-none d-md-none mb-10 transparent"
+          (click)="sidePanelService.toggle()"
+        >
+          <div
+            class="sidebar-toggler"
+            [class.collapsed]="sidePanelService.get()"
+          >
+            <div></div>
+            <div></div>
+          </div>
+        </app-map-control>
+      </ng-container>
+
       <ng-container leftBottomPanel>
         <app-map-control class="transparent">
           <app-color-legend

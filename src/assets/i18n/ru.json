@@ -227,5 +227,7 @@
   "Code": "Код",
   "Settings": "Настройки",
   "Close the sidebar when filtering": "Закрывать боковую панель при фильтрации",
-  "Map": "Карта"
+  "Map": "Карта",
+  "Close sidebar": "Закрыть боковую панель",
+  "Open sidebar": "Открыть боковую панель"
 }

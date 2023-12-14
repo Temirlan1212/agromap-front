@@ -24,6 +24,7 @@ import { QuestionDialogComponent } from '../../../../../ui/components/question-d
 import { StoreService } from 'src/modules/ui/services/store.service';
 import { ICulture } from '../../../../../api/models/culture.model';
 import { SettingsService } from 'src/modules/ui/services/settings.service';
+import { SidePanelService } from 'src/modules/ui/services/side-panel.service';
 
 @Component({
   selector: 'app-contour-filter',
@@ -128,7 +129,8 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
     private translate: TranslatePipe,
     private translateSvc: TranslateService,
     private store: StoreService,
-    private settingsService: SettingsService
+    private settingsService: SettingsService,
+    private sidePanelService: SidePanelService
   ) {}
 
   async ngOnInit(): Promise<void> {
@@ -236,9 +238,7 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
         this.filtersQuery
       );
 
-      if (this.collapseOnApply) {
-        this.store.setItem('isSidePanelCollapsed', true);
-      }
+      if (this.collapseOnApply) this.sidePanelService.set(true);
     } catch (e: any) {
       this.messages.error(e.error?.message ?? e.message);
     } finally {

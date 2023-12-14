@@ -227,5 +227,7 @@
   "Code": "Код",
   "Settings": "Орнотуулар",
   "Close the sidebar when filtering": "Фильтрциялоодо каптал тилкесин жабуу",
-  "Map": "Карта"
+  "Map": "Карта",
+  "Close sidebar": "Каптал тилкесин жабуу",
+  "Open sidebar": "Каптал тилкесин ачуу"
 }

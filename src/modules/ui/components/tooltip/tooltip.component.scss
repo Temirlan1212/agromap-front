@@ -17,6 +17,10 @@ $arrowSize: 8px;
   pointer-events: none;
   z-index: 1000;
 
+  &.delay-none {
+    transition: none;
+  }
+
   &::before {
     content: "";
     position: absolute;

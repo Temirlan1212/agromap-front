@@ -115,19 +115,6 @@
 
 <div class="menu" [class.open]="opened">
   <nav class="top">
-    <div
-      class="hubmerger"
-      (click)="handleToggleSidePanel()"
-      [class.disabled]="!activeNavItem?.['panel']"
-      [class.collapsed]="collapsed"
-    >
-      <app-svg-icon name="sidebar" size="22"></app-svg-icon>
-      <app-svg-icon
-        class="arrow"
-        name="double-arrow-right"
-        size="22"
-      ></app-svg-icon>
-    </div>
     <ng-container
       *ngFor="let route of topRoutes"
       [ngTemplateOutlet]="navItem"
@@ -152,9 +139,6 @@
   </nav>
 </div>
 
-<div
-  class="content"
-  [class.collapsed]="collapsed && !!activeNavItem?.['panel']"
->
+<div class="content">
   <ng-content></ng-content>
 </div>

@@ -67,3 +67,23 @@
     }
   }
 }
+
+.topCenterPanel {
+  position: absolute;
+  top: 10px;
+  left: 0px;
+  right: 5px;
+  pointer-events: none;
+  bottom: 10px;
+  display: flex;
+  align-items: center;
+
+  ::ng-deep {
+    .map-control {
+      position: relative;
+      display: inline-block;
+      z-index: 404;
+      pointer-events: initial;
+    }
+  }
+}
