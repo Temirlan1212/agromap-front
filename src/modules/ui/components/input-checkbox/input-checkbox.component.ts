@@ -1,7 +1,9 @@
 import {
   Component,
+  ElementRef,
   EventEmitter,
   forwardRef,
+  HostListener,
   Input,
   Output,
 } from '@angular/core';
@@ -32,7 +34,13 @@ export class InputCheckboxComponent {
   onChange: Function = () => null;
   onTouched: Function = () => null;
 
-  constructor() {}
+  constructor(private elementRef: ElementRef) {}
+
+  @HostListener('document:click', ['$event'])
+  public onClick(e: any) {
+    const clickedInside = this.elementRef.nativeElement.contains(e.target);
+    if (clickedInside) this.handleClick();
+  }
 
   handleClick(): void {
     this.checked = !this.checked;

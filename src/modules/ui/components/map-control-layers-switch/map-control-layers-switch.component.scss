@@ -65,19 +65,11 @@ app-input-radio {
     padding: 5px;
     cursor: pointer;
     position: relative;
+    margin: 10px 0 5px 0;
 
     &.active {
-      &::after {
-        content: "✔️";
-        position: absolute;
-        top: 0;
-        right: 0;
-        height: 100%;
-        padding: 2px;
-        display: flex;
-        align-items: center;
-        background: $baseColor;
-      }
+      background: rgba($grayColor, 0.2);
+      border-radius: 5px;
     }
   }
 }
