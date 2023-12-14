@@ -6,6 +6,7 @@ import {
   ViewChild,
   ElementRef,
 } from '@angular/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import {
   ChartComponent,
   ApexChart,
@@ -92,9 +93,20 @@ export class SimplePieChartComponent implements OnChanges {
     colors: ['#1BA87D', '#B3EC84'],
   };
 
-  constructor() {}
+  constructor(
+    private translateSvc: TranslateService,
+    private translate: TranslatePipe
+  ) {}
 
   ngOnChanges(changes: SimpleChanges) {
+    this.chartOptions.chart.defaultLocale = this.translateSvc.currentLang;
+    this.chartOptions.chart.locales = [
+      {
+        name: this.translateSvc.currentLang,
+        options: { toolbar: this.translate.transform('apex-chart-toolbar') },
+      },
+    ];
+
     this.chartOptions.labels = this.labels;
     this.chartOptions.series = this.series;
   }

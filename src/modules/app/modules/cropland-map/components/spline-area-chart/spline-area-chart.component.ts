@@ -5,6 +5,7 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import {
   ChartComponent,
   ApexAxisChartSeries,
@@ -85,9 +86,30 @@ export class SplineAreaChartComponent implements OnChanges {
     },
   };
 
-  constructor() {}
+  constructor(
+    private translateSvc: TranslateService,
+    private translate: TranslatePipe
+  ) {
+    this.translateSvc.onLangChange.subscribe(({ lang }) => {
+      this.chartOptions.chart.defaultLocale = lang;
+      this.chartOptions.chart.locales = [
+        {
+          name: lang,
+          options: { toolbar: this.translate.transform('apex-chart-toolbar') },
+        },
+      ];
+    });
+  }
 
   ngOnChanges(changes: SimpleChanges) {
+    this.chartOptions.chart.defaultLocale = this.translateSvc.currentLang;
+    this.chartOptions.chart.locales = [
+      {
+        name: this.translateSvc.currentLang,
+        options: { toolbar: this.translate.transform('apex-chart-toolbar') },
+      },
+    ];
+
     this.chartOptions.series = this.chartData;
     this.chartOptions.xaxis.categories = this.chartData[0].dates;
   }

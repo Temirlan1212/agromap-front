@@ -229,5 +229,17 @@
   "Close the sidebar when filtering": "Close the sidebar when filtering",
   "Map": "Map",
   "Close sidebar": "Close sidebar",
-  "Open sidebar": "Open sidebar"
+  "Open sidebar": "Open sidebar",
+  "apex-chart-toolbar": {
+    "exportToSVG": "Download SVG",
+    "exportToPNG": "Download PNG",
+    "exportToCSV": "exportToCSV",
+    "menu": "Menu",
+    "selection": "Selection",
+    "selectionZoom": "Selection Zoom",
+    "zoomIn": "Zoom In",
+    "zoomOut": "Zoom Out",
+    "pan": "Panning",
+    "reset": "Reset Zoom"
+  }
 }

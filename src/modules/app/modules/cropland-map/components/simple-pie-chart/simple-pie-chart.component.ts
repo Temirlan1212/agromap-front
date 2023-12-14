@@ -6,7 +6,7 @@ import {
   ViewChild,
   ElementRef,
 } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import {
   ChartComponent,
   ApexChart,
@@ -42,7 +42,7 @@ export class SimplePieChartComponent implements OnChanges {
   @Input() seriesFieldName: string = '';
   @Input() labels!: Record<string, any>[];
   @Input() labelsFieldName: string = '';
-  @Input() dataLabelUnitOfMeasure: string = 'га';
+  @Input() dataLabelUnitOfMeasure: string = '';
   @Input() colors: string[] = [];
 
   chartOptions: ChartOptions = {
@@ -107,7 +107,10 @@ export class SimplePieChartComponent implements OnChanges {
     ],
   };
 
-  constructor(private translate: TranslateService) {}
+  constructor(
+    private translateSvc: TranslateService,
+    private translate: TranslatePipe
+  ) {}
 
   ngOnChanges(changes: SimpleChanges) {
     const series = this.series?.map(
@@ -116,10 +119,19 @@ export class SimplePieChartComponent implements OnChanges {
 
     const labels = this.labels.map(
       (item) =>
-        item?.[`${this.labelsFieldName ?? ''}_${this.translate.currentLang}`] ??
-        ''
+        item?.[
+          `${this.labelsFieldName ?? ''}_${this.translateSvc.currentLang}`
+        ] ?? ''
     );
 
+    this.chartOptions.chart.locales = [
+      {
+        name: this.translateSvc.currentLang,
+        options: { toolbar: this.translate.transform('apex-chart-toolbar') },
+      },
+    ];
+
+    this.chartOptions.chart.defaultLocale = this.translateSvc.currentLang;
     this.chartOptions.labels = labels;
     this.chartOptions.series = series;
   }

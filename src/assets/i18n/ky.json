@@ -229,5 +229,17 @@
   "Close the sidebar when filtering": "Фильтрциялоодо каптал тилкесин жабуу",
   "Map": "Карта",
   "Close sidebar": "Каптал тилкесин жабуу",
-  "Open sidebar": "Каптал тилкесин ачуу"
+  "Open sidebar": "Каптал тилкесин ачуу",
+  "apex-chart-toolbar": {
+    "exportToSVG": "SVG жүктөө",
+    "exportToPNG": "PNG жүктөө",
+    "exportToCSV": "CSV жүктөө",
+    "menu": "Меню",
+    "selection": "Тандоо",
+    "selectionZoom": "Тандоо байланышы",
+    "zoomIn": "Жакындатуу",
+    "zoomOut": "Алыстатуу",
+    "pan": "Жылдыруу",
+    "reset": "Масштабты калыбына келтирүү"
+  }
 }
