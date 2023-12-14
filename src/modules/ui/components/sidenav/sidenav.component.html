@@ -64,7 +64,12 @@
 </ng-template>
 
 <ng-template #navItem let-path="path" let-title="title" let-data="data">
-  <a routerLinkActive="active" [routerLink]="path" [ngClass]="data.class">
+  <a
+    routerLinkActive="active"
+    [routerLink]="path"
+    (click)="sidePanelService.set(false)"
+    [ngClass]="data.class"
+  >
     <div class="icon-wrapper">
       <app-svg-icon
         class="icon"
