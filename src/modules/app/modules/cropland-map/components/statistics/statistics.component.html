@@ -60,9 +60,8 @@
                     class="chart"
                   >
                     <app-simple-pie-chart
-                      [series]="item"
+                      [items]="item"
                       seriesFieldName="productive"
-                      [labels]="item"
                       [dataLabelUnitOfMeasure]="'ha' | translate"
                       labelsFieldName="areaName"
                     ></app-simple-pie-chart>
@@ -74,9 +73,8 @@
                     class="chart"
                   >
                     <app-simple-pie-chart
-                      [series]="item"
+                      [items]="item"
                       seriesFieldName="unproductive"
-                      [labels]="item"
                       labelsFieldName="areaName"
                       [dataLabelUnitOfMeasure]="'ha' | translate"
                     ></app-simple-pie-chart>
@@ -87,10 +85,10 @@
               <ng-container *ngIf="!getItem(ltype.id).nested">
                 <div class="chart">
                   <app-simple-pie-chart
-                    [series]="getItem(ltype.id).value"
+                    [items]="getItem(ltype.id).value"
                     seriesFieldName="area_ha"
-                    [labels]="getItem(ltype.id).value"
                     labelsFieldName="predicted_culture_name"
+                    colorsFieldName="color"
                     [dataLabelUnitOfMeasure]="'ha' | translate"
                   ></app-simple-pie-chart>
                 </div>
