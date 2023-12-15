@@ -38,15 +38,26 @@ export type ChartOptions = {
 export class SimplePieChartComponent implements OnChanges {
   @ViewChild('pie') chart!: ChartComponent | ElementRef;
 
-  @Input() series!: Record<string, any>[];
+  @Input() items!: Record<string, any>[];
   @Input() seriesFieldName: string = '';
-  @Input() labels!: Record<string, any>[];
   @Input() labelsFieldName: string = '';
   @Input() dataLabelUnitOfMeasure: string = '';
-  @Input() colors: string[] = [];
+  @Input() colorsFieldName: string = '';
+  colors: string[] = [
+    '#39afd1',
+    '#ffbc00',
+    '#e3eaef',
+    '#CAC13B',
+    '#A580A1',
+    '#0B9B7A',
+    '#85046B',
+    '#807F82',
+    '#63FF0F',
+    '#FF800F',
+  ];
 
   chartOptions: ChartOptions = {
-    series: this.series?.map((item) => item?.[this.seriesFieldName ?? ''] ?? 0),
+    series: this.items?.map((item) => item?.[this.seriesFieldName ?? ''] ?? 0),
     chart: {
       height: 400,
       type: 'pie',
@@ -54,7 +65,7 @@ export class SimplePieChartComponent implements OnChanges {
         show: true,
       },
     },
-    labels: this.labels,
+    labels: this.items,
     responsive: [
       {
         breakpoint: 480,
@@ -93,18 +104,7 @@ export class SimplePieChartComponent implements OnChanges {
     legend: {
       position: 'bottom',
     },
-    colors: [
-      '#39afd1',
-      '#ffbc00',
-      '#e3eaef',
-      '#CAC13B',
-      '#A580A1',
-      '#0B9B7A',
-      '#85046B',
-      '#807F82',
-      '#63FF0F',
-      '#FF800F',
-    ],
+    colors: ['red'],
   };
 
   constructor(
@@ -112,27 +112,42 @@ export class SimplePieChartComponent implements OnChanges {
     private translate: TranslatePipe
   ) {}
 
-  ngOnChanges(changes: SimpleChanges) {
-    const series = this.series?.map(
-      (item) => item?.[this.seriesFieldName ?? ''] ?? 0
+  updateColors() {
+    this.colors = [...(this.items ?? [])]?.map(
+      (item, index) =>
+        item?.[this.colorsFieldName ?? ''] ?? this.colors?.[index] ?? '#fff'
     );
+  }
 
-    const labels = this.labels.map(
+  updateLabels() {
+    this.chartOptions.labels = this.items.map(
       (item) =>
         item?.[
           `${this.labelsFieldName ?? ''}_${this.translateSvc.currentLang}`
         ] ?? ''
     );
+  }
 
+  updateSeries() {
+    this.chartOptions.series = this.items?.map(
+      (item) => item?.[this.seriesFieldName ?? ''] ?? 0
+    );
+  }
+
+  updateLocale() {
     this.chartOptions.chart.locales = [
       {
         name: this.translateSvc.currentLang,
         options: { toolbar: this.translate.transform('apex-chart-toolbar') },
       },
     ];
-
     this.chartOptions.chart.defaultLocale = this.translateSvc.currentLang;
-    this.chartOptions.labels = labels;
-    this.chartOptions.series = series;
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    this.updateColors();
+    this.updateLabels();
+    this.updateSeries();
+    this.updateLocale();
   }
 }
