@@ -44,23 +44,6 @@
       [textContent]="'Language' | translate"
     ></app-tooltip>
   </div>
-
-  <div>
-    <div class="switcher">
-      <app-svg-icon class="icon" size="24px" name="settings"></app-svg-icon>
-      <span class="title">{{ "Settings" | translate }}</span>
-    </div>
-
-    <app-menu [placement]="placement" (onChange)="settingsOpened = $event">
-      <app-settings></app-settings>
-    </app-menu>
-
-    <app-tooltip
-      *ngIf="!settingsOpened"
-      [placement]="placement"
-      [textContent]="'Settings' | translate"
-    ></app-tooltip>
-  </div>
 </ng-template>
 
 <ng-template #navItem let-path="path" let-title="title" let-data="data">

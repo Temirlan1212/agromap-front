@@ -45,6 +45,7 @@ import { ColorLegendComponent } from 'src/modules/ui/components/color-legend/col
 import { MapControlComponent } from 'src/modules/ui/components/map-control/map-control.component';
 import { StatisticsComponent } from './components/statistics/statistics.component';
 import { SimplePieChartComponent } from './components/simple-pie-chart/simple-pie-chart.component';
+import { MenuComponent } from 'src/modules/ui/components/menu/menu.component';
 
 @NgModule({
   declarations: [
@@ -96,6 +97,7 @@ import { SimplePieChartComponent } from './components/simple-pie-chart/simple-pi
     ToggleButtonComponent,
     ColorLegendComponent,
     MapControlComponent,
+    MenuComponent,
   ],
   providers: [MapService, TranslatePipe],
 })

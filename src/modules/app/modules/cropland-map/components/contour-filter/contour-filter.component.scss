@@ -11,6 +11,22 @@ $indent: 0 20px;
   width: $sidePanelContentWidth;
   background-color: $lightColor;
   padding: $fieldsGroupContentPadding;
+
+  .settings-wrapper {
+    display: flex;
+    justify-content: flex-end;
+
+    .settings {
+      display: flex;
+      width: fit-content;
+      cursor: pointer;
+
+      app-menu {
+        padding: 10px;
+        max-width: 250px;
+      }
+    }
+  }
 }
 
 .filters > button {
