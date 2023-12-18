@@ -11,6 +11,7 @@ import { MessagesService } from '../../../../../ui/services/messages.service';
 import { TranslatePipe } from '@ngx-translate/core';
 import { StoreService } from 'src/modules/ui/services/store.service';
 import { FormControl, Validators } from '@angular/forms';
+import { SidePanelService } from 'src/modules/ui/services/side-panel.service';
 
 @Component({
   selector: 'app-contour-add',
@@ -32,10 +33,12 @@ export class ContourAddComponent implements OnInit, OnDestroy {
     private messages: MessagesService,
     private translate: TranslatePipe,
     private store: StoreService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private sidePanelService: SidePanelService
   ) {}
 
   async ngOnInit() {
+    this.sidePanelService.set(false);
     this.handleSetSidePanelState(true);
 
     this.mapSubscription = this.mapService.map.subscribe(

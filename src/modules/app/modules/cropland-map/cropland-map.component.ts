@@ -259,15 +259,6 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
       }),
       type: 'checkbox',
     },
-    {
-      title: 'Land shares of the Chui region',
-      name: 'agromap:zemdoli',
-      layer: tileLayer.wms('https://geoserver.24mycrm.com/agromap/wms', {
-        layers: 'agromap:zemdoli',
-        ...this.wmsLayersOverlayOptions,
-      }),
-      type: 'checkbox',
-    },
   ];
 
   constructor(
@@ -432,8 +423,7 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.mapComponent && this.activeContour != null) {
       this.mapComponent.handleFeatureClose();
     }
-
-    this.handleWmsLayerPopup(e);
+    // this.handleWmsLayerPopup(e);
   }
 
   async handleWmsLayerPopup(e: LeafletMouseEvent) {
