@@ -241,5 +241,6 @@
     "zoomOut": "Zoom Out",
     "pan": "Panning",
     "reset": "Reset Zoom"
-  }
+  },
+  "Status": "Status"
 }
