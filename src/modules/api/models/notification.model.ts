@@ -5,4 +5,8 @@ export interface INotification {
   text_ky: string;
   text_en: string;
   user: number;
+  is_read: boolean;
+  status_en: 'Unread' | 'Read';
+  status_ky: 'Окулбаган' | 'Окулган';
+  status_ru: 'Не прочитано' | 'Прочитано';
 }
