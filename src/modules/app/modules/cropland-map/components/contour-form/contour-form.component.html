@@ -86,6 +86,22 @@
       ></span>
     </app-form-field>
 
+    <app-form-field name="eni" #eni *ngIf="mode != 'contours_main_ai'">
+      <app-input
+        type="text"
+        [placeholder]="'ENI-' + ('Code' | translate).toLowerCase()"
+        formControlName="eni"
+        [required]="eni.required"
+      >
+      </app-input>
+
+      <span
+        class="field-error"
+        *ngIf="form.get('eni')?.getError('error') != null"
+        [textContent]="form.get('eni')?.getError('error') | translate"
+      ></span>
+    </app-form-field>
+
     <div class="actions">
       <ng-content select="[actions]"></ng-content>
     </div>

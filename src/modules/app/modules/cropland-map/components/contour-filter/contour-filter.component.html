@@ -1,17 +1,3 @@
-<div class="settings-wrapper">
-  <div class="settings">
-    <app-svg-icon name="settings"></app-svg-icon>
-    <app-menu [placement]="'right'"
-      ><app-input-checkbox
-        class="checkbox"
-        [name]="'Close the sidebar when filtering' | translate"
-        [checked]="settings['filter.collapseOnApply']"
-        (changed)="handleChangeSettings('filter.collapseOnApply', $event)"
-      ></app-input-checkbox>
-    </app-menu>
-  </div>
-</div>
-
 <h4>{{ "Filter" | translate }}</h4>
 
 <div class="filters">

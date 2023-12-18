@@ -37,6 +37,7 @@ export class ContourFormComponent implements OnInit, OnDestroy {
         year: v.year,
         code_soato: v.code_soato,
         ink: v.ink,
+        eni: v.eni,
       });
     }
   }
@@ -48,6 +49,7 @@ export class ContourFormComponent implements OnInit, OnDestroy {
     year: new FormControl<number | null>(null, Validators.required),
     code_soato: new FormControl<string | null>(null),
     ink: new FormControl<string | null>(null),
+    eni: new FormControl<string | null>(null),
   });
   @Output() onChange = new EventEmitter<any>();
 

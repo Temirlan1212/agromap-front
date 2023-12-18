@@ -55,7 +55,6 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
   @Output() onFormSubmit = new EventEmitter<Record<string, any>>();
   @Output() onFormReset = new EventEmitter<Record<string, any>>();
 
-  settings = this.settingsService.settings;
   loading: boolean = false;
   form: FormGroup = new FormGroup({
     region: new FormControl<string | null>(null, {
@@ -349,10 +348,6 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
     await this.deleteItem();
     this.selectedId = null;
     dialog.close();
-  }
-
-  handleChangeSettings(key: keyof typeof this.settings, value: any) {
-    this.settingsService.patch(key, value, { persist: true });
   }
 
   ngOnDestroy() {
