@@ -1,5 +1,5 @@
 <div class="contact-information-list" *ngIf="contactInformations.length > 0">
-  <ng-container *ngIf="!isLoading">
+  <ng-container *ngIf="!isLoading; else skeleton">
     <app-contact-information
       *ngFor="let item of contactInformations"
       (click)="handleContactInformationClick(item)"
@@ -9,6 +9,17 @@
       "
     ></app-contact-information>
   </ng-container>
-  <app-loading [loading]="isLoading"></app-loading>
+
+  <ng-template #skeleton>
+    <ng-container *ngFor="let num of [1, 2, 3, 4, 5]">
+      <app-skeleton
+        [width]="'100%'"
+        [height]="'200px'"
+        [className]="'custom-skeleton'"
+        [borderRadius]="'10px'"
+        *ngIf="true"
+      ></app-skeleton>
+    </ng-container>
+  </ng-template>
 </div>
 <app-map (mapData)="handleMapData($event)"></app-map>
