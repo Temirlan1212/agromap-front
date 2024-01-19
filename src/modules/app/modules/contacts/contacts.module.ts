@@ -12,12 +12,14 @@ import { MapComponent } from 'src/modules/ui/components/map/map.component';
 import { MapService } from 'src/modules/ui/services/map.service';
 import { ToggleButtonComponent } from 'src/modules/ui/components/toggle-button/toggle-button.component';
 import { TranslateFieldPipe } from 'src/modules/ui/pipes/translate-field.pipe';
+import { SkeletonComponent } from 'src/modules/ui/components/skeleton/skeleton.component';
 
 @NgModule({
   declarations: [
     ContactsComponent,
     ContactInformationsComponent,
     ContactInformationComponent,
+    SkeletonComponent,
   ],
   imports: [
     CommonModule,

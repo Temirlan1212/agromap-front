@@ -1,0 +1,33 @@
+.wrapper {
+  background-color: rgb(243, 243, 243);
+  border-radius: 10px;
+}
+
+.skeleton-wave {
+  position: relative;
+  overflow: hidden;
+  height: 100%;
+  width: 100%;
+  border-radius: 10px;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, #ecebeb, transparent);
+    border-radius: 4px;
+    animation: wave-animation 1.5s infinite;
+  }
+}
+
+@keyframes wave-animation {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
