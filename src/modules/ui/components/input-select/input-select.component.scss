@@ -13,6 +13,14 @@
     }
   }
 
+  &.multi {
+    .placeholder {
+      &.floating {
+        transform: translateY(-25px);
+      }
+    }
+  }
+
   .placeholder {
     transform: translateY(0px);
     transition: all 0.2s linear;
