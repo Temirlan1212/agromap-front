@@ -34,7 +34,9 @@ export class InputSelectComponent implements ControlValueAccessor, OnChanges {
   onTouched: Function = () => null;
 
   @Input() required: boolean = false;
-  @Input() multi: boolean = false;
+  @HostBinding('class.multi')
+  @Input()
+  multi: boolean = false;
   @Input() placeholder: string = 'placeholder';
   @HostBinding('class.disabled')
   isDisabled!: boolean;
