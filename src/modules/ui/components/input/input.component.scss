@@ -15,6 +15,7 @@
   input {
     width: 100%;
     border-color: $inputBorderColor;
+    border-radius: $fieldBorderRadius;
 
     &:focus {
       border-color: rgba(27, 85, 235, 0.48);

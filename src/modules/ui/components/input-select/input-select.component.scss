@@ -3,14 +3,16 @@
 :host {
   display: block;
   position: relative;
+  border: 1px solid $fieldBorder;
+  border-radius: $fieldBorderRadius;
+  cursor: pointer;
+  height: fit-content;
 
-  &.disabled {
-    background-color: $secondaryColor;
-    height: fit-content;
+  &:hover {
+    border: 1px solid $fieldBorder;
+  }
 
-    .placeholder.floating::after {
-      background-color: $secondaryColor;
-    }
+  .container {
   }
 
   &.multi {
@@ -49,6 +51,7 @@
   .actions-icons {
     display: flex;
     gap: 10px;
+    color: $iconColor;
   }
 
   .selected-items {
@@ -75,7 +78,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border: 1px solid $inputBorderColor;
+    // border: 1px solid $inputBorderColor;
     border-radius: $inputBorderRadius;
     font-weight: 400;
     line-height: 19px;
@@ -110,12 +113,15 @@
       position: absolute;
       z-index: 100;
       width: 100%;
+      margin-top: 5px;
     }
 
     .search {
       position: sticky;
-      top: 0;
       padding: 10px;
+      input {
+        cursor: initial;
+      }
     }
 
     .option {
@@ -172,12 +178,45 @@
   }
 
   &.ng-touched.ng-invalid {
+    margin-bottom: 5px;
+    border: 1px solid $dangerColor;
+    .actions-icons {
+      color: $dangerColor;
+    }
     .container {
-      border: 1px solid $dangerColor;
+      color: $dangerColor;
+    }
+    .placeholder {
+      color: $dangerColor;
     }
     .options {
       &.collapsed {
-        border: 1px solid $dangerColor;
+        border: 1px solid $disabledField;
+      }
+    }
+  }
+
+  &.disabled {
+    background-color: $secondaryColor;
+    color: $disabledField;
+    border: 1px solid $disabledField;
+    height: fit-content;
+    cursor: initial;
+    .placeholder.floating::after {
+      background-color: $secondaryColor;
+    }
+    .actions-icons {
+      color: $disabledField;
+    }
+    .container {
+      color: $disabledField;
+    }
+    .placeholder {
+      color: $disabledField;
+    }
+    .options {
+      &.collapsed {
+        border: 1px solid $disabledField;
       }
     }
   }
