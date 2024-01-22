@@ -9,6 +9,8 @@
 .map-container {
   position: relative;
   flex: 1;
+  display: flex;
+  align-items: center;
 }
 
 .no-data-text {
