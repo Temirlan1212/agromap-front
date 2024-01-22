@@ -76,7 +76,7 @@
     />
     <span class="title" [textContent]="title | translate"></span>
     <app-tooltip
-      *ngIf="!opened"
+      *ngIf="!opened && !!title"
       placement="right"
       [textContent]="title | translate"
     ></app-tooltip>

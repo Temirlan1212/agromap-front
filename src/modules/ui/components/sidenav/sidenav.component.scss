@@ -83,8 +83,11 @@
           $sideNavMenuItemIconMargin;
       }
 
-      .icon {
-        // margin-left: $sideNavMenuItemIconMargin;
+      &.homepage {
+        &:hover {
+          background-color: transparent;
+          cursor: initial;
+        }
       }
 
       .title {
