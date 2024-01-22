@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
 import { CroplandMapRoutingModule } from './cropland-map-routing.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CroplandMapComponent } from './cropland-map.component';
@@ -46,6 +45,7 @@ import { MapControlComponent } from 'src/modules/ui/components/map-control/map-c
 import { StatisticsComponent } from './components/statistics/statistics.component';
 import { SimplePieChartComponent } from './components/simple-pie-chart/simple-pie-chart.component';
 import { MenuComponent } from 'src/modules/ui/components/menu/menu.component';
+import { SkeletonComponent } from 'src/modules/ui/components/skeleton/skeleton.component';
 
 @NgModule({
   declarations: [
@@ -98,6 +98,7 @@ import { MenuComponent } from 'src/modules/ui/components/menu/menu.component';
     ColorLegendComponent,
     MapControlComponent,
     MenuComponent,
+    SkeletonComponent,
   ],
   providers: [MapService, TranslatePipe],
 })

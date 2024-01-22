@@ -21,21 +21,24 @@ const routes: Routes = [
         (m) => m.LoginModule
       ),
   },
-  // {
-  //   title: 'GiproZem',
-  //   path: 'pastures-map',
-  //   data: {
-  //     position: 'top',
-  //     image: 'logo.png',
-  //     class: 'homepage',
-  //     panel: true,
-  //   },
-  //   canActivate: [AuthGuard],
-  //   loadChildren: () =>
-  //     import('./modules/pastures-map/pastures-map.module').then(
-  //       (m) => m.PasturesMapModule
-  //     ),
-  // },
+  {
+    title: 'GiproZem',
+    path: '',
+    redirectTo: 'cropland-map',
+    pathMatch: 'full',
+    data: {
+      position: 'top',
+      image: 'logo.png',
+      class: 'homepage divider-bottom',
+      panel: true,
+      active: false,
+    },
+    // canActivate: [AuthGuard],
+    // loadChildren: () =>
+    //   import('./modules/cropland-map/cropland-map.module').then(
+    //     (m) => m.CroplandMapModule
+    //   ),
+  },
   // {
   //   title: 'Home',
   //   path: 'pastures-map',
@@ -49,7 +52,13 @@ const routes: Routes = [
   {
     title: 'Map',
     path: 'cropland-map',
-    data: { position: 'top', icon: 'map', panel: true, toggle: true },
+    data: {
+      position: 'top',
+      icon: 'map',
+      panel: true,
+      toggle: true,
+      active: true,
+    },
     canActivate: [AuthGuard],
     loadChildren: () =>
       import('./modules/cropland-map/cropland-map.module').then(
@@ -59,7 +68,7 @@ const routes: Routes = [
   {
     title: 'Reports',
     path: 'reports',
-    data: { position: 'top', icon: 'reports' },
+    data: { position: 'top', icon: 'reports', active: true },
     canActivate: [AuthGuard],
     loadChildren: () =>
       import('./modules/reports/reports.module').then((m) => m.ReportsModule),
@@ -67,7 +76,7 @@ const routes: Routes = [
   {
     title: 'Dictionary',
     path: 'dictionary',
-    data: { position: 'top', icon: 'dictionary', panel: true },
+    data: { position: 'top', icon: 'dictionary', panel: true, active: true },
     canActivate: [AuthGuard],
     loadChildren: () =>
       import('./modules/dictionary/dictionary.module').then(
@@ -77,7 +86,7 @@ const routes: Routes = [
   {
     title: 'Contacts',
     path: 'contacts',
-    data: { position: 'top', icon: 'contacts', panel: true },
+    data: { position: 'top', icon: 'contacts', panel: true, active: true },
     canActivate: [AuthGuard],
     loadChildren: () =>
       import('./modules/contacts/contacts.module').then(
@@ -87,7 +96,7 @@ const routes: Routes = [
   {
     title: 'About system',
     path: 'about',
-    data: { position: 'top', icon: 'info' },
+    data: { position: 'top', icon: 'info', active: true },
     canActivate: [AuthGuard],
     loadChildren: () =>
       import('./modules/about/about.module').then((m) => m.AboutModule),
@@ -95,7 +104,12 @@ const routes: Routes = [
   {
     title: 'Profile',
     path: 'profile',
-    data: { position: 'bottom', icon: 'user' },
+    data: {
+      position: 'bottom',
+      icon: 'user',
+      active: true,
+      class: 'divider-top',
+    },
     canActivate: [AuthGuard],
     loadChildren: () =>
       import('./modules/profile/profile.module').then((m) => m.ProfileModule),
@@ -103,7 +117,12 @@ const routes: Routes = [
   {
     title: 'Notifications',
     path: 'notifications',
-    data: { position: 'bottom', icon: 'notification', class: 'notification' },
+    data: {
+      position: 'bottom',
+      icon: 'notification',
+      class: 'notification',
+      active: true,
+    },
     canActivate: [AuthGuard],
     loadChildren: () =>
       import('./modules/notifications/notifications.module').then(

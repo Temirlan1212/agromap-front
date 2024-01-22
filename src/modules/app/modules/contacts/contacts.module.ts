@@ -19,7 +19,6 @@ import { SkeletonComponent } from 'src/modules/ui/components/skeleton/skeleton.c
     ContactsComponent,
     ContactInformationsComponent,
     ContactInformationComponent,
-    SkeletonComponent,
   ],
   imports: [
     CommonModule,
@@ -31,6 +30,7 @@ import { SkeletonComponent } from 'src/modules/ui/components/skeleton/skeleton.c
     MapComponent,
     ToggleButtonComponent,
     TranslateFieldPipe,
+    SkeletonComponent,
   ],
   providers: [TranslatePipe, MapService],
 })

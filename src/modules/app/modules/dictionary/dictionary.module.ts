@@ -31,6 +31,7 @@ import { CultureAddComponent } from './cultures/components/culture-add/culture-a
 import { CultureEditComponent } from './cultures/components/culture-edit/culture-edit.component';
 import { CultureFormComponent } from './cultures/components/culture-form/culture-form.component';
 import { PastureComponent } from './pasture/pasture.component';
+import { SkeletonComponent } from 'src/modules/ui/components/skeleton/skeleton.component';
 
 @NgModule({
   declarations: [
@@ -67,6 +68,7 @@ import { PastureComponent } from './pasture/pasture.component';
     ToggleButtonComponent,
     PaginatorComponent,
     InputSelectComponent,
+    SkeletonComponent,
   ],
   providers: [TranslatePipe],
 })
