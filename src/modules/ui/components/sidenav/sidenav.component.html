@@ -47,6 +47,9 @@
 </ng-template>
 
 <ng-template #navItem let-path="path" let-title="title" let-data="data">
+  <ng-container *ngIf="data?.class?.includes('divider-top')">
+    <div class="divider"></div>
+  </ng-container>
   <a
     [routerLinkActive]="!!data?.active ? 'active' : ''"
     [routerLink]="path"
@@ -78,6 +81,9 @@
       [textContent]="title | translate"
     ></app-tooltip>
   </a>
+  <ng-container *ngIf="data?.class?.includes('divider-bottom')">
+    <div class="divider"></div>
+  </ng-container>
 </ng-template>
 
 <div class="mobile-menu" #menuContainer>
@@ -123,7 +129,7 @@
     ></ng-container>
 
     <button type="button" class="toggler" (click)="opened = !opened">
-      <app-svg-icon name="arrow-down" size="14"></app-svg-icon>
+      <app-svg-icon name="arrow-down" size="20"></app-svg-icon>
     </button>
   </nav>
 </div>

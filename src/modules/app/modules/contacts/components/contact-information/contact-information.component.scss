@@ -17,13 +17,15 @@ p {
   background-color: $lightColor;
   backdrop-filter: blur(30px);
   transition: all 0.2s;
+  color: $iconColor;
+  font-size: 14px;
 
   &:hover {
-    background-color: rgba($lightColor, 0.2);
+    color: $darkColor;
   }
 
   &.active {
-    background-color: $sideNavMenuBgColor;
+    color: $darkColor;
   }
 
   ul {
@@ -50,5 +52,6 @@ p {
   .icon {
     width: 20px !important;
     height: 20px !important;
+    color: $iconColor;
   }
 }
