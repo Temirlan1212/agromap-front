@@ -20,7 +20,7 @@
       <app-svg-icon
         *ngIf="!isDisabled"
         name="clear"
-        size="10"
+        size="18"
         (click)="handleRemoveItem($event, selectedItems[0])"
       ></app-svg-icon>
     </div>
@@ -29,13 +29,13 @@
   <div class="actions-icons">
     <app-svg-icon
       name="clear"
-      size="12"
+      size="18"
       *ngIf="selectedItems && selectedItems.length > 0 && multi"
       (click)="handleClearAll()"
     ></app-svg-icon>
     <app-svg-icon
       name="arrow-down"
-      size="14"
+      size="18"
       [class.opened]="opened"
     ></app-svg-icon>
   </div>
@@ -65,7 +65,7 @@
         <span [textContent]="item[nameField]"></span>
         <app-svg-icon
           name="clear"
-          size="10"
+          size="18"
           (click)="handleRemoveItem($event, item)"
         ></app-svg-icon>
       </div>
