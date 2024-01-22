@@ -28,16 +28,11 @@ const routes: Routes = [
     pathMatch: 'full',
     data: {
       position: 'top',
-      image: 'logo.png',
+      icon: 'logo',
       class: 'homepage divider-bottom',
       panel: true,
       active: false,
     },
-    // canActivate: [AuthGuard],
-    // loadChildren: () =>
-    //   import('./modules/cropland-map/cropland-map.module').then(
-    //     (m) => m.CroplandMapModule
-    //   ),
   },
   // {
   //   title: 'Home',
@@ -54,7 +49,7 @@ const routes: Routes = [
     path: 'cropland-map',
     data: {
       position: 'top',
-      icon: 'map',
+      icon: 'earth',
       panel: true,
       toggle: true,
       active: true,
@@ -68,7 +63,7 @@ const routes: Routes = [
   {
     title: 'Reports',
     path: 'reports',
-    data: { position: 'top', icon: 'reports', active: true },
+    data: { position: 'top', icon: 'chart-simple', active: true },
     canActivate: [AuthGuard],
     loadChildren: () =>
       import('./modules/reports/reports.module').then((m) => m.ReportsModule),
@@ -76,7 +71,7 @@ const routes: Routes = [
   {
     title: 'Dictionary',
     path: 'dictionary',
-    data: { position: 'top', icon: 'dictionary', panel: true, active: true },
+    data: { position: 'top', icon: 'list', panel: true, active: true },
     canActivate: [AuthGuard],
     loadChildren: () =>
       import('./modules/dictionary/dictionary.module').then(
@@ -86,7 +81,7 @@ const routes: Routes = [
   {
     title: 'Contacts',
     path: 'contacts',
-    data: { position: 'top', icon: 'contacts', panel: true, active: true },
+    data: { position: 'top', icon: 'contact-group', panel: true, active: true },
     canActivate: [AuthGuard],
     loadChildren: () =>
       import('./modules/contacts/contacts.module').then(
@@ -96,7 +91,7 @@ const routes: Routes = [
   {
     title: 'About system',
     path: 'about',
-    data: { position: 'top', icon: 'info', active: true },
+    data: { position: 'top', icon: 'info-circle', active: true },
     canActivate: [AuthGuard],
     loadChildren: () =>
       import('./modules/about/about.module').then((m) => m.AboutModule),
@@ -106,7 +101,7 @@ const routes: Routes = [
     path: 'profile',
     data: {
       position: 'bottom',
-      icon: 'user',
+      icon: 'profile-circle',
       active: true,
       class: 'divider-top',
     },
