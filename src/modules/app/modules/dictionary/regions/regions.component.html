@@ -2,21 +2,32 @@
   <h1 class="title">{{ "Regions" | translate }}</h1>
 </div>
 <div class="list">
-  <app-table
-    [items]="list"
-    [fields]="[
-      { title: 'Name' | translate, field: 'name_' + currentLang },
-      { title: 'Code SOATO' | translate, field: 'code_soato' },
-      { title: 'Population' | translate, field: 'population' },
-      { title: 'Density' | translate, field: 'density' },
-      { title: 'Area' | translate, field: 'area' }
-    ]"
-    *ngIf="list.length > 0; else noItems"
-  ></app-table>
-  <ng-template #noItems>
-    <app-loading [loading]="loading">
+  <ng-container *ngIf="!loading; else skeleton">
+    <app-table
+      [items]="list"
+      [fields]="[
+        { title: 'Name' | translate, field: 'name_' + currentLang },
+        { title: 'Code SOATO' | translate, field: 'code_soato' },
+        { title: 'Population' | translate, field: 'population' },
+        { title: 'Density' | translate, field: 'density' },
+        { title: 'Area' | translate, field: 'area' }
+      ]"
+      *ngIf="list.length > 0; else noItems"
+    ></app-table>
+    <ng-template #noItems>
       <h4>{{ "No data" | translate }}</h4>
-    </app-loading>
+    </ng-template>
+  </ng-container>
+
+  <ng-template #skeleton>
+    <ng-container *ngFor="let num of [].constructor(10)">
+      <app-skeleton
+        [width]="'100%'"
+        [height]="'35px'"
+        [className]="'mb-10'"
+        [borderRadius]="'10px'"
+      ></app-skeleton>
+    </ng-container>
   </ng-template>
 </div>
 <router-outlet></router-outlet>

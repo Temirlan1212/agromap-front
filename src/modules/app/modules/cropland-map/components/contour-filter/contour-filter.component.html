@@ -12,7 +12,7 @@
           </app-input-radio>
         </div> -->
 
-      <ng-container *ngIf="!loading">
+      <ng-container *ngIf="!loading; else skeleton">
         <app-form-field name="region" #region>
           <app-input-select
             [placeholder]="'Select a region' | translate"
@@ -79,7 +79,16 @@
         </app-form-field>
       </ng-container>
 
-      <app-loading [loading]="loading" class="dynamic-color"></app-loading>
+      <ng-template #skeleton>
+        <ng-container *ngFor="let num of [].constructor(6)">
+          <app-skeleton
+            [width]="'100%'"
+            [height]="'50px'"
+            [className]="'custom-skeleton'"
+            [borderRadius]="'5px'"
+          ></app-skeleton>
+        </ng-container>
+      </ng-template>
 
       <button type="button" class="success" (click)="handleFormSubmit()">
         {{ "Apply" | translate }}

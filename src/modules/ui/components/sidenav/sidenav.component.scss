@@ -62,6 +62,14 @@
         width: 100%;
         max-width: $sideNavMenuWidth - $sideNavMenuItemPadding -
           $sideNavMenuItemIconMargin;
+
+        &.homepage {
+          height: 40px;
+          width: 40px;
+          margin: auto;
+          max-width: $sideNavMenuWidth - $sideNavMenuItemPadding -
+            $sideNavMenuItemIconMargin;
+        }
       }
 
       .icon {
@@ -71,6 +79,13 @@
       .title {
         display: none;
         margin-left: $sideNavMenuItemGap;
+      }
+
+      &.divider-bottom {
+        border-bottom: 1px solid $grayColor;
+      }
+      &.divider-top {
+        border-top: 1px solid $grayColor;
       }
     }
   }

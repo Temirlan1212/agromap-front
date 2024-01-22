@@ -48,7 +48,7 @@
 
 <ng-template #navItem let-path="path" let-title="title" let-data="data">
   <a
-    routerLinkActive="active"
+    [routerLinkActive]="!!data?.active ? 'active' : ''"
     [routerLink]="path"
     (click)="sidePanelService.set(false, 'cropland-map')"
     [ngClass]="data.class"
@@ -66,6 +66,7 @@
       ></span>
     </div>
     <img
+      [class]="data?.class ?? ''"
       class="image"
       [src]="'assets/images/' + data.image"
       *ngIf="data.image != null"
