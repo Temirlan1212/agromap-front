@@ -131,10 +131,15 @@ select:disabled {
 
 button {
   opacity: 0.8;
-  border: 0;
   font-weight: 500;
   background-color: $secondaryColor;
   color: $darkColor;
+  border-radius: $fieldBorderRadius;
+  padding: 15px;
+
+  &:focus {
+    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
+  }
 
   &:not(:disabled):hover {
     opacity: 1;
@@ -143,21 +148,33 @@ button {
   &.primary {
     background-color: $primaryColor;
     color: $lightColor;
+    &:focus {
+      box-shadow: 0 0 0 3px rgba($primaryColor, 0.5);
+    }
   }
 
   &.success {
     background-color: $successColor;
     color: $lightColor;
+    &:focus {
+      box-shadow: 0 0 0 3px rgba($successColor, 0.5);
+    }
   }
 
   &.danger {
     background-color: $dangerColor;
     color: $lightColor;
+    &:focus {
+      box-shadow: 0 0 0 2px #ffffff, 0 0 3px 5px $dangerColor;
+    }
   }
 
   &.warning {
     background-color: $warningColor;
     color: $lightColor;
+    &:focus {
+      box-shadow: 0 0 0 3px rgba($warningColor, 0.5);
+    }
   }
 
   &.disabled {
