@@ -109,11 +109,27 @@
     position: relative;
     overflow-y: auto;
 
+    &.collapsed {
+      max-height: 200px;
+    }
+
     &.absolute {
       position: absolute;
       z-index: 100;
       width: 100%;
       margin-top: 5px;
+      max-height: 200px;
+      top: -500px;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.1s ease-in;
+
+      &.collapsed {
+        top: auto;
+        opacity: 1;
+        transition: all 0.1s ease-out;
+        pointer-events: initial;
+      }
     }
 
     .search {
@@ -139,10 +155,6 @@
 
     .options-list {
       padding: 0;
-    }
-
-    &.collapsed {
-      max-height: 200px;
     }
 
     &::-webkit-scrollbar-track {
