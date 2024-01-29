@@ -22,7 +22,7 @@ const routes: Routes = [
       ),
   },
   {
-    title: '',
+    title: 'GiproZem',
     path: '',
     redirectTo: 'cropland-map',
     pathMatch: 'full',
