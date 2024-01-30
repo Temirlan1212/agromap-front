@@ -108,6 +108,7 @@
     transition: max-height 0.1s linear;
     position: relative;
     overflow-y: auto;
+    background-color: $lightColor;
 
     &.collapsed {
       max-height: 200px;
@@ -155,6 +156,9 @@
 
     .options-list {
       padding: 0;
+      .group-title {
+        padding: 0 10px;
+      }
     }
 
     &::-webkit-scrollbar-track {

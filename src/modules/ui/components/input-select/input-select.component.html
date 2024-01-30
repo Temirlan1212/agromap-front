@@ -80,9 +80,9 @@
         </ng-container>
       </ng-container>
 
-      <ng-container *ngIf="groupField">
+      <ng-container class="group" *ngIf="groupField">
         <div *ngFor="let group of groups">
-          <p>{{ group }}</p>
+          <p class="group-title">{{ group }}</p>
 
           <div *ngFor="let item of localItems">
             <ng-container
