@@ -9,13 +9,13 @@
     z-index: 1;
     top: $inputPlaceholderTop;
     left: 12px;
-    cursor: pointer;
   }
 
   input {
     width: 100%;
     border-color: $inputBorderColor;
     border-radius: $fieldBorderRadius;
+    cursor: text;
 
     &:focus {
       border-color: rgba(27, 85, 235, 0.48);
