@@ -76,7 +76,10 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
       nonNullable: true,
       validators: Validators.required,
     }),
-    culture: new FormControl<string | null>(null, { nonNullable: true }),
+    culture: new FormControl<string | null>(
+      { value: null, disabled: true },
+      { nonNullable: true }
+    ),
     year: new FormControl<number | null>(
       this.mapService.filterDefaultValues.year,
       {
@@ -103,6 +106,13 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
       ?.valueChanges.subscribe((value) =>
         this.handleContonChange(value)
       ) as Subscription,
+
+    this.form.get('land_type')?.valueChanges.subscribe((value) => {
+      const culture = this.form.get('culture');
+      if (!culture) return;
+      if (value?.includes('1')) culture.enable();
+      else culture.disable();
+    }) as Subscription,
     this.mode?.valueChanges.pipe(filter((res) => !!res)).subscribe((value) => {
       this.onModeChanged.emit(value);
     }) as Subscription,
