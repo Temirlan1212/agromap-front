@@ -12,7 +12,7 @@
         [textContent]="activeContour?.culture?.['name_'+currentLang]"
       ></h1>
       <button
-        class="toggle-btn arrow"
+        class="toggle-btn arrow dark"
         (click)="isHidden = !isHidden"
         [class.hidden]="isHidden"
       >
@@ -20,7 +20,7 @@
       </button>
 
       <button
-        class="toggle-btn clear"
+        class="toggle-btn clear dark"
         (click)="onCancelClick.emit()"
         [class.hidden]="isHidden"
       >

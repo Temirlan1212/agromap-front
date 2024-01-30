@@ -130,7 +130,7 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
     private translateSvc: TranslateService,
     private store: StoreService,
     private settingsService: SettingsService,
-    private sidePanelService: SidePanelService
+    public sidePanelService: SidePanelService
   ) {}
 
   async ngOnInit(): Promise<void> {

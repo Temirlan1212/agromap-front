@@ -13,6 +13,26 @@ $indent: 0 20px;
   padding: $fieldsGroupContentPadding;
 }
 
+.sidebar-toggler {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  display: flex;
+  justify-content: flex-end;
+  button {
+    padding: 7px;
+    border: 1px solid $secondaryColor;
+    &:hover {
+      background-color: $lightColor;
+    }
+  }
+  app-svg-icon {
+    width: 20px !important;
+    height: 20px !important;
+    transform: rotate(90deg);
+  }
+}
+
 .filters > button {
   width: 100%;
   border-bottom: 1px solid $secondaryColor;

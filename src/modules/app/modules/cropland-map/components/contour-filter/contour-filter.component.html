@@ -1,3 +1,12 @@
+<div class="sidebar-toggler">
+  <app-tooltip placement="right">
+    {{ "Close sidebar" | translate }}
+  </app-tooltip>
+  <button (click)="sidePanelService.toggle()">
+    <app-svg-icon name="arrow-down" size="20"></app-svg-icon>
+  </button>
+</div>
+
 <h4>{{ "Filter" | translate }}</h4>
 
 <div class="filters">

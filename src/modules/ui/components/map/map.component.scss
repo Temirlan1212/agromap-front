@@ -93,6 +93,14 @@ $transitionDelay: 0.2s;
   .actions-block {
     display: flex;
     overflow-y: hidden;
+    gap: 10px;
+    padding: 4px;
+    ::ng-deep {
+      button {
+        background-color: $lightColor;
+        padding: 10px;
+      }
+    }
   }
 
   .arrow-down {

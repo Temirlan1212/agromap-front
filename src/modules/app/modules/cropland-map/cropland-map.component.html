@@ -135,7 +135,8 @@
         topCenterPanel
         *ngIf="
           !currentRouterPathname.includes('contour-add') &&
-          !currentRouterPathname.includes('contour-edit')
+          !currentRouterPathname.includes('contour-edit') &&
+          sidePanelService.get()
         "
       >
         <app-map-control
@@ -147,13 +148,12 @@
           class="d-xs-none d-sm-none d-md-none mb-10 transparent"
           (click)="sidePanelService.toggle()"
         >
-          <div
+          <button
             class="sidebar-toggler"
             [class.collapsed]="sidePanelService.get()"
           >
-            <div></div>
-            <div></div>
-          </div>
+            <app-svg-icon name="arrow-down" size="20"></app-svg-icon>
+          </button>
         </app-map-control>
       </ng-container>
 

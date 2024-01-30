@@ -46,6 +46,7 @@ import { StatisticsComponent } from './components/statistics/statistics.componen
 import { SimplePieChartComponent } from './components/simple-pie-chart/simple-pie-chart.component';
 import { MenuComponent } from 'src/modules/ui/components/menu/menu.component';
 import { SkeletonComponent } from 'src/modules/ui/components/skeleton/skeleton.component';
+import { TooltipComponent } from 'src/modules/ui/components/tooltip/tooltip.component';
 
 @NgModule({
   declarations: [
@@ -99,6 +100,7 @@ import { SkeletonComponent } from 'src/modules/ui/components/skeleton/skeleton.c
     MapControlComponent,
     MenuComponent,
     SkeletonComponent,
+    TooltipComponent,
   ],
   providers: [MapService, TranslatePipe],
 })
