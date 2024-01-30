@@ -60,6 +60,7 @@ export class MapComponent implements OnInit, OnDestroy {
   @Input() mapId: string = 'map';
   subscriptions: Subscription[] = [];
   @Output() mapData = new EventEmitter<MapData>();
+  @Output() mapMoveWithDebounce = new EventEmitter<MapMove>();
   @Output() mapMove = new EventEmitter<MapMove>();
   @Output() mapClick = new EventEmitter<LeafletMouseEvent>();
   @Output() mapMousemove = new EventEmitter<LeafletMouseEvent>();
@@ -147,9 +148,13 @@ export class MapComponent implements OnInit, OnDestroy {
           return interval(1000);
         })
       )
-      .subscribe(() => this.handleMapMove());
-    this.subscriptions.push(s);
+      .subscribe(() => this.handleMapMove(true));
 
+    const s2 = fromEvent(this.map as Map, 'moveend').subscribe(() =>
+      this.handleMapMove(false)
+    );
+
+    [s, s2].map((s) => this.subscriptions.push(s));
     this.subscriptions.push(
       fromEvent<LeafletMouseEvent>(this.map as Map, 'mousemove')
         .pipe(debounceTime(100))
@@ -161,11 +166,12 @@ export class MapComponent implements OnInit, OnDestroy {
     this.subscriptions.forEach((s) => s.unsubscribe());
   }
 
-  handleMapMove(): void {
+  handleMapMove(debounce: boolean): void {
     if (this.map != null) {
       const zoom = this.map.getZoom();
       const bounds = this.map.getBounds();
-      this.mapMove.emit({ zoom, bounds });
+      if (debounce) this.mapMoveWithDebounce.emit({ zoom, bounds });
+      else this.mapMove.emit({ zoom, bounds });
     }
   }
 

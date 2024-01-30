@@ -30,7 +30,7 @@ export class ApiService {
     this.form = new FormApi();
     this.user = new UserApi(this.http);
     this.dictionary = new DictionaryApi(this.http);
-    this.map = new MapApi(this.http);
+    this.map = new MapApi(this.http, this.user);
     this.culture = new CultureApi(this.http);
     this.contour = new ContourApi(this.http);
     this.vegIndexes = new VegIndexesApi(this.http);

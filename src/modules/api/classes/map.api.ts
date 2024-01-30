@@ -5,22 +5,38 @@ import { IGetFeatureInfoQuery } from '../models/map.model';
 import { environment } from 'src/environments/environment';
 import { BYPASS_LOG } from '../api-interceptor.service';
 import { IPolygonsInScreenQuery } from '../models/map.model';
+import { UserApi } from './user.api';
 
 export class MapApi {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private userApi: UserApi) {}
 
-  async getPolygonsInScreen(query: IPolygonsInScreenQuery): Promise<GeoJSON> {
+  async getPolygonsInScreen(
+    query: IPolygonsInScreenQuery,
+    signal?: AbortSignal
+  ): Promise<GeoJSON> {
     const { latLngBounds, land_type, year, culture } = query;
-    const params: any = { land_type, year };
-    if (culture != null) params.culture = culture;
+    const params = new URLSearchParams();
+    land_type && params.append('land_type', String(land_type));
+    year && params.append('year', String(year));
+    culture && params.append('culture', String(culture));
+    const token = this.userApi.getLoggedInUser()?.token;
+    let headers: HeadersInit = {};
+    if (token != null) headers['Authorization'] = `token ${token}`;
 
-    const response = await firstValueFrom(
-      this.http.post<GeoJSON>('gip/polygons-in-screen', latLngBounds, {
-        params,
-      })
+    const response = await fetch(
+      `https://adminagro.24mycrm.com/gip/polygons-in-screen/?${params}`,
+      {
+        method: 'POST',
+        body: JSON.stringify(latLngBounds),
+        headers: {
+          'Content-Type': 'application/json',
+          ...headers,
+        },
+        signal: signal,
+      }
     );
 
-    return response;
+    return await response.json();
   }
 
   async getPolygonsInScreenAi(query: IPolygonsInScreenQuery): Promise<GeoJSON> {

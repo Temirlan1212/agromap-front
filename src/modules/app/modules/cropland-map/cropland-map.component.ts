@@ -89,6 +89,7 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
   activeVegIndexOption: IVegIndexOption | null = null;
   wmsLayerInfoPopup: Popup | null = null;
   storageName = 'MapControlLayersSwitchComponent';
+  polygonsRequestController: AbortController | null = null;
 
   wmsProductivityLayerColorLegend: Record<string, any>[] = [
     { label: '-1', color: '#000000' },
@@ -484,6 +485,13 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   async handleMapMove(mapMove: MapMove): Promise<void> {
+    if (this.polygonsRequestController) {
+      this.polygonsRequestController.abort();
+      this.polygonsRequestController = null;
+    }
+  }
+
+  async handleMapMoveWithDebaunce(mapMove: MapMove): Promise<void> {
     this.store.setItem<Record<string, LatLngBounds | number>>(
       'ArableLandComponent',
       {
@@ -491,11 +499,7 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
         mapZoom: mapMove.zoom,
       }
     );
-    if (
-      this.mapData?.map != null &&
-      this.filterFormValues != null &&
-      this.activeContour == null
-    ) {
+    if (this.mapData?.map != null && this.filterFormValues != null) {
       const layersLength = this.mapData.geoJson.getLayers().length;
       if (layersLength > 0) this.mapData.geoJson.clearLayers();
       if (mapMove.zoom >= 12) this.addPolygonsInScreenToMap(mapMove.bounds);
@@ -701,12 +705,18 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
             culture,
           });
         } else {
-          polygons = await this.api.map.getPolygonsInScreen({
-            latLngBounds: mapBounds,
-            land_type,
-            year,
-            culture,
-          });
+          this.polygonsRequestController = new AbortController();
+          const response = await this.api.map.getPolygonsInScreen(
+            {
+              latLngBounds: mapBounds,
+              land_type,
+              year,
+              culture,
+            },
+            this.polygonsRequestController.signal
+          );
+
+          polygons = response;
         }
 
         this.mapData.geoJson.options.snapIgnore = true;
@@ -721,7 +731,9 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
         this.mapData.geoJson.addData(polygons);
       }
     } catch (e: any) {
-      this.messages.error(e.error?.message ?? e.message);
+      const message = e.error?.message ?? e.message;
+      if (message === this.messages.messages.abortedRequest) return;
+      this.messages.error(message);
     } finally {
       this.loading = false;
     }
