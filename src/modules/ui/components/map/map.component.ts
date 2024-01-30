@@ -40,6 +40,7 @@ import {
 } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 import { MapService } from 'src/modules/ui/services/map.service';
+import { SidePanelService } from '../../services/side-panel.service';
 
 @Component({
   selector: 'app-map',
@@ -72,6 +73,9 @@ export class MapComponent implements OnInit, OnDestroy {
   @HostBinding('class.collapsed')
   feautureCollapse: boolean = false;
 
+  @HostBinding('class.revalidating')
+  featureContentRevalidating: boolean = false;
+
   map: Map | null = null;
   geoJson: GeoJSON = geoJSON(undefined, {
     onEachFeature: (feature: Feature, layer: Layer) => {
@@ -94,7 +98,8 @@ export class MapComponent implements OnInit, OnDestroy {
     @Inject(LOCALE_ID) public locale: string,
     private translate: TranslateService,
     private mapService: MapService,
-    private cd: ChangeDetectorRef
+    private cd: ChangeDetectorRef,
+    private sidePanelService: SidePanelService
   ) {}
 
   ngOnInit(): void {
@@ -107,6 +112,12 @@ export class MapComponent implements OnInit, OnDestroy {
     this.map = this.mapService.initMap(this.mapId, {
       maxBounds: this.maxBounds,
       center: this.center,
+    });
+
+    this.sidePanelService.watch((isSidePanelClosed) => {
+      if (this.featureOpen && this.feautureCollapse && !isSidePanelClosed) {
+        this.revalidateFeatureContent();
+      }
     });
 
     this.map?.pm.setLang(this.translate.currentLang as any);
@@ -185,6 +196,13 @@ export class MapComponent implements OnInit, OnDestroy {
   handleFeatureCollapseToggle() {
     this.feautureCollapse = !this.feautureCollapse;
     if (this.map) this.mapService.invalidateSize(this.map);
+  }
+
+  private revalidateFeatureContent() {
+    this.featureContentRevalidating = true;
+    setTimeout(() => {
+      this.featureContentRevalidating = false;
+    }, 1000);
   }
 
   ngOnDestroy() {

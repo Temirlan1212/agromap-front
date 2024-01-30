@@ -39,6 +39,10 @@ $transitionDelay: 0.2s;
       }
     }
   }
+
+  &.revalidating {
+    width: 99.99%;
+  }
 }
 
 .map-wrapper {
