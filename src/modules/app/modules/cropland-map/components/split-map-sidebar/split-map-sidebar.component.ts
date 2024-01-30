@@ -14,6 +14,7 @@ import { Subscription } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 import { MapService } from '../../../../../ui/services/map.service';
 import { MessagesService } from 'src/modules/ui/services/messages.service';
+import { SidePanelService } from 'src/modules/ui/services/side-panel.service';
 
 @Component({
   selector: 'app-split-map-sidebar',
@@ -57,7 +58,8 @@ export class SplitMapSidebarComponent implements OnDestroy, OnInit {
     private formatDate: FormatDatePipe,
     private translate: TranslateService,
     private cd: ChangeDetectorRef,
-    private messages: MessagesService
+    private messages: MessagesService,
+    private sidePanelService: SidePanelService
   ) {}
 
   handleSplitMapClick(splitMapQuantity: number) {
@@ -156,6 +158,7 @@ export class SplitMapSidebarComponent implements OnDestroy, OnInit {
   }
 
   async ngOnInit(): Promise<void> {
+    this.sidePanelService.set(false);
     this.layerFeature = this.store.getItem<Feature>('selectedLayerFeature');
     if (this.layerFeature != null) {
       this.contourId = this.layerFeature.properties?.['id'];
