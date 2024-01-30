@@ -32,6 +32,7 @@ const routes: Routes = [
       class: 'homepage divider-bottom',
       panel: true,
       active: false,
+      onlyDesktop: true,
     },
   },
   // {

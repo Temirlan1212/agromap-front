@@ -65,6 +65,7 @@ $transitionDelay: 0.2s;
     justify-content: space-between;
     overflow: hidden auto;
     cursor: pointer;
+    background-color: rgba($secondaryColor, 0.5);
 
     &:hover {
       .arrow-down {
@@ -72,6 +73,7 @@ $transitionDelay: 0.2s;
           opacity: 1;
         }
       }
+      background-color: $secondaryColor;
     }
 
     .arrow-down {
@@ -83,10 +85,6 @@ $transitionDelay: 0.2s;
     h4 {
       margin: 0;
       cursor: pointer;
-    }
-
-    &:hover {
-      background-color: $secondaryColor;
     }
   }
 

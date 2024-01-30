@@ -105,7 +105,7 @@ export class SidenavComponent implements OnChanges, OnDestroy {
       (f) => f.data != null && f.data['position'] === 'bottom'
     );
     this.mobileRoutes = this.routes.filter(
-      (f) => f.data != null && f.data['class'] != 'homepage'
+      (f) => f.data != null && !f.data['onlyDesktop']
     );
   }
 

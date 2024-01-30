@@ -185,6 +185,14 @@ button {
   &.transparent {
     background-color: transparent;
   }
+
+  &.navigate {
+    padding: 7px;
+    border: 1px solid $secondaryColor;
+    &:hover {
+      background-color: $lightColor;
+    }
+  }
 }
 
 nav {

@@ -192,7 +192,6 @@
     height: $mobileBottomNavHeight;
     overflow-x: auto;
     overflow-y: hidden;
-    padding: 0 25px;
 
     nav {
       display: flex;
@@ -222,14 +221,18 @@
       font-size: 50px;
       height: inherit;
       opacity: 1;
-      width: 50px;
       background-color: #ececec;
       display: flex;
       justify-content: center;
       align-items: center;
-      position: fixed;
       z-index: 500;
       border-radius: 0px;
+      position: sticky;
+
+      button {
+        padding: 10px;
+        background-color: rgba($lightColor, 0.5);
+      }
 
       &:hover {
         background-color: $sideNavMenuItemHoverBgColor;
@@ -246,10 +249,12 @@
 
     .btn-left {
       left: 0;
+      padding: 0 0 0 5px;
     }
 
     .btn-right {
       right: 0;
+      padding: 0 5px 0 0;
     }
   }
 

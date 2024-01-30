@@ -20,11 +20,9 @@ $indent: 0 20px;
   align-items: center;
   gap: $indent;
 
-  button {
-    padding: 0;
-  }
-
   app-svg-icon {
+    width: 20px !important;
+    height: 20px !important;
     transform: rotate(90deg);
   }
 }

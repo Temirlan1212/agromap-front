@@ -19,13 +19,7 @@ $indent: 0 20px;
   top: 10px;
   display: flex;
   justify-content: flex-end;
-  button {
-    padding: 7px;
-    border: 1px solid $secondaryColor;
-    &:hover {
-      background-color: $lightColor;
-    }
-  }
+
   app-svg-icon {
     width: 20px !important;
     height: 20px !important;
