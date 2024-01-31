@@ -106,14 +106,14 @@
     margin: 0;
     transition: max-height 0.1s linear;
     position: relative;
-    overflow-y: auto;
     background-color: $lightColor;
     opacity: 0;
+    overflow-y: auto;
 
     &.collapsed {
       max-height: 200px;
-      overflow: hidden;
       opacity: 1;
+      transition: overflow-y 0.5s ease;
     }
 
     &.absolute {
