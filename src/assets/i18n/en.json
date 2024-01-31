@@ -243,5 +243,6 @@
     "pan": "Panning",
     "reset": "Reset Zoom"
   },
-  "Status": "Status"
+  "Status": "Status",
+  "Uploading data": "Uploading data"
 }

@@ -13,7 +13,7 @@
 <div class="map-container">
   <!-- <app-loading *ngIf="loading" [loading]="loading"></app-loading> -->
   <div class="polygons-loading" *ngIf="loading">
-    <p>Загрузка данных...</p>
+    <p>{{ "Uploading data" | translate }}</p>
     <app-loading
       class="dynamic-color"
       [loading]="true"
