@@ -12,7 +12,17 @@
         </a>
       </ng-container>
     </nav>
-    <app-loading [loading]="isLoading"></app-loading>
+    <div *ngIf="isLoading" class="column-list">
+      <ng-container *ngFor="let num of [].constructor(7)">
+        <app-skeleton
+          style="padding: 0 10px"
+          [width]="'100%'"
+          [height]="'60px'"
+          [className]="'custom-skeleton'"
+          [borderRadius]="'10px'"
+        ></app-skeleton>
+      </ng-container>
+    </div>
   </div>
 </app-side-panel>
 
