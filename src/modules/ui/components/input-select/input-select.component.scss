@@ -108,9 +108,12 @@
     position: relative;
     overflow-y: auto;
     background-color: $lightColor;
+    opacity: 0;
 
     &.collapsed {
       max-height: 200px;
+      overflow: hidden;
+      opacity: 1;
     }
 
     &.absolute {
