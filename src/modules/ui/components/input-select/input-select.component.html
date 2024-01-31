@@ -47,7 +47,7 @@
   [class.absolute]="dropdownType === 'default'"
   *ngIf="items.length > 0"
 >
-  <div class="search">
+  <div class="search" *ngIf="searchable">
     <input
       #input
       type="text"

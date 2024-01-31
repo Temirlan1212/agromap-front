@@ -7,6 +7,7 @@
   border-radius: $fieldBorderRadius;
   cursor: pointer;
   height: fit-content;
+  padding: 2px 0;
 
   &:hover {
     border: 1px solid $fieldBorder;
@@ -100,8 +101,6 @@
 
   .options {
     max-height: 0;
-    box-shadow: 0px 3px 6px -4px rgba(0, 0, 0, 0.12),
-      0px 6px 16px rgba(0, 0, 0, 0.08), 0px 9px 28px 8px rgba(0, 0, 0, 0.05);
     border-radius: $inputBorderRadius;
     padding: 0;
     margin: 0;
@@ -124,6 +123,8 @@
       opacity: 0;
       pointer-events: none;
       transition: all 0.1s ease-in;
+      box-shadow: 0px 3px 6px -4px rgba(0, 0, 0, 0.12),
+        0px 6px 16px rgba(0, 0, 0, 0.08), 0px 9px 28px 8px rgba(0, 0, 0, 0.05);
 
       &.collapsed {
         top: auto;
@@ -207,7 +208,7 @@
     }
     .options {
       &.collapsed {
-        border: 1px solid $disabledField;
+        // border: 1px solid $disabledField;
       }
     }
   }

@@ -3,7 +3,7 @@
     {{ "Close sidebar" | translate }}
   </app-tooltip>
   <button class="navigate" (click)="sidePanelService.toggle()">
-    <app-svg-icon name="arrow-down" size="20"></app-svg-icon>
+    <app-svg-icon name="clear" size="20"></app-svg-icon>
   </button>
 </div>
 
@@ -29,6 +29,7 @@
             [items]="regions"
             [nameField]="'name_' + currentLang"
             [required]="region.required"
+            dropdownType="accordion"
           ></app-input-select>
         </app-form-field>
 
@@ -39,6 +40,7 @@
             [items]="districts"
             [nameField]="'name_' + currentLang"
             [required]="district.required"
+            dropdownType="accordion"
           ></app-input-select>
         </app-form-field>
 
@@ -50,6 +52,7 @@
             [items]="contons"
             [nameField]="'name_' + currentLang"
             [required]="conton.required"
+            dropdownType="accordion"
           ></app-input-select>
         </app-form-field>
 
@@ -61,6 +64,8 @@
             [multi]="true"
             [nameField]="'name_' + currentLang"
             [required]="land_type.required"
+            dropdownType="accordion"
+            [searchable]="false"
           ></app-input-select>
         </app-form-field>
 
@@ -72,6 +77,7 @@
             [multi]="true"
             [nameField]="'name_' + currentLang"
             [required]="culture.required"
+            dropdownType="accordion"
           ></app-input-select>
         </app-form-field>
 

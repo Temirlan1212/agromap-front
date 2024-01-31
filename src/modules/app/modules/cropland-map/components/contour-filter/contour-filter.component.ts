@@ -111,7 +111,10 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
       const culture = this.form.get('culture');
       if (!culture) return;
       if (value?.includes('1')) culture.enable();
-      else culture.disable();
+      else {
+        culture.patchValue({ value: null });
+        culture.disable();
+      }
     }) as Subscription,
     this.mode?.valueChanges.pipe(filter((res) => !!res)).subscribe((value) => {
       this.onModeChanged.emit(value);
