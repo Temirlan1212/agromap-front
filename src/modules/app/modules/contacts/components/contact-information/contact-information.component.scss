@@ -26,6 +26,8 @@ p {
 
   &.active {
     color: $darkColor;
+    box-shadow: 0 0 0 3px rgba($darkColor, 0.4);
+    background-color: rgba($lightColor, 0.5);
   }
 
   ul {
