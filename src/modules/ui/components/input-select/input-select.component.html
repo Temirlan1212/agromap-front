@@ -10,10 +10,14 @@
     [textContent]="placeholder"
   ></span>
 
-  <span
+  <div
+    class="badge"
     *ngIf="selectedItems && selectedItems.length > 0 && multi; else singleItem"
-    >{{ "Selected items" | translate }}: {{ selectedItems.length }}</span
   >
+    <span class="label">{{ "Selected items" | translate }}: </span>
+    <span class="count">{{ selectedItems.length }}</span>
+  </div>
+
   <ng-template #singleItem>
     <div class="item" *ngIf="selectedItems && selectedItems.length > 0">
       <span [textContent]="selectedItems && selectedItems[0][nameField]"></span>

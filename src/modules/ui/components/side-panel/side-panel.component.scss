@@ -7,9 +7,7 @@
     &.collapsed {
       .panel {
         position: absolute;
-        left: -1000px;
-        opacity: 0;
-        pointer-events: none;
+        left: -100000px;
         transition: all $sideNavTransitionDelay ease;
       }
     }
