@@ -43,6 +43,10 @@ export class InputSelectComponent implements ControlValueAccessor, OnChanges {
   @HostBinding('class.disabled')
   isDisabled!: boolean;
 
+  @HostBinding('class.placeholder-floatable')
+  @Input()
+  floatable: boolean = true;
+
   @Input() items: Record<string, any>[] = [];
   @Input() value: string | number | null = null;
   @Input() dropdownType: 'accordion' | 'default' = 'default';

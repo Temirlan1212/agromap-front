@@ -47,6 +47,7 @@ import { SimplePieChartComponent } from './components/simple-pie-chart/simple-pi
 import { MenuComponent } from 'src/modules/ui/components/menu/menu.component';
 import { SkeletonComponent } from 'src/modules/ui/components/skeleton/skeleton.component';
 import { TooltipComponent } from 'src/modules/ui/components/tooltip/tooltip.component';
+import { SettingsComponent } from './components/contour-filter/components/settings.component';
 
 @NgModule({
   declarations: [
@@ -61,6 +62,7 @@ import { TooltipComponent } from 'src/modules/ui/components/tooltip/tooltip.comp
     ContourDetailsComponent,
     StatisticsComponent,
     SimplePieChartComponent,
+    SettingsComponent,
   ],
   imports: [
     CommonModule,

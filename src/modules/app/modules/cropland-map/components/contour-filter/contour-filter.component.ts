@@ -1,6 +1,8 @@
 import {
   Component,
   EventEmitter,
+  HostBinding,
+  Input,
   OnDestroy,
   OnInit,
   Output,
@@ -49,11 +51,21 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
     { name: 'RSE', value: 'contours_main_ai' },
     { name: 'Base', value: 'contours_main' },
   ];
+  @Input() activeContour!: any;
   @Output() onCardClick = new EventEmitter<MapLayerFeature>();
   @Output() onEditClick = new EventEmitter<void>();
   @Output() onModeChanged = new EventEmitter<string>();
   @Output() onFormSubmit = new EventEmitter<Record<string, any>>();
   @Output() onFormReset = new EventEmitter<Record<string, any>>();
+  floating = true;
+
+  @HostBinding('class.croplandMapFilterBarFloating')
+  get croplandMapFilterBarFloating() {
+    const floating = this.sidePanelService.get('croplandMapFilterBarFloating');
+    const isSidePanelClosed = this.sidePanelService.get();
+    this.floating = floating && isSidePanelClosed && !this.activeContour;
+    return this.floating;
+  }
 
   loading: boolean = false;
   form: FormGroup = new FormGroup({
@@ -72,10 +84,13 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
         nonNullable: true,
       }
     ),
-    land_type: new FormControl<string | null>(null, {
-      nonNullable: true,
-      validators: Validators.required,
-    }),
+    land_type: new FormControl<string | null>(
+      { value: null, disabled: false },
+      {
+        nonNullable: true,
+        // validators: Validators.required,
+      }
+    ),
     culture: new FormControl<string | null>(
       { value: null, disabled: true },
       { nonNullable: true }
@@ -84,7 +99,6 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
       this.mapService.filterDefaultValues.year,
       {
         nonNullable: true,
-        validators: Validators.required,
       }
     ),
   });
@@ -147,11 +161,7 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
   ) {}
 
   async ngOnInit(): Promise<void> {
-    this.collapseOnApply = this.settingsService.get('filter.collapseOnApply');
-    this.settingsService.watch(
-      (value) => (this.collapseOnApply = value),
-      'filter.collapseOnApply'
-    );
+    this.initSettings();
 
     this.mode?.patchValue('default');
     this.loading = true;
@@ -226,14 +236,33 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
   }
 
   async handleFormSubmit(): Promise<void> {
-    const formState = this.getState();
+    let formState = { ...this.getState() };
     if (!formState.valid) {
       this.messages.error(this.translate.transform('Form is invalid'));
       return;
     }
+
+    const values = formState.value;
+
+    const land_type_values = this.landTypes
+      .map((land_type) => land_type.id)
+      .join(',');
+
+    if (!values?.land_type) formState.value['land_type'] = land_type_values;
+    if (!values?.year) {
+      formState.value['year'] = this.mapService.filterDefaultValues.year;
+      this.form
+        .get('year')
+        ?.patchValue(this.mapService.filterDefaultValues.year);
+    }
+
+    if (!values?.culture?.value) formState.value['culture'] = '';
+
     this.onFormSubmit.emit(formState);
+
     const { region, district, year, conton, land_type, culture } =
       formState.value;
+
     this.loading = true;
     try {
       this.filtersQuery = {
@@ -276,7 +305,7 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
     } else {
       districtVal?.patchValue(null);
       districtVal?.disable({ emitEvent: false });
-      this.resetMapBounds();
+      // this.resetMapBounds();
     }
 
     districtVal?.reset();
@@ -313,7 +342,7 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
         maxZoom: 12,
       });
     } else {
-      this.resetMapBounds();
+      // this.resetMapBounds();
     }
   }
 
@@ -361,6 +390,32 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
     await this.deleteItem();
     this.selectedId = null;
     dialog.close();
+  }
+
+  handleCloseFloatingBar() {
+    this.sidePanelService.set(false, 'croplandMapFilterBarFloating');
+    this.settingsService.patch('filter.showFloatingFilterBar', false, {
+      persist: true,
+    });
+  }
+
+  private initSettings() {
+    this.collapseOnApply = this.settingsService.get('filter.collapseOnApply');
+    this.settingsService.watch(
+      (value) => (this.collapseOnApply = value),
+      'filter.collapseOnApply'
+    );
+
+    this.sidePanelService.set(
+      this.settingsService.get('filter.showFloatingFilterBar'),
+      'croplandMapFilterBarFloating'
+    );
+
+    this.settingsService.watch(
+      (value) =>
+        this.sidePanelService.set(value, 'croplandMapFilterBarFloating'),
+      'filter.showFloatingFilterBar'
+    );
   }
 
   ngOnDestroy() {

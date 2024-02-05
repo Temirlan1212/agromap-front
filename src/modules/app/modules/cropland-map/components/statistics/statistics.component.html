@@ -55,12 +55,9 @@
               </div>
               <ng-container *ngIf="getItem(ltype.id).nested && ltype.id === 2">
                 <ng-container *ngIf="pastureViewType === 'productive'">
-                  <div
-                    *ngFor="let item of getItem(ltype.id).value"
-                    class="chart"
-                  >
+                  <div class="chart">
                     <app-simple-pie-chart
-                      [items]="item"
+                      [items]="getItem(ltype.id).value?.[1]"
                       seriesFieldName="productive"
                       [dataLabelUnitOfMeasure]="'ha' | translate"
                       labelsFieldName="areaName"
@@ -68,12 +65,9 @@
                   </div>
                 </ng-container>
                 <ng-container *ngIf="pastureViewType === 'unproductive'">
-                  <div
-                    *ngFor="let item of getItem(ltype.id).value"
-                    class="chart"
-                  >
+                  <div class="chart">
                     <app-simple-pie-chart
-                      [items]="item"
+                      [items]="getItem(ltype.id).value?.[1]"
                       seriesFieldName="unproductive"
                       labelsFieldName="areaName"
                       [dataLabelUnitOfMeasure]="'ha' | translate"

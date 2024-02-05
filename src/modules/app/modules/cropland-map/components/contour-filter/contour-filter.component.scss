@@ -11,12 +11,180 @@ $indent: 0 20px;
   width: $sidePanelContentWidth;
   background-color: $lightColor;
   padding: $fieldsGroupContentPadding;
+
+  .floating-bar-actions,
+  .close-floating-bar {
+    display: none;
+  }
+
+  .actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  @media only screen and (min-width: 992px) {
+    &.croplandMapFilterBarFloating {
+      .actions {
+        display: none;
+      }
+      .field-group {
+        $field-width: 150px;
+        border-radius: 10px;
+        position: fixed;
+        top: 15px;
+        left: 105px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 1px;
+
+        .floating-bar-actions {
+          display: flex;
+          gap: 1px;
+          button {
+            padding: 20.5px 10px;
+            border-radius: 0px;
+            background-color: $darkColor;
+            color: $lightColor;
+            opacity: 1;
+            &:hover {
+              background-color: rgba($darkColor, 0.8);
+            }
+            &:focus {
+              box-shadow: none;
+            }
+          }
+        }
+
+        .close-floating-bar {
+          display: flex;
+          color: $lightColor;
+          background-color: rgba($lightColor, 0.2);
+          backdrop-filter: blur(30px);
+          position: absolute;
+          left: -5px;
+          top: -5px;
+          padding: 2px;
+          border-radius: 100%;
+          cursor: pointer;
+        }
+
+        hr {
+          display: none;
+        }
+
+        app-form-field {
+          min-width: $field-width;
+          max-width: $field-width;
+
+          app-input-select {
+            background-color: $darkColor;
+            border: none;
+            border-radius: 0px;
+            position: relative;
+            &:hover {
+              background-color: rgba($darkColor, 0.8);
+            }
+            &.disabled {
+              &:hover {
+                background-color: $darkColor;
+              }
+            }
+          }
+
+          &[name="conton"] {
+            app-input-select {
+              border-radius: 0 0 0 0;
+            }
+          }
+          &[name="land_type"] {
+            app-input-select {
+              border-radius: 5px 0 0 5px;
+            }
+          }
+
+          &[name="year"] {
+            display: none;
+          }
+        }
+
+        ::ng-deep {
+          app-input-select {
+            &.disabled {
+              .placeholder {
+                color: rgba($lightColor, 0.2);
+              }
+            }
+            .options {
+              border-radius: 0px;
+              &::-webkit-scrollbar-thumb {
+                background-color: $darkColor;
+                border-radius: 0px;
+              }
+            }
+            .selected-items {
+              display: none;
+            }
+            .container {
+              padding: 17px 10px;
+              &:has(.placeholder.floating) {
+                padding: 24px 10px 10px 10px;
+              }
+              &:has(.badge) {
+                padding: 17px 10px !important;
+              }
+            }
+            .item {
+              padding: 0 2px;
+              background-color: transparent;
+              span {
+                width: 100px;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                overflow: hidden;
+              }
+            }
+            .actions-icons {
+              display: none;
+            }
+            &:has(.badge) {
+              .placeholder {
+                display: none;
+              }
+              .badge {
+                display: flex;
+                color: $lightColor;
+              }
+            }
+            .placeholder,
+            .badge .label {
+              display: block;
+              width: calc($field-width - 40px);
+              text-overflow: ellipsis;
+              white-space: nowrap;
+              overflow: hidden;
+              color: rgba($lightColor, 0.6);
+
+              &.floating {
+                transform: translateY(-19px);
+                padding: 0px;
+                &::after {
+                  background-color: transparent;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
 }
 
 .sidebar-toggler {
   position: absolute;
-  right: 10px;
-  top: 10px;
+  left: 10px;
+  top: 12px;
   display: flex;
   justify-content: flex-end;
 
@@ -24,6 +192,22 @@ $indent: 0 20px;
     width: 20px !important;
     height: 20px !important;
     transform: rotate(90deg);
+  }
+}
+
+.sidebar-settings {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  display: flex;
+  justify-content: flex-end;
+  z-index: 10000;
+  app-svg-icon {
+    width: 20px !important;
+    height: 20px !important;
+  }
+  app-menu {
+    top: 10px !important;
   }
 }
 

@@ -244,5 +244,8 @@
     "reset": "Сбросить масштаб"
   },
   "Status": "Статус",
-  "Uploading data": "Загрузка данных"
+  "Uploading data": "Загрузка данных",
+  "Show floating filtering": "Показывать плавающую фильтрацию",
+  "All types of land": "Все виды угодий",
+  "All regions": "Все регионы"
 }

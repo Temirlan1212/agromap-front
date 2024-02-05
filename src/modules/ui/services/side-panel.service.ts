@@ -12,8 +12,19 @@ export class SidePanelService {
     this.router.events.subscribe((event: Event) => {
       if (event instanceof RoutesRecognized) {
         const config = event.state.root.firstChild?.routeConfig;
+        let url = event.url;
+        const isLastParamNan = isNaN(
+          Number(url.split('/')[url.split('/').length - 1])
+        );
+
+        if (!isLastParamNan)
+          url = url
+            .split('/')
+            .slice(0, url.split('/').length - 1)
+            .join('/');
+
         if (config?.data?.['toggle']) {
-          this.activeNavItemPath = config?.path ?? null;
+          this.activeNavItemPath = url ?? null;
           this.set(this.get());
         } else {
           this.activeNavItemPath = null;
@@ -44,9 +55,9 @@ export class SidePanelService {
     return payload;
   }
 
-  get() {
+  get(name?: string) {
     return !!this.storeService.getItem(this.storageName)?.[
-      this.activeNavItemPath ?? ''
+      name ?? this.activeNavItemPath ?? ''
     ];
   }
 

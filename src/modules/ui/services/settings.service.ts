@@ -5,6 +5,7 @@ import { StoreService } from './store.service';
 export class SettingsService {
   settings = {
     ['filter.collapseOnApply']: true,
+    ['filter.showFloatingFilterBar']: true,
   };
   storageName = 'settings';
   storeService = new StoreService();

@@ -244,5 +244,8 @@
     "reset": "Reset Zoom"
   },
   "Status": "Status",
-  "Uploading data": "Uploading data"
+  "Uploading data": "Uploading data",
+  "Show floating filtering": "Show floating filtering",
+  "All types of land": "All types of land",
+  "All regions": "All regions"
 }

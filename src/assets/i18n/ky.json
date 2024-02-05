@@ -244,5 +244,8 @@
     "reset": "Масштабты калыбына келтирүү"
   },
   "Status": "Статус",
-  "Uploading data": "Маалымат жүктөө"
+  "Uploading data": "Маалымат жүктөө",
+  "Show floating filtering": "Картадагы фильтрацияны көрсөтүү",
+  "All types of land": "Жердин бардык түрлөрү",
+  "All regions": "Бардык региондор"
 }

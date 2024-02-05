@@ -5,6 +5,7 @@
     (onModeChanged)="handleModeChange($event)"
     (onFormSubmit)="handleFilterFormSubmit($event)"
     (onFormReset)="handleFilterFormReset()"
+    [activeContour]="activeContour"
   >
   </app-contour-filter>
   <router-outlet></router-outlet>

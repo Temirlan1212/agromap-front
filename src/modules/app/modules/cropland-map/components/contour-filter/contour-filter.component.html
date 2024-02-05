@@ -7,67 +7,45 @@
   </button>
 </div>
 
+<div class="sidebar-settings">
+  <app-menu [placement]="'right'" [dark]="true">
+    <app-settings></app-settings>
+  </app-menu>
+  <button class="navigate">
+    <app-svg-icon name="settings" size="20"></app-svg-icon>
+  </button>
+</div>
+
 <h4>{{ "Filter" | translate }}</h4>
 
 <div class="filters">
   <form [formGroup]="form">
     <div class="field-group">
       <!-- <div class="radio-btns">
-          <app-input-radio
-            [isResettable]="true"
-            [options]="radioOptions"
-            [formControl]="mode"
-          >
-          </app-input-radio>
-        </div> -->
+        <app-input-radio
+          [isResettable]="true"
+          [options]="radioOptions"
+          [formControl]="mode"
+        >
+        </app-input-radio>
+      </div> -->
 
       <ng-container *ngIf="!loading; else skeleton">
-        <app-form-field name="region" #region>
-          <app-input-select
-            [placeholder]="'Select a region' | translate"
-            formControlName="region"
-            [items]="regions"
-            [nameField]="'name_' + currentLang"
-            [required]="region.required"
-            dropdownType="accordion"
-          ></app-input-select>
-        </app-form-field>
-
-        <app-form-field name="district" #district>
-          <app-input-select
-            [placeholder]="'Select a district' | translate"
-            formControlName="district"
-            [items]="districts"
-            [nameField]="'name_' + currentLang"
-            [required]="district.required"
-            dropdownType="accordion"
-          ></app-input-select>
-        </app-form-field>
-
-        <app-form-field name="conton" #conton>
-          <app-input-select
-            *ngIf="mode?.value != 'contours_main_ai'"
-            [placeholder]="'Select a conton' | translate"
-            formControlName="conton"
-            [items]="contons"
-            [nameField]="'name_' + currentLang"
-            [required]="conton.required"
-            dropdownType="accordion"
-          ></app-input-select>
-        </app-form-field>
-
         <app-form-field name="land_type" #land_type>
           <app-input-select
-            [placeholder]="'Select a land type' | translate"
+            [placeholder]="'All types of land' | translate"
             formControlName="land_type"
             [items]="landTypes"
             [multi]="true"
             [nameField]="'name_' + currentLang"
             [required]="land_type.required"
-            dropdownType="accordion"
+            [dropdownType]="floating ? 'default' : 'accordion'"
             [searchable]="false"
+            [floatable]="false"
           ></app-input-select>
         </app-form-field>
+
+        <hr style="margin: 0" />
 
         <app-form-field name="culture" #culture>
           <app-input-select
@@ -77,7 +55,7 @@
             [multi]="true"
             [nameField]="'name_' + currentLang"
             [required]="culture.required"
-            dropdownType="accordion"
+            [dropdownType]="floating ? 'default' : 'accordion'"
           ></app-input-select>
         </app-form-field>
 
@@ -92,6 +70,55 @@
           >
           </app-input>
         </app-form-field>
+
+        <hr style="margin: 0" />
+
+        <app-form-field name="region" #region>
+          <app-input-select
+            [placeholder]="'All regions' | translate"
+            formControlName="region"
+            [items]="regions"
+            [nameField]="'name_' + currentLang"
+            [required]="region.required"
+            [dropdownType]="floating ? 'default' : 'accordion'"
+          ></app-input-select>
+        </app-form-field>
+
+        <app-form-field name="district" #district>
+          <app-input-select
+            [placeholder]="'Select a district' | translate"
+            formControlName="district"
+            [items]="districts"
+            [nameField]="'name_' + currentLang"
+            [required]="district.required"
+            [dropdownType]="floating ? 'default' : 'accordion'"
+          ></app-input-select>
+        </app-form-field>
+
+        <app-form-field name="conton" #conton>
+          <app-input-select
+            *ngIf="mode?.value != 'contours_main_ai'"
+            [placeholder]="'Select a conton' | translate"
+            formControlName="conton"
+            [items]="contons"
+            [nameField]="'name_' + currentLang"
+            [required]="conton.required"
+            [dropdownType]="floating ? 'default' : 'accordion'"
+          ></app-input-select>
+        </app-form-field>
+
+        <div class="floating-bar-actions">
+          <button type="button" class="success" (click)="handleFormSubmit()">
+            <app-svg-icon name="search"></app-svg-icon>
+          </button>
+          <button type="button" (click)="handleFormReset()">
+            <app-svg-icon name="delete"></app-svg-icon>
+          </button>
+        </div>
+
+        <div class="close-floating-bar" (click)="handleCloseFloatingBar()">
+          <app-svg-icon name="clear"></app-svg-icon>
+        </div>
       </ng-container>
 
       <ng-template #skeleton>
@@ -105,12 +132,14 @@
         </ng-container>
       </ng-template>
 
-      <button type="button" class="success" (click)="handleFormSubmit()">
-        {{ "Apply" | translate }}
-      </button>
-      <button type="button" (click)="handleFormReset()">
-        {{ "Clear" | translate }}
-      </button>
+      <div class="actions">
+        <button type="button" class="success" (click)="handleFormSubmit()">
+          {{ "Apply" | translate }}
+        </button>
+        <button type="button" (click)="handleFormReset()">
+          {{ "Clear" | translate }}
+        </button>
+      </div>
     </div>
   </form>
 </div>
