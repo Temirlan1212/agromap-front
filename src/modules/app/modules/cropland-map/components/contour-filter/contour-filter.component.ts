@@ -64,7 +64,6 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
     const floating = this.sidePanelService.get('croplandMapFilterBarFloating');
     const isSidePanelClosed = this.sidePanelService.get();
     this.floating = floating && isSidePanelClosed && !this.activeContour;
-
     return this.floating;
   }
 
@@ -162,13 +161,7 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
   ) {}
 
   async ngOnInit(): Promise<void> {
-    this.sidePanelService.set(true, 'croplandMapFilterBarFloating');
-
-    this.collapseOnApply = this.settingsService.get('filter.collapseOnApply');
-    this.settingsService.watch(
-      (value) => (this.collapseOnApply = value),
-      'filter.collapseOnApply'
-    );
+    this.initSettings();
 
     this.mode?.patchValue('default');
     this.loading = true;
@@ -397,6 +390,32 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
     await this.deleteItem();
     this.selectedId = null;
     dialog.close();
+  }
+
+  handleCloseFloatingBar() {
+    this.sidePanelService.set(false, 'croplandMapFilterBarFloating');
+    this.settingsService.patch('filter.showFloatingFilterBar', false, {
+      persist: true,
+    });
+  }
+
+  private initSettings() {
+    this.collapseOnApply = this.settingsService.get('filter.collapseOnApply');
+    this.settingsService.watch(
+      (value) => (this.collapseOnApply = value),
+      'filter.collapseOnApply'
+    );
+
+    this.sidePanelService.set(
+      this.settingsService.get('filter.showFloatingFilterBar'),
+      'croplandMapFilterBarFloating'
+    );
+
+    this.settingsService.watch(
+      (value) =>
+        this.sidePanelService.set(value, 'croplandMapFilterBarFloating'),
+      'filter.showFloatingFilterBar'
+    );
   }
 
   ngOnDestroy() {

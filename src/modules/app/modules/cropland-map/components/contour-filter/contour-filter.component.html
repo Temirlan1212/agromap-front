@@ -7,6 +7,15 @@
   </button>
 </div>
 
+<div class="sidebar-settings">
+  <app-menu [placement]="'right'" [dark]="true">
+    <app-settings></app-settings>
+  </app-menu>
+  <button class="navigate">
+    <app-svg-icon name="settings" size="20"></app-svg-icon>
+  </button>
+</div>
+
 <h4>{{ "Filter" | translate }}</h4>
 
 <div class="filters">
@@ -107,10 +116,7 @@
           </button>
         </div>
 
-        <div
-          class="close-floating-bar"
-          (click)="sidePanelService.set(false, 'croplandMapFilterBarFloating')"
-        >
+        <div class="close-floating-bar" (click)="handleCloseFloatingBar()">
           <app-svg-icon name="clear"></app-svg-icon>
         </div>
       </ng-container>
