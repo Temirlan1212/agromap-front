@@ -33,7 +33,7 @@
       <ng-container *ngIf="!loading; else skeleton">
         <app-form-field name="land_type" #land_type>
           <app-input-select
-            [placeholder]="'Все виды угодий' | translate"
+            [placeholder]="'All types of land' | translate"
             formControlName="land_type"
             [items]="landTypes"
             [multi]="true"
@@ -75,7 +75,7 @@
 
         <app-form-field name="region" #region>
           <app-input-select
-            [placeholder]="'Все регионы' | translate"
+            [placeholder]="'All regions' | translate"
             formControlName="region"
             [items]="regions"
             [nameField]="'name_' + currentLang"
