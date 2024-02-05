@@ -24,7 +24,7 @@ export class MapApi {
     if (token != null) headers['Authorization'] = `token ${token}`;
 
     const response = await fetch(
-      `https://adminagro.24mycrm.com/gip/polygons-in-screen/?${params}`,
+      `${environment.apiUrl}/gip/polygons-in-screen/?${params}`,
       {
         method: 'POST',
         body: JSON.stringify(latLngBounds),
