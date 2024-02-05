@@ -309,7 +309,7 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
     } else {
       districtVal?.patchValue(null);
       districtVal?.disable({ emitEvent: false });
-      this.resetMapBounds();
+      // this.resetMapBounds();
     }
 
     districtVal?.reset();
@@ -346,7 +346,7 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
         maxZoom: 12,
       });
     } else {
-      this.resetMapBounds();
+      // this.resetMapBounds();
     }
   }
 
