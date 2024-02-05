@@ -33,7 +33,7 @@ $indent: 0 20px;
         border-radius: 10px;
         position: fixed;
         top: 15px;
-        left: 105px;
+        left: $floatingFilterBarLeft;
         display: flex;
         flex-direction: row;
         align-items: center;
@@ -60,7 +60,7 @@ $indent: 0 20px;
         .close-floating-bar {
           display: flex;
           color: $lightColor;
-          background-color: rgba($lightColor, 0.2);
+          background-color: rgba(27, 27, 27, 0.8);
           backdrop-filter: blur(30px);
           position: absolute;
           left: -5px;
