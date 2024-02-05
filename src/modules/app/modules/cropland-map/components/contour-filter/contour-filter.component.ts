@@ -249,23 +249,26 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const { region, district, year, conton, land_type, culture } =
-      formState.value;
+    const values = formState.value;
 
     const land_type_values = this.landTypes
       .map((land_type) => land_type.id)
       .join(',');
 
-    if (!land_type) formState.value['land_type'] = land_type_values;
-    if (!year) {
+    if (!values?.land_type) formState.value['land_type'] = land_type_values;
+    if (!values?.year) {
       formState.value['year'] = this.mapService.filterDefaultValues.year;
       this.form
         .get('year')
         ?.patchValue(this.mapService.filterDefaultValues.year);
     }
-    if (culture) formState.value['culture'] = '';
+
+    if (!values?.culture?.value) formState.value['culture'] = '';
 
     this.onFormSubmit.emit(formState);
+
+    const { region, district, year, conton, land_type, culture } =
+      formState.value;
 
     this.loading = true;
     try {
