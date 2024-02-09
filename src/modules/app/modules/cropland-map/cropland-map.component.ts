@@ -384,6 +384,12 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
         color: '#f6ab39',
       });
     await this.getContour(Number(cid));
+    if (
+      this.activeVegIndexOption == null &&
+      Array.isArray(this.vegIndexOptionsList)
+    ) {
+      this.activeVegIndexOption = this.vegIndexOptionsList[0];
+    }
 
     if (this.activeVegIndexOption?.id) {
       this.getVegSatelliteDates(cid, this.activeVegIndexOption.id);
