@@ -57,6 +57,7 @@ import {
   storageNames,
 } from './lib/_constants';
 import { buildWmsCQLFilter, buildWmsPopup } from './lib/_helpers';
+import { ApiController } from './lib/controllers/api-controller';
 
 @Component({
   selector: 'app-cropland-map',
@@ -133,6 +134,7 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
     private translate: TranslatePipe,
     private route: ActivatedRoute,
     private cd: ChangeDetectorRef,
+    private apiController: ApiController,
     public sidePanelService: SidePanelService
   ) {
     this.wmsProductivityLayerColorLegend = wmsProductivityLayerColorLegend;
@@ -462,146 +464,48 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
 
   async deleteItem(): Promise<void> {
     const id = this.layerFeature?.feature?.properties?.['id'];
-    try {
-      if (this.isWmsAiActive) {
-        await this.api.aiContour.remove(Number(id));
-      } else {
-        await this.api.contour.remove(Number(id));
-      }
-
-      this.messages.success(
-        this.translate.transform('Polygon successfully deleted')
-      );
-    } catch (e: any) {
-      this.messages.error(e.error?.message ?? e.message);
-    }
-  }
-
-  private async getContour(id: number): Promise<void> {
-    try {
-      if (this.isWmsAiActive) {
-        this.activeContour = await this.api.aiContour.getOne(id);
-      } else {
-        this.activeContour = await this.api.contour.getOne(id);
-      }
-    } catch (e: any) {
-      this.messages.error(e.error?.message ?? e.message);
-    }
-  }
-
-  private async getContourData(id: number) {
-    const query: ActualVegQuery = { contour_id: id };
-    try {
-      let res: ActualVegIndexes[];
-      if (this.isWmsAiActive) {
-        res = await this.api.vegIndexes.getActualVegIndexesAi(query);
-      } else {
-        res = await this.api.vegIndexes.getActualVegIndexes(query);
-      }
-
-      const data = res?.reduce((acc: any, i: any) => {
-        if (!acc[i.index.id]) {
-          acc[i.index.id] = {};
-          acc[i.index.id]['name'] = i.index[`name_${this.currentLang}`];
-          acc[i.index.id]['data'] = [];
-          acc[i.index.id]['dates'] = [];
-          acc[i.index.id]['data'].push(i.average_value);
-          acc[i.index.id]['dates'].push(i.date);
-        } else {
-          acc[i.index.id]['data'].push(i.average_value);
-          acc[i.index.id]['dates'].push(i.date);
-        }
-        return acc;
-      }, {});
-      this.contourData = data ? Object.values(data) : [];
-    } catch (e: any) {
-      this.messages.error(e.error?.message ?? e.message);
-      this.contourData = [];
-    }
+    this.apiController.deleteContour({
+      id,
+      isWmsAiActive: this.isWmsAiActive,
+      message: this.translate.transform('Polygon successfully deleted'),
+    });
   }
 
   private async addPolygonsInScreenToMap(mapBounds: LatLngBounds) {
     this.loading = true;
-    try {
-      const year =
-        this.filterFormValues?.['year'] ??
-        this.mapService.filterDefaultValues.year;
-      const culture = this.filterFormValues?.['culture'] ?? null;
-      const land_type =
-        this.filterFormValues?.['land_type'] ??
-        this.landTypes.map((l: ILandType) => l['id']).join(',');
+    this.polygonsRequestController = new AbortController();
+    await this.apiController.addPolygonsInScreenToMap({
+      isWmsAiActive: this.isWmsAiActive,
+      mapData: this.mapData,
+      abortConroller: this.polygonsRequestController,
+      filterFormValues: this.filterFormValues,
+      landTypes: this.landTypes,
+      mapBounds,
+    });
+    this.loading = false;
+  }
 
-      if (this.mapData?.map != null && land_type) {
-        let polygons: GeoJSON;
-        if (this.isWmsAiActive) {
-          polygons = await this.api.map.getPolygonsInScreenAi({
-            latLngBounds: mapBounds,
-            land_type,
-            year,
-            culture,
-          });
-        } else {
-          this.polygonsRequestController = new AbortController();
-          const response = await this.api.map.getPolygonsInScreen(
-            {
-              latLngBounds: mapBounds,
-              land_type,
-              year,
-              culture,
-            },
-            this.polygonsRequestController.signal
-          );
+  private async getContourData(id: number) {
+    this.contourData = await this.apiController.getContourData({
+      id,
+      isWmsAiActive: this.isWmsAiActive,
+      currLang: this.currentLang,
+    });
+  }
 
-          polygons = response;
-        }
-
-        this.mapData.geoJson.options.snapIgnore = true;
-        this.mapData.geoJson.options.pmIgnore = true;
-        this.mapData.geoJson.options.style = {
-          fillOpacity: 0,
-          weight: 0.4,
-        };
-
-        this.mapData.geoJson.setZIndex(400);
-        this.mapData.geoJson.options.interactive = true;
-        this.mapData.geoJson.addData(polygons);
-      }
-    } catch (e: any) {
-      const message = e.error?.message ?? e.message;
-      if (message === this.messages.messages.abortedRequest) return;
-      this.messages.error(message);
-    } finally {
-      this.loading = false;
-    }
+  private async getContour(id: number): Promise<void> {
+    this.activeContour = await this.apiController.getContour({
+      id,
+      isWmsAiActive: this.isWmsAiActive,
+    });
   }
 
   private async getLandTypes() {
-    try {
-      this.landTypes = await this.api.dictionary.getLandType();
-    } catch (e: any) {
-      this.messages.error(e.error?.message ?? e.message);
-    }
+    this.landTypes = await this.apiController.getLandTypes();
   }
 
   private async getRegionsPolygon() {
-    try {
-      let polygons: IRegion[];
-      polygons = await this.api.dictionary.getRegions({
-        polygon: true,
-      });
-
-      polygons.map((polygon) => {
-        if (this.mapData?.map != null) {
-          this.mapData.geoJsonStatic.options.snapIgnore = true;
-          this.mapData.geoJsonStatic.options.pmIgnore = true;
-          this.mapData.geoJsonStatic.options.style = { fillOpacity: 0 };
-          this.mapData.geoJsonStatic.options.interactive = false;
-          this.mapData.geoJsonStatic.addData(polygon.polygon);
-        }
-      });
-    } catch (e: any) {
-      this.messages.error(e.error?.message ?? e.message);
-    }
+    await this.apiController.getRegionsPolygon({ mapData: this.mapData });
   }
 
   private async getVegSatelliteDates(
@@ -609,32 +513,16 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
     vegIndexId: number
   ): Promise<void> {
     this.loadingSatelliteDates = true;
-    try {
-      const query = {
-        contourId: contoruId,
-        vegIndexId: vegIndexId,
-      };
-
-      let res: IVegSatelliteDate[];
-      if (this.isWmsAiActive) {
-        res = await this.api.vegIndexes.getVegSatelliteDatesAi(query);
-      } else {
-        res = await this.api.vegIndexes.getVegSatelliteDates(query);
-      }
-      this.vegIndexesData = res;
-    } catch (e: any) {
-      this.messages.error(e.error?.message ?? e.message);
-    }
+    this.vegIndexesData = await this.apiController.getVegSatelliteDates({
+      vegIndexId: vegIndexId,
+      isWmsAiActive: this.isWmsAiActive,
+      contoruId: contoruId,
+    });
     this.loadingSatelliteDates = false;
   }
 
   private async getVegIndexList() {
-    try {
-      this.vegIndexOptionsList =
-        (await this.api.vegIndexes.getVegIndexList()) as IVegIndexOption[];
-    } catch (e: any) {
-      this.messages.error(e.error?.message ?? e.message);
-    }
+    this.vegIndexOptionsList = await this.apiController.getVegIndexList();
   }
 
   private setWmsParams(): void {

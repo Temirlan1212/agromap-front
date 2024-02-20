@@ -14,7 +14,7 @@ import {
 import { imageOverlay } from 'leaflet';
 import { ImageOverlay } from 'leaflet';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class MapService {
   map = new BehaviorSubject<MapData | null>(null);
   contourEditingMode = new Subject<boolean>();
