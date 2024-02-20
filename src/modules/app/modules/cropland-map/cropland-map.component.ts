@@ -30,19 +30,15 @@ import {
   MapMove,
 } from 'src/modules/ui/models/map.model';
 import { MapService } from '../../../ui/services/map.service';
-import { MessagesService } from '../../../ui/services/messages.service';
 import { IChartData } from './components/spline-area-chart/spline-area-chart.component';
-import { ActualVegQuery } from '../../../api/classes/veg-indexes';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { Router, NavigationEnd, Event, ActivatedRoute } from '@angular/router';
 import { StoreService } from 'src/modules/ui/services/store.service';
 import { Feature } from 'geojson';
 import { MapComponent } from '../../../ui/components/map/map.component';
 import { Subscription } from 'rxjs';
-import { ActualVegIndexes } from 'src/modules/api/models/actual-veg-indexes';
 import { ITileLayer } from 'src/modules/ui/models/map.model';
 import { QuestionDialogComponent } from '../../../ui/components/question-dialog/question-dialog.component';
-import { IRegion } from 'src/modules/api/models/region.model';
 import { ContourFiltersQuery } from 'src/modules/api/models/contour.model';
 import { ContourDetailsComponent } from './components/contour-details/contour-details.component';
 import { ToggleButtonComponent } from '../../../ui/components/toggle-button/toggle-button.component';
@@ -127,7 +123,6 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
   constructor(
     private api: ApiService,
     private mapService: MapService,
-    private messages: MessagesService,
     private store: StoreService,
     private translateSvc: TranslateService,
     private router: Router,
