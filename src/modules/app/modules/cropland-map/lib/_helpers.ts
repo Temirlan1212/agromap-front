@@ -1,3 +1,6 @@
+import { LeafletMouseEvent, Map, Popup, popup } from 'leaflet';
+import { MapApi } from 'src/modules/api/classes/map.api';
+
 export const buildWmsCQLFilter = (v: any) => {
   let wmsCQLFilter = '';
   wmsCQLFilter = '';
@@ -50,4 +53,74 @@ export const buildWmsCQLFilter = (v: any) => {
     wmsCQLFilter += 'year=' + val;
   }
   return wmsCQLFilter;
+};
+
+export const buildWmsPopup = async ({
+  event: e,
+  mapControlLayersSwitch,
+  map,
+  mapApi,
+}: {
+  event: LeafletMouseEvent;
+  mapControlLayersSwitch: Record<string, any>;
+  map: Map;
+  mapApi: MapApi;
+}) => {
+  let wmsLayerInfoPopup: Popup | null = null;
+  const contolLayers = Object.values({
+    ...mapControlLayersSwitch,
+  });
+  const activeControlLayer = [...contolLayers]
+    .sort((a, b) => b?.updatedAt - a?.updatedAt)
+    .filter((item) => item?.name && item?.updatedAt && item?.layersName)?.[0];
+
+  if (activeControlLayer != null) {
+    const layers = activeControlLayer?.layersName;
+    if (layers == null) return;
+
+    const { lat, lng } = e.latlng;
+    const bbox = [lng - 0.1, lat - 0.1, lng + 0.1, lat + 0.1];
+
+    try {
+      let data: any = null;
+      if (layers.includes('agromap')) {
+        data = await mapApi.getFeatureInfo({
+          bbox: bbox.join(','),
+          layers: layers,
+          query_layers: layers,
+        });
+      }
+
+      const properties: any = data.features?.[0]?.properties;
+
+      if (map && properties != null) {
+        const tooltipContent = `
+        <div>
+          ${Object.entries(properties)
+            .map(([key, value]) => {
+              if (
+                value &&
+                (typeof value === typeof '' || typeof value === typeof 0)
+              ) {
+                return `<p><strong>${key}:</strong>  ${value}</p> `;
+              }
+              return null;
+            })
+            .filter(Boolean)
+            .join('<hr>')}
+        </div>
+      `;
+
+        const options = { maxHeight: 300, maxWidth: 300 };
+        wmsLayerInfoPopup = popup(options)
+          .setLatLng(e.latlng)
+          .setContent(tooltipContent)
+          .openOn(map);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  return wmsLayerInfoPopup;
 };
