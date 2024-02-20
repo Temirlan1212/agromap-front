@@ -3,12 +3,11 @@ import {
   latLngBounds,
   LatLngBounds,
   Map,
-  tileLayer,
   LeafletMouseEvent,
   Popup,
   popup,
 } from 'leaflet';
-import { GeoJSON, Geometry } from 'geojson';
+import { GeoJSON } from 'geojson';
 import {
   AfterViewInit,
   ChangeDetectorRef,
@@ -51,6 +50,13 @@ import { MapControlLayersSwitchComponent } from '../../../ui/components/map-cont
 import { ILandType } from 'src/modules/api/models/land-type.model';
 import { IUser } from 'src/modules/api/models/user.model';
 import { SidePanelService } from 'src/modules/ui/services/side-panel.service';
+import {
+  baseLayers,
+  wmsLayers,
+  wmsProductivityLayerColorLegend,
+  storageNames,
+} from './lib/_constants';
+import { buildWmsCQLFilter } from './lib/_helpers';
 
 @Component({
   selector: 'app-cropland-map',
@@ -63,204 +69,59 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('mapControls') mapControls!: MapControlLayersSwitchComponent;
   @ViewChild('toggleBtn') toggleBtn!: ToggleButtonComponent;
   @ViewChildren(ContourDetailsComponent)
+
+  //components
   contourDetailsComponents!: QueryList<ContourDetailsComponent>;
+
+  //loadings
+  loadingSatelliteDates: boolean = false;
+  loading: boolean = false;
+
+  //mode
   mode!: string;
-  user: IUser | null = this.api.user.getLoggedInUser();
+  isWmsAiActive: boolean = false;
+
+  //constants
+  wmsProductivityLayerColorLegend: Record<string, any>[] = [];
+  baseLayers: ITileLayer[] = [];
+  wmsLayers: ITileLayer[] = [];
+  storageName = '';
+
+  //dictionaries
   landTypes: ILandType[] = [];
+  activeVegIndexOption: IVegIndexOption | null = null;
+  sidePanelData: Record<string, any> = {};
+  vegIndexesData: IVegSatelliteDate[] = [];
+  vegIndexOptionsList: IVegIndexOption[] = [];
+  mapControlLayersSwitch: Record<string, any> = {};
+
+  //user
+  user: IUser | null = this.api.user.getLoggedInUser();
+
+  //map
   mapData: MapData | null = null;
   layerFeature: MapLayerFeature | null = null;
   selectedLayer: any;
   contourData: IChartData[] = [];
-  currentLang: string = this.translateSvc.currentLang;
-  currentRouterPathname: string = '';
-  isWmsAiActive: boolean = false;
   productivity: string | null = null;
   wmsSelectedStatusLayers: Record<string, string> | null = null;
   selectedContourId!: number;
-  loading: boolean = false;
   activeContour!: any;
   activeContourSmall: any;
-  mapControlLayersSwitch: Record<string, any> = {};
-  filterFormValues!: any;
-  sidePanelData: Record<string, any> = {};
-  vegIndexesData: IVegSatelliteDate[] = [];
-  vegIndexOptionsList: IVegIndexOption[] = [];
-  loadingSatelliteDates: boolean = false;
-  activeVegIndexOption: IVegIndexOption | null = null;
+
+  //map-popups
   wmsLayerInfoPopup: Popup | null = null;
-  storageName = 'MapControlLayersSwitchComponent';
-  polygonsRequestController: AbortController | null = null;
 
-  wmsProductivityLayerColorLegend: Record<string, any>[] = [
-    { label: '-1', color: '#000000' },
-    { label: '0.055', color: '#800000' },
-    { label: '0.075', color: '#ff0000' },
-    { label: '0.16', color: '#FFEA00' },
-    { label: '0.401', color: '#359b52' },
-    { label: '1', color: '#004529' },
-  ];
+  //settings
+  currentLang: string = this.translateSvc.currentLang;
+  currentRouterPathname: string = '';
 
+  //filter
   wmsCQLFilter: string | null = null;
-  wmsLayersOptions = {
-    format: 'image/png',
-    transparent: true,
-    zIndex: 500,
-  };
+  filterFormValues!: any;
 
-  wmsLayersOverlayOptions = {
-    format: 'image/png',
-    transparent: true,
-    zIndex: 499,
-  };
-
-  baseLayers: ITileLayer[] = [
-    {
-      title: 'Satellite map',
-      name: 'FULL_KR_TCI',
-      layer: tileLayer.wms('https://geoserver.24mycrm.com/agromap/wms', {
-        layers: 'agromap:FULL_KR_TCI',
-        ...this.wmsLayersOverlayOptions,
-        zIndex: 400,
-      }),
-    },
-    {
-      title: 'Google Streets',
-      name: 'Google Streets',
-      layer: tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
-        subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
-      }),
-    },
-    {
-      title: 'Google Terrain',
-      name: 'Google Terrain',
-      layer: tileLayer('http://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}', {
-        subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
-      }),
-    },
-    {
-      title: 'Open Street Map',
-      name: 'Open Street Map',
-      layer: tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png'),
-    },
-    {
-      title: 'Base Map',
-      name: 'Base Map',
-      layer: tileLayer(
-        'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
-      ),
-    },
-  ];
-
-  wmsLayers: ITileLayer[] = [
-    {
-      title: 'Base',
-      name: 'contours_main',
-      layer: tileLayer.wms('https://geoserver.24mycrm.com/agromap/wms', {
-        layers: 'agromap:contours_main',
-        ...this.wmsLayersOptions,
-      }),
-      type: 'radio',
-    },
-    {
-      title: 'RSE',
-      name: 'contours_main_ai',
-      layer: tileLayer.wms('https://geoserver.24mycrm.com/agromap/wms', {
-        layers: 'agromap:contours_main_ai',
-        ...this.wmsLayersOptions,
-      }),
-      type: 'checkbox',
-    },
-    {
-      title: 'SoilLayer',
-      name: 'soil_agromap',
-      layer: tileLayer.wms('https://geoserver.24mycrm.com/agromap/wms', {
-        layers: 'agromap:soil_agromap',
-        ...this.wmsLayersOverlayOptions,
-      }),
-      type: 'checkbox',
-    },
-    {
-      title: 'NDVI heat map',
-      name: 'ndvi_heat_map',
-      layer: tileLayer.wms('https://geoserver.24mycrm.com/agromap/wms', {
-        layers: 'agromap:ndvi_heat_map',
-        ...this.wmsLayersOverlayOptions,
-      }),
-      type: 'checkbox',
-    },
-    {
-      title: 'Forestry',
-      name: 'agromap:forestry',
-      layer: tileLayer.wms('https://geoserver.24mycrm.com/agromap/wms', {
-        layers: 'agromap:forestry',
-        ...this.wmsLayersOverlayOptions,
-      }),
-      type: 'checkbox',
-    },
-    {
-      title: 'On-farm channels',
-      name: 'agromap:Внутрихозяйственные_каналы',
-      layer: tileLayer.wms('https://geoserver.24mycrm.com/agromap/wms', {
-        layers: 'agromap:Внутрихозяйственные_каналы',
-        ...this.wmsLayersOverlayOptions,
-      }),
-      type: 'checkbox',
-    },
-    {
-      title: 'Inter-farm channels',
-      name: 'agromap:Межхозяйственные_каналы',
-      layer: tileLayer.wms('https://geoserver.24mycrm.com/agromap/wms', {
-        layers: 'agromap:Межхозяйственные_каналы',
-        ...this.wmsLayersOverlayOptions,
-      }),
-      type: 'checkbox',
-    },
-    {
-      title: 'Tepke',
-      name: 'agromap:Tepke_20cm(EPSG:7695)',
-      layer: tileLayer.wms('https://geoserver.24mycrm.com/agromap/wms', {
-        layers: 'agromap:Tepke_20cm(EPSG:7695)',
-        ...this.wmsLayersOverlayOptions,
-      }),
-      type: 'checkbox',
-    },
-    {
-      title: 'AWU',
-      name: 'agromap:АВП',
-      layer: tileLayer.wms('https://geoserver.24mycrm.com/agromap/wms', {
-        layers: 'agromap:АВП',
-        ...this.wmsLayersOverlayOptions,
-      }),
-      type: 'checkbox',
-    },
-    {
-      title: 'Regions borders',
-      name: 'kyrgyz:Oblast',
-      layer: tileLayer.wms('https://isul.forest.gov.kg/geoserver/kyrgyz/wms', {
-        layers: 'kyrgyz:Oblast',
-        ...this.wmsLayersOverlayOptions,
-      }),
-      type: 'checkbox',
-    },
-    {
-      title: 'Districts borders',
-      name: 'kyrgyz:Raion',
-      layer: tileLayer.wms('https://isul.forest.gov.kg/geoserver/kyrgyz/wms', {
-        layers: 'kyrgyz:Raion',
-        ...this.wmsLayersOverlayOptions,
-      }),
-      type: 'checkbox',
-    },
-    {
-      title: 'Karagana Suusamyr valley',
-      name: 'agromap:Karagana_Suusamyr_Valley2020',
-      layer: tileLayer.wms('https://geoserver.24mycrm.com/agromap/wms', {
-        layers: 'agromap:Karagana_Suusamyr_Valley2020',
-        ...this.wmsLayersOverlayOptions,
-      }),
-      type: 'checkbox',
-    },
-  ];
+  //requests
+  polygonsRequestController: AbortController | null = null;
 
   constructor(
     private api: ApiService,
@@ -274,6 +135,11 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
     private cd: ChangeDetectorRef,
     public sidePanelService: SidePanelService
   ) {
+    this.wmsProductivityLayerColorLegend = wmsProductivityLayerColorLegend;
+    this.baseLayers = baseLayers;
+    this.wmsLayers = wmsLayers;
+    this.storageName = storageNames.mapControlLayersSwitchComponent;
+
     const routerEventSub = this.router.events.subscribe((event: Event) => {
       if (event instanceof NavigationEnd) {
         this.currentRouterPathname = router.url;
@@ -291,7 +157,7 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
         if (this.mapData?.map && !isChildRoute && this.mapData?.geoJson) {
           const data = this.store.getItem<
             Record<string, LatLngBounds | number>
-          >('ArableLandComponent');
+          >(storageNames.arableLandComponent);
 
           const layersLength = this.mapData.geoJson.getLayers().length;
           const zoom = data?.['mapZoom'] as number;
@@ -321,15 +187,17 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.mapService.loading.subscribe((loading) => (this.loading = loading)),
 
-    this.store.watchItem('MapControlLayersSwitchComponent').subscribe((v) => {
-      if (this.wmsLayerInfoPopup) {
-        this.mapData?.map.removeLayer(this.wmsLayerInfoPopup);
-        this.wmsLayerInfoPopup = null;
-      }
-      this.mapControlLayersSwitch = v;
-    }),
+    this.store
+      .watchItem(storageNames.mapControlLayersSwitchComponent)
+      .subscribe((v) => {
+        if (this.wmsLayerInfoPopup) {
+          this.mapData?.map.removeLayer(this.wmsLayerInfoPopup);
+          this.wmsLayerInfoPopup = null;
+        }
+        this.mapControlLayersSwitch = v;
+      }),
 
-    this.store.watchItem('SidePanelComponent').subscribe((v) => {
+    this.store.watchItem(storageNames.sidePanel).subscribe((v) => {
       this.sidePanelData = v;
       this.cd.detectChanges();
     }),
@@ -394,7 +262,10 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.activeVegIndexOption?.id) {
       this.getVegSatelliteDates(cid, this.activeVegIndexOption.id);
     }
-    this.store.setItem<Feature>('selectedLayerFeature', layerFeature.feature);
+    this.store.setItem<Feature>(
+      storageNames.selectedLayerFeature,
+      layerFeature.feature
+    );
     const bounds = geoJSON(layerFeature.feature).getBounds();
     if (this.mapData?.map) {
       this.mapData.map.fitBounds(bounds, { maxZoom: 14 });
@@ -404,7 +275,7 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
 
   handleFeatureClose(): void {
     this.layerFeature = null;
-    this.store.removeItem('selectedLayerFeature');
+    this.store.removeItem(storageNames.selectedLayerFeature);
     if (this.selectedLayer) {
       this.selectedLayer.remove();
     }
@@ -423,7 +294,7 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   handleSidePanelToggle(isOpened: boolean) {
-    this.store.setItem('SidePanelComponent', { state: isOpened });
+    this.store.setItem(storageNames.sidePanel, { state: isOpened });
   }
 
   handleMapClick(e: LeafletMouseEvent) {
@@ -499,7 +370,7 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
 
   async handleMapMoveWithDebaunce(mapMove: MapMove): Promise<void> {
     this.store.setItem<Record<string, LatLngBounds | number>>(
-      'ArableLandComponent',
+      storageNames.arableLandComponent,
       {
         mapBounds: mapMove.bounds,
         mapZoom: mapMove.zoom,
@@ -528,7 +399,7 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   handleSetSidePanelState(state: boolean) {
-    this.store.setItem('SidePanelComponent', { state });
+    this.store.setItem(storageNames.sidePanel, { state });
   }
 
   handleFilterFormSubmit(formValue: Record<string, any>) {
@@ -537,7 +408,7 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.mapData?.map) {
       this.mapData.geoJson.clearLayers();
       const data = this.store.getItem<Record<string, LatLngBounds | number>>(
-        'ArableLandComponent'
+        storageNames.arableLandComponent
       );
 
       const bounds = data?.['mapBounds'] as LatLngBounds;
@@ -550,7 +421,7 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
       }
     }
 
-    this.store.setItem('SidePanelComponent', { state: false });
+    this.store.setItem(storageNames.sidePanel, { state: false });
     this.toggleBtn.isContentToggled = false;
     this.handleSetSidePanelState(false);
     this.mode = 'contours_main';
@@ -588,7 +459,7 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
 
     if (this.mapData?.map) {
       const data = this.store.getItem<Record<string, LatLngBounds | number>>(
-        'ArableLandComponent'
+        storageNames.arableLandComponent
       );
       const bounds = data?.['mapBounds'] as LatLngBounds;
       const zoom = data?.['mapZoom'] as number;
@@ -621,7 +492,7 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
     dialog.close();
     if (this.mapComponent) this.mapComponent.handleFeatureClose();
     const data = this.store.getItem<Record<string, LatLngBounds | number>>(
-      'ArableLandComponent'
+      storageNames.arableLandComponent
     );
 
     const bounds = data?.['mapBounds'] as LatLngBounds;
@@ -835,60 +706,14 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  private buildWmsCQLFilter() {
+  private handleWmsCQLFilter() {
     this.store
-      .watchItem<ContourFiltersQuery | null>('ContourFilterComponent')
+      .watchItem<ContourFiltersQuery | null>(
+        storageNames.contourFilterComponent
+      )
       .subscribe((v) => {
         if (v != null) {
-          this.wmsCQLFilter = '';
-          if (v.region) {
-            if (this.wmsCQLFilter.length > 0) {
-              this.wmsCQLFilter += '&&';
-            }
-            this.wmsCQLFilter += 'rgn=' + v.region;
-          }
-          if (v.district) {
-            if (this.wmsCQLFilter.length > 0) {
-              this.wmsCQLFilter += '&&';
-            }
-            this.wmsCQLFilter += 'dst=' + v.district;
-          }
-          if (v.conton) {
-            if (this.wmsCQLFilter.length > 0) {
-              this.wmsCQLFilter += '&&';
-            }
-            this.wmsCQLFilter += 'cntn=' + v.conton;
-          }
-          if (v.culture) {
-            const val = v.culture;
-            if (this.wmsCQLFilter.length > 0) {
-              this.wmsCQLFilter += '&&';
-            }
-            if (typeof val === 'string' && val.split(',').length > 1) {
-              this.wmsCQLFilter += `clt in (${val})`;
-            } else {
-              this.wmsCQLFilter += 'clt=' + v.culture;
-            }
-          }
-          if (v.land_type) {
-            const val = v.land_type;
-            if (this.wmsCQLFilter.length > 0) {
-              this.wmsCQLFilter += '&&';
-            }
-            if (typeof val === 'string' && val.split(',').length > 1) {
-              this.wmsCQLFilter += `ltype in (${val})`;
-            } else {
-              this.wmsCQLFilter += 'ltype=' + v.land_type;
-            }
-          }
-          if (v.year) {
-            const val = v.year;
-            if (this.wmsCQLFilter.length > 0) {
-              this.wmsCQLFilter += '&&';
-            }
-
-            this.wmsCQLFilter += 'year=' + val;
-          }
+          this.wmsCQLFilter = buildWmsCQLFilter(v);
           this.setWmsParams();
         }
       });
@@ -900,7 +725,9 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
         this.mapService.invalidateSize(this.mapData.map);
       }
     });
-    const data = this.store.getItem('MapControlLayersSwitchComponent');
+    const data = this.store.getItem(
+      storageNames.mapControlLayersSwitchComponent
+    );
     this.wmsSelectedStatusLayers = data;
 
     this.activeVegIndexOption = this.vegIndexOptionsList[0];
@@ -908,14 +735,14 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
     await this.getLandTypes();
     await this.getVegIndexList();
 
-    this.buildWmsCQLFilter();
+    this.handleWmsCQLFilter();
   }
 
   ngAfterViewInit(): void {
     this.getRegionsPolygon();
     this.mapControls.handleBaseLayerChange('FULL_KR_TCI');
 
-    const data = this.store.getItem('ArableLandComponent');
+    const data = this.store.getItem(storageNames.arableLandComponent);
     if (data !== null) {
       const newBounds = latLngBounds(
         data.mapBounds._southWest,

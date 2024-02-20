@@ -15,6 +15,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { MapService } from '../../../../../ui/services/map.service';
 import { MessagesService } from 'src/modules/ui/services/messages.service';
 import { SidePanelService } from 'src/modules/ui/services/side-panel.service';
+import { storageNames } from '../../lib/_constants';
 
 @Component({
   selector: 'app-split-map-sidebar',
@@ -159,7 +160,9 @@ export class SplitMapSidebarComponent implements OnDestroy, OnInit {
 
   async ngOnInit(): Promise<void> {
     this.sidePanelService.set(false);
-    this.layerFeature = this.store.getItem<Feature>('selectedLayerFeature');
+    this.layerFeature = this.store.getItem<Feature>(
+      storageNames.selectedLayerFeature
+    );
     if (this.layerFeature != null) {
       this.contourId = this.layerFeature.properties?.['id'];
       this.bounds = L.geoJSON(this.layerFeature).getBounds();
@@ -169,7 +172,7 @@ export class SplitMapSidebarComponent implements OnDestroy, OnInit {
       this.buildSatelliteDatesOptions(this.satelliteDateData, this.currLang);
     }
     const MapControlLayersSwitchComponent = this.store.getItem(
-      'MapControlLayersSwitchComponent'
+      storageNames.mapControlLayersSwitchComponent
     );
 
     const name = MapControlLayersSwitchComponent.filterControlLayerSwitch.name;

@@ -12,6 +12,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { StoreService } from '../../../../../ui/services/store.service';
 import { FormControl, FormsModule, Validators } from '@angular/forms';
 import { SidePanelService } from 'src/modules/ui/services/side-panel.service';
+import { storageNames } from '../../lib/_constants';
 
 @Component({
   selector: 'app-contour-edit',
@@ -44,8 +45,9 @@ export class ContourEditComponent implements OnInit, OnDestroy {
   async ngOnInit() {
     this.sidePanelService.set(false);
     this.handleSetSidePanelState(true);
-
-    const data = this.store.getItem('MapControlLayersSwitchComponent');
+    const data = this.store.getItem(
+      storageNames.mapControlLayersSwitchComponent
+    );
     this.mode = data?.filterControlLayerSwitch.name;
     const id = this.route.snapshot.paramMap.get('id');
     try {

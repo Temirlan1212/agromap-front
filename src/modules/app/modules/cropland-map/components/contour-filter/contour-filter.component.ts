@@ -27,6 +27,7 @@ import { StoreService } from 'src/modules/ui/services/store.service';
 import { ICulture } from '../../../../../api/models/culture.model';
 import { SettingsService } from 'src/modules/ui/services/settings.service';
 import { SidePanelService } from 'src/modules/ui/services/side-panel.service';
+import { storageNames } from '../../lib/_constants';
 
 @Component({
   selector: 'app-contour-filter',
@@ -140,11 +141,13 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
       this.mapInstance = res?.map as Map;
       this.mapGeo = res?.geoJson as GeoJSON;
     }),
-    this.store.watchItem('MapControlLayersSwitchComponent').subscribe((v) => {
-      this.mode?.patchValue(v.filterControlLayerSwitch?.oldValue, {
-        emitEvent: false,
-      });
-    }),
+    this.store
+      .watchItem(storageNames.mapControlLayersSwitchComponent)
+      .subscribe((v) => {
+        this.mode?.patchValue(v.filterControlLayerSwitch?.oldValue, {
+          emitEvent: false,
+        });
+      }),
   ];
 
   constructor(
@@ -224,7 +227,7 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
     this.filteredContours = [];
     this.onFormReset.emit();
     this.store.setItem<ContourFiltersQuery | null>(
-      'ContourFilterComponent',
+      storageNames.contourFilterComponent,
       null
     );
   }
@@ -276,7 +279,7 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
       };
 
       this.store.setItem<ContourFiltersQuery | null>(
-        'ContourFilterComponent',
+        storageNames.contourFilterComponent,
         this.filtersQuery
       );
 
