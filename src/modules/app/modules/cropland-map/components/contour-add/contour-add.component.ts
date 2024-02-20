@@ -1,5 +1,4 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { MapService } from '../../../../../ui/services/map.service';
 import { Subscription } from 'rxjs';
 import { MapData } from '../../../../../ui/models/map.model';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -10,8 +9,8 @@ import { ApiService } from '../../../../../api/api.service';
 import { MessagesService } from '../../../../../ui/services/messages.service';
 import { TranslatePipe } from '@ngx-translate/core';
 import { StoreService } from 'src/modules/ui/services/store.service';
-import { FormControl, Validators } from '@angular/forms';
 import { SidePanelService } from 'src/modules/ui/services/side-panel.service';
+import { CroplandMainMapService } from '../../lib/services/map.service';
 
 @Component({
   selector: 'app-contour-add',
@@ -27,7 +26,7 @@ export class ContourAddComponent implements OnInit, OnDestroy {
   isLoading = false;
 
   constructor(
-    private mapService: MapService,
+    private mapService: CroplandMainMapService,
     private router: Router,
     private api: ApiService,
     private messages: MessagesService,

@@ -20,7 +20,7 @@ import { ITableItem } from 'src/modules/ui/models/table.model';
 import { MessagesService } from 'src/modules/ui/services/messages.service';
 import { Subscription } from 'rxjs';
 import { StoreService } from 'src/modules/ui/services/store.service';
-import { MapService } from 'src/modules/ui/services/map.service';
+import { CroplandMainMapService } from '../../lib/services/map.service';
 
 @Component({
   selector: 'app-statistics',
@@ -58,7 +58,7 @@ export class StatisticsComponent
     private translateSvc: TranslateService,
     private cd: ChangeDetectorRef,
     private store: StoreService,
-    private mapService: MapService
+    private mapService: CroplandMainMapService
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {

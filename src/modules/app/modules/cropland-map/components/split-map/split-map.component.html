@@ -1,0 +1,23 @@
+<div id="split-map">
+  <div class="column">
+    <ng-container
+      [ngTemplateOutlet]="map"
+      *ngFor="let quantity of [].constructor(mapsQuantity); let i = index"
+      [ngTemplateOutletContext]="{ index: i }"
+    ></ng-container>
+  </div>
+</div>
+
+<ng-template #map let-index="index">
+  <div
+    [id]="'map-' + index"
+    class="map"
+    [class.initialized]="maps['map-' + index]"
+  >
+    <div class="mapNumber">
+      <p>
+        {{ index + 1 }}
+      </p>
+    </div>
+  </div>
+</ng-template>

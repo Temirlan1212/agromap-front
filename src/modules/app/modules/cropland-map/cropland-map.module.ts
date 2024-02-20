@@ -25,7 +25,6 @@ import { MapControlVegIndexesComponent } from 'src/modules/ui/components/map-con
 import { ContourEditComponent } from './components/contour-edit/contour-edit.component';
 import { QuestionDialogComponent } from '../../../ui/components/question-dialog/question-dialog.component';
 import { SplitMapSidebarComponent } from './components/split-map-sidebar/split-map-sidebar.component';
-import { SplitMapComponent } from 'src/modules/ui/components/split-map/split-map.component';
 import { LoadingComponent } from 'src/modules/ui/components/loading/loading.component';
 import { UnitPipe } from 'src/modules/ui/pipes/unit.pipe';
 import { CheckExistPipe } from 'src/modules/ui/pipes/check-exist.pipe';
@@ -48,6 +47,7 @@ import { MenuComponent } from 'src/modules/ui/components/menu/menu.component';
 import { SkeletonComponent } from 'src/modules/ui/components/skeleton/skeleton.component';
 import { TooltipComponent } from 'src/modules/ui/components/tooltip/tooltip.component';
 import { SettingsComponent } from './components/contour-filter/components/settings.component';
+import { SplitMapComponent } from './components/split-map/split-map.component';
 
 @NgModule({
   declarations: [

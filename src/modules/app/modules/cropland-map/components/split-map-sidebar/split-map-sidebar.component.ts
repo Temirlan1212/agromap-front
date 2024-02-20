@@ -16,6 +16,7 @@ import { MapService } from '../../../../../ui/services/map.service';
 import { MessagesService } from 'src/modules/ui/services/messages.service';
 import { SidePanelService } from 'src/modules/ui/services/side-panel.service';
 import { storageNames } from '../../lib/_constants';
+import { CroplandMainMapService } from '../../lib/services/map.service';
 
 @Component({
   selector: 'app-split-map-sidebar',
@@ -53,7 +54,7 @@ export class SplitMapSidebarComponent implements OnDestroy, OnInit {
   subscriptions: Subscription[] = [];
 
   constructor(
-    private mapService: MapService,
+    private mapService: CroplandMainMapService,
     private store: StoreService,
     private api: ApiService,
     private formatDate: FormatDatePipe,

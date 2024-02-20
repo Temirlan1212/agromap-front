@@ -9,10 +9,10 @@ import {
   IVegSatelliteDate,
 } from 'src/modules/api/models/veg-indexes.model';
 import { MapData } from 'src/modules/ui/models/map.model';
-import { MapService } from 'src/modules/ui/services/map.service';
 import { MessagesService } from 'src/modules/ui/services/messages.service';
 import { GeoJSON } from 'geojson';
 import { LatLngBounds } from 'leaflet';
+import { CroplandMainMapService } from '../services/map.service';
 
 type ControllerParam = {
   currLang: string;
@@ -20,11 +20,14 @@ type ControllerParam = {
 };
 @Injectable({ providedIn: 'root' })
 export class ApiController {
+  mapData: MapData | null = null;
   constructor(
     private api: ApiService,
     private messages: MessagesService,
-    private mapService: MapService
-  ) {}
+    private mapService: CroplandMainMapService
+  ) {
+    this.mapService.map.subscribe(async (mapData) => (this.mapData = mapData));
+  }
 
   async getContourData({
     isWmsAiActive,
@@ -64,21 +67,21 @@ export class ApiController {
     return resData;
   }
 
-  async getRegionsPolygon({ mapData }: { mapData: MapData | null }) {
+  async addRegionsPolygonToMap() {
     let resData: IRegion[] = [];
     try {
       let polygons: IRegion[];
       polygons = await this.api.dictionary.getRegions({
         polygon: true,
       });
-
+      resData = polygons;
       polygons.map((polygon) => {
-        if (mapData?.map != null) {
-          mapData.geoJsonStatic.options.snapIgnore = true;
-          mapData.geoJsonStatic.options.pmIgnore = true;
-          mapData.geoJsonStatic.options.style = { fillOpacity: 0 };
-          mapData.geoJsonStatic.options.interactive = false;
-          mapData.geoJsonStatic.addData(polygon.polygon);
+        if (this.mapData?.map != null) {
+          this.mapData.geoJsonStatic.options.snapIgnore = true;
+          this.mapData.geoJsonStatic.options.pmIgnore = true;
+          this.mapData.geoJsonStatic.options.style = { fillOpacity: 0.1 };
+          this.mapData.geoJsonStatic.options.interactive = true;
+          this.mapData.geoJsonStatic.addData(polygon.polygon);
         }
       });
     } catch (e: any) {
@@ -170,13 +173,11 @@ export class ApiController {
 
   async addPolygonsInScreenToMap({
     isWmsAiActive,
-    mapData,
     filterFormValues = {},
     landTypes,
     mapBounds,
     abortConroller,
   }: Partial<ControllerParam> & {
-    mapData: MapData | null;
     filterFormValues: Record<string, any>;
     landTypes: ILandType[];
     mapBounds: LatLngBounds;
@@ -192,7 +193,7 @@ export class ApiController {
         filterFormValues?.['land_type'] ??
         landTypes.map((l: ILandType) => l['id']).join(',');
 
-      if (mapData?.map != null && land_type) {
+      if (this.mapData?.map != null && land_type) {
         let polygons: GeoJSON;
         if (isWmsAiActive) {
           polygons = await this.api.map.getPolygonsInScreenAi({
@@ -215,16 +216,16 @@ export class ApiController {
           polygons = response;
         }
 
-        mapData.geoJson.options.snapIgnore = true;
-        mapData.geoJson.options.pmIgnore = true;
-        mapData.geoJson.options.style = {
+        this.mapData.geoJson.options.snapIgnore = true;
+        this.mapData.geoJson.options.pmIgnore = true;
+        this.mapData.geoJson.options.style = {
           fillOpacity: 0,
           weight: 0.4,
         };
 
-        mapData.geoJson.setZIndex(400);
-        mapData.geoJson.options.interactive = true;
-        mapData.geoJson.addData(polygons);
+        this.mapData.geoJson.setZIndex(400);
+        this.mapData.geoJson.options.interactive = true;
+        this.mapData.geoJson.addData(polygons);
       }
     } catch (e: any) {
       const message = e.error?.message ?? e.message;

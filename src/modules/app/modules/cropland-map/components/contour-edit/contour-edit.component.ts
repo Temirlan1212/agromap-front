@@ -5,14 +5,13 @@ import { IContour } from '../../../../../api/models/contour.model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ApiService } from '../../../../../api/api.service';
 import { MessagesService } from '../../../../../ui/services/messages.service';
-import { MapService } from '../../../../../ui/services/map.service';
 import { Subscription } from 'rxjs';
 import { MapData } from '../../../../../ui/models/map.model';
 import { TranslatePipe } from '@ngx-translate/core';
 import { StoreService } from '../../../../../ui/services/store.service';
-import { FormControl, FormsModule, Validators } from '@angular/forms';
 import { SidePanelService } from 'src/modules/ui/services/side-panel.service';
 import { storageNames } from '../../lib/_constants';
+import { CroplandMainMapService } from '../../lib/services/map.service';
 
 @Component({
   selector: 'app-contour-edit',
@@ -36,7 +35,7 @@ export class ContourEditComponent implements OnInit, OnDestroy {
     private router: Router,
     private route: ActivatedRoute,
     private messages: MessagesService,
-    private mapService: MapService,
+    private mapService: CroplandMainMapService,
     private translate: TranslatePipe,
     private store: StoreService,
     private sidePanelService: SidePanelService

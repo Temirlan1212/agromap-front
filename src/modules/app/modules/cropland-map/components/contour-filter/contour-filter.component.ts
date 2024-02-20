@@ -17,7 +17,6 @@ import { filter, Subscription } from 'rxjs';
 import { ILandType } from '../../../../../api/models/land-type.model';
 import { ContourFiltersQuery } from '../../../../../api/models/contour.model';
 import { GeoJSON, geoJSON, geoJson, latLng, latLngBounds, Map } from 'leaflet';
-import { MapService } from '../../../../../ui/services/map.service';
 import { MapData, MapLayerFeature } from '../../../../../ui/models/map.model';
 import { Feature } from 'geojson';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -28,6 +27,7 @@ import { ICulture } from '../../../../../api/models/culture.model';
 import { SettingsService } from 'src/modules/ui/services/settings.service';
 import { SidePanelService } from 'src/modules/ui/services/side-panel.service';
 import { storageNames } from '../../lib/_constants';
+import { CroplandMainMapService } from '../../lib/services/map.service';
 
 @Component({
   selector: 'app-contour-filter',
@@ -153,7 +153,7 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
   constructor(
     private api: ApiService,
     private messages: MessagesService,
-    private mapService: MapService,
+    private mapService: CroplandMainMapService,
     private router: Router,
     private route: ActivatedRoute,
     private translate: TranslatePipe,

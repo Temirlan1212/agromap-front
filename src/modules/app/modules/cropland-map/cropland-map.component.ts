@@ -54,6 +54,7 @@ import {
 } from './lib/_constants';
 import { buildWmsCQLFilter, buildWmsPopup } from './lib/_helpers';
 import { ApiController } from './lib/controllers/api-controller';
+import { CroplandMainMapService } from './lib/services/map.service';
 
 @Component({
   selector: 'app-cropland-map',
@@ -122,7 +123,7 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
 
   constructor(
     private api: ApiService,
-    private mapService: MapService,
+    private mapService: CroplandMainMapService,
     private store: StoreService,
     private translateSvc: TranslateService,
     private router: Router,
@@ -471,7 +472,6 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
     this.polygonsRequestController = new AbortController();
     await this.apiController.addPolygonsInScreenToMap({
       isWmsAiActive: this.isWmsAiActive,
-      mapData: this.mapData,
       abortConroller: this.polygonsRequestController,
       filterFormValues: this.filterFormValues,
       landTypes: this.landTypes,
@@ -500,7 +500,7 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private async getRegionsPolygon() {
-    await this.apiController.getRegionsPolygon({ mapData: this.mapData });
+    await this.apiController.addRegionsPolygonToMap();
   }
 
   private async getVegSatelliteDates(
