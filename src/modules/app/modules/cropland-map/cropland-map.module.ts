@@ -48,6 +48,7 @@ import { SkeletonComponent } from 'src/modules/ui/components/skeleton/skeleton.c
 import { TooltipComponent } from 'src/modules/ui/components/tooltip/tooltip.component';
 import { SettingsComponent } from './components/contour-filter/components/settings.component';
 import { SplitMapComponent } from './components/split-map/split-map.component';
+import { ContourHoverInfoComponent } from './components/contour-hover-info/contour-hover-info.component';
 
 @NgModule({
   declarations: [
@@ -63,6 +64,7 @@ import { SplitMapComponent } from './components/split-map/split-map.component';
     StatisticsComponent,
     SimplePieChartComponent,
     SettingsComponent,
+    ContourHoverInfoComponent,
   ],
   imports: [
     CommonModule,

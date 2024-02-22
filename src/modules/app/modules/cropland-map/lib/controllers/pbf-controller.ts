@@ -5,7 +5,7 @@ import { Feature } from 'geojson';
 import { environment } from 'src/environments/environment';
 import * as L from 'leaflet';
 import 'leaflet.vectorgrid';
-import { LayerProperties, LayerPropertiesTypes } from '../_models';
+import { LayerProperties } from '../_models';
 import { initLayerProperties } from '../_constants';
 import { CroplandMainLayerService } from '../services/layer.service';
 
@@ -29,6 +29,7 @@ export class PBFConroller {
 
   setttings = {
     zoom: {
+      currentMapZoom: 0,
       layerSelectedMaxZoom: 16,
       layerUnselectedZoom: 14,
     },
@@ -110,6 +111,7 @@ export class PBFConroller {
     map.on({
       zoom: (e) => {
         const zoom = e.target?._zoom;
+        this.setttings.zoom.currentMapZoom = zoom;
         if (zoom >= 12 && status === 'default') {
           onInit();
           status = 'initialized';
@@ -120,8 +122,7 @@ export class PBFConroller {
         }
       },
       click: () => {
-        const selectId =
-          this.layerService.layerProperties.getValue().selectProperties?.id;
+        const selectId = this.layerService.selectProperties.getValue().id;
         if (!!selectId) {
           if (this.vectorGrid) {
             const setDefault = this.LayerViewMethods(
@@ -133,16 +134,15 @@ export class PBFConroller {
       },
 
       mousemove: () => {
-        const hoverId =
-          this.layerService.layerProperties.getValue().hoverProperites?.id;
-        const selectId =
-          this.layerService.layerProperties.getValue().selectProperties?.id;
+        const hoverId = this.layerService.hoverProperites.getValue().id;
+        const selectId = this.layerService.selectProperties.getValue().id;
         if (!!hoverId && hoverId !== selectId) {
           if (this.vectorGrid) {
             const setDefault = this.LayerViewMethods(
               this.vectorGrid
             ).setDefault;
             setDefault(hoverId);
+            this.layerService.hoverProperites.next(initLayerProperties);
           }
         }
       },
@@ -159,6 +159,10 @@ export class PBFConroller {
       });
     }
     if (type === 'unselect') {
+      const isResetable =
+        this.setttings.zoom.currentMapZoom >
+        this.setttings.zoom.layerUnselectedZoom;
+      if (!isResetable) return;
       map.setZoom(this.setttings.zoom.layerUnselectedZoom);
     }
   };
@@ -176,20 +180,23 @@ export class PBFConroller {
         if (e?.layer?.properties) properties = e.layer.properties;
         if (!properties?.['id']) return;
         const currId = properties['id'];
-
-        const { setHover, setDefault } = this.LayerViewMethods(vectorGrid);
-
-        if (!!currId && currId !== prevHoverId && prevHoverId !== prevClickId) {
-          if (currId !== prevClickId) setHover(currId);
-          if (!!prevHoverId) setDefault(prevHoverId);
-          onHover && onHover(properties);
+        if (!currId) {
+          prevHoverId = 0;
+        } else {
+          const { setHover, setDefault } = this.LayerViewMethods(vectorGrid);
+          if (currId !== prevHoverId && prevHoverId !== prevClickId) {
+            onHover && onHover(properties);
+            if (currId !== prevClickId) setHover(currId);
+            if (!!prevHoverId) setDefault(prevHoverId);
+          }
+          prevHoverId = currId;
         }
-        prevHoverId = currId;
       },
       click: (e: any) => {
         L.DomEvent.stopPropagation(e);
         let properties: LayerProperties = initLayerProperties;
         if (e?.layer?.properties) properties = e.layer.properties;
+
         if (!properties?.['id']) return;
         const currId = properties['id'];
 
@@ -207,6 +214,7 @@ export class PBFConroller {
           setDefault(currId);
           prevClickId = 0;
           onReset && onReset(initLayerProperties);
+
           this.fitBounds(e.latlng, 'unselect');
           return;
         }
@@ -257,13 +265,13 @@ export class PBFConroller {
   private initVectorGridEvents() {
     this.vectorGridEvents(this.vectorGrid, {
       onSelect: (props) => {
-        this.layerService.layerProperties.next({ selectProperties: props });
+        this.layerService.selectProperties.next(props);
       },
       onReset: (props) => {
-        this.layerService.layerProperties.next({ selectProperties: props });
+        this.layerService.selectProperties.next(props);
       },
       onHover: (props) => {
-        this.layerService.layerProperties.next({ hoverProperites: props });
+        this.layerService.hoverProperites.next(props);
       },
     });
   }

@@ -128,6 +128,16 @@
         </app-map-control>
 
         <app-map-control
+          class="transparent d-xs-none"
+          *ngIf="!map?.['feautureCollapse']"
+        >
+          <app-contour-hover-info
+            [hidden]="currentRouterPathname.includes('split-map')"
+          >
+          </app-contour-hover-info>
+        </app-map-control>
+
+        <app-map-control
           *ngIf="activeContourSmall && !(layerFeature && activeContour)"
           class="transparent d-xs-none"
         >

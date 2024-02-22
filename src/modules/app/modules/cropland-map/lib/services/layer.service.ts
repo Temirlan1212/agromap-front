@@ -5,10 +5,12 @@ import { LayerPropertiesTypes } from '../_models';
 
 @Injectable({ providedIn: 'root' })
 export class CroplandMainLayerService {
-  layerProperties = new BehaviorSubject<Partial<LayerPropertiesTypes>>({
-    selectProperties: initLayerProperties,
-    hoverProperites: initLayerProperties,
-  });
+  selectProperties = new BehaviorSubject<
+    LayerPropertiesTypes['selectProperties']
+  >(initLayerProperties);
+  hoverProperites = new BehaviorSubject<
+    LayerPropertiesTypes['hoverProperites']
+  >(initLayerProperties);
 
   constructor() {}
 }
