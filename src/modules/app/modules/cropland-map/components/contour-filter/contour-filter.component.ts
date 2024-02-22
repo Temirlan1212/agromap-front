@@ -172,6 +172,7 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
     await this.getLandTypes();
     await this.getCultures();
     this.loading = false;
+    this.handleFormSubmit();
   }
 
   async getRegions(): Promise<void> {
