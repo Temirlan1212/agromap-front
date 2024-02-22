@@ -55,6 +55,7 @@ import {
 import { buildWmsCQLFilter, buildWmsPopup } from './lib/_helpers';
 import { ApiController } from './lib/controllers/api-controller';
 import { CroplandMainMapService } from './lib/services/map.service';
+import { PBFConroller } from './lib/controllers/pbf-controller';
 
 @Component({
   selector: 'app-cropland-map',
@@ -131,6 +132,7 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
     private route: ActivatedRoute,
     private cd: ChangeDetectorRef,
     private apiController: ApiController,
+    private pbfConroller: PBFConroller,
     public sidePanelService: SidePanelService
   ) {
     this.wmsProductivityLayerColorLegend = wmsProductivityLayerColorLegend;
@@ -574,6 +576,7 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
     await this.getVegIndexList();
 
     this.handleWmsCQLFilter();
+    this.pbfConroller.initSchema();
   }
 
   ngAfterViewInit(): void {

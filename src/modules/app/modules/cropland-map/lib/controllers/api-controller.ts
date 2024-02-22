@@ -79,8 +79,8 @@ export class ApiController {
         if (this.mapData?.map != null) {
           this.mapData.geoJsonStatic.options.snapIgnore = true;
           this.mapData.geoJsonStatic.options.pmIgnore = true;
-          this.mapData.geoJsonStatic.options.style = { fillOpacity: 0.1 };
-          this.mapData.geoJsonStatic.options.interactive = true;
+          this.mapData.geoJsonStatic.options.style = { fillOpacity: 0 };
+          this.mapData.geoJsonStatic.options.interactive = false;
           this.mapData.geoJsonStatic.addData(polygon.polygon);
         }
       });
