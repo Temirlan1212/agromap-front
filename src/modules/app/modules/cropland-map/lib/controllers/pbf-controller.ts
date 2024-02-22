@@ -5,13 +5,9 @@ import { Feature } from 'geojson';
 import { environment } from 'src/environments/environment';
 import * as L from 'leaflet';
 import 'leaflet.vectorgrid';
-import { LayerProperties } from '../_models';
+import { LayerProperties, LayerPropertiesTypes } from '../_models';
 import { initLayerProperties } from '../_constants';
-
-type LayerVar = {
-  hoverProperites: LayerProperties;
-  selectProperties: LayerProperties;
-};
+import { CroplandMainLayerService } from '../services/layer.service';
 
 type MapEvents = {
   onInit: () => void;
@@ -30,10 +26,6 @@ export class PBFConroller {
   VG: any = L;
   vectorGrid: any = null;
   myScriptElement!: HTMLScriptElement;
-  layer: LayerVar = {
-    selectProperties: initLayerProperties,
-    hoverProperites: initLayerProperties,
-  };
 
   setttings = {
     zoom: {
@@ -42,7 +34,10 @@ export class PBFConroller {
     },
   };
 
-  constructor(private mapService: CroplandMainMapService) {
+  constructor(
+    private mapService: CroplandMainMapService,
+    private layerService: CroplandMainLayerService
+  ) {
     this.mapService.map.subscribe(async (mapData) => (this.mapData = mapData));
   }
 
@@ -125,26 +120,29 @@ export class PBFConroller {
         }
       },
       click: () => {
-        if (!!this.layer.selectProperties.id) {
+        const selectId =
+          this.layerService.layerProperties.getValue().selectProperties?.id;
+        if (!!selectId) {
           if (this.vectorGrid) {
             const setDefault = this.LayerViewMethods(
               this.vectorGrid
             ).setDefault;
-            setDefault(this.layer.selectProperties.id);
+            setDefault(selectId);
           }
         }
       },
 
       mousemove: () => {
-        if (
-          !!this.layer.hoverProperites.id &&
-          this.layer.hoverProperites.id !== this.layer.selectProperties.id
-        ) {
+        const hoverId =
+          this.layerService.layerProperties.getValue().hoverProperites?.id;
+        const selectId =
+          this.layerService.layerProperties.getValue().selectProperties?.id;
+        if (!!hoverId && hoverId !== selectId) {
           if (this.vectorGrid) {
             const setDefault = this.LayerViewMethods(
               this.vectorGrid
             ).setDefault;
-            setDefault(this.layer.hoverProperites.id);
+            setDefault(hoverId);
           }
         }
       },
@@ -259,13 +257,13 @@ export class PBFConroller {
   private initVectorGridEvents() {
     this.vectorGridEvents(this.vectorGrid, {
       onSelect: (props) => {
-        this.layer.selectProperties = props;
+        this.layerService.layerProperties.next({ selectProperties: props });
       },
       onReset: (props) => {
-        this.layer.selectProperties = props;
+        this.layerService.layerProperties.next({ selectProperties: props });
       },
       onHover: (props) => {
-        this.layer.hoverProperites = props;
+        this.layerService.layerProperties.next({ hoverProperites: props });
       },
     });
   }

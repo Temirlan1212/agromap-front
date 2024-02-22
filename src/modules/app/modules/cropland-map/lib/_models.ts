@@ -11,3 +11,8 @@ export type LayerProperties = {
   rgn: number;
   year: string;
 };
+
+export type LayerPropertiesTypes = {
+  hoverProperites: LayerProperties;
+  selectProperties: LayerProperties;
+};
