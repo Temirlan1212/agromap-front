@@ -1,40 +1,12 @@
 import { Injectable } from '@angular/core';
-import { ApiService } from 'src/modules/api/api.service';
 import { MapData } from 'src/modules/ui/models/map.model';
-import { MessagesService } from 'src/modules/ui/services/messages.service';
 import { CroplandMainMapService } from '../services/map.service';
 import { Feature } from 'geojson';
 import { environment } from 'src/environments/environment';
 import * as L from 'leaflet';
 import 'leaflet.vectorgrid';
-
-const initLayerProperties = {
-  area: 0,
-  cdstr: 0,
-  cntn: 0,
-  dst: 0,
-  id: 0,
-  ltype: 0,
-  prd_clt_id: 0,
-  prd_clt_n: '',
-  prdvty: '',
-  rgn: 0,
-  year: '',
-};
-
-type LayerProperties = {
-  id: number;
-  area: number;
-  cdstr: number;
-  cntn: number;
-  dst: number;
-  ltype: number;
-  prd_clt_id: number;
-  prd_clt_n: string;
-  prdvty: string;
-  rgn: number;
-  year: string;
-};
+import { LayerProperties } from '../_models';
+import { initLayerProperties } from '../_constants';
 
 type LayerVar = {
   hoverProperites: LayerProperties;
@@ -63,11 +35,14 @@ export class PBFConroller {
     hoverProperites: initLayerProperties,
   };
 
-  constructor(
-    private api: ApiService,
-    private messages: MessagesService,
-    private mapService: CroplandMainMapService
-  ) {
+  setttings = {
+    zoom: {
+      layerSelectedMaxZoom: 16,
+      layerUnselectedZoom: 14,
+    },
+  };
+
+  constructor(private mapService: CroplandMainMapService) {
     this.mapService.map.subscribe(async (mapData) => (this.mapData = mapData));
   }
 
@@ -95,12 +70,12 @@ export class PBFConroller {
     var style: Record<string, any> = {};
     style[layerName] = function () {
       return {
-        fillOpacity: 1,
-        fillColor: 'transparent',
+        fillOpacity: 0.3,
+        fillColor: 'white',
         fill: true,
         color: 'blue',
         opacity: 1,
-        weight: 0.5,
+        weight: 0,
       };
     };
     return style;
@@ -176,6 +151,20 @@ export class PBFConroller {
     });
   }
 
+  private fitBounds = (latlng: L.LatLng, type: 'select' | 'unselect') => {
+    const map = this.mapData?.map;
+    if (!map) return;
+    if (type === 'select') {
+      const initBounds = L.latLngBounds(L.latLng(latlng), L.latLng(latlng));
+      map.fitBounds(initBounds, {
+        maxZoom: this.setttings.zoom.layerSelectedMaxZoom,
+      });
+    }
+    if (type === 'unselect') {
+      map.setZoom(this.setttings.zoom.layerUnselectedZoom);
+    }
+  };
+
   private vectorGridEvents(
     vectorGrid: any,
     { onSelect, onReset, onHover }: Partial<VectorGridEvents>
@@ -209,6 +198,9 @@ export class PBFConroller {
         const { setActive, setDefault } = this.LayerViewMethods(vectorGrid);
 
         if (!!currId && currId !== prevClickId) {
+          if (this.mapData?.map && e?.latlng) {
+            this.fitBounds(e.latlng, 'select');
+          }
           setActive(currId);
           if (!!prevClickId) setDefault(prevClickId);
           onSelect && onSelect(properties);
@@ -217,6 +209,7 @@ export class PBFConroller {
           setDefault(currId);
           prevClickId = 0;
           onReset && onReset(initLayerProperties);
+          this.fitBounds(e.latlng, 'unselect');
           return;
         }
 
@@ -231,22 +224,27 @@ export class PBFConroller {
         vectorGrid.setFeatureStyle(
           id,
           {
-            color: 'red',
+            color: 'white',
+            fillOpacity: 0,
+            weight: 5,
           },
           100
         );
       },
       setDefault: (id: number) => {
-        vectorGrid.setFeatureStyle(id, {
-          color: 'blue',
-          weight: 0.5,
-        });
+        vectorGrid.setFeatureStyle(
+          id,
+          this.getVectorStyles(this.getVectorUrls().layerName)[
+            this.getVectorUrls().layerName
+          ]
+        );
       },
       setHover: (id: number) => {
         vectorGrid.setFeatureStyle(
           id,
           {
-            color: 'green',
+            color: 'white',
+            fillOpacity: 0,
           },
           100
         );

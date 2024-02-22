@@ -178,3 +178,17 @@ export const storageNames = {
   selectedLayerFeature: 'selectedLayerFeature',
   contourFilterComponent: 'ContourFilterComponent',
 };
+
+export const initLayerProperties = {
+  area: 0,
+  cdstr: 0,
+  cntn: 0,
+  dst: 0,
+  id: 0,
+  ltype: 0,
+  prd_clt_id: 0,
+  prd_clt_n: '',
+  prdvty: '',
+  rgn: 0,
+  year: '',
+};
