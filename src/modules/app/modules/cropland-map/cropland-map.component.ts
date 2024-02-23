@@ -357,7 +357,7 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
 
   handleEditClick() {
     const id = this.layerService.selectProperties.getValue().id;
-    if (!!id) return;
+    if (!id) return;
     this.router.navigate(['contour-edit', id], { relativeTo: this.route });
     if (this.mapComponent) this.mapComponent.handleFeatureClose();
   }
