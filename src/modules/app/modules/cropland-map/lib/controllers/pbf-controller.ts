@@ -124,6 +124,7 @@ export class PBFConroller {
 
     map.on({
       zoom: (e) => {
+        const zoom = e.target._zoom;
         this.zoom.currentMapZoom = zoom;
         if (zoom >= this.zoom.vectorInitZoom && status === 'default') {
           onInit();
