@@ -174,8 +174,8 @@ export const wmsProductivityLayerColorLegend: Record<string, any>[] = [
 export const storageNames = {
   sidePanel: 'SidePanelCompoent',
   mapControlLayersSwitchComponent: 'MapControlLayersSwitchComponent',
-  arableLandComponent: 'ArableLandComponent',
   selectedLayerFeature: 'selectedLayerFeature',
+  croplandMapView: 'CroplandMapView',
   contourFilterComponent: 'ContourFilterComponent',
 };
 

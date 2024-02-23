@@ -6,8 +6,9 @@ import { environment } from 'src/environments/environment';
 import * as L from 'leaflet';
 import 'leaflet.vectorgrid';
 import { LayerProperties } from '../_models';
-import { initLayerProperties } from '../_constants';
+import { initLayerProperties, storageNames } from '../_constants';
 import { CroplandMainLayerService } from '../services/layer.service';
+import { StoreService } from 'src/modules/ui/services/store.service';
 
 type MapEvents = {
   onInit: () => void;
@@ -18,12 +19,6 @@ type VectorGridEvents = {
   onSelect: (props: LayerProperties) => void;
   onReset: (props: LayerProperties) => void;
   onHover: (props: LayerProperties) => void;
-};
-
-type latLngs = {
-  vector: {
-    click: L.LatLng | null;
-  };
 };
 
 @Injectable({ providedIn: 'root' })
@@ -43,10 +38,12 @@ export class PBFConroller {
     layerSelectedMaxZoom: 16,
     layerUnselectedZoom: 14,
   };
+  mapMoveMounted = false;
 
   constructor(
     private mapService: CroplandMainMapService,
-    private layerService: CroplandMainLayerService
+    private layerService: CroplandMainLayerService,
+    private storeService: StoreService
   ) {
     this.mapService.map.subscribe(async (mapData) => (this.mapData = mapData));
   }
@@ -144,20 +141,13 @@ export class PBFConroller {
     });
   }
 
-  private fitActiveVectorBounds = (
-    latlng: L.LatLng,
-    type: 'select' | 'unselect'
-  ) => {
+  fitBounds(bounds: L.LatLngBounds) {
     const map = this.mapData?.map;
     if (!map) return;
-    if (type === 'select') {
-      const initBounds = L.latLngBounds(L.latLng(latlng), L.latLng(latlng));
-      map.fitBounds(initBounds, {
-        maxZoom: this.zoom.layerSelectedMaxZoom,
-      });
-    }
-    if (type === 'unselect') this.setUnselectZoom();
-  };
+    map.fitBounds(bounds, {
+      maxZoom: this.zoom.layerSelectedMaxZoom,
+    });
+  }
 
   setUnselectZoom() {
     const map = this.mapData?.map;
@@ -209,9 +199,6 @@ export class PBFConroller {
         const { setActive, setDefault } = this.LayerViewMethods(vectorGrid);
 
         if (!!currId && currId !== this.ids.vector.prevClickId) {
-          if (this.mapData?.map && e?.latlng) {
-            this.fitActiveVectorBounds(e.latlng, 'select');
-          }
           setActive(currId);
           if (!!this.ids.vector.prevClickId)
             setDefault(this.ids.vector.prevClickId);
@@ -221,8 +208,7 @@ export class PBFConroller {
           setDefault(currId);
           this.ids.vector.prevClickId = 0;
           onReset && onReset(initLayerProperties);
-
-          this.fitActiveVectorBounds(e.latlng, 'unselect');
+          this.setUnselectZoom();
           return;
         }
 
@@ -291,6 +277,27 @@ export class PBFConroller {
         this.layerService.hoverProperites.next(props);
       },
     });
+  }
+
+  persistMapView(zoom: number, bounds: L.LatLngBounds) {
+    this.storeService.setItem<Record<string, typeof bounds | number>>(
+      storageNames.croplandMapView,
+      {
+        bounds,
+        zoom,
+      }
+    );
+  }
+
+  initPersistedMapView(map: MapData['map']) {
+    const data = this.storeService.getItem(storageNames.croplandMapView);
+    if (data !== null) {
+      const bounds = L.latLngBounds(
+        data.bounds._southWest,
+        data.bounds._northEast
+      );
+      if (bounds) map.fitBounds(bounds);
+    }
   }
 
   initSchema() {
