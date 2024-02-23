@@ -10,8 +10,6 @@ import {
 } from 'src/modules/api/models/veg-indexes.model';
 import { MapData } from 'src/modules/ui/models/map.model';
 import { MessagesService } from 'src/modules/ui/services/messages.service';
-import { GeoJSON } from 'geojson';
-import { LatLngBounds } from 'leaflet';
 import { CroplandMainMapService } from '../services/map.service';
 
 type ControllerParam = {
@@ -169,71 +167,5 @@ export class ApiController {
     } catch (e: any) {
       this.messages.error(e.error?.message ?? e.message);
     }
-  }
-
-  async addPolygonsInScreenToMap({
-    isWmsAiActive,
-    filterFormValues = {},
-    landTypes,
-    mapBounds,
-    abortConroller,
-  }: Partial<ControllerParam> & {
-    filterFormValues: Record<string, any>;
-    landTypes: ILandType[];
-    mapBounds: LatLngBounds;
-    abortConroller: AbortController;
-  }) {
-    let resData: IVegIndexOption[] = [];
-
-    try {
-      const year =
-        filterFormValues?.['year'] ?? this.mapService.filterDefaultValues.year;
-      const culture = filterFormValues?.['culture'] ?? null;
-      const land_type =
-        filterFormValues?.['land_type'] ??
-        landTypes.map((l: ILandType) => l['id']).join(',');
-
-      // if (this.mapData?.map != null && land_type) {
-      //   let polygons: GeoJSON;
-      //   if (isWmsAiActive) {
-      //     polygons = await this.api.map.getPolygonsInScreenAi({
-      //       latLngBounds: mapBounds,
-      //       land_type,
-      //       year,
-      //       culture,
-      //     });
-      //   } else {
-      //     const response = await this.api.map.getPolygonsInScreen(
-      //       {
-      //         latLngBounds: mapBounds,
-      //         land_type,
-      //         year,
-      //         culture,
-      //       },
-      //       abortConroller.signal
-      //     );
-
-      //     polygons = response;
-      //   }
-
-      //   this.mapData.geoJson.options.snapIgnore = true;
-      //   this.mapData.geoJson.options.pmIgnore = true;
-      //   this.mapData.geoJson.options.style = {
-      //     fillOpacity: 0,
-      //     weight: 0.4,
-      //   };
-
-      //   this.mapData.geoJson.setZIndex(400);
-      //   this.mapData.geoJson.options.interactive = true;
-      //   this.mapData.geoJson.addData(polygons);
-      // }
-    } catch (e: any) {
-      const message = e.error?.message ?? e.message;
-      if (message === this.messages.messages.abortedRequest) return;
-      this.messages.error(message);
-    } finally {
-    }
-
-    return resData;
   }
 }
