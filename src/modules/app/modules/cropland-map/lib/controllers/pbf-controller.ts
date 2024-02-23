@@ -20,19 +20,28 @@ type VectorGridEvents = {
   onHover: (props: LayerProperties) => void;
 };
 
+type latLngs = {
+  vector: {
+    click: L.LatLng | null;
+  };
+};
+
 @Injectable({ providedIn: 'root' })
 export class PBFConroller {
   mapData: MapData | null = null;
   VG: any = L;
   vectorGrid: any = null;
   myScriptElement!: HTMLScriptElement;
-
-  setttings = {
-    zoom: {
-      currentMapZoom: 0,
-      layerSelectedMaxZoom: 16,
-      layerUnselectedZoom: 14,
+  ids = {
+    vector: {
+      prevClickId: 0,
+      prevHoverId: 0,
     },
+  };
+  zoom = {
+    currentMapZoom: 0,
+    layerSelectedMaxZoom: 16,
+    layerUnselectedZoom: 14,
   };
 
   constructor(
@@ -111,7 +120,7 @@ export class PBFConroller {
     map.on({
       zoom: (e) => {
         const zoom = e.target?._zoom;
-        this.setttings.zoom.currentMapZoom = zoom;
+        this.zoom.currentMapZoom = zoom;
         if (zoom >= 12 && status === 'default') {
           onInit();
           status = 'initialized';
@@ -132,64 +141,61 @@ export class PBFConroller {
           }
         }
       },
-
-      mousemove: () => {
-        const hoverId = this.layerService.hoverProperites.getValue().id;
-        const selectId = this.layerService.selectProperties.getValue().id;
-        if (!!hoverId && hoverId !== selectId) {
-          if (this.vectorGrid) {
-            const setDefault = this.LayerViewMethods(
-              this.vectorGrid
-            ).setDefault;
-            setDefault(hoverId);
-            this.layerService.hoverProperites.next(initLayerProperties);
-          }
-        }
-      },
     });
   }
 
-  private fitBounds = (latlng: L.LatLng, type: 'select' | 'unselect') => {
+  private fitActiveVectorBounds = (
+    latlng: L.LatLng,
+    type: 'select' | 'unselect'
+  ) => {
     const map = this.mapData?.map;
     if (!map) return;
     if (type === 'select') {
       const initBounds = L.latLngBounds(L.latLng(latlng), L.latLng(latlng));
       map.fitBounds(initBounds, {
-        maxZoom: this.setttings.zoom.layerSelectedMaxZoom,
+        maxZoom: this.zoom.layerSelectedMaxZoom,
       });
     }
-    if (type === 'unselect') {
-      const isResetable =
-        this.setttings.zoom.currentMapZoom >
-        this.setttings.zoom.layerUnselectedZoom;
-      if (!isResetable) return;
-      map.setZoom(this.setttings.zoom.layerUnselectedZoom);
-    }
+    if (type === 'unselect') this.setUnselectZoom();
   };
+
+  setUnselectZoom() {
+    const map = this.mapData?.map;
+    if (!map) return;
+    const isResetable =
+      this.zoom.currentMapZoom > this.zoom.layerUnselectedZoom;
+    if (!isResetable) return;
+    map.setZoom(this.zoom.layerUnselectedZoom);
+  }
 
   private vectorGridEvents(
     vectorGrid: any,
     { onSelect, onReset, onHover }: Partial<VectorGridEvents>
   ) {
-    let prevClickId: number = 0;
-    let prevHoverId: number = 0;
     vectorGrid.on({
-      mousemove: (e: any) => {
+      mouseover: (e: any) => {
         L.DomEvent.stopPropagation(e);
         let properties: LayerProperties = initLayerProperties;
         if (e?.layer?.properties) properties = e.layer.properties;
         if (!properties?.['id']) return;
         const currId = properties['id'];
-        if (!currId) {
-          prevHoverId = 0;
-        } else {
-          const { setHover, setDefault } = this.LayerViewMethods(vectorGrid);
-          if (currId !== prevHoverId && prevHoverId !== prevClickId) {
-            onHover && onHover(properties);
-            if (currId !== prevClickId) setHover(currId);
-            if (!!prevHoverId) setDefault(prevHoverId);
-          }
-          prevHoverId = currId;
+        const { setHover } = this.LayerViewMethods(vectorGrid);
+        if (this.ids.vector.prevClickId !== currId) {
+          setHover(currId);
+          this.ids.vector.prevHoverId = currId;
+          onHover && onHover(properties);
+        }
+      },
+      mouseout: (e: any) => {
+        L.DomEvent.stopPropagation(e);
+        const { setDefault } = this.LayerViewMethods(vectorGrid);
+        if (
+          !!this.ids.vector.prevHoverId &&
+          this.ids.vector.prevClickId !== this.ids.vector.prevHoverId
+        ) {
+          setDefault(this.ids.vector.prevHoverId);
+          this.ids.vector.prevHoverId = 0;
+          onHover && onHover(initLayerProperties);
         }
       },
       click: (e: any) => {
@@ -202,24 +208,25 @@ export class PBFConroller {
 
         const { setActive, setDefault } = this.LayerViewMethods(vectorGrid);
 
-        if (!!currId && currId !== prevClickId) {
+        if (!!currId && currId !== this.ids.vector.prevClickId) {
           if (this.mapData?.map && e?.latlng) {
-            this.fitBounds(e.latlng, 'select');
+            this.fitActiveVectorBounds(e.latlng, 'select');
           }
           setActive(currId);
-          if (!!prevClickId) setDefault(prevClickId);
+          if (!!this.ids.vector.prevClickId)
+            setDefault(this.ids.vector.prevClickId);
           onSelect && onSelect(properties);
         }
-        if (currId === prevClickId) {
+        if (currId === this.ids.vector.prevClickId) {
           setDefault(currId);
-          prevClickId = 0;
+          this.ids.vector.prevClickId = 0;
           onReset && onReset(initLayerProperties);
 
-          this.fitBounds(e.latlng, 'unselect');
+          this.fitActiveVectorBounds(e.latlng, 'unselect');
           return;
         }
 
-        prevClickId = currId;
+        this.ids.vector.prevClickId = currId;
       },
     });
   }
@@ -232,7 +239,6 @@ export class PBFConroller {
           {
             color: 'white',
             fillOpacity: 0,
-            weight: 5,
           },
           100
         );
@@ -262,6 +268,17 @@ export class PBFConroller {
     (L.DomEvent as any).fakeStop = () => 0;
   }
 
+  setDefaultContour() {
+    if (!this.vectorGrid) return;
+    this.layerService.selectProperties.subscribe((v) => {
+      if (!v.id) {
+        const { setDefault } = this.LayerViewMethods(this.vectorGrid);
+        setDefault(this.ids.vector.prevClickId);
+        this.ids.vector.prevClickId = 0;
+      }
+    });
+  }
+
   private initVectorGridEvents() {
     this.vectorGridEvents(this.vectorGrid, {
       onSelect: (props) => {
@@ -283,11 +300,12 @@ export class PBFConroller {
     this.mapEvents(map, {
       onInit: () => {
         this.initVectorTileLayer(map);
-
         if (this.vectorGrid) this.initVectorGridEvents();
+        this.mapService.vectorGridStatus.next('initialized');
       },
       onReset: () => {
         this.removeVectorTileLayer(map);
+        this.mapService.vectorGridStatus.next('default');
       },
     });
   }

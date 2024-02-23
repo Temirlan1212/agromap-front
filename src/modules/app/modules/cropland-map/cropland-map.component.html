@@ -28,10 +28,7 @@
     (mapMoveWithDebounce)="handleMapMoveWithDebaunce($event)"
     (mapMove)="handleMapMove($event)"
     (mapClick)="handleMapClick($event)"
-    (featureClick)="handleFeatureClick($event)"
     (featureClose)="handleFeatureClose()"
-    (featureHover)="handleFeatureMouseOver($event)"
-    (featureUnhover)="handleFeatureMouseLeave($event)"
     [featureTitle]="'Vegetative indexes' | translate"
   >
     <app-map-controls controls>
@@ -40,7 +37,7 @@
           tooltipTitle="Comparison of images"
           width="140px"
           routerLink="split-map"
-          *ngIf="layerFeature"
+          *ngIf="!!activeContour"
           iconName="split-screen"
           [class.active]="currentRouterPathname.includes('split-map')"
         ></app-map-control>
@@ -65,7 +62,7 @@
           (wmsLayerChanged)="handleWmsLayerChanged($event)"
         ></app-map-control-layers-switch>
         <app-map-control-locate
-          *ngIf="mapData && !layerFeature"
+          *ngIf="mapData && !activeContour"
           [map]="mapData.map"
         ></app-map-control-locate>
 
@@ -93,9 +90,9 @@
         "
       >
         <app-map-control-veg-indexes
-          *ngIf="layerFeature && mapData"
+          *ngIf="!!activeContour && mapData"
           [defaultYear]="filterFormValues?.year"
-          [layer]="layerFeature"
+          [polygon]="activeContour?.polygon"
           [mapData]="mapData"
           [vegIndexesData]="vegIndexesData"
           [vegIndexOptionsList]="vegIndexOptionsList"
@@ -107,7 +104,7 @@
         <app-statistics
           [filterFormValues]="filterFormValues"
           *ngIf="
-            landTypes.length > 0 && !layerFeature && filterFormValues != null
+            landTypes.length > 0 && !activeContour && filterFormValues != null
           "
           [landTypes]="landTypes"
           [hidden]="activeContour"
@@ -129,36 +126,12 @@
 
         <app-map-control
           class="transparent d-xs-none"
-          *ngIf="!map?.['feautureCollapse']"
-        >
-          <app-contour-info
-            [hidden]="currentRouterPathname.includes('split-map')"
-          >
-          </app-contour-info>
-        </app-map-control>
-
-        <app-map-control
-          class="transparent d-xs-none"
-          *ngIf="!map?.['feautureCollapse']"
+          *ngIf="!map?.['feautureCollapse'] && !activeContour"
         >
           <app-contour-hover-info
             [hidden]="currentRouterPathname.includes('split-map')"
           >
           </app-contour-hover-info>
-        </app-map-control>
-
-        <app-map-control
-          *ngIf="activeContourSmall && !(layerFeature && activeContour)"
-          class="transparent d-xs-none"
-        >
-          <app-contour-details
-            [hidden]="currentRouterPathname.includes('split-map')"
-            #contourDetails
-            [mapData]="mapData"
-            [activeContourSmall]="activeContourSmall"
-            (onCancelClick)="map.handleFeatureClose()"
-          >
-          </app-contour-details>
         </app-map-control>
       </ng-container>
 
@@ -206,7 +179,7 @@
     <app-spline-area-chart
       featureBody
       [chartData]="contourData"
-      *ngIf="layerFeature && contourData.length > 0; else noContourData"
+      *ngIf="!!activeContour && contourData.length > 0; else noContourData"
     >
     </app-spline-area-chart>
     <ng-template #noContourData>

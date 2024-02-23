@@ -26,6 +26,7 @@ import { environment } from 'src/environments/environment';
 import { Feature } from 'geojson';
 import { TranslateService } from '@ngx-translate/core';
 import { MapService } from 'src/modules/ui/services/map.service';
+import { geoJson } from 'leaflet';
 
 @Component({
   selector: 'app-map-control-veg-indexes',
@@ -63,18 +64,15 @@ export class MapControlVegIndexesComponent
   @Output() vegIndexOptionClick = new EventEmitter<IVegIndexOption>();
   @Output() onDateSelect = new EventEmitter<void>();
 
-  @Input('layer') set layer(value: MapLayerFeature | null) {
-    if (value?.feature.properties?.['id']) {
-      this.layerFeature = value.feature;
-      this.selectedDate = null;
-      this.bounds = L.geoJSON(this.layerFeature).getBounds();
-
-      this.removeImageOverlay();
+  @Input('polygon') set polygon(value: L.Polygon | undefined) {
+    if (value) {
+      this.bounds = geoJson(value as any).getBounds();
     }
+    this.removeImageOverlay();
+    this.selectedDate = null;
   }
 
-  bounds!: L.LatLngBounds;
-  layerFeatureContourId: string = '';
+  bounds: L.LatLngBounds | undefined;
   layerFeature: Feature | null = null;
 
   selectedDate: string | null = null;
@@ -133,6 +131,9 @@ export class MapControlVegIndexesComponent
       this.setImageOverlay(date);
       this.onDateSelect.emit();
     }
+    if (date === null) {
+      this.removeImageOverlay();
+    }
   }
 
   handleCalendarDateClick(date: string | null) {
@@ -147,10 +148,10 @@ export class MapControlVegIndexesComponent
   private setImageOverlay(date: string) {
     if (this.mapData?.map && this.bounds) {
       this.imageOverlayIncstance = this.mapServie.setImageOverlay(
-        this.mapData?.map as L.Map,
+        this.mapData.map,
         this.buildImageUrl(date),
         this.bounds,
-        { zIndex: 500 }
+        { zIndex: 2000, interactive: false }
       );
     }
   }

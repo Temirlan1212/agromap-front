@@ -24,6 +24,7 @@ export class CroplandMainMapService {
   filterDefaultValues = {
     year: 2022,
   };
+  vectorGridStatus = new BehaviorSubject<'initialized' | 'default'>('default');
 
   center: LatLng = latLng(41.84, 75.06);
   maxBounds: LatLngBounds = latLngBounds(

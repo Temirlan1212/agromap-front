@@ -36,7 +36,6 @@ import { InputCheckboxComponent } from 'src/modules/ui/components/input-checkbox
 import { FormFieldComponent } from '../../../ui/components/form-field/form-field.component';
 import { ContentTabsComponent } from '../../../ui/components/content-tabs/content-tabs.component';
 import { TabComponent } from '../../../ui/components/content-tabs/tab/tab.component';
-import { ContourInfoComponent } from './components/contour-info/contour-info.component';
 import { ContourDetailsComponent } from './components/contour-details/contour-details.component';
 import { ToggleButtonComponent } from '../../../ui/components/toggle-button/toggle-button.component';
 import { ColorLegendComponent } from 'src/modules/ui/components/color-legend/color-legend.component';
@@ -59,7 +58,6 @@ import { ContourHoverInfoComponent } from './components/contour-hover-info/conto
     ContourFormComponent,
     SplitMapSidebarComponent,
     ContourEditComponent,
-    ContourInfoComponent,
     ContourDetailsComponent,
     StatisticsComponent,
     SimplePieChartComponent,

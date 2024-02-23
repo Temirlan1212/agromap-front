@@ -94,8 +94,13 @@ export class MapControlTabSliderComponent
   }
 
   handleSelectDate(date: string) {
-    this.selectedDateOutput.emit(date);
-    this.selectedDate = date;
+    if (this.selectedDate === date) {
+      this.selectedDateOutput.emit(null);
+      this.selectedDate = null;
+    } else {
+      this.selectedDateOutput.emit(date);
+      this.selectedDate = date;
+    }
   }
 
   private toggleNextPrevBtns(): void {

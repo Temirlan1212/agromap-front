@@ -6,6 +6,7 @@ import {
   LeafletMouseEvent,
   Popup,
   popup,
+  geoJson,
 } from 'leaflet';
 import { GeoJSON } from 'geojson';
 import {
@@ -51,11 +52,13 @@ import {
   wmsLayers,
   wmsProductivityLayerColorLegend,
   storageNames,
+  initLayerProperties,
 } from './lib/_constants';
 import { buildWmsCQLFilter, buildWmsPopup } from './lib/_helpers';
 import { ApiController } from './lib/controllers/api-controller';
 import { CroplandMainMapService } from './lib/services/map.service';
 import { PBFConroller } from './lib/controllers/pbf-controller';
+import { CroplandMainLayerService } from './lib/services/layer.service';
 
 @Component({
   selector: 'app-cropland-map',
@@ -99,14 +102,11 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
 
   //map
   mapData: MapData | null = null;
-  layerFeature: MapLayerFeature | null = null;
-  selectedLayer: any;
   contourData: IChartData[] = [];
   productivity: string | null = null;
   wmsSelectedStatusLayers: Record<string, string> | null = null;
-  selectedContourId!: number;
   activeContour!: any;
-  activeContourSmall: any;
+  activeContourBounds!: LatLngBounds;
 
   //map-popups
   wmsLayerInfoPopup: Popup | null = null;
@@ -133,6 +133,7 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
     private cd: ChangeDetectorRef,
     private apiController: ApiController,
     private pbfConroller: PBFConroller,
+    private layerService: CroplandMainLayerService,
     public sidePanelService: SidePanelService
   ) {
     this.wmsProductivityLayerColorLegend = wmsProductivityLayerColorLegend;
@@ -201,57 +202,30 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
       this.sidePanelData = v;
       this.cd.detectChanges();
     }),
+
+    this.mapService.vectorGridStatus.subscribe((status) => {
+      if (status === 'default' && this.activeContour) {
+        this.handleFeatureClose();
+        this.mapComponent.featureOpen = false;
+        this.layerService.hoverProperites.next(initLayerProperties);
+      }
+    }),
+
+    this.layerService.selectProperties.subscribe(async (v) => {
+      if (!!v['id']) this.handleFeatureClick(v.id);
+      if (!v['id']) {
+        this.pbfConroller.setDefaultContour();
+        this.activeContour = null;
+        this.mapComponent.featureOpen = false;
+      }
+    }),
   ];
 
-  handleMapData(mapData: MapData): void {
-    this.mapData = mapData;
-    this.mapService.map.next(mapData);
-  }
+  async handleFeatureClick(id: number) {
+    await this.getContour(id);
+    await this.getContourData(id);
+    this.mapComponent.featureOpen = true;
 
-  async handleFeatureMouseOver(layerFeature: MapLayerFeature) {
-    const l = layerFeature.layer as any;
-    l.setStyle({
-      color: '#fff',
-      weight: 3,
-    });
-    this.activeContourSmall = {
-      culture: layerFeature?.feature?.properties?.['culture'],
-      area_ha: layerFeature?.feature?.properties?.['area_ha'],
-      contour_id: layerFeature?.feature?.properties?.['id'],
-    };
-  }
-
-  handleFeatureMouseLeave(layerFeature: MapLayerFeature) {
-    const l = layerFeature.layer as any;
-    l.setStyle({
-      color: 'rgba(51,136,255,0.5)',
-      weight: 1,
-    });
-    this.activeContourSmall = null;
-  }
-
-  async handleFeatureClick(layerFeature: MapLayerFeature): Promise<void> {
-    this.contourDetailsComponents.map((c) => {
-      if (c) c.isHidden = false;
-    });
-    if (this.layerFeature) {
-      this.selectedLayer.remove();
-    }
-    const cid =
-      layerFeature?.feature?.properties?.['contour_id'] ??
-      layerFeature?.feature?.properties?.['id'];
-    this.selectedContourId = Number(cid);
-    this.productivity = layerFeature?.feature?.properties?.['productivity'];
-    this.getContourData(cid);
-    this.layerFeature = layerFeature;
-    this.selectedLayer = geoJSON(this.layerFeature?.feature)
-      .addTo(this.mapData?.map as Map)
-      .setStyle({
-        fillOpacity: 0,
-        weight: 5,
-        color: '#f6ab39',
-      });
-    await this.getContour(Number(cid));
     if (
       this.activeVegIndexOption == null &&
       Array.isArray(this.vegIndexOptionsList)
@@ -260,30 +234,29 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     if (this.activeVegIndexOption?.id) {
-      this.getVegSatelliteDates(cid, this.activeVegIndexOption.id);
+      this.getVegSatelliteDates(id, this.activeVegIndexOption.id);
     }
-    this.store.setItem<Feature>(
-      storageNames.selectedLayerFeature,
-      layerFeature.feature
-    );
-    const bounds = geoJSON(layerFeature.feature).getBounds();
-    if (this.mapData?.map) {
-      this.mapData.map.fitBounds(bounds, { maxZoom: 14 });
-      this.mapService.invalidateSize(this.mapData.map);
-    }
+
+    // this.store.setItem<Feature>(
+    //   storageNames.selectedLayerFeature,
+    //   layerFeature.feature
+    // );
+    // const bounds = geoJSON(layerFeature.feature).getBounds();
+    // if (this.mapData?.map) {
+    //   this.mapData.map.fitBounds(bounds, { maxZoom: 14 });
+    //   this.mapService.invalidateSize(this.mapData.map);
+    // }
+  }
+
+  handleMapData(mapData: MapData): void {
+    this.mapData = mapData;
+    this.mapService.map.next(mapData);
   }
 
   handleFeatureClose(): void {
-    this.layerFeature = null;
-    this.store.removeItem(storageNames.selectedLayerFeature);
-    if (this.selectedLayer) {
-      this.selectedLayer.remove();
-    }
-    this.activeContour = null;
+    this.layerService.selectProperties.next(initLayerProperties);
+    this.pbfConroller.setUnselectZoom();
     this.activeVegIndexOption = this.vegIndexOptionsList[0];
-    this.contourDetailsComponents.map((c) => {
-      if (c) c.ngOnDestroy();
-    });
     if (this.mapData?.map) this.mapService.invalidateSize(this.mapData.map);
   }
 
@@ -339,7 +312,6 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
       const layersLength = this.mapData.geoJson.getLayers().length;
       if (layersLength > 0) this.mapData.geoJson.clearLayers();
       if (mapMove.zoom >= 12) this.addPolygonsInScreenToMap(mapMove.bounds);
-      if (mapMove.zoom < 12) this.activeContourSmall = null;
     }
   }
 
@@ -384,11 +356,9 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
 
   handleVegIndexOptionClick(vegIndexOption: IVegIndexOption) {
     this.activeVegIndexOption = vegIndexOption;
-    const contourId =
-      this.layerFeature?.feature?.properties?.['contour_id'] ??
-      this.layerFeature?.feature?.properties?.['id'];
+    const contourId = this.layerService.selectProperties.getValue().id;
 
-    if (this.activeVegIndexOption?.id && contourId) {
+    if (this.activeVegIndexOption?.id && !!contourId) {
       this.getVegSatelliteDates(contourId, this.activeVegIndexOption.id);
     }
   }
@@ -437,7 +407,8 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   handleEditClick() {
-    const id = this.layerFeature?.feature?.properties?.['id'];
+    const id = this.layerService.selectProperties.getValue().id;
+    if (!!id) return;
     this.router.navigate(['contour-edit', id], { relativeTo: this.route });
     if (this.mapComponent) this.mapComponent.handleFeatureClose();
   }
@@ -461,7 +432,9 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   async deleteItem(): Promise<void> {
-    const id = this.layerFeature?.feature?.properties?.['id'];
+    const id = this.layerService.selectProperties.getValue().id;
+    if (!!id) return;
+
     this.apiController.deleteContour({
       id,
       isWmsAiActive: this.isWmsAiActive,

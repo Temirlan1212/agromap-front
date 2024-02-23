@@ -1,11 +1,9 @@
 <div
   class="dark-info-dialog"
   [class.hidden]="isHidden"
-  *ngIf="activeContour != null || activeContourSmall != null"
+  *ngIf="activeContour != null"
 >
-  <div
-    *ngIf="activeContour != null && activeContourSmall == null; else partial"
-  >
+  <div *ngIf="activeContour != null">
     <div class="header">
       <h1
         [ngClass]="activeContour?.culture?.['name_'+currentLang]"
@@ -130,16 +128,4 @@
       </div>
     </div>
   </div>
-  <ng-template #partial>
-    <div class="contour-info-partial" *ngIf="!isHidden">
-      <h1 [ngClass]="activeContourSmall?.contour_id">
-        {{ "Contour id" | translate }}
-        <p>{{ activeContourSmall?.contour_id }}</p>
-      </h1>
-      <div>
-        {{ "Area" | translate }}
-        <span>{{ activeContourSmall?.area_ha }} {{ "ha" | translate }}</span>
-      </div>
-    </div>
-  </ng-template>
 </div>

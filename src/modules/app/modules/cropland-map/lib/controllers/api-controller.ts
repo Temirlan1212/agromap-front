@@ -193,40 +193,40 @@ export class ApiController {
         filterFormValues?.['land_type'] ??
         landTypes.map((l: ILandType) => l['id']).join(',');
 
-      if (this.mapData?.map != null && land_type) {
-        let polygons: GeoJSON;
-        if (isWmsAiActive) {
-          polygons = await this.api.map.getPolygonsInScreenAi({
-            latLngBounds: mapBounds,
-            land_type,
-            year,
-            culture,
-          });
-        } else {
-          const response = await this.api.map.getPolygonsInScreen(
-            {
-              latLngBounds: mapBounds,
-              land_type,
-              year,
-              culture,
-            },
-            abortConroller.signal
-          );
+      // if (this.mapData?.map != null && land_type) {
+      //   let polygons: GeoJSON;
+      //   if (isWmsAiActive) {
+      //     polygons = await this.api.map.getPolygonsInScreenAi({
+      //       latLngBounds: mapBounds,
+      //       land_type,
+      //       year,
+      //       culture,
+      //     });
+      //   } else {
+      //     const response = await this.api.map.getPolygonsInScreen(
+      //       {
+      //         latLngBounds: mapBounds,
+      //         land_type,
+      //         year,
+      //         culture,
+      //       },
+      //       abortConroller.signal
+      //     );
 
-          polygons = response;
-        }
+      //     polygons = response;
+      //   }
 
-        this.mapData.geoJson.options.snapIgnore = true;
-        this.mapData.geoJson.options.pmIgnore = true;
-        this.mapData.geoJson.options.style = {
-          fillOpacity: 0,
-          weight: 0.4,
-        };
+      //   this.mapData.geoJson.options.snapIgnore = true;
+      //   this.mapData.geoJson.options.pmIgnore = true;
+      //   this.mapData.geoJson.options.style = {
+      //     fillOpacity: 0,
+      //     weight: 0.4,
+      //   };
 
-        this.mapData.geoJson.setZIndex(400);
-        this.mapData.geoJson.options.interactive = true;
-        this.mapData.geoJson.addData(polygons);
-      }
+      //   this.mapData.geoJson.setZIndex(400);
+      //   this.mapData.geoJson.options.interactive = true;
+      //   this.mapData.geoJson.addData(polygons);
+      // }
     } catch (e: any) {
       const message = e.error?.message ?? e.message;
       if (message === this.messages.messages.abortedRequest) return;

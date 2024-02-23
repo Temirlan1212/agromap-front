@@ -25,7 +25,11 @@
         <app-svg-icon name="arrow-down" size="16"></app-svg-icon>
       </button>
 
-      <button type="button" class="transparent" (click)="handleFeatureClose()">
+      <button
+        type="button"
+        class="transparent"
+        (click)="[$event.stopPropagation(), handleFeatureClose()]"
+      >
         <app-svg-icon name="clear" size="18"></app-svg-icon>
       </button>
     </div>
