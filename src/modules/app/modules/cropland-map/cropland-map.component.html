@@ -131,6 +131,16 @@
           class="transparent d-xs-none"
           *ngIf="!map?.['feautureCollapse']"
         >
+          <app-contour-info
+            [hidden]="currentRouterPathname.includes('split-map')"
+          >
+          </app-contour-info>
+        </app-map-control>
+
+        <app-map-control
+          class="transparent d-xs-none"
+          *ngIf="!map?.['feautureCollapse']"
+        >
           <app-contour-hover-info
             [hidden]="currentRouterPathname.includes('split-map')"
           >
