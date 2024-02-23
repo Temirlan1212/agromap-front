@@ -37,6 +37,7 @@ export class PBFConroller {
     currentMapZoom: 0,
     layerSelectedMaxZoom: 16,
     layerUnselectedZoom: 14,
+    vectorInitZoom: 12,
   };
   mapMoveMounted = false;
 
@@ -114,15 +115,21 @@ export class PBFConroller {
 
   private mapEvents(map: MapData['map'], { onInit, onReset }: MapEvents) {
     let status: 'initialized' | 'default' = 'default';
+    const zoom = map.getZoom();
+
+    if (zoom >= this.zoom.vectorInitZoom && status === 'default') {
+      onInit();
+      status = 'initialized';
+    }
+
     map.on({
       zoom: (e) => {
-        const zoom = e.target?._zoom;
         this.zoom.currentMapZoom = zoom;
-        if (zoom >= 12 && status === 'default') {
+        if (zoom >= this.zoom.vectorInitZoom && status === 'default') {
           onInit();
           status = 'initialized';
         }
-        if (zoom < 12 && status === 'initialized') {
+        if (zoom < this.zoom.vectorInitZoom && status === 'initialized') {
           onReset();
           status = 'default';
         }

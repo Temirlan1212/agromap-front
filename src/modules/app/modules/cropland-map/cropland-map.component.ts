@@ -140,27 +140,25 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
     const routerEventSub = this.router.events.subscribe((event: Event) => {
       if (event instanceof NavigationEnd) {
         this.currentRouterPathname = router.url;
-        const isChildRoute = this.route.firstChild !== null;
-
-        if (
-          isChildRoute &&
-          this.mapComponent &&
-          this.activeContour != null &&
-          !this.currentRouterPathname.includes('split-map')
-        ) {
-          this.mapComponent.handleFeatureClose();
-        }
-
-        if (this.mapData?.map && !isChildRoute && this.mapData?.geoJson) {
-          // const data = this.store.getItem<
-          //   Record<string, LatLngBounds | number>
-          // >(storageNames.arableLandComponent);
-          // const layersLength = this.mapData.geoJson.getLayers().length;
-          // const zoom = data?.['mapZoom'] as number;
-          // const bounds = data?.['mapBounds'] as LatLngBounds;
-          // if (layersLength > 0) this.mapData.geoJson.clearLayers();
-          // if (bounds && zoom >= 12) this.addPolygonsInScreenToMap(bounds);
-        }
+        // const isChildRoute = this.route.firstChild !== null;
+        // if (
+        //   isChildRoute &&
+        //   this.mapComponent &&
+        //   this.activeContour != null &&
+        //   !this.currentRouterPathname.includes('split-map')
+        // ) {
+        //   this.mapComponent.handleFeatureClose();
+        // }
+        // if (this.mapData?.map && !isChildRoute && this.mapData?.geoJson) {
+        // const data = this.store.getItem<
+        //   Record<string, LatLngBounds | number>
+        // >(storageNames.arableLandComponent);
+        // const layersLength = this.mapData.geoJson.getLayers().length;
+        // const zoom = data?.['mapZoom'] as number;
+        // const bounds = data?.['mapBounds'] as LatLngBounds;
+        // if (layersLength > 0) this.mapData.geoJson.clearLayers();
+        // if (bounds && zoom >= 12) this.addPolygonsInScreenToMap(bounds);
+        // }
       }
     });
 
