@@ -172,7 +172,6 @@ export class PBFConroller {
   ) {
     vectorGrid.on({
       mouseover: (e: any) => {
-        L.DomEvent.stopPropagation(e);
         let properties: LayerProperties = initLayerProperties;
         if (e?.layer?.properties) properties = e.layer.properties;
         if (!properties?.['id']) return;
@@ -185,7 +184,6 @@ export class PBFConroller {
         }
       },
       mouseout: (e: any) => {
-        L.DomEvent.stopPropagation(e);
         const { setDefault } = this.LayerViewMethods(vectorGrid);
         if (
           !!this.ids.vector.prevHoverId &&
