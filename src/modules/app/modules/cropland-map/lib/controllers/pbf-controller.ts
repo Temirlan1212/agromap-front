@@ -258,9 +258,7 @@ export class PBFConroller {
     };
   }
 
-  private configurations() {
-    (L.DomEvent as any).fakeStop = () => 0;
-  }
+  private configurations() {}
 
   setDefaultContour() {
     if (!this.vectorGrid) return;
