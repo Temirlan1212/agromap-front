@@ -17,7 +17,6 @@ import { Subscription } from 'rxjs';
 export class ContourDetailsComponent implements OnDestroy {
   @Input() mapData!: MapData | null;
   @Input() activeContour: any;
-  @Input() activeContourSmall: any;
   @Output() onCancelClick = new EventEmitter<void>();
   isHidden: boolean = false;
   hasOverlay: boolean = false;
