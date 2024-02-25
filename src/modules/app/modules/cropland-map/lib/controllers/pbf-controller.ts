@@ -175,10 +175,20 @@ export class PBFConroller {
     const translations = this.translateService.translations;
     const ha = translations?.[currLang]?.['ha'];
     if (this.mapData?.map) {
-      L.popup()
+      this.layerService.layerInstances['active-contour-hover-popup'] = L.popup()
         .setContent(String(props.area) + ' ' + ha)
         .setLatLng(latlng)
         .openOn(this.mapData.map);
+    }
+  }
+
+  private closePopupOnHover() {
+    const instance =
+      this.layerService.layerInstances['active-contour-hover-popup'];
+    const map = this.mapData?.map;
+    if (map && instance) {
+      map.closePopup(instance);
+      this.layerService.layerInstances['active-contour-hover-popup'] = null;
     }
   }
 
@@ -210,6 +220,7 @@ export class PBFConroller {
           setDefault(this.ids.vector.prevHoverId);
           this.ids.vector.prevHoverId = 0;
           onHover && onHover(initLayerProperties);
+          if (!!this.ids.vector.prevClickId) this.closePopupOnHover();
         }
       },
       click: (e: any) => {
