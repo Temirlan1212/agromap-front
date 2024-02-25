@@ -249,12 +249,15 @@ hr {
     left: -40px;
   }
   .leaflet-popup-content {
-    margin: 0px;
-    width: 30px !important;
-    height: 30px !important;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    display: contents;
+    .content {
+      margin: 0px;
+      width: 30px !important;
+      height: 30px !important;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
   }
   .leaflet-popup-tip-container {
     display: none;
