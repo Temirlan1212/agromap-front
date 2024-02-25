@@ -182,7 +182,7 @@ export class PBFConroller {
     }
   }
 
-  private closetooltipOnHover() {
+  private closeTooltipOnHover() {
     const instance = this.layerService.layerInstances['tooltip-on-hover'];
     const map = this.mapData?.map;
     if (map && instance) {
@@ -219,7 +219,7 @@ export class PBFConroller {
           setDefault(this.ids.vector.prevHoverId);
           this.ids.vector.prevHoverId = 0;
           onHover && onHover(initLayerProperties);
-          if (!!this.ids.vector.prevClickId) this.closetooltipOnHover();
+          if (!!this.ids.vector.prevClickId) this.closeTooltipOnHover();
         }
       },
       click: (e: any) => {
@@ -284,6 +284,16 @@ export class PBFConroller {
     };
   }
 
+  clearCloseButtonPopup() {
+    const instance =
+      this.layerService.layerInstances['close-active-layer-popup'];
+    const map = this.mapData?.map;
+    if (map && instance) {
+      map.closePopup(instance);
+      this.layerService.layerInstances['close-active-layer-popup'] = null;
+    }
+  }
+
   private configurations() {}
 
   setDefaultContour() {
@@ -346,8 +356,30 @@ export class PBFConroller {
           fillColor: 'green',
         },
       }).addTo(map);
+
+    const bounds =
+      this.layerService.layerInstances[
+        'splash-screen-active-contour'
+      ].getBounds();
+
+    // Calculate the center of the bounds
+    const center = bounds.getNorthEast();
+
+    // Create a popup with your content
+    const popup = L.popup({
+      closeButton: true,
+      className: 'close-active-layer-popup',
+      autoClose: false,
+    }).setLatLng(center);
+
+    popup.addTo(map);
+
+    this.layerService.layerInstances['close-active-layer-popup'] = popup;
+
     this.layerService.layerInstances['splash-screen'] =
       buildSplashScreen().addTo(map);
+
+    return popup;
   }
 
   resetSplashScreenOnActiveFeature() {

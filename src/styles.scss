@@ -241,6 +241,32 @@ hr {
 
 .leaflet-interactive:hover {
 }
+.close-active-layer-popup {
+  .leaflet-popup-close-button {
+    margin: 0px;
+    padding: 0px !important;
+    width: 30px !important;
+    height: 30px !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: $lightColor !important;
+    border-radius: 100% !important;
+    cursor: pointer;
+    position: relative;
+    left: -40px;
+    color: $darkColor !important;
+  }
+  .leaflet-popup-content-wrapper {
+    display: none;
+  }
+  .leaflet-popup-content {
+    display: none;
+  }
+  .leaflet-popup-tip-container {
+    display: none;
+  }
+}
 
 .leaflet-top,
 .leaflet-bottom {

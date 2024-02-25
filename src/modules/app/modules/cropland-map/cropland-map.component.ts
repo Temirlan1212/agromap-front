@@ -207,7 +207,15 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
     if (bounds) this.pbfConroller.fitBounds(bounds);
 
     this.pbfConroller.resetSplashScreenOnActiveFeature();
-    this.pbfConroller.addSplashScreenOnActiveFeature(polygon);
+    const popup = this.pbfConroller.addSplashScreenOnActiveFeature(polygon);
+    popup?.on({
+      remove: () => {
+        this.layerService.selectProperties.next(initLayerProperties);
+        this.pbfConroller.setUnselectZoom();
+        this.pbfConroller.setDefaultContour();
+        this.pbfConroller.resetSplashScreenOnActiveFeature();
+      },
+    });
   }
 
   activateVegSatelliteDates(id: number) {
@@ -231,6 +239,7 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
   handleFeatureClose(): void {
     this.layerService.selectProperties.next(initLayerProperties);
     this.pbfConroller.setUnselectZoom();
+    this.pbfConroller.clearCloseButtonPopup();
     this.activeVegIndexOption = this.vegIndexOptionsList[0];
     if (this.mapData?.map) this.mapService.invalidateSize(this.mapData.map);
     this.pbfConroller.resetSplashScreenOnActiveFeature();
