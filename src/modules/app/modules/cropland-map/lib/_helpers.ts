@@ -126,7 +126,7 @@ export const buildWmsPopup = async ({
   return wmsLayerInfoPopup;
 };
 
-export const addSplashScreen = (map: Map) => {
+export const buildSplashScreen = () => {
   var svgElement = document.createElementNS(
     'http://www.w3.org/2000/svg',
     'svg'
@@ -140,5 +140,5 @@ export const addSplashScreen = (map: Map) => {
   return L.svgOverlay(svgElement, latLngBounds, {
     opacity: 0.6,
     interactive: false,
-  }).addTo(map);
+  });
 };

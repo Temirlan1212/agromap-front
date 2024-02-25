@@ -9,7 +9,7 @@ import { LayerProperties } from '../_models';
 import { initLayerProperties, storageNames } from '../_constants';
 import { CroplandMainLayerService } from '../services/layer.service';
 import { StoreService } from 'src/modules/ui/services/store.service';
-import { addSplashScreen } from '../_helpers';
+import { buildSplashScreen } from '../_helpers';
 
 type MapEvents = {
   onInit: () => void;
@@ -320,7 +320,8 @@ export class PBFConroller {
           fillColor: 'green',
         },
       }).addTo(map);
-    this.layerService.layerInstances['splash-screen'] = addSplashScreen(map);
+    this.layerService.layerInstances['splash-screen'] =
+      buildSplashScreen().addTo(map);
   }
 
   resetSplashScreenOnActiveFeature() {

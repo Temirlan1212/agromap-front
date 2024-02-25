@@ -48,11 +48,7 @@ import {
   storageNames,
   initLayerProperties,
 } from './lib/_constants';
-import {
-  addSplashScreen,
-  buildWmsCQLFilter,
-  buildWmsPopup,
-} from './lib/_helpers';
+import { buildWmsCQLFilter, buildWmsPopup } from './lib/_helpers';
 import { ApiController } from './lib/controllers/api-controller';
 import { CroplandMainMapService } from './lib/services/map.service';
 import { PBFConroller } from './lib/controllers/pbf-controller';
