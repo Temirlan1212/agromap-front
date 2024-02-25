@@ -10,6 +10,7 @@ import { initLayerProperties, storageNames } from '../_constants';
 import { CroplandMainLayerService } from '../services/layer.service';
 import { StoreService } from 'src/modules/ui/services/store.service';
 import { buildSplashScreen } from '../_helpers';
+import { TranslateService } from '@ngx-translate/core';
 
 type MapEvents = {
   onInit: () => void;
@@ -45,7 +46,8 @@ export class PBFConroller {
   constructor(
     private mapService: CroplandMainMapService,
     private layerService: CroplandMainLayerService,
-    private storeService: StoreService
+    private storeService: StoreService,
+    private translateService: TranslateService
   ) {
     this.mapService.map.subscribe(async (mapData) => (this.mapData = mapData));
   }
@@ -168,6 +170,18 @@ export class PBFConroller {
     map.setZoom(this.zoom.layerUnselectedZoom);
   }
 
+  private popupOnHover(latlng: L.LatLng, props: LayerProperties) {
+    const currLang = this.translateService.currentLang;
+    const translations = this.translateService.translations;
+    const ha = translations?.[currLang]?.['ha'];
+    if (this.mapData?.map) {
+      L.popup()
+        .setContent(String(props.area) + ' ' + ha)
+        .setLatLng(latlng)
+        .openOn(this.mapData.map);
+    }
+  }
+
   private vectorGridEvents(
     vectorGrid: any,
     { onSelect, onReset, onHover }: Partial<VectorGridEvents>
@@ -183,6 +197,8 @@ export class PBFConroller {
           setHover(currId);
           this.ids.vector.prevHoverId = currId;
           onHover && onHover(properties);
+          if (!!this.ids.vector.prevClickId)
+            this.popupOnHover(e.latlng, properties);
         }
       },
       mouseout: (e: any) => {
