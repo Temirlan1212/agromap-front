@@ -112,6 +112,8 @@ export class PBFConroller {
   private removeVectorTileLayer(map: MapData['map']) {
     if (!this.vectorGrid) return;
     map.removeLayer(this.vectorGrid);
+    this.layerService.selectProperties.next(initLayerProperties);
+    this.layerService.hoverProperites.next(initLayerProperties);
   }
 
   private mapEvents(map: MapData['map'], { onInit, onReset }: MapEvents) {
