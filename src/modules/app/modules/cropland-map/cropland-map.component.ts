@@ -48,7 +48,11 @@ import {
   storageNames,
   initLayerProperties,
 } from './lib/_constants';
-import { buildWmsCQLFilter, buildWmsPopup } from './lib/_helpers';
+import {
+  addSplashScreen,
+  buildWmsCQLFilter,
+  buildWmsPopup,
+} from './lib/_helpers';
 import { ApiController } from './lib/controllers/api-controller';
 import { CroplandMainMapService } from './lib/services/map.service';
 import { PBFConroller } from './lib/controllers/pbf-controller';
@@ -140,25 +144,6 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
     const routerEventSub = this.router.events.subscribe((event: Event) => {
       if (event instanceof NavigationEnd) {
         this.currentRouterPathname = router.url;
-        // const isChildRoute = this.route.firstChild !== null;
-        // if (
-        //   isChildRoute &&
-        //   this.mapComponent &&
-        //   this.activeContour != null &&
-        //   !this.currentRouterPathname.includes('split-map')
-        // ) {
-        //   this.mapComponent.handleFeatureClose();
-        // }
-        // if (this.mapData?.map && !isChildRoute && this.mapData?.geoJson) {
-        // const data = this.store.getItem<
-        //   Record<string, LatLngBounds | number>
-        // >(storageNames.arableLandComponent);
-        // const layersLength = this.mapData.geoJson.getLayers().length;
-        // const zoom = data?.['mapZoom'] as number;
-        // const bounds = data?.['mapBounds'] as LatLngBounds;
-        // if (layersLength > 0) this.mapData.geoJson.clearLayers();
-        // if (bounds && zoom >= 12) this.addPolygonsInScreenToMap(bounds);
-        // }
       }
     });
 
@@ -217,11 +202,19 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
     this.loading = true;
     await this.getContour(id);
     await this.getContourData(id);
-    this.mapComponent.featureOpen = true;
+    this.activateVegSatelliteDates(id);
+    this.loading = false;
 
-    const bounds = geoJson(this.activeContour?.polygon).getBounds();
+    this.mapComponent.featureOpen = true;
+    const polygon = this.activeContour?.polygon;
+    const bounds = geoJson(polygon).getBounds();
     if (bounds) this.pbfConroller.fitBounds(bounds);
 
+    this.pbfConroller.resetSplashScreenOnActiveFeature();
+    this.pbfConroller.addSplashScreenOnActiveFeature(polygon);
+  }
+
+  activateVegSatelliteDates(id: number) {
     if (
       this.activeVegIndexOption == null &&
       Array.isArray(this.vegIndexOptionsList)
@@ -232,7 +225,6 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.activeVegIndexOption?.id) {
       this.getVegSatelliteDates(id, this.activeVegIndexOption.id);
     }
-    this.loading = false;
   }
 
   handleMapData(mapData: MapData): void {
@@ -245,6 +237,7 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
     this.pbfConroller.setUnselectZoom();
     this.activeVegIndexOption = this.vegIndexOptionsList[0];
     if (this.mapData?.map) this.mapService.invalidateSize(this.mapData.map);
+    this.pbfConroller.resetSplashScreenOnActiveFeature();
   }
 
   hanldeVegIndexesDateSelect() {

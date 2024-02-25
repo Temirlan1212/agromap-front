@@ -9,6 +9,7 @@ import { LayerProperties } from '../_models';
 import { initLayerProperties, storageNames } from '../_constants';
 import { CroplandMainLayerService } from '../services/layer.service';
 import { StoreService } from 'src/modules/ui/services/store.service';
+import { addSplashScreen } from '../_helpers';
 
 type MapEvents = {
   onInit: () => void;
@@ -73,7 +74,7 @@ export class PBFConroller {
     var style: Record<string, any> = {};
     style[layerName] = function () {
       return {
-        fillOpacity: 0.3,
+        fillOpacity: 0,
         fillColor: 'white',
         fill: true,
         color: 'blue',
@@ -302,6 +303,37 @@ export class PBFConroller {
       );
       if (bounds) map.fitBounds(bounds);
     }
+  }
+
+  addSplashScreenOnActiveFeature(polygon: any) {
+    const map = this.mapData?.map;
+    if (!map) return;
+    map.createPane('customPane').style.zIndex = '401';
+    this.layerService.layerInstances['splash-screen-active-contour'] =
+      L.geoJSON(polygon, {
+        pane: 'customPane',
+        style: {
+          color: 'white',
+          fill: true,
+          fillOpacity: 1,
+          fillColor: 'green',
+        },
+      }).addTo(map);
+    this.layerService.layerInstances['splash-screen'] = addSplashScreen(map);
+  }
+
+  resetSplashScreenOnActiveFeature() {
+    const map = this.mapData?.map;
+    if (
+      !map ||
+      !this.layerService.layerInstances['splash-screen-active-contour'] ||
+      !this.layerService.layerInstances['splash-screen']
+    )
+      return;
+    map.removeLayer(
+      this.layerService.layerInstances['splash-screen-active-contour']
+    );
+    map.removeLayer(this.layerService.layerInstances['splash-screen']);
   }
 
   initSchema() {

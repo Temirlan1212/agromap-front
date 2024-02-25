@@ -1,3 +1,4 @@
+import * as L from 'leaflet';
 import { LeafletMouseEvent, Map, Popup, popup } from 'leaflet';
 import { MapApi } from 'src/modules/api/classes/map.api';
 
@@ -123,4 +124,21 @@ export const buildWmsPopup = async ({
   }
 
   return wmsLayerInfoPopup;
+};
+
+export const addSplashScreen = (map: Map) => {
+  var svgElement = document.createElementNS(
+    'http://www.w3.org/2000/svg',
+    'svg'
+  );
+  svgElement.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+  svgElement.setAttribute('viewBox', '0 0 200 200');
+  svgElement.innerHTML = '<rect width="200" height="200"/>';
+
+  var latLngBounds = L.latLngBounds(L.latLng(50.0, 60.0), L.latLng(30.0, 90.0));
+
+  return L.svgOverlay(svgElement, latLngBounds, {
+    opacity: 0.6,
+    interactive: false,
+  }).addTo(map);
 };
