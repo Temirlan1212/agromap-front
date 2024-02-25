@@ -16,7 +16,7 @@ p {
   position: relative;
 
   .container {
-    z-index: 400;
+    z-index: 402;
     user-select: none;
     background-color: $bgColor;
     max-width: 45%;
@@ -44,6 +44,12 @@ p {
     header {
       display: flex;
       align-items: center;
+      justify-content: space-between;
+      padding: 10px 0;
+      .title {
+        display: flex;
+        align-items: center;
+      }
     }
 
     h4 {
@@ -62,6 +68,7 @@ p {
       &::-webkit-scrollbar {
         width: 3px;
         border-radius: 8px;
+        height: 3px;
         background-color: $lightColor;
       }
 

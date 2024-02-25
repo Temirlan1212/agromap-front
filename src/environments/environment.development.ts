@@ -1,6 +1,6 @@
 export const environment = {
   production: false,
-  url: 'http://localhost:4200',
-  apiUrl: 'http://10.118.50.31:8111',
+  url: 'https://agromap.24mycrm.com',
+  apiUrl: 'https://adminagro.24mycrm.com',
   geoserverUrl: 'https://geoserver.24mycrm.com',
 };

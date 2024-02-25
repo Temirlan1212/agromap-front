@@ -81,10 +81,26 @@ export class UserApi {
     );
   }
 
-  async removeNotification(id: number): Promise<Record<string, any>> {
+  async removeNotification(
+    id: number,
+    data: INotification
+  ): Promise<Record<string, any>> {
     return await firstValueFrom(
-      this.http.delete<Record<string, any>>(
-        `account/delete_notifications/${id}`
+      this.http.patch<Record<string, any>>(
+        `account/notifications-delete/${id}`,
+        data
+      )
+    );
+  }
+
+  async updateNotifications(
+    id: number,
+    data: INotification
+  ): Promise<Record<string, any>> {
+    return await firstValueFrom(
+      this.http.patch<Record<string, any>>(
+        `account/notifications-update/${id}`,
+        data
       )
     );
   }

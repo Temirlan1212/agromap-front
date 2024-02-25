@@ -7,6 +7,8 @@ import {
   LeafletMouseEvent,
   Tooltip,
   tooltip,
+  popup,
+  Popup,
 } from 'leaflet';
 import { GeoJSON, FeatureCollection } from 'geojson';
 import {
@@ -72,7 +74,7 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
   isComparisonMapsActivated: boolean = false;
 
   mode!: string;
-  pastureLayerProductivityTooltip: Tooltip | null = null;
+  wmsLayerInfoPopup: Popup | null = null;
   user: IUser | null = this.api.user.getLoggedInUser();
   landTypes: ILandType[] = [];
   mapData: MapData | null = null;
@@ -98,6 +100,7 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
   vegIndexOptionsList: IVegIndexOption[] = [];
   loadingSatelliteDates: boolean = false;
   activeVegIndexOption: IVegIndexOption | null = null;
+  storageName = 'PasturesMapControlLayersSwitchComponent';
 
   wmsProductivityLayerColorLegend: Record<string, any>[] = [
     { label: '-1', color: '#000000' },
@@ -162,9 +165,9 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
   wmsLayers: ITileLayer[] = [
     {
       title: 'Base',
-      name: 'agromap_store',
+      name: 'contours_main',
       layer: tileLayer.wms('https://geoserver.24mycrm.com/agromap/wms', {
-        layers: 'agromap:agromap_store',
+        layers: 'agromap:contours_main',
         ...this.wmsLayersOptions,
       }),
       type: 'radio',
@@ -192,6 +195,87 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
       name: 'ndvi_heat_map',
       layer: tileLayer.wms('https://geoserver.24mycrm.com/agromap/wms', {
         layers: 'agromap:ndvi_heat_map',
+        ...this.wmsLayersOverlayOptions,
+      }),
+      type: 'checkbox',
+    },
+    {
+      title: 'Forestry',
+      name: 'agromap:forestry',
+      layer: tileLayer.wms('https://geoserver.24mycrm.com/agromap/wms', {
+        layers: 'agromap:forestry',
+        ...this.wmsLayersOverlayOptions,
+      }),
+      type: 'checkbox',
+    },
+    {
+      title: 'On-farm channels',
+      name: 'agromap:Внутрихозяйственные_каналы',
+      layer: tileLayer.wms('https://geoserver.24mycrm.com/agromap/wms', {
+        layers: 'agromap:Внутрихозяйственные_каналы',
+        ...this.wmsLayersOverlayOptions,
+      }),
+      type: 'checkbox',
+    },
+    {
+      title: 'Inter-farm channels',
+      name: 'agromap:Межхозяйственные_каналы',
+      layer: tileLayer.wms('https://geoserver.24mycrm.com/agromap/wms', {
+        layers: 'agromap:Межхозяйственные_каналы',
+        ...this.wmsLayersOverlayOptions,
+      }),
+      type: 'checkbox',
+    },
+    {
+      title: 'Tepke',
+      name: 'agromap:Tepke_20cm(EPSG:7695)',
+      layer: tileLayer.wms('https://geoserver.24mycrm.com/agromap/wms', {
+        layers: 'agromap:Tepke_20cm(EPSG:7695)',
+        ...this.wmsLayersOverlayOptions,
+      }),
+      type: 'checkbox',
+    },
+    {
+      title: 'AWU',
+      name: 'agromap:АВП',
+      layer: tileLayer.wms('https://geoserver.24mycrm.com/agromap/wms', {
+        layers: 'agromap:АВП',
+        ...this.wmsLayersOverlayOptions,
+      }),
+      type: 'checkbox',
+    },
+    {
+      title: 'Regions borders',
+      name: 'kyrgyz:Oblast',
+      layer: tileLayer.wms('https://isul.forest.gov.kg/geoserver/kyrgyz/wms', {
+        layers: 'kyrgyz:Oblast',
+        ...this.wmsLayersOverlayOptions,
+      }),
+      type: 'checkbox',
+    },
+    {
+      title: 'Districts borders',
+      name: 'kyrgyz:Raion',
+      layer: tileLayer.wms('https://isul.forest.gov.kg/geoserver/kyrgyz/wms', {
+        layers: 'kyrgyz:Raion',
+        ...this.wmsLayersOverlayOptions,
+      }),
+      type: 'checkbox',
+    },
+    {
+      title: 'Karagana Suusamyr valley',
+      name: 'agromap:Karagana_Suusamyr_Valley2020',
+      layer: tileLayer.wms('https://geoserver.24mycrm.com/agromap/wms', {
+        layers: 'agromap:Karagana_Suusamyr_Valley2020',
+        ...this.wmsLayersOverlayOptions,
+      }),
+      type: 'checkbox',
+    },
+    {
+      title: 'Land shares of the Chui region',
+      name: 'agromap:zemdoli',
+      layer: tileLayer.wms('https://geoserver.24mycrm.com/agromap/wms', {
+        layers: 'agromap:zemdoli',
         ...this.wmsLayersOverlayOptions,
       }),
       type: 'checkbox',
@@ -257,12 +341,18 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
     this.store
       .watchItem('PasturesMapControlLayersSwitchComponent')
       .subscribe((v) => {
-        if (this.pastureLayerProductivityTooltip) {
-          this.mapData?.map.removeLayer(this.pastureLayerProductivityTooltip);
-          this.pastureLayerProductivityTooltip = null;
+        if (this.wmsLayerInfoPopup) {
+          this.mapData?.map.removeLayer(this.wmsLayerInfoPopup);
+          this.wmsLayerInfoPopup = null;
         }
         this.pasturesMapControlLayersSwitch = v;
       }),
+
+    this.store.watchItem('isSidePanelCollapsed').subscribe((v) => {
+      if (!!v && this.mapData?.map != null) {
+        this.mapService.invalidateSize(this.mapData.map);
+      }
+    }),
 
     this.store.watchItem('PasturesMapSidePanelComponent').subscribe((v) => {
       this.sidePanelData = v;
@@ -330,7 +420,7 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
 
     const bounds = geoJSON(layerFeature.feature).getBounds();
     if (this.mapData?.map) {
-      this.mapData.map.fitBounds(bounds);
+      this.mapData.map.fitBounds(bounds, { maxZoom: 14 });
       this.mapService.invalidateSize(this.mapData.map);
     }
   }
@@ -363,46 +453,56 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.mapComponent && this.activeContour != null) {
       this.mapComponent.handleFeatureClose();
     }
+    this.handleWmsLayerPopup(e);
   }
 
-  async handleMapMousemove(e: LeafletMouseEvent) {
-    if (this.pastureLayerProductivityTooltip) {
-      this.mapData?.map.removeLayer(this.pastureLayerProductivityTooltip);
-      this.pastureLayerProductivityTooltip = null;
-    }
-    if (this.pasturesMapControlLayersSwitch?.['productivity']?.name) {
+  async handleWmsLayerPopup(e: LeafletMouseEvent) {
+    const contolLayers = Object.values({
+      ...this.pasturesMapControlLayersSwitch,
+    });
+    const activeControlLayer = [...contolLayers]
+      .sort((a, b) => b?.updatedAt - a?.updatedAt)
+      .filter((item) => item?.name && item?.updatedAt && item?.layersName)?.[0];
+
+    if (activeControlLayer != null) {
+      const layers = activeControlLayer?.layersName;
+      if (layers == null) return;
+
       const { lat, lng } = e.latlng;
       const bbox = [lng - 0.1, lat - 0.1, lng + 0.1, lat + 0.1];
 
       try {
-        const data = await this.api.map.getFeatureInfo({
-          service: 'WMS',
-          request: 'GetFeatureInfo',
-          srs: 'EPSG:4326',
-          styles: '',
-          format: 'image/png',
-          bbox: bbox.join(','),
-          layers: 'agromap:productivity',
-          query_layers: 'agromap:productivity',
-          transparent: true,
-          width: 101,
-          height: 101,
-          x: 50,
-          y: 50,
-          version: '1.1.1',
-          info_format: 'application/json',
-        });
+        let data: any = null;
+        if (layers.includes('agromap')) {
+          data = await this.api.map.getFeatureInfo({
+            bbox: bbox.join(','),
+            layers: layers,
+            query_layers: layers,
+          });
+        }
 
-        const gray_index = (
-          data as FeatureCollection
-        )?.features?.[0]?.properties?.['GRAY_INDEX']?.toFixed(2);
+        const properties: any = data.features?.[0]?.properties;
 
-        if (this.mapData?.map && gray_index != null) {
-          const tooltipContent = `${this.translate.transform(
-            'Productivity'
-          )}: ${gray_index}`;
+        if (this.mapData?.map && properties != null) {
+          const tooltipContent = `
+          <div>
+            ${Object.entries(properties)
+              .map(([key, value]) => {
+                if (
+                  value &&
+                  (typeof value === typeof '' || typeof value === typeof 0)
+                ) {
+                  return `<p><strong>${key}:</strong>  ${value}</p> `;
+                }
+                return null;
+              })
+              .filter(Boolean)
+              .join('<hr>')}
+          </div>
+        `;
 
-          this.pastureLayerProductivityTooltip = tooltip()
+          const options = { maxHeight: 300, maxWidth: 300 };
+          this.wmsLayerInfoPopup = popup(options)
             .setLatLng(e.latlng)
             .setContent(tooltipContent)
             .openOn(this.mapData.map);
@@ -412,6 +512,8 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
       }
     }
   }
+
+  async handleMapMousemove(e: LeafletMouseEvent) {}
 
   async handleMapMove(mapMove: MapMove): Promise<void> {
     this.store.setItem<Record<string, LatLngBounds | number>>('HomeComponent', {
@@ -427,11 +529,13 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   handleFilterFormReset(): void {
-    this.wmsCQLFilter = null;
+    this.wmsCQLFilter =
+      'ltype in (1,2)&&year=' + this.mapService.filterDefaultValues.year;
     this.setWmsParams();
     if (this.mapComponent) this.mapComponent.handleFeatureClose();
     this.filterFormValues = null;
     this.handleSetSidePanelState(false);
+    this.mode = 'default';
   }
 
   handleSetSidePanelState(state: boolean) {
@@ -460,6 +564,7 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
     this.store.setItem('PasturesMapSidePanelComponent', { state: false });
     this.toggleBtn.isContentToggled = false;
     this.handleSetSidePanelState(false);
+    this.mode = 'contours_main';
   }
 
   async getVegSatelliteDates(
@@ -586,14 +691,20 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
   private async addPolygonsInScreenToMap(mapBounds: LatLngBounds) {
     this.loading = true;
     try {
-      const landType = this.landTypes.find((l) => l.id === 2);
+      const land_type = this.landTypes.find((l) => l.id === 2);
+      const year =
+        this.filterFormValues?.['year'] ??
+        this.mapService.filterDefaultValues.year;
+      const culture = this.filterFormValues?.['culture'] ?? null;
 
-      if (this.mapData?.map != null && landType?.id) {
+      if (this.mapData?.map != null && land_type?.id) {
         let polygons: GeoJSON;
 
         polygons = await this.api.map.getPolygonsInScreen({
           latLngBounds: mapBounds,
-          land_type: landType.id,
+          land_type: land_type.id,
+          year,
+          culture,
         });
 
         this.mapData.geoJson.options.snapIgnore = true;
@@ -647,11 +758,12 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private setWmsParams(): void {
     const finded = this.wmsLayers.find(
-      (w) => w.name === 'agromap_store'
+      (w) => w.name === 'contours_main'
     ) as any;
 
     if (finded != null) {
       delete finded.layer.wmsParams.cql_filter;
+
       if (this.wmsCQLFilter != null) {
         finded.layer?.setParams({ cql_filter: this.wmsCQLFilter });
       }
@@ -688,11 +800,7 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
               this.wmsCQLFilter += '&&';
             }
             if (typeof val === 'string' && val.split(',').length > 1) {
-              this.wmsCQLFilter += val
-                .split(',')
-                .reduce((acc, i) => (acc += 'clt=' + i + ' OR '), '')
-                .slice(0, -3)
-                .trim();
+              this.wmsCQLFilter += `clt in (${val})`;
             } else {
               this.wmsCQLFilter += 'clt=' + v.culture;
             }
@@ -703,14 +811,18 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
               this.wmsCQLFilter += '&&';
             }
             if (typeof val === 'string' && val.split(',').length > 1) {
-              this.wmsCQLFilter += val
-                .split(',')
-                .reduce((acc, i) => (acc += 'ltype=' + i + ' OR '), '')
-                .slice(0, -3)
-                .trim();
+              this.wmsCQLFilter += `ltype in (${val})`;
             } else {
               this.wmsCQLFilter += 'ltype=' + v.land_type;
             }
+          }
+          if (v.year) {
+            const val = v.year;
+            if (this.wmsCQLFilter.length > 0) {
+              this.wmsCQLFilter += '&&';
+            }
+
+            this.wmsCQLFilter += 'year=' + val;
           }
           this.setWmsParams();
         }
@@ -719,9 +831,7 @@ export class PasturesMapComponent implements OnInit, OnDestroy, AfterViewInit {
 
   async ngOnInit(): Promise<void> {
     const data = this.store.getItem('PasturesMapControlLayersSwitchComponent');
-    if (!data) {
-      this.mode = 'agromap_store';
-    }
+    this.mode = 'default';
 
     this.wmsSelectedStatusLayers = data;
 

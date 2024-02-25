@@ -5,9 +5,9 @@
     [checked]="checked"
     [disabled]="disabled"
   />
-  <label
-    [class.active]="checked"
-    [textContent]="name | translate"
-    (click)="handleClick()"
-  ></label>
+  <div class="checkbox-wrapper">
+    <label class="checkbox" [class.active]="checked"></label>
+
+    <label [textContent]="name | translate"></label>
+  </div>
 </div>

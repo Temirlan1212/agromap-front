@@ -10,17 +10,21 @@
     [textContent]="placeholder"
   ></span>
 
-  <span
+  <div
+    class="badge"
     *ngIf="selectedItems && selectedItems.length > 0 && multi; else singleItem"
-    >{{ "Selected items" | translate }}: {{ selectedItems.length }}</span
   >
+    <span class="label">{{ "Selected items" | translate }}: </span>
+    <span class="count">{{ selectedItems.length }}</span>
+  </div>
+
   <ng-template #singleItem>
     <div class="item" *ngIf="selectedItems && selectedItems.length > 0">
       <span [textContent]="selectedItems && selectedItems[0][nameField]"></span>
       <app-svg-icon
         *ngIf="!isDisabled"
         name="clear"
-        size="10"
+        size="18"
         (click)="handleRemoveItem($event, selectedItems[0])"
       ></app-svg-icon>
     </div>
@@ -29,34 +33,25 @@
   <div class="actions-icons">
     <app-svg-icon
       name="clear"
-      size="12"
+      size="18"
       *ngIf="selectedItems && selectedItems.length > 0 && multi"
       (click)="handleClearAll()"
     ></app-svg-icon>
     <app-svg-icon
       name="arrow-down"
-      size="14"
+      size="18"
       [class.opened]="opened"
     ></app-svg-icon>
   </div>
 </div>
 
-<div class="options" [class.collapsed]="opened" *ngIf="items.length > 0">
-  <div
-    class="selected-items"
-    *ngIf="selectedItems && selectedItems.length !== 0 && multi"
-  >
-    <div class="item" *ngFor="let item of selectedItems">
-      <span [textContent]="item[nameField]"></span>
-      <app-svg-icon
-        name="clear"
-        size="10"
-        (click)="handleRemoveItem($event, item)"
-      ></app-svg-icon>
-    </div>
-  </div>
-
-  <div class="search">
+<div
+  class="options"
+  [class.collapsed]="opened"
+  [class.absolute]="dropdownType === 'default'"
+  *ngIf="items.length > 0"
+>
+  <div class="search" *ngIf="searchable">
     <input
       #input
       type="text"
@@ -65,30 +60,45 @@
     />
   </div>
 
-  <div class="options-list">
-    <ng-container *ngIf="!groupField">
-      <ng-container
-        *ngFor="let item of localItems"
-        [ngTemplateOutlet]="option"
-        [ngTemplateOutletContext]="{item}"
-      >
-      </ng-container>
-    </ng-container>
-
-    <ng-container *ngIf="groupField">
-      <div *ngFor="let group of groups">
-        <p>{{ group }}</p>
-
-        <div *ngFor="let item of localItems">
-          <ng-container
-            *ngIf="item[groupField] === group"
-            [ngTemplateOutlet]="option"
-            [ngTemplateOutletContext]="{item}"
-          >
-          </ng-container>
-        </div>
+  <div>
+    <div
+      class="selected-items"
+      *ngIf="selectedItems && selectedItems.length !== 0 && multi"
+    >
+      <div class="item" *ngFor="let item of selectedItems">
+        <span [textContent]="item[nameField]"></span>
+        <app-svg-icon
+          name="clear"
+          size="18"
+          (click)="handleRemoveItem($event, item)"
+        ></app-svg-icon>
       </div>
-    </ng-container>
+    </div>
+    <div class="options-list">
+      <ng-container *ngIf="!groupField">
+        <ng-container
+          *ngFor="let item of localItems"
+          [ngTemplateOutlet]="option"
+          [ngTemplateOutletContext]="{item}"
+        >
+        </ng-container>
+      </ng-container>
+
+      <ng-container class="group" *ngIf="groupField">
+        <div *ngFor="let group of groups">
+          <p class="group-title">{{ group }}</p>
+
+          <div *ngFor="let item of localItems">
+            <ng-container
+              *ngIf="item[groupField] === group"
+              [ngTemplateOutlet]="option"
+              [ngTemplateOutletContext]="{item}"
+            >
+            </ng-container>
+          </div>
+        </div>
+      </ng-container>
+    </div>
   </div>
 </div>
 

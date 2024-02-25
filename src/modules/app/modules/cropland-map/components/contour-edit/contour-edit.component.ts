@@ -5,12 +5,13 @@ import { IContour } from '../../../../../api/models/contour.model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ApiService } from '../../../../../api/api.service';
 import { MessagesService } from '../../../../../ui/services/messages.service';
-import { MapService } from '../../../../../ui/services/map.service';
 import { Subscription } from 'rxjs';
 import { MapData } from '../../../../../ui/models/map.model';
 import { TranslatePipe } from '@ngx-translate/core';
 import { StoreService } from '../../../../../ui/services/store.service';
-import { FormControl, Validators } from '@angular/forms';
+import { SidePanelService } from 'src/modules/ui/services/side-panel.service';
+import { storageNames } from '../../lib/_constants';
+import { CroplandMainMapService } from '../../lib/services/map.service';
 
 @Component({
   selector: 'app-contour-edit',
@@ -27,26 +28,30 @@ export class ContourEditComponent implements OnInit, OnDestroy {
   polygon: GeoJSON.Polygon | null = null;
   isPolygonChanged: boolean = false;
   mode: string | null = null;
+  isLoading = false;
 
   constructor(
     private api: ApiService,
     private router: Router,
     private route: ActivatedRoute,
     private messages: MessagesService,
-    private mapService: MapService,
+    private mapService: CroplandMainMapService,
     private translate: TranslatePipe,
-    private store: StoreService
+    private store: StoreService,
+    private sidePanelService: SidePanelService
   ) {}
 
   async ngOnInit() {
+    this.sidePanelService.set(false);
     this.handleSetSidePanelState(true);
-
-    const data = this.store.getItem('MapControlLayersSwitchComponent');
+    const data = this.store.getItem(
+      storageNames.mapControlLayersSwitchComponent
+    );
     this.mode = data?.filterControlLayerSwitch.name;
     const id = this.route.snapshot.paramMap.get('id');
     try {
       this.loading = true;
-      if (this.mode === 'agromap_store_ai') {
+      if (this.mode === 'contours_main_ai') {
         this.contour = await this.api.aiContour.getOne(Number(id));
       } else {
         this.contour = await this.api.contour.getOne(Number(id));
@@ -152,17 +157,6 @@ export class ContourEditComponent implements OnInit, OnDestroy {
   }
 
   async handleSaveClick(contourForm: ContourFormComponent) {
-    const formValueNames =
-      this.mode === 'agromap_store_ai'
-        ? ['district', 'conton']
-        : ['district', 'conton', 'code_soato', 'ink'];
-
-    formValueNames.forEach((controlName) => {
-      const control = contourForm.form.get(controlName) as FormControl;
-      control.setValidators([Validators.required]);
-      control.updateValueAndValidity();
-    });
-
     const formState = contourForm.getState();
 
     if (!formState.touched && !this.isPolygonChanged) {
@@ -182,15 +176,19 @@ export class ContourEditComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.mapInstance.pm.disableGlobalEditMode();
     const { region, district, ...rest } = formState.value;
     const contour: Partial<IContour> = {
-      ...rest,
+      ...(Object.fromEntries(
+        Object.entries(rest ?? {}).filter(([_, value]) => value != null)
+      ) as typeof formState.value),
       polygon: this.polygon,
     };
 
     try {
-      if (this.mode === 'agromap_store_ai') {
+      this.mapInstance.pm.disableGlobalEditMode();
+      this.isLoading = true;
+      this.mapService.loading.next(this.isLoading);
+      if (this.mode === 'contours_main_ai') {
         await this.api.aiContour.update(this.contour.id, contour);
       } else {
         await this.api.contour.update(this.contour.id, contour);
@@ -201,6 +199,7 @@ export class ContourEditComponent implements OnInit, OnDestroy {
       this.router.navigate(['../..'], { relativeTo: this.route });
     } catch (e: any) {
       const formErrLength = Object.keys(e.error).length;
+      this.mapInstance.pm.enableGlobalEditMode();
       if (!e.error?.message && formErrLength > 0) {
         let flattenedObjOfErrors: any = {};
         for (let key in e.error) {
@@ -209,11 +208,19 @@ export class ContourEditComponent implements OnInit, OnDestroy {
           }
         }
 
-        this.api.form.setError(flattenedObjOfErrors, contourForm.form);
+        if (flattenedObjOfErrors.hasOwnProperty('polygon')) {
+          const message = flattenedObjOfErrors['polygon']?.error;
+          this.messages.error(message);
+        } else {
+          this.api.form.setError(flattenedObjOfErrors, contourForm.form);
+        }
         return;
       }
 
       this.messages.error(e.error?.message ?? e.message);
+    } finally {
+      this.isLoading = false;
+      this.mapService.loading.next(this.isLoading);
     }
   }
 

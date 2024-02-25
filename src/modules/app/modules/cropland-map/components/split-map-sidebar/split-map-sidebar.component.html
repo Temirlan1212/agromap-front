@@ -1,6 +1,6 @@
 <div class="back">
-  <button type="button" class="transparent" routerLink="..">
-    <app-svg-icon name="arrow-down" size="14"></app-svg-icon>
+  <button type="button" class="navigate" routerLink="..">
+    <app-svg-icon name="arrow-down" size="20"></app-svg-icon>
   </button>
   <h4>{{ "Comparison of images" | translate }}</h4>
 </div>
@@ -49,13 +49,13 @@
     ></app-input-select>
   </div>
 
-  <ul class="analyses-list" *ngIf="selectedVegIndex">
-    <ng-container *ngIf="!loadingSatelliteDates">
+  <ul class="analyses-list" *ngIf="selectedVegIndex && !loading">
+    <ng-container>
       <li
         *ngFor="let quantity of [].constructor(splitMapQuantity); let i = index"
       >
         <p>
-          {{ i + 1 }}. Индекс вегетации
+          {{ i + 1 }}. {{ "Vegetation index" | translate }}
           {{ selectedVegIndex["name_" + currLang] }}
         </p>
 
@@ -71,13 +71,20 @@
         ></app-input-select>
       </li>
     </ng-container>
-    <li>
-      <app-loading
-        [loading]="loadingSatelliteDates"
-        class="dynamic-color"
-      ></app-loading>
-    </li>
   </ul>
+  <ul class="analyses-list" *ngIf="loading">
+    <ng-container *ngFor="let num of [].constructor(5)">
+      <li>
+        <app-skeleton
+          [width]="'100%'"
+          [height]="'50px'"
+          [className]="'mb-10'"
+          [borderRadius]="'10px'"
+        ></app-skeleton>
+      </li>
+    </ng-container>
+  </ul>
+
   <ul class="analyses-list" *ngIf="!selectedVegIndex">
     <li>
       <p>{{ "Choose a vegetative index" | translate }}</p>

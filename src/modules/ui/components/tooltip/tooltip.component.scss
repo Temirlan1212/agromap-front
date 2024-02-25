@@ -15,6 +15,11 @@ $arrowSize: 8px;
   transition: all $fieldsGroupTransitionDelay ease;
   opacity: 0;
   pointer-events: none;
+  z-index: 1000;
+
+  &.delay-none {
+    transition: none;
+  }
 
   &::before {
     content: "";

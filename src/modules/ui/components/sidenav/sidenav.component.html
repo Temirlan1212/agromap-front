@@ -10,44 +10,52 @@
     <span class="title" [textContent]="title | translate"></span>
   </a>
 </ng-template>
-<div class="mobile-menu" #menuContainer>
-  <button class="btn-left" (click)="handleArrowLeftClick(menuContainer)">
-    <app-svg-icon class="icon arrow-left" size="16px" name="arrow-down">
-    </app-svg-icon>
-  </button>
-  <button class="btn-right" (click)="handleArrowRightClick(menuContainer)">
-    <app-svg-icon class="icon arrow-right" size="16px" name="arrow-down">
-    </app-svg-icon>
-  </button>
-  <nav>
-    <ng-container
-      *ngFor="let route of mobileRoutes"
-      [ngTemplateOutlet]="navMobItem"
-      [ngTemplateOutletContext]="route"
-    ></ng-container>
-    <a class="language-switcher" (click)="handleLangClick($event)">
-      <app-svg-icon class="icon" size="24px" name="lang"></app-svg-icon>
-      <span [textContent]="'Language' | translate"></span>
-    </a>
-  </nav>
-</div>
 
-<div class="languages languages-mobile" [class.languages-opened]="langsOpened">
-  <span
-    *ngFor="let lang of allLangs"
-    (click)="handleLangChange($event, lang.code)"
-  >
-    {{ lang.name | translate }}
-    <app-svg-icon
-      *ngIf="currentLang === lang.code"
-      size="14px"
-      name="check"
-    ></app-svg-icon>
-  </span>
-</div>
+<ng-template #switchers let-placement="placement">
+  <div>
+    <div class="switcher">
+      <app-svg-icon class="icon" size="24px" name="lang"></app-svg-icon>
+      <span class="title">{{ "Language" | translate }}</span>
+    </div>
+
+    <app-menu
+      [placement]="placement"
+      [dark]="false"
+      (onChange)="langsOpened = $event"
+    >
+      <div class="languages">
+        <span
+          *ngFor="let lang of allLangs"
+          (click)="handleLangChange($event, lang.code)"
+        >
+          {{ lang.name | translate }}
+          <app-svg-icon
+            *ngIf="currentLang === lang.code"
+            size="14px"
+            name="check"
+          ></app-svg-icon>
+        </span>
+      </div>
+    </app-menu>
+
+    <app-tooltip
+      *ngIf="!langsOpened"
+      [placement]="placement"
+      [textContent]="'Language' | translate"
+    ></app-tooltip>
+  </div>
+</ng-template>
 
 <ng-template #navItem let-path="path" let-title="title" let-data="data">
-  <a routerLinkActive="active" [routerLink]="path" [ngClass]="data.class">
+  <ng-container *ngIf="data?.class?.includes('divider-top')">
+    <div class="divider"></div>
+  </ng-container>
+  <a
+    [routerLinkActive]="!!data?.active ? 'active' : ''"
+    [routerLink]="path"
+    (click)="sidePanelService.set(false, 'cropland-map')"
+    [ngClass]="data.class"
+  >
     <div class="icon-wrapper">
       <app-svg-icon
         class="icon"
@@ -61,18 +69,50 @@
       ></span>
     </div>
     <img
+      [class]="data?.class ?? ''"
       class="image"
       [src]="'assets/images/' + data.image"
       *ngIf="data.image != null"
     />
     <span class="title" [textContent]="title | translate"></span>
     <app-tooltip
-      *ngIf="!opened"
+      *ngIf="!opened && !!title"
       placement="right"
       [textContent]="title | translate"
     ></app-tooltip>
   </a>
+  <ng-container *ngIf="data?.class?.includes('divider-bottom')">
+    <div class="divider"></div>
+  </ng-container>
 </ng-template>
+
+<div class="mobile-menu" #menuContainer>
+  <div class="btn-left">
+    <button (click)="handleArrowLeftClick(menuContainer)">
+      <app-svg-icon class="icon arrow-left" size="16px" name="arrow-down">
+      </app-svg-icon>
+    </button>
+  </div>
+
+  <nav>
+    <ng-container
+      *ngFor="let route of mobileRoutes"
+      [ngTemplateOutlet]="navMobItem"
+      [ngTemplateOutletContext]="route"
+    ></ng-container>
+    <ng-container
+      [ngTemplateOutlet]="switchers"
+      [ngTemplateOutletContext]="{ placement: 'top' }"
+    ></ng-container>
+  </nav>
+
+  <div class="btn-right">
+    <button (click)="handleArrowRightClick(menuContainer)">
+      <app-svg-icon class="icon arrow-right" size="16px" name="arrow-down">
+      </app-svg-icon>
+    </button>
+  </div>
+</div>
 
 <div class="menu" [class.open]="opened">
   <nav class="top">
@@ -89,32 +129,13 @@
       [ngTemplateOutletContext]="route"
     ></ng-container>
 
-    <a class="language-switcher" (click)="handleLangClick($event)">
-      <app-svg-icon class="icon" size="24px" name="lang"></app-svg-icon>
-      <span class="title">{{ "Language" | translate }}</span>
-      <div class="languages" [class.languages-opened]="langsOpened">
-        <span
-          *ngFor="let lang of allLangs"
-          (click)="handleLangChange($event, lang.code)"
-        >
-          {{ lang.name | translate }}
-          <app-svg-icon
-            *ngIf="currentLang === lang.code"
-            size="14px"
-            name="check"
-          ></app-svg-icon>
-        </span>
-      </div>
-
-      <app-tooltip
-        *ngIf="!opened && !langsOpened"
-        placement="right"
-        [textContent]="'Language' | translate"
-      ></app-tooltip>
-    </a>
+    <ng-container
+      [ngTemplateOutlet]="switchers"
+      [ngTemplateOutletContext]="{ placement: 'right' }"
+    ></ng-container>
 
     <button type="button" class="toggler" (click)="opened = !opened">
-      <app-svg-icon name="arrow-down" size="14"></app-svg-icon>
+      <app-svg-icon name="arrow-down" size="20"></app-svg-icon>
     </button>
   </nav>
 </div>

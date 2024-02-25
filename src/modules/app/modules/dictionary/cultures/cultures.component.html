@@ -13,23 +13,34 @@
     </button>
   </div>
 </div>
-<div class="list">
-  <app-table
-    [actionEdit]="true"
-    [actionDelete]="true"
-    [actions]="user != null"
-    [items]="list"
-    [fields]="[
-      { title: 'Name' | translate, field: 'name_' + currentLang },
-      { title: 'Coefficient' | translate, field: 'coefficient_crop' }
-    ]"
-    (actionClick)="handleTableActionClick($event)"
-    *ngIf="list.length > 0; else noItems"
-  ></app-table>
-  <ng-template #noItems>
-    <app-loading [loading]="loading">
+
+<ng-container *ngIf="!loading; else skeleton">
+  <div class="list">
+    <app-table
+      [actions]="user != null"
+      [items]="list"
+      [fields]="[
+        { title: 'Name' | translate, field: 'name_' + currentLang },
+        { title: 'Coefficient' | translate, field: 'coefficient_crop' }
+      ]"
+      (actionClick)="handleTableActionClick($event)"
+      *ngIf="list.length > 0; else noItems"
+    ></app-table>
+    <ng-template #noItems>
       <h4>{{ "No data" | translate }}</h4>
-    </app-loading>
-  </ng-template>
-</div>
+    </ng-template>
+  </div>
+</ng-container>
+
+<ng-template #skeleton>
+  <ng-container *ngFor="let num of [].constructor(10)">
+    <app-skeleton
+      [width]="'100%'"
+      [height]="'35px'"
+      [className]="'mb-10'"
+      [borderRadius]="'10px'"
+    ></app-skeleton>
+  </ng-container>
+</ng-template>
+
 <router-outlet></router-outlet>

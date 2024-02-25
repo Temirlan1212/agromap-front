@@ -20,11 +20,9 @@ $indent: 0 20px;
   align-items: center;
   gap: $indent;
 
-  button {
-    padding: 0;
-  }
-
   app-svg-icon {
+    width: 20px !important;
+    height: 20px !important;
     transform: rotate(90deg);
   }
 }
@@ -43,6 +41,16 @@ button[actions] {
 
   button {
     width: 100%;
+    position: relative;
+  }
+
+  .spinner {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 50px;
+    height: 50px;
   }
 }
 

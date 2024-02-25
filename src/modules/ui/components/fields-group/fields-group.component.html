@@ -1,4 +1,5 @@
 <button type="button" class="transparent" (click)="handleButtonClick()">
+  <ng-content select="[headerContent]"></ng-content>
   <h5 [textContent]="title"></h5>
   <app-svg-icon
     name="arrow-down"

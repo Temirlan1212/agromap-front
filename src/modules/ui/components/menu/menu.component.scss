@@ -1,0 +1,53 @@
+@import "constants";
+$arrowSize: 8px;
+
+:host {
+  position: fixed;
+  display: block;
+  z-index: 1;
+  text-align: left;
+  border-radius: 4px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.200691);
+  background-color: $darkColor;
+  backdrop-filter: blur(30px);
+  color: $lightColor;
+  transition: all $fieldsGroupTransitionDelay ease;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 999;
+  background-color: $lightColor;
+
+  &.dark {
+    background-color: $darkColor;
+  }
+
+  &::before {
+    content: "";
+    position: absolute;
+    border-width: $arrowSize;
+    border-style: solid;
+    border-color: transparent;
+  }
+
+  &.top {
+    transform: translate(0px, -10px);
+  }
+
+  &.right {
+    transform: translate(10px, 0px);
+  }
+
+  &.bottom {
+    transform: translate(0px, 10px);
+  }
+
+  &.left {
+    transform: translate(-10px, 0px);
+  }
+
+  &.visible {
+    transform: translate(0px);
+    opacity: 1;
+    pointer-events: initial;
+  }
+}

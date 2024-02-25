@@ -34,13 +34,22 @@ export class InputSelectComponent implements ControlValueAccessor, OnChanges {
   onTouched: Function = () => null;
 
   @Input() required: boolean = false;
-  @Input() multi: boolean = false;
+  @HostBinding('class.multi')
+  @Input()
+  multi: boolean = false;
+  @Input()
+  searchable: boolean = true;
   @Input() placeholder: string = 'placeholder';
   @HostBinding('class.disabled')
   isDisabled!: boolean;
 
+  @HostBinding('class.placeholder-floatable')
+  @Input()
+  floatable: boolean = true;
+
   @Input() items: Record<string, any>[] = [];
   @Input() value: string | number | null = null;
+  @Input() dropdownType: 'accordion' | 'default' = 'default';
 
   @Input() idField: string = 'id';
   @Input() nameField: string = 'name';
@@ -182,12 +191,22 @@ export class InputSelectComponent implements ControlValueAccessor, OnChanges {
     if (obj == null) {
       this.selectedItemsObj = {};
     }
-    this.selectedItems = this.items.filter(
-      (i) => i[this.idField] === this.value
-    );
-    this.selectedItems.forEach(
-      (i) => (this.selectedItemsObj[i[this.idField]] = i[this.nameField])
-    );
+
+    if (this.multi) {
+      this.selectedItems = this.items.filter((i) =>
+        String(this.value).split(',').includes(String(i[this.idField]))
+      );
+      this.selectedItems.forEach(
+        (i) => (this.selectedItemsObj[i[this.idField]] = i[this.nameField])
+      );
+    } else {
+      this.selectedItems = this.items.filter(
+        (i) => i[this.idField] === this.value
+      );
+      this.selectedItems.forEach(
+        (i) => (this.selectedItemsObj[i[this.idField]] = i[this.nameField])
+      );
+    }
   }
 
   registerOnChange(fn: Function): void {

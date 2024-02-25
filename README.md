@@ -25,3 +25,12 @@ Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To u
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+
+## Documentation
+* [Tools used in the project](https://github.com/giprozem/AgroMap-Front/wiki/Tools-used-in-the-project)
+* [Create a contour](https://github.com/giprozem/AgroMap-Front/wiki/Create-a-contour)
+* [Filtration](https://github.com/giprozem/AgroMap-Front/wiki/Filtration)
+* [GeoJSON (Geographic JSON)](https://github.com/giprozem/AgroMap-Front/wiki/GeoJSON-(Geographic-JSON))
+* [Layers](https://github.com/giprozem/AgroMap-Front/wiki/Layers)
+* [The architecture of the AIS application.](https://github.com/giprozem/AgroMap-Front/wiki/The-architecture-of-the-AIS-application.)
+

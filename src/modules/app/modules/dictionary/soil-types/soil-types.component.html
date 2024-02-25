@@ -1,10 +1,25 @@
-<div class="soil-classes">
-  <div class="soil" *ngFor="let i of list">
-    <div class="color" [ngStyle]="{ 'background-color': i.color }">
-      <span>ID: {{ i.ID }}</span>
-    </div>
-    <div class="soil-info">
-      <span [textContent]="i[nameKey]"></span>
+<ng-container *ngIf="!loading; else skeleton">
+  <div class="soil-classes">
+    <div class="soil" *ngFor="let i of list">
+      <div class="color" [ngStyle]="{ 'background-color': i.color }">
+        <span>ID: {{ i.id_soil }}</span>
+      </div>
+      <div class="soil-info">
+        <span [textContent]="i[nameKey]"></span>
+      </div>
     </div>
   </div>
-</div>
+</ng-container>
+
+<ng-template #skeleton>
+  <div class="soil-classes">
+    <ng-container *ngFor="let num of [].constructor(30)">
+      <app-skeleton
+        [width]="'150px'"
+        [height]="'150px'"
+        [className]="'mb-10'"
+        [borderRadius]="'10px'"
+      ></app-skeleton>
+    </ng-container>
+  </div>
+</ng-template>

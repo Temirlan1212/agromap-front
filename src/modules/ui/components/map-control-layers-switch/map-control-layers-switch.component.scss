@@ -61,4 +61,15 @@ app-input-radio {
     pointer-events: initial;
     transition: all $baseTransitionDelay;
   }
+  .checkbox {
+    padding: 5px;
+    cursor: pointer;
+    position: relative;
+    margin: 10px 0 5px 0;
+
+    &.active {
+      background: rgba($grayColor, 0.2);
+      border-radius: 5px;
+    }
+  }
 }

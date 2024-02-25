@@ -16,19 +16,13 @@ import { DatePipe } from '@angular/common';
 })
 export class NotificationsComponent implements OnInit, OnDestroy {
   loading: boolean = false;
-  list: any = [];
+  list: Record<string, any>[] = [];
   currentLang: string = this.translateSvc.currentLang;
 
   subscriptions: Subscription[] = [
     this.translateSvc.onLangChange.subscribe(
       (res) => (this.currentLang = res.lang)
     ),
-    this.store.watchItem('AppComponent').subscribe((res) => {
-      this.list = res;
-      if (this.list.length > 0) {
-        this.formatNotificationListDate('yyyy/MM/dd, h:mm a');
-      }
-    }),
   ];
 
   constructor(
@@ -39,29 +33,48 @@ export class NotificationsComponent implements OnInit, OnDestroy {
     private datePipe: DatePipe
   ) {}
 
+  private renderNotifications = async () => {
+    const res = await this.api.user.getNotifications();
+    if (Array.isArray(res)) this.list = res;
+    if (this.list.length > 0) this.formatNotifications();
+  };
+
   async handleTableActionClick(action: ITableAction) {
-    if (action.type === 'delete') {
+    const item = action.item;
+    if (action.type === 'delete' && item != null) {
       const res = await this.api.user.removeNotification(
-        Number(action?.item['id'])
+        Number(action?.item['id']),
+        { ...item, is_read: true } as any
       );
-      this.list = await this.api.user.getNotifications();
-      this.messages.success(res['message'][this.currentLang]);
-      this.store.setItem<INotification[] | null>('AppComponent', this.list);
+      if (res?.['message'] != null) {
+        this.messages.success(res['message'][this.currentLang]);
+      }
+      this.renderNotifications();
     }
   }
 
-  private formatNotificationListDate(format: string) {
+  private formatNotifications() {
+    const format = 'yyyy/MM/dd, h:mm a';
     this.list = (this.list as INotification[]).map((n) => {
       n.date = this.datePipe.transform(n.date, format) as string;
+      n.status_ru = !!n?.is_read ? 'Прочитано' : 'Не прочитано';
+      n.status_ky = !!n?.is_read ? 'Окулган' : 'Окулбаган';
+      n.status_en = !!n?.is_read ? 'Read' : 'Unread';
       return n;
     });
   }
 
-  ngOnInit() {
-    this.list = this.store.getItem('AppComponent') ?? [];
-    if (this.list.length > 0) {
-      this.formatNotificationListDate('yyyy/MM/dd, h:mm a');
-    }
+  async ngOnInit() {
+    this.renderNotifications();
+
+    this.list?.map((item) => {
+      if (item?.['id']) {
+        this.api.user.updateNotifications(item['id'], {
+          ...item,
+          is_read: true,
+        } as any);
+      }
+    });
   }
 
   ngOnDestroy() {

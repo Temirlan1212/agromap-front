@@ -5,22 +5,29 @@
     (onModeChanged)="handleModeChange($event)"
     (onFormSubmit)="handleFilterFormSubmit($event)"
     (onFormReset)="handleFilterFormReset()"
+    [activeContour]="activeContour"
   >
   </app-contour-filter>
   <router-outlet></router-outlet>
 </app-side-panel>
 
 <div class="map-container">
-  <app-loading *ngIf="loading" [loading]="loading"></app-loading>
+  <div class="polygons-loading" *ngIf="loading">
+    <p>{{ "Uploading data" | translate }}</p>
+    <app-loading
+      class="dynamic-color"
+      [loading]="true"
+      [mini]="true"
+    ></app-loading>
+  </div>
+
   <app-map
     #map
     (mapData)="handleMapData($event)"
+    (mapMoveWithDebounce)="handleMapMoveWithDebaunce($event)"
     (mapMove)="handleMapMove($event)"
     (mapClick)="handleMapClick($event)"
-    (featureClick)="handleFeatureClick($event)"
     (featureClose)="handleFeatureClose()"
-    (featureHover)="handleFeatureMouseOver($event)"
-    (featureUnhover)="handleFeatureMouseLeave($event)"
     [featureTitle]="'Vegetative indexes' | translate"
   >
     <app-map-controls controls>
@@ -29,7 +36,7 @@
           tooltipTitle="Comparison of images"
           width="140px"
           routerLink="split-map"
-          *ngIf="layerFeature"
+          *ngIf="!!activeContour"
           iconName="split-screen"
           [class.active]="currentRouterPathname.includes('split-map')"
         ></app-map-control>
@@ -49,11 +56,12 @@
           [map]="mapData.map"
           [baseLayers]="baseLayers"
           [wmsLayers]="wmsLayers"
+          [storageName]="storageName"
           [wmsSelectedStatusLayers]="wmsSelectedStatusLayers"
           (wmsLayerChanged)="handleWmsLayerChanged($event)"
         ></app-map-control-layers-switch>
         <app-map-control-locate
-          *ngIf="mapData && !layerFeature"
+          *ngIf="mapData && !activeContour"
           [map]="mapData.map"
         ></app-map-control-locate>
 
@@ -81,8 +89,9 @@
         "
       >
         <app-map-control-veg-indexes
-          *ngIf="layerFeature && mapData"
-          [layer]="layerFeature"
+          *ngIf="!!activeContour && mapData"
+          [defaultYear]="filterFormValues?.year"
+          [polygon]="activeContour?.polygon"
           [mapData]="mapData"
           [vegIndexesData]="vegIndexesData"
           [vegIndexOptionsList]="vegIndexOptionsList"
@@ -93,7 +102,9 @@
 
         <app-statistics
           [filterFormValues]="filterFormValues"
-          *ngIf="landTypes.length > 0"
+          *ngIf="
+            landTypes.length > 0 && !activeContour && filterFormValues != null
+          "
           [landTypes]="landTypes"
           [hidden]="activeContour"
         ></app-statistics>
@@ -113,17 +124,39 @@
         </app-map-control>
 
         <app-map-control
-          *ngIf="activeContourSmall && !(layerFeature && activeContour)"
-          class="transparent d-xs-none"
+          class="transparent d-xs-none events-none"
+          *ngIf="!map?.['feautureCollapse'] && !activeContour"
         >
-          <app-contour-details
+          <app-contour-hover-info
             [hidden]="currentRouterPathname.includes('split-map')"
-            #contourDetails
-            [mapData]="mapData"
-            [activeContourSmall]="activeContourSmall"
-            (onCancelClick)="map.handleFeatureClose()"
           >
-          </app-contour-details>
+          </app-contour-hover-info>
+        </app-map-control>
+      </ng-container>
+
+      <ng-container
+        topCenterPanel
+        *ngIf="
+          !currentRouterPathname.includes('contour-add') &&
+          !currentRouterPathname.includes('contour-edit') &&
+          sidePanelService.get()
+        "
+      >
+        <app-map-control
+          tooltipPlacement="right"
+          [tooltipTitle]="
+            !sidePanelService.get() ? 'Close sidebar' : 'Open sidebar'
+          "
+          tooltipClass="delay-none"
+          class="d-xs-none d-sm-none d-md-none mb-10 transparent"
+          (click)="sidePanelService.toggle()"
+        >
+          <button
+            class="sidebar-toggler"
+            [class.collapsed]="sidePanelService.get()"
+          >
+            <app-svg-icon name="arrow-down" size="20"></app-svg-icon>
+          </button>
         </app-map-control>
       </ng-container>
 
@@ -145,7 +178,7 @@
     <app-spline-area-chart
       featureBody
       [chartData]="contourData"
-      *ngIf="layerFeature && contourData.length > 0; else noContourData"
+      *ngIf="!!activeContour && contourData.length > 0; else noContourData"
     >
     </app-spline-area-chart>
     <ng-template #noContourData>
@@ -159,7 +192,7 @@
       actions
       type="button"
       class="transparent"
-      (click)="handleEditClick()"
+      (click)="[$event.stopPropagation(), handleEditClick()]"
     >
       <app-svg-icon name="edit" size="18"></app-svg-icon>
     </button>
@@ -168,7 +201,7 @@
       actions
       type="button"
       class="transparent"
-      (click)="deleteDialog.show()"
+      (click)="[$event.stopPropagation(), deleteDialog.show()]"
     >
       <app-svg-icon name="delete" size="18"></app-svg-icon>
     </button>

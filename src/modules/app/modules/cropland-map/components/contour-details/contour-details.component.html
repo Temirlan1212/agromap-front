@@ -1,18 +1,16 @@
 <div
   class="dark-info-dialog"
   [class.hidden]="isHidden"
-  *ngIf="activeContour != null || activeContourSmall != null"
+  *ngIf="activeContour != null"
 >
-  <div
-    *ngIf="activeContour != null && activeContourSmall == null; else partial"
-  >
+  <div *ngIf="activeContour != null">
     <div class="header">
       <h1
         [ngClass]="activeContour?.culture?.['name_'+currentLang]"
         [textContent]="activeContour?.culture?.['name_'+currentLang]"
       ></h1>
       <button
-        class="toggle-btn arrow"
+        class="toggle-btn arrow dark"
         (click)="isHidden = !isHidden"
         [class.hidden]="isHidden"
       >
@@ -20,11 +18,11 @@
       </button>
 
       <button
-        class="toggle-btn clear"
+        class="toggle-btn clear dark"
         (click)="onCancelClick.emit()"
         [class.hidden]="isHidden"
       >
-        <app-svg-icon name="clear" size="16"></app-svg-icon>
+        <app-svg-icon name="clear" size="18"></app-svg-icon>
       </button>
     </div>
 
@@ -37,25 +35,27 @@
         {{ "Area" | translate }}
         <span>{{ activeContour.area_ha }} {{ "ha" | translate }}</span>
       </div>
-      <div *ngIf="activeContour?.region">
+      <div *ngIf="activeContour?.region?.['name_' + currentLang]">
         {{ "Region" | translate }}
         <span
           [textContent]="activeContour.region?.['name_' + currentLang]"
         ></span>
       </div>
-      <div *ngIf="activeContour?.district">
+      <div *ngIf="activeContour?.district?.['name_' + currentLang]">
         {{ "District" | translate }}
         <span
           [textContent]="activeContour.district?.['name_' + currentLang]"
         ></span>
       </div>
-      <div *ngIf="activeContour?.conton">
+      <div
+        *ngIf="activeContour?.conton?.['name_' + currentLang] && activeContour?.conton?.['name_' + currentLang]?.toLowerCase() !== 'none'"
+      >
         {{ "Conton" | translate }}
         <span
           [textContent]="activeContour.conton?.['name_' + currentLang]"
         ></span>
       </div>
-      <div *ngIf="activeContour?.type">
+      <div *ngIf="activeContour?.type?.['name_' + currentLang]">
         {{ "Land type" | translate }}
         <span
           [textContent]="activeContour.type?.['name_' + currentLang]"
@@ -88,12 +88,21 @@
         {{ "RSE determination error" | translate
         }}<span>{{ activeContour.percent * 100 }} % </span>
       </div>
-      <div *ngIf="activeContour?.soil_class">
+      <div *ngIf="activeContour?.soil_class?.['name_' + currentLang]">
         {{ "Soil class" | translate }}
         <span
           >ID {{ activeContour.soil_class?.ID }} -
           {{ activeContour.soil_class?.['name_' + currentLang] }}
         </span>
+      </div>
+      <div *ngIf="!!activeContour?.ink">
+        {{ "INK" | translate }}
+        <span>{{ activeContour.ink }}</span>
+      </div>
+
+      <div *ngIf="!!activeContour?.eni">
+        ENI-{{ ("Code" | translate).toLowerCase() }}
+        <span>{{ activeContour.eni }}</span>
       </div>
       <div>
         {{ "Culture" | translate }}
@@ -105,18 +114,18 @@
           <span>{{ "Culture is not defined" | translate }}</span>
         </ng-template>
       </div>
-    </div>
-  </div>
-  <ng-template #partial>
-    <div class="contour-info-partial" *ngIf="!isHidden">
-      <h1 [ngClass]="activeContourSmall?.contour_id">
-        {{ "Contour id" | translate }}
-        <p>{{ activeContourSmall?.contour_id }}</p>
-      </h1>
       <div>
-        {{ "Area" | translate }}
-        <span>{{ activeContourSmall?.area_ha }} {{ "ha" | translate }}</span>
+        {{ "Culture" | translate }} ({{ "RSE" | translate }})
+        <span
+          *ngIf="activeContour.predicted_culture?.['name_' + currentLang]; else noCulture"
+          >{{
+          activeContour.predicted_culture?.['name_' + currentLang]
+          }}</span
+        >
+        <ng-template #noCulture>
+          <span>{{ "Culture is not defined" | translate }}</span>
+        </ng-template>
       </div>
     </div>
-  </ng-template>
+  </div>
 </div>

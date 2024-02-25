@@ -18,6 +18,8 @@ import { TabComponent } from 'src/modules/ui/components/content-tabs/tab/tab.com
 import { ITableItem } from 'src/modules/ui/models/table.model';
 import { MessagesService } from 'src/modules/ui/services/messages.service';
 import { Subscription } from 'rxjs';
+import { StoreService } from 'src/modules/ui/services/store.service';
+import { MapService } from 'src/modules/ui/services/map.service';
 
 @Component({
   selector: 'app-statistics',
@@ -34,13 +36,16 @@ export class StatisticsComponent
   currentLang: string = this.translateSvc.currentLang;
   activeTab!: TabComponent;
   subscriptions: Subscription[] = [];
+  mapControlStatsToggleState: boolean = true;
 
   constructor(
     private api: ApiService,
     private messages: MessagesService,
     private translate: TranslatePipe,
     private translateSvc: TranslateService,
-    private cd: ChangeDetectorRef
+    private cd: ChangeDetectorRef,
+    private store: StoreService,
+    private mapService: MapService
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -64,8 +69,16 @@ export class StatisticsComponent
 
     this.pastureStatsProdTableItems = [];
     if (this.activeTab?.id) {
-      let params = { year: 2022, land_type: String(this.activeTab.id) };
+      let params = {
+        year: this.mapService.filterDefaultValues.year,
+        land_type: String(this.activeTab.id),
+      };
       this.getPastureStatisticsProductivity(params);
+    }
+
+    const pasturesMapStats = this.store.getItem('PasturesMapStats');
+    if (pasturesMapStats != null) {
+      this.mapControlStatsToggleState = pasturesMapStats?.isCollapsed;
     }
 
     this.cd.detectChanges();
@@ -78,6 +91,12 @@ export class StatisticsComponent
   handleSelectedTab(selectedTab: TabComponent) {
     this.activeTab = selectedTab;
   }
+  handleMapControlStatsToggle(toggleState: boolean) {
+    this.mapControlStatsToggleState = toggleState;
+    this.store.setItem('PasturesMapStats', {
+      isCollapsed: this.mapControlStatsToggleState,
+    });
+  }
 
   public getLandTypeItem(item: any): string {
     const propertyName = 'name_' + this.currentLang;
@@ -87,7 +106,9 @@ export class StatisticsComponent
   private handleFilterFormReset() {
     this.pastureStatsProdTableItems = [];
     if (this.activeTab?.id) {
-      this.filterFormValues = { year: 2022 };
+      this.filterFormValues = {
+        year: this.mapService.filterDefaultValues.year,
+      };
       this.filterFormValues['land_type'] = String(this.activeTab.id);
       this.getPastureStatisticsProductivity(this.filterFormValues);
       this.filterFormValues = null;
@@ -100,7 +121,7 @@ export class StatisticsComponent
     this.pastureStatsProdTableItems = [];
     this.getPastureStatisticsProductivity({
       ...formValue,
-      land_type: String(this.activeTab.id),
+      land_type: String(this.activeTab?.id ?? 2),
     });
     this.filterFormValues = formValue;
   }

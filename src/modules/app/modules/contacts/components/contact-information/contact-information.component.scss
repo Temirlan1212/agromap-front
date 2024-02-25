@@ -1,0 +1,59 @@
+@import "constants";
+
+a {
+  text-decoration: none;
+  color: $primaryColor;
+}
+p {
+  overflow-wrap: anywhere;
+}
+
+:host {
+  padding: 10px;
+  display: flex;
+  height: max-content;
+  cursor: pointer;
+  border-radius: 12px;
+  background-color: $lightColor;
+  backdrop-filter: blur(30px);
+  transition: all 0.2s;
+  color: $iconColor;
+  font-size: 14px;
+
+  &:hover {
+    color: $darkColor;
+  }
+
+  &.active {
+    color: $darkColor;
+    box-shadow: 0 0 0 3px rgba($darkColor, 0.4);
+    background-color: rgba($lightColor, 0.5);
+  }
+
+  ul {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    .title {
+      margin: 0 0 10px 0;
+    }
+
+    li {
+      list-style-type: none;
+      display: flex;
+      align-items: center;
+      gap: 0 10px;
+      p {
+        margin: 0;
+      }
+    }
+  }
+
+  .icon {
+    width: 20px !important;
+    height: 20px !important;
+    color: $iconColor;
+  }
+}

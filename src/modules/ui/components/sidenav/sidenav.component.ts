@@ -3,10 +3,17 @@ import {
   Input,
   OnChanges,
   SimpleChanges,
-  HostListener,
+  OnDestroy,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink, RouterLinkActive, Routes } from '@angular/router';
+import {
+  Event,
+  Router,
+  RouterLink,
+  RouterLinkActive,
+  Routes,
+  RoutesRecognized,
+} from '@angular/router';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import {
@@ -17,6 +24,10 @@ import {
 import { StoreService } from 'src/modules/ui/services/store.service';
 import { INotification } from '../../../api/models/notification.model';
 import { TooltipComponent } from '../tooltip/tooltip.component';
+import { Subscription } from 'rxjs';
+import { SettingsComponent } from '../settings/settings.component';
+import { MenuComponent } from '../menu/menu.component';
+import { SidePanelService } from '../../services/side-panel.service';
 
 @Component({
   selector: 'app-sidenav',
@@ -29,11 +40,13 @@ import { TooltipComponent } from '../tooltip/tooltip.component';
     SvgIconComponent,
     TranslateModule,
     TooltipComponent,
+    SettingsComponent,
+    MenuComponent,
   ],
   templateUrl: './sidenav.component.html',
   styleUrls: ['./sidenav.component.scss'],
 })
-export class SidenavComponent implements OnChanges {
+export class SidenavComponent implements OnChanges, OnDestroy {
   @Input() routes: Routes = [];
   @Input() notifications!: INotification[];
   topRoutes: Routes = [];
@@ -41,19 +54,21 @@ export class SidenavComponent implements OnChanges {
   mobileRoutes: Routes = [];
   opened: boolean = false;
   langsOpened: boolean = false;
+  settingsOpened: boolean = false;
   currentLang: ELanguageCode = ELanguageCode.ru;
   allLangs: ILanguage[] = [];
   indicator: boolean = false;
+  subs: Subscription[] = [];
+  activeNavItem: Record<string, any> | null = null;
 
   constructor(
     private translate: TranslateService,
-    private store: StoreService
+    private store: StoreService,
+    private router: Router,
+    public sidePanelService: SidePanelService
   ) {}
 
-  @HostListener('document:click', ['$event.target'])
-  public onClick(target: any) {
-    this.langsOpened = false;
-  }
+  collapsed: boolean = false;
 
   ngOnInit(): void {
     const languageStore = this.store.getItem<ILanguageStore>('language');
@@ -62,12 +77,17 @@ export class SidenavComponent implements OnChanges {
       this.currentLang = languageStore.current;
       this.allLangs = languageStore.all;
     }
+
+    const sub = this.router.events.subscribe((event: Event) => {
+      if (event instanceof RoutesRecognized) {
+        this.activeNavItem = event.state.root.firstChild?.data ?? null;
+      }
+    });
+    this.subs.push(sub);
   }
 
-  handleLangClick(e: MouseEvent) {
-    e.preventDefault();
-    e.stopPropagation();
-    this.langsOpened = !this.langsOpened;
+  ngOnDestroy(): void {
+    this.subs.map((sub) => sub.unsubscribe());
   }
 
   handleLangChange(e: MouseEvent, lang: ELanguageCode) {
@@ -75,7 +95,6 @@ export class SidenavComponent implements OnChanges {
     e.stopPropagation();
     this.translate.use(lang);
     this.currentLang = lang;
-    this.langsOpened = !this.langsOpened;
   }
 
   private chunkRoutes(routes: Routes): void {
@@ -86,7 +105,7 @@ export class SidenavComponent implements OnChanges {
       (f) => f.data != null && f.data['position'] === 'bottom'
     );
     this.mobileRoutes = this.routes.filter(
-      (f) => f.data != null && f.data['class'] != 'homepage'
+      (f) => f.data != null && !f.data['onlyDesktop']
     );
   }
 

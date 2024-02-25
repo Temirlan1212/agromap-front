@@ -1,0 +1,13 @@
+<app-input-checkbox
+  class="checkbox"
+  [name]="'Close the sidebar when filtering' | translate"
+  [checked]="settings['filter.collapseOnApply']"
+  (changed)="handleChangeSettings('filter.collapseOnApply', $event)"
+></app-input-checkbox>
+
+<app-input-checkbox
+  class="checkbox"
+  [name]="'Show floating filtering' | translate"
+  [checked]="settings['filter.showFloatingFilterBar']"
+  (changed)="handleChangeSettings('filter.showFloatingFilterBar', $event)"
+></app-input-checkbox>

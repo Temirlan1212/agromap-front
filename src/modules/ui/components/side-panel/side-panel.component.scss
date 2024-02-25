@@ -2,6 +2,16 @@
 
 :host {
   z-index: 500;
+
+  @media only screen and (min-width: 992px) {
+    &.collapsed {
+      .panel {
+        position: absolute;
+        left: -100000px;
+        transition: all $sideNavTransitionDelay ease;
+      }
+    }
+  }
 }
 
 .panel-toggle-btn {
@@ -13,6 +23,7 @@
   width: $sidePanelContentWidth;
   background: $primaryBackgroundColor;
   padding: 24px 16px;
+  transition: all 0.5s ease;
 }
 
 @media only screen and (max-width: 992px) {

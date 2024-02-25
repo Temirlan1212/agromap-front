@@ -1,6 +1,8 @@
 import {
   Component,
   EventEmitter,
+  HostBinding,
+  Input,
   OnDestroy,
   OnInit,
   Output,
@@ -15,7 +17,6 @@ import { filter, Subscription } from 'rxjs';
 import { ILandType } from '../../../../../api/models/land-type.model';
 import { ContourFiltersQuery } from '../../../../../api/models/contour.model';
 import { GeoJSON, geoJSON, geoJson, latLng, latLngBounds, Map } from 'leaflet';
-import { MapService } from '../../../../../ui/services/map.service';
 import { MapData, MapLayerFeature } from '../../../../../ui/models/map.model';
 import { Feature } from 'geojson';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -23,6 +24,10 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { QuestionDialogComponent } from '../../../../../ui/components/question-dialog/question-dialog.component';
 import { StoreService } from 'src/modules/ui/services/store.service';
 import { ICulture } from '../../../../../api/models/culture.model';
+import { SettingsService } from 'src/modules/ui/services/settings.service';
+import { SidePanelService } from 'src/modules/ui/services/side-panel.service';
+import { storageNames } from '../../lib/_constants';
+import { CroplandMainMapService } from '../../lib/services/map.service';
 
 @Component({
   selector: 'app-contour-filter',
@@ -42,15 +47,26 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
   currentLang: string = this.translateSvc.currentLang;
   selectedId: number | null = null;
   filtersQuery!: ContourFiltersQuery;
+  collapseOnApply = false;
   radioOptions: any = [
-    { name: 'RSE', value: 'agromap_store_ai' },
-    { name: 'Base', value: 'agromap_store' },
+    { name: 'RSE', value: 'contours_main_ai' },
+    { name: 'Base', value: 'contours_main' },
   ];
+  @Input() activeContour!: any;
   @Output() onCardClick = new EventEmitter<MapLayerFeature>();
   @Output() onEditClick = new EventEmitter<void>();
   @Output() onModeChanged = new EventEmitter<string>();
   @Output() onFormSubmit = new EventEmitter<Record<string, any>>();
   @Output() onFormReset = new EventEmitter<Record<string, any>>();
+  floating = true;
+
+  @HostBinding('class.croplandMapFilterBarFloating')
+  get croplandMapFilterBarFloating() {
+    const floating = this.sidePanelService.get('croplandMapFilterBarFloating');
+    const isSidePanelClosed = this.sidePanelService.get();
+    this.floating = floating && isSidePanelClosed && !this.activeContour;
+    return this.floating;
+  }
 
   loading: boolean = false;
   form: FormGroup = new FormGroup({
@@ -69,15 +85,23 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
         nonNullable: true,
       }
     ),
-    land_type: new FormControl<string | null>(null, {
-      nonNullable: true,
-      validators: Validators.required,
-    }),
-    culture: new FormControl<string | null>(null, { nonNullable: true }),
-    year: new FormControl<number | null>(2022, {
-      nonNullable: true,
-      validators: Validators.required,
-    }),
+    land_type: new FormControl<string | null>(
+      { value: null, disabled: false },
+      {
+        nonNullable: true,
+        // validators: Validators.required,
+      }
+    ),
+    culture: new FormControl<string | null>(
+      { value: null, disabled: true },
+      { nonNullable: true }
+    ),
+    year: new FormControl<number | null>(
+      this.mapService.filterDefaultValues.year,
+      {
+        nonNullable: true,
+      }
+    ),
   });
   mode: FormControl = new FormControl<string | null>(null);
 
@@ -97,6 +121,16 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
       ?.valueChanges.subscribe((value) =>
         this.handleContonChange(value)
       ) as Subscription,
+
+    this.form.get('land_type')?.valueChanges.subscribe((value) => {
+      const culture = this.form.get('culture');
+      if (!culture) return;
+      if (value?.includes('1')) culture.enable();
+      else {
+        culture.patchValue({ value: null });
+        culture.disable();
+      }
+    }) as Subscription,
     this.mode?.valueChanges.pipe(filter((res) => !!res)).subscribe((value) => {
       this.onModeChanged.emit(value);
     }) as Subscription,
@@ -107,37 +141,38 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
       this.mapInstance = res?.map as Map;
       this.mapGeo = res?.geoJson as GeoJSON;
     }),
-    this.store.watchItem('MapControlLayersSwitchComponent').subscribe((v) => {
-      this.mode?.patchValue(v.filterControlLayerSwitch?.oldValue, {
-        emitEvent: false,
-      });
-    }),
+    this.store
+      .watchItem(storageNames.mapControlLayersSwitchComponent)
+      .subscribe((v) => {
+        this.mode?.patchValue(v.filterControlLayerSwitch?.oldValue, {
+          emitEvent: false,
+        });
+      }),
   ];
 
   constructor(
     private api: ApiService,
     private messages: MessagesService,
-    private mapService: MapService,
+    private mapService: CroplandMainMapService,
     private router: Router,
     private route: ActivatedRoute,
     private translate: TranslatePipe,
     private translateSvc: TranslateService,
-    private store: StoreService
+    private store: StoreService,
+    private settingsService: SettingsService,
+    public sidePanelService: SidePanelService
   ) {}
 
   async ngOnInit(): Promise<void> {
-    if (
-      this.store.getItem('MapControlLayersSwitchComponent')
-        ?.filterControlLayerSwitch?.name == null
-    ) {
-      this.mode?.patchValue('agromap_store_ai');
-    }
+    this.initSettings();
 
+    this.mode?.patchValue('default');
     this.loading = true;
     await this.getRegions();
     await this.getLandTypes();
     await this.getCultures();
     this.loading = false;
+    this.handleFormSubmit(true);
   }
 
   async getRegions(): Promise<void> {
@@ -193,7 +228,7 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
     this.filteredContours = [];
     this.onFormReset.emit();
     this.store.setItem<ContourFiltersQuery | null>(
-      'ContourFilterComponent',
+      storageNames.contourFilterComponent,
       null
     );
   }
@@ -204,15 +239,34 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
     this.router.navigate(['contour-edit', id], { relativeTo: this.route });
   }
 
-  async handleFormSubmit(): Promise<void> {
-    const formState = this.getState();
+  async handleFormSubmit(onNgInit?: boolean): Promise<void> {
+    let formState = { ...this.getState() };
     if (!formState.valid) {
       this.messages.error(this.translate.transform('Form is invalid'));
       return;
     }
+
+    const values = formState.value;
+
+    const land_type_values = this.landTypes
+      .map((land_type) => land_type.id)
+      .join(',');
+
+    if (!values?.land_type) formState.value['land_type'] = land_type_values;
+    if (!values?.year) {
+      formState.value['year'] = this.mapService.filterDefaultValues.year;
+      this.form
+        .get('year')
+        ?.patchValue(this.mapService.filterDefaultValues.year);
+    }
+
+    if (!values?.culture?.value) formState.value['culture'] = '';
+
     this.onFormSubmit.emit(formState);
+
     const { region, district, year, conton, land_type, culture } =
       formState.value;
+
     this.loading = true;
     try {
       this.filtersQuery = {
@@ -222,13 +276,19 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
         land_type,
         culture,
         year,
-        ...(this.mode.value == 'agromap_store_ai' && { ai: true }),
+        ...(this.mode.value == 'contours_main_ai' && { ai: true }),
       };
 
       this.store.setItem<ContourFiltersQuery | null>(
-        'ContourFilterComponent',
+        storageNames.contourFilterComponent,
         this.filtersQuery
       );
+      if (!onNgInit) {
+        this.collapseOnApply = this.settingsService.get(
+          'filter.collapseOnApply'
+        );
+        if (this.collapseOnApply) this.sidePanelService.set(true);
+      }
     } catch (e: any) {
       this.messages.error(e.error?.message ?? e.message);
     } finally {
@@ -238,6 +298,8 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
 
   async handleRegionChange(value: string | null) {
     const districtVal = this.form.get('district');
+    const contonVal = this.form.get('conton');
+
     const region = this.regions.find((r) => r.id == Number(value));
     region &&
       this.mapInstance.fitBounds(geoJson(region?.polygon).getBounds(), {
@@ -251,8 +313,11 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
     } else {
       districtVal?.patchValue(null);
       districtVal?.disable({ emitEvent: false });
-      this.resetMapBounds();
+      // this.resetMapBounds();
     }
+
+    districtVal?.reset();
+    contonVal?.reset();
   }
 
   async handleDistrictChange(value: string | null) {
@@ -271,6 +336,8 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
       contonVal?.patchValue(null, { emitEvent: false });
       contonVal?.disable({ emitEvent: false });
     }
+
+    contonVal?.reset();
   }
 
   async handleContonChange(value: string | null) {
@@ -283,7 +350,7 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
         maxZoom: 12,
       });
     } else {
-      this.resetMapBounds();
+      // this.resetMapBounds();
     }
   }
 
@@ -331,6 +398,32 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
     await this.deleteItem();
     this.selectedId = null;
     dialog.close();
+  }
+
+  handleCloseFloatingBar() {
+    this.sidePanelService.set(false, 'croplandMapFilterBarFloating');
+    this.settingsService.patch('filter.showFloatingFilterBar', false, {
+      persist: true,
+    });
+  }
+
+  private initSettings() {
+    // this.collapseOnApply = this.settingsService.get('filter.collapseOnApply');
+    this.settingsService.watch(
+      (value) => (this.collapseOnApply = value),
+      'filter.collapseOnApply'
+    );
+
+    this.sidePanelService.set(
+      this.settingsService.get('filter.showFloatingFilterBar'),
+      'croplandMapFilterBarFloating'
+    );
+
+    this.settingsService.watch(
+      (value) =>
+        this.sidePanelService.set(value, 'croplandMapFilterBarFloating'),
+      'filter.showFloatingFilterBar'
+    );
   }
 
   ngOnDestroy() {

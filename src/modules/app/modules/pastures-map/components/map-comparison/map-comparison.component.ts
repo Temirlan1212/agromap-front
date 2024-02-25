@@ -20,6 +20,7 @@ import { Subscription } from 'rxjs';
 import { LatLngBounds } from 'leaflet';
 import { StoreService } from 'src/modules/ui/services/store.service';
 import { GeoJSON } from 'geojson';
+import { ContourFiltersQuery } from 'src/modules/api/models/contour.model';
 
 @Component({
   selector: 'app-map-comparison',
@@ -63,6 +64,16 @@ export class MapComparisonComponent
     this.yieldMapComponents?.first.handleFilterFormSubmit(
       this.filterFormValues
     );
+
+    const data =
+      this.store.getItem<Record<string, LatLngBounds | number>>(
+        'HomeComponent'
+      );
+
+    const zoom = data?.['mapZoom'] as number;
+    const bounds = data?.['mapBounds'] as LatLngBounds;
+
+    this.handleMapMove({ zoom, bounds });
   }
 
   syncMaps(maps: ILeafletMap[]): void {
@@ -144,25 +155,25 @@ export class MapComparisonComponent
 
     if (mapMove.zoom >= 12) {
       this.loading = true;
-      this.polygons = await this.yieldMapComponents.first.getPolygonsInScreen(
+      this.polygons = await this.yieldMapComponents?.first.getPolygonsInScreen(
         mapMove.bounds
       );
       this.loading = false;
     }
-
-    this.yieldMapComponents.forEach((ref) => {
-      const mapData = ref.mapData;
-      if (mapData?.map != null) {
-        const layersLength = mapData.geoJson.getLayers().length;
-        if (layersLength > 0) mapData.geoJson.clearLayers();
-        if (mapMove.zoom >= 12) ref.addPolygonsInScreenToMap(this.polygons);
-        if (mapMove.zoom < 12) ref.activeContourSmall = null;
-      }
-    });
+    if (this.yieldMapComponents) {
+      this.yieldMapComponents.forEach((ref) => {
+        const mapData = ref.mapData;
+        if (mapData?.map != null) {
+          const layersLength = mapData.geoJson.getLayers().length;
+          if (layersLength > 0) mapData.geoJson.clearLayers();
+          if (mapMove.zoom >= 12) ref.addPolygonsInScreenToMap(this.polygons);
+          if (mapMove.zoom < 12) ref.activeContourSmall = null;
+        }
+      });
+    }
   }
 
   ngAfterViewInit(): void {
-    this.handleFilterFormSubmit();
     this.maps = this.yieldMapComponents.map(
       (ref) => ref.mapData?.map as ILeafletMap
     );
@@ -189,10 +200,22 @@ export class MapComparisonComponent
         ref.onDateSelect?.subscribe(() => {
           refs.first.contourDetailsComponents.map((c) => (c.isHidden = true));
         }),
+
+        this.store
+          .watchItem<ContourFiltersQuery | null>('ContourFilterComponent')
+          .subscribe((v) => ref.buildWmsCQLFilter(v)),
       ];
+
+      const contourFilterData = this.store.getItem<ContourFiltersQuery | null>(
+        'ContourFilterComponent'
+      );
+
+      if (contourFilterData) ref.buildWmsCQLFilter(contourFilterData);
 
       this.subscriptions.push(...subscriptions);
     });
+
+    refs?.first.handleFilterFormSubmit(this.filterFormValues);
 
     this.subscriptions.push(
       refs.first.mapComponent.mapMove.subscribe(async (mapMove: MapMove) =>

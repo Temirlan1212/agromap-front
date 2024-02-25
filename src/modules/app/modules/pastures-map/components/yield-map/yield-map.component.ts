@@ -44,10 +44,6 @@ import { ActualVegIndexes } from 'src/modules/api/models/actual-veg-indexes';
 import { ITileLayer } from 'src/modules/ui/models/map.model';
 import { IRegion } from 'src/modules/api/models/region.model';
 import { ContourFiltersQuery } from 'src/modules/api/models/contour.model';
-import {
-  IContourStatisticsProductivity,
-  IContourStatisticsProductivityQuery,
-} from 'src/modules/api/models/statistics.model';
 import { ITableItem } from 'src/modules/ui/models/table.model';
 import { MapControlLayersSwitchComponent } from '../../../../../ui/components/map-control-layers-switch/map-control-layers-switch.component';
 import { ILandType } from 'src/modules/api/models/land-type.model';
@@ -87,7 +83,7 @@ export class YieldMapComponent
   @Output() onDateSelect = new EventEmitter<any>();
 
   mode!: string;
-  pastureLayerProductivityTooltip: Tooltip | null = null;
+  wmsLayerInfoPopup: Tooltip | null = null;
   user: IUser | null = this.api.user.getLoggedInUser();
   landTypes: ILandType[] = [];
   mapData: MapData | null = null;
@@ -175,9 +171,9 @@ export class YieldMapComponent
   wmsLayers: ITileLayer[] = [
     {
       title: 'Base',
-      name: 'agromap_store',
+      name: 'contours_main',
       layer: tileLayer.wms('https://geoserver.24mycrm.com/agromap/wms', {
-        layers: 'agromap:agromap_store',
+        layers: 'agromap:contours_main',
         ...this.wmsLayersOptions,
       }),
       type: 'radio',
@@ -234,9 +230,9 @@ export class YieldMapComponent
       this.subscriptions = [
         ...this.subscriptions,
         this.store.watchItem(this.storageName).subscribe((v) => {
-          if (this.pastureLayerProductivityTooltip) {
-            this.mapData?.map.removeLayer(this.pastureLayerProductivityTooltip);
-            this.pastureLayerProductivityTooltip = null;
+          if (this.wmsLayerInfoPopup) {
+            this.mapData?.map.removeLayer(this.wmsLayerInfoPopup);
+            this.wmsLayerInfoPopup = null;
           }
           this.pasturesMapControlLayersSwitch = v;
         }),
@@ -304,7 +300,7 @@ export class YieldMapComponent
 
     const bounds = geoJSON(layerFeature.feature).getBounds();
     if (this.mapData?.map) {
-      this.mapData.map.fitBounds(bounds);
+      this.mapData.map.fitBounds(bounds, { maxZoom: 14 });
       this.mapService.invalidateSize(this.mapData.map);
     }
   }
@@ -373,34 +369,29 @@ export class YieldMapComponent
     if (this.mapComponent && this.activeContour != null) {
       this.mapComponent.handleFeatureClose();
     }
+    this.handleWmsLayerPopup(e);
   }
 
-  async handleMapMousemove(e: LeafletMouseEvent) {
-    if (this.pastureLayerProductivityTooltip) {
-      this.mapData?.map.removeLayer(this.pastureLayerProductivityTooltip);
-      this.pastureLayerProductivityTooltip = null;
-    }
-    if (this.pasturesMapControlLayersSwitch?.['productivity']?.name) {
+  async handleWmsLayerPopup(e: LeafletMouseEvent) {
+    const contolLayers = Object.values({
+      ...this.pasturesMapControlLayersSwitch,
+    });
+    const activeControlLayer = [...contolLayers]
+      .sort((a, b) => b?.updatedAt - a?.updatedAt)
+      .filter((item) => item?.name && item?.updatedAt && item?.layersName)?.[0];
+
+    if (activeControlLayer != null) {
+      const layers = activeControlLayer?.layersName;
+      if (layers == null) return;
+
       const { lat, lng } = e.latlng;
       const bbox = [lng - 0.1, lat - 0.1, lng + 0.1, lat + 0.1];
 
       try {
         const data = await this.api.map.getFeatureInfo({
-          service: 'WMS',
-          request: 'GetFeatureInfo',
-          srs: 'EPSG:4326',
-          styles: '',
-          format: 'image/png',
           bbox: bbox.join(','),
           layers: 'agromap:productivity',
           query_layers: 'agromap:productivity',
-          transparent: true,
-          width: 101,
-          height: 101,
-          x: 50,
-          y: 50,
-          version: '1.1.1',
-          info_format: 'application/json',
         });
 
         const gray_index = (
@@ -412,7 +403,7 @@ export class YieldMapComponent
             'Productivity'
           )}: ${gray_index}`;
 
-          this.pastureLayerProductivityTooltip = tooltip()
+          this.wmsLayerInfoPopup = tooltip()
             .setLatLng(e.latlng)
             .setContent(tooltipContent)
             .openOn(this.mapData.map);
@@ -423,13 +414,19 @@ export class YieldMapComponent
     }
   }
 
+  async handleMapMousemove(e: LeafletMouseEvent) {}
+
   async getPolygonsInScreen(mapMove: LatLngBounds) {
-    const landTypeParam = this.landTypes[0]?.['id'];
+    const year = this.filterFormValues?.['year'] ?? new Date().getFullYear();
+    const culture = this.filterFormValues?.['culture'] ?? null;
+    const land_type = this.landTypes[0]?.['id'];
     let polygons: GeoJSON;
 
     polygons = await this.api.map.getPolygonsInScreen({
       latLngBounds: mapMove,
-      land_type: landTypeParam,
+      land_type,
+      year,
+      culture,
     });
 
     return polygons;
@@ -437,7 +434,7 @@ export class YieldMapComponent
 
   async addPolygonsInScreenToMap(polygons: GeoJSON) {
     try {
-      if (this.mapData?.map != null) {
+      if (this.mapData?.map != null && polygons != null) {
         const zoom = this.mapData.map.getZoom();
 
         if (zoom >= 12) {
@@ -542,7 +539,7 @@ export class YieldMapComponent
   handleWmsLayerChanged(layer: ITileLayer | null): void {
     if (layer != null) {
       const finded = this.wmsLayers.find((l) => l.name === layer.name);
-      if (finded != null && finded.name === 'agromap_store_ai') {
+      if (finded != null && finded.name === 'contours_main_ai') {
         this.isWmsAiActive = true;
       } else {
         this.isWmsAiActive = false;
@@ -552,7 +549,7 @@ export class YieldMapComponent
 
   private setWmsParams(): void {
     const finded = this.wmsLayers.find(
-      (w) => w.name === 'agromap_store'
+      (w) => w.name === 'contours_main'
     ) as any;
 
     if (finded != null) {
@@ -563,7 +560,7 @@ export class YieldMapComponent
     }
   }
 
-  private buildWmsCQLFilter(v: ContourFiltersQuery | null) {
+  public buildWmsCQLFilter(v: ContourFiltersQuery | null) {
     if (v != null) {
       this.wmsCQLFilter = '';
       if (v.region) {
@@ -590,11 +587,7 @@ export class YieldMapComponent
           this.wmsCQLFilter += '&&';
         }
         if (typeof val === 'string' && val.split(',').length > 1) {
-          this.wmsCQLFilter += val
-            .split(',')
-            .reduce((acc, i) => (acc += 'clt=' + i + ' OR '), '')
-            .slice(0, -3)
-            .trim();
+          this.wmsCQLFilter += `clt in (${val})`;
         } else {
           this.wmsCQLFilter += 'clt=' + v.culture;
         }
@@ -605,14 +598,18 @@ export class YieldMapComponent
           this.wmsCQLFilter += '&&';
         }
         if (typeof val === 'string' && val.split(',').length > 1) {
-          this.wmsCQLFilter += val
-            .split(',')
-            .reduce((acc, i) => (acc += 'ltype=' + i + ' OR '), '')
-            .slice(0, -3)
-            .trim();
+          this.wmsCQLFilter += `ltype in (${val})`;
         } else {
           this.wmsCQLFilter += 'ltype=' + v.land_type;
         }
+      }
+      if (v.year) {
+        const val = v.year;
+        if (this.wmsCQLFilter.length > 0) {
+          this.wmsCQLFilter += '&&';
+        }
+
+        this.wmsCQLFilter += 'year=' + val;
       }
       this.setWmsParams();
     }
@@ -630,7 +627,7 @@ export class YieldMapComponent
     this.getRegionsPolygon();
     const data = this.store.getItem(this.storageName);
     if (!data) {
-      this.mode = 'agromap_store';
+      this.mode = 'contours_main';
     }
 
     this.wmsSelectedStatusLayers = data;
@@ -640,7 +637,6 @@ export class YieldMapComponent
     this.activeVegIndexOption = this.vegIndexOptionsList[0];
 
     this.wmsCQLFilter = `ltype=${String(this.landTypes[0].id)}`;
-    this.setWmsParams();
 
     this.store
       .watchItem<ContourFiltersQuery | null>('ContourFilterComponent')

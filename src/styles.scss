@@ -131,10 +131,16 @@ select:disabled {
 
 button {
   opacity: 0.8;
-  border: 0;
   font-weight: 500;
   background-color: $secondaryColor;
   color: $darkColor;
+  border-radius: $fieldBorderRadius;
+  padding: 15px;
+  border: none;
+
+  &:focus {
+    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
+  }
 
   &:not(:disabled):hover {
     opacity: 1;
@@ -143,25 +149,49 @@ button {
   &.primary {
     background-color: $primaryColor;
     color: $lightColor;
+    &:focus {
+      box-shadow: 0 0 0 3px rgba($primaryColor, 0.5);
+    }
   }
 
   &.success {
     background-color: $successColor;
     color: $lightColor;
+    &:focus {
+      box-shadow: 0 0 0 3px rgba($successColor, 0.5);
+    }
   }
 
   &.danger {
     background-color: $dangerColor;
     color: $lightColor;
+    &:focus {
+      box-shadow: 0 0 0 2px #ffffff, 0 0 3px 5px $dangerColor;
+    }
   }
 
   &.warning {
     background-color: $warningColor;
     color: $lightColor;
+    &:focus {
+      box-shadow: 0 0 0 3px rgba($warningColor, 0.5);
+    }
+  }
+
+  &.disabled {
+    pointer-events: none;
   }
 
   &.transparent {
     background-color: transparent;
+  }
+
+  &.navigate {
+    padding: 7px;
+    border: 1px solid $secondaryColor;
+    &:hover {
+      background-color: $lightColor;
+    }
   }
 }
 
@@ -210,7 +240,32 @@ hr {
 }
 
 .leaflet-interactive:hover {
-  fill: $primaryColor;
+}
+.close-active-layer-popup {
+  .leaflet-popup-content-wrapper {
+    border-radius: 100% !important;
+    cursor: pointer;
+    position: relative;
+    left: -40px;
+  }
+  .leaflet-popup-content {
+    display: contents;
+    .content {
+      margin: 0px;
+      width: 30px !important;
+      height: 30px !important;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+  .leaflet-popup-tip-container {
+    display: none;
+  }
+
+  .leaflet-popup-close-button {
+    display: none;
+  }
 }
 
 .leaflet-top,

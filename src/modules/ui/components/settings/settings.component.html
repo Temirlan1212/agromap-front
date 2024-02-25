@@ -1,0 +1,6 @@
+<app-input-checkbox
+  class="checkbox"
+  [name]="'Close the sidebar when filtering' | translate"
+  [checked]="settings['filter.collapseOnApply']"
+  (changed)="handleChangeSettings('filter.collapseOnApply', $event)"
+></app-input-checkbox>

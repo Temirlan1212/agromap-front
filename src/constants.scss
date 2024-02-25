@@ -6,15 +6,20 @@
 $lightColor: #ffffff;
 $darkColor: #322c2c;
 $primaryColor: #1b55eb;
-$secondaryColor: #e1e1e1;
-$successColor: #27ae60;
+$secondaryColor: #eeeff2;
+$successColor: #03aa49;
 $dangerColor: #e34645;
 $warningColor: #ffa500;
 $primaryBackgroundColor: #fff;
+$grayColor: #c7c7db;
+$iconColor: #1d1d1d;
+$disabledField: #c0c0c0;
+$fieldBorder: #c2c2c2;
+$fieldBorderRadius: 8px;
 
 // Sidenav
 $sideNavMenuBgColor: #eeeff2;
-$sideNavMenuItemHoverBgColor: #dddfe4;
+$sideNavMenuItemHoverBgColor: #eeeff2;
 
 // Input
 $inputBorderColor: #c8c7c7;
@@ -105,3 +110,6 @@ $mapControlActiveBgHoverColor: $lightColor;
 //mapControl-disabled
 $mapControlDisabledBgColor: #5f5f5fea;
 $mapControlDisabledColor: rgba(165, 178, 188, 0.7);
+
+//floating filter bar
+$floatingFilterBarLeft: 105px;

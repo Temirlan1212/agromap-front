@@ -39,6 +39,10 @@ $transitionDelay: 0.2s;
       }
     }
   }
+
+  &.revalidating {
+    width: 99.99%;
+  }
 }
 
 .map-wrapper {
@@ -55,15 +59,32 @@ $transitionDelay: 0.2s;
   flex: 1;
   z-index: 450;
   display: none;
-  padding: 16px;
   background-color: $lightColor;
   flex-direction: column;
 
   .header {
+    padding: 16px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     overflow: hidden auto;
+    cursor: pointer;
+    background-color: rgba($secondaryColor, 0.5);
+
+    &:hover {
+      .arrow-down {
+        &.show-on-hover {
+          opacity: 1;
+        }
+      }
+      background-color: $secondaryColor;
+    }
+
+    .arrow-down {
+      &.show-on-hover {
+        opacity: 0;
+      }
+    }
 
     h4 {
       margin: 0;
@@ -74,6 +95,14 @@ $transitionDelay: 0.2s;
   .actions-block {
     display: flex;
     overflow-y: hidden;
+    gap: 10px;
+    padding: 4px;
+    ::ng-deep {
+      button {
+        background-color: $lightColor;
+        padding: 10px;
+      }
+    }
   }
 
   .arrow-down {

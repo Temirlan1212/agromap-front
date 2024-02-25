@@ -48,7 +48,6 @@ export class MapControlLayersSwitchComponent
   @Input() baseLayers: ITileLayer[] = [];
   @Input() wmsLayers: ITileLayer[] = [];
   @Input() activeBaseLayer: ITileLayer | null = null;
-  @Input() activeWmsLayers: ITileLayer[] = [];
   @Input() wmsSelectedStatusLayers: Record<string, string> | null = null;
   @Input() storageName: string = 'MapControlLayersSwitchComponent';
   @Output() wmsLayerChanged = new EventEmitter<ITileLayer | null>();
@@ -80,12 +79,20 @@ export class MapControlLayersSwitchComponent
     }
 
     if (!value) {
-      for (let key in this.wmsSelectedStatusLayers) {
-        this.handleWmsCheckboxLayerChange(
-          !!(this.wmsSelectedStatusLayers[key] as any)?.name,
-          key
-        );
+      const wmsSelectedStatusLayers: Record<string, any>[] | string[] =
+        Object.entries({
+          ...this.wmsSelectedStatusLayers,
+        });
+
+      const sortedWmsSelectedStatusLayers = [...wmsSelectedStatusLayers].sort(
+        (a, b) => b?.[1]?.updatedAt - a?.[1]?.updatedAt
+      );
+
+      for (let i = sortedWmsSelectedStatusLayers.length - 1; i >= 0; i--) {
+        const item = sortedWmsSelectedStatusLayers?.[i];
+        this.handleWmsCheckboxLayerChange(!!item?.[1]?.name, item?.[0]);
       }
+
       if (this.wmsSelectedStatusLayers) {
         const filterControlLayerSwitchStatus: any =
           this.wmsSelectedStatusLayers['filterControlLayerSwitch'];
@@ -110,6 +117,20 @@ export class MapControlLayersSwitchComponent
 
     this.wmsBaseLayers = this.wmsLayers.filter((l) => l.type === 'radio');
     this.wmsOverLayers = this.wmsLayers.filter((l) => l.type === 'checkbox');
+  }
+
+  getActiveWmsLayerName(): string | null {
+    const wmsSelectedStatusLayers: Record<string, any>[] = Object.values({
+      ...(this.selected as Record<string, any>),
+    });
+
+    const activeWmsSelectedStatusLayers = [...wmsSelectedStatusLayers]
+      .sort((a, b) => b?.['updatedAt'] - a?.['updatedAt'])
+      .filter(
+        (item) => item?.['name'] && item?.['updatedAt'] && item?.['layersName']
+      )?.[0];
+
+    return activeWmsSelectedStatusLayers?.['name'] ?? false;
   }
 
   @HostListener('document:click', ['$event.target'])
@@ -150,7 +171,11 @@ export class MapControlLayersSwitchComponent
     this.store.setItem(this.storageName, this.selected);
   }
 
-  handleWmsCheckboxLayerChange(checked: boolean, layerName: string): void {
+  handleWmsCheckboxLayerChange(
+    checked: boolean,
+    layerName: string,
+    event?: boolean
+  ): void {
     this.wmsLayers.forEach((l) => {
       const isCurrent = layerName === l.name;
       if (isCurrent) {
@@ -175,6 +200,10 @@ export class MapControlLayersSwitchComponent
         }
 
         this.selected[l.name]['name'] = checked ? layerName : '';
+        this.selected[l.name]['updatedAt'] = event
+          ? Date.now()
+          : data[layerName]?.updatedAt ?? null;
+        this.selected[l.name]['layersName'] = (l.layer?.options as any)?.layers;
 
         this.store.setItem(
           this.storageName,

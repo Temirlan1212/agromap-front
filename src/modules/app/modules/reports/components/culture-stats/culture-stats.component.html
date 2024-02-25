@@ -19,7 +19,7 @@
   *ngIf="data.length > 0 && !loading; else noData"
   [items]="data"
   [fields]="[
-    { title: 'Name' | translate, field: 'culture_name_' + currLang },
+    { title: 'Name' | translate, field: 'predicted_culture_name_' + currLang },
     { title: 'Area' | translate, field: 'area_ha' },
     { title: 'Territory' | translate, field: 'territory_' + currLang }
   ]"

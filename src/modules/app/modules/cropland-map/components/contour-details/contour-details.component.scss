@@ -20,6 +20,18 @@
   .contour-info {
     max-height: 50vh;
     overflow: auto;
+    padding: 0px 10px;
+    &::-webkit-scrollbar {
+      width: 3px;
+      height: 3px;
+      border-radius: 8px;
+      background-color: $darkColor;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: $lightColor;
+      border-radius: 5px;
+    }
   }
 
   .contour-info,
@@ -29,7 +41,7 @@
       width: 100%;
       justify-content: space-between;
       align-items: center;
-      gap: 50px;
+      gap: 30px;
       color: #fff;
       font-size: 15px;
 

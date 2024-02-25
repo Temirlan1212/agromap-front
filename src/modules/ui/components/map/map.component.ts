@@ -40,6 +40,7 @@ import {
 } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 import { MapService } from 'src/modules/ui/services/map.service';
+import { SidePanelService } from '../../services/side-panel.service';
 
 @Component({
   selector: 'app-map',
@@ -59,6 +60,7 @@ export class MapComponent implements OnInit, OnDestroy {
   @Input() mapId: string = 'map';
   subscriptions: Subscription[] = [];
   @Output() mapData = new EventEmitter<MapData>();
+  @Output() mapMoveWithDebounce = new EventEmitter<MapMove>();
   @Output() mapMove = new EventEmitter<MapMove>();
   @Output() mapClick = new EventEmitter<LeafletMouseEvent>();
   @Output() mapMousemove = new EventEmitter<LeafletMouseEvent>();
@@ -71,6 +73,9 @@ export class MapComponent implements OnInit, OnDestroy {
 
   @HostBinding('class.collapsed')
   feautureCollapse: boolean = false;
+
+  @HostBinding('class.revalidating')
+  featureContentRevalidating: boolean = false;
 
   map: Map | null = null;
   geoJson: GeoJSON = geoJSON(undefined, {
@@ -94,18 +99,26 @@ export class MapComponent implements OnInit, OnDestroy {
     @Inject(LOCALE_ID) public locale: string,
     private translate: TranslateService,
     private mapService: MapService,
-    private cd: ChangeDetectorRef
+    private cd: ChangeDetectorRef,
+    private sidePanelService: SidePanelService
   ) {}
 
   ngOnInit(): void {
     this.cd.detectChanges();
     this.initMap();
+    if (this.map != null) this.mapService.invalidateSize(this.map);
   }
 
   initMap(): void {
     this.map = this.mapService.initMap(this.mapId, {
       maxBounds: this.maxBounds,
       center: this.center,
+    });
+
+    this.sidePanelService.watch((isSidePanelClosed) => {
+      if (this.featureOpen && this.feautureCollapse && !isSidePanelClosed) {
+        this.revalidateFeatureContent();
+      }
     });
 
     this.map?.pm.setLang(this.translate.currentLang as any);
@@ -135,9 +148,13 @@ export class MapComponent implements OnInit, OnDestroy {
           return interval(1000);
         })
       )
-      .subscribe(() => this.handleMapMove());
-    this.subscriptions.push(s);
+      .subscribe(() => this.handleMapMove(true));
 
+    const s2 = fromEvent(this.map as Map, 'moveend').subscribe(() =>
+      this.handleMapMove(false)
+    );
+
+    [s, s2].map((s) => this.subscriptions.push(s));
     this.subscriptions.push(
       fromEvent<LeafletMouseEvent>(this.map as Map, 'mousemove')
         .pipe(debounceTime(100))
@@ -149,11 +166,12 @@ export class MapComponent implements OnInit, OnDestroy {
     this.subscriptions.forEach((s) => s.unsubscribe());
   }
 
-  handleMapMove(): void {
+  handleMapMove(debounce: boolean): void {
     if (this.map != null) {
       const zoom = this.map.getZoom();
       const bounds = this.map.getBounds();
-      this.mapMove.emit({ zoom, bounds });
+      if (debounce) this.mapMoveWithDebounce.emit({ zoom, bounds });
+      else this.mapMove.emit({ zoom, bounds });
     }
   }
 
@@ -184,6 +202,13 @@ export class MapComponent implements OnInit, OnDestroy {
   handleFeatureCollapseToggle() {
     this.feautureCollapse = !this.feautureCollapse;
     if (this.map) this.mapService.invalidateSize(this.map);
+  }
+
+  private revalidateFeatureContent() {
+    this.featureContentRevalidating = true;
+    setTimeout(() => {
+      this.featureContentRevalidating = false;
+    }, 1000);
   }
 
   ngOnDestroy() {

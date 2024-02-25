@@ -1,87 +1,138 @@
-<h4>{{ "Indicators filter" | translate }}</h4>
+<div class="sidebar-toggler">
+  <app-tooltip placement="right">
+    {{ "Close sidebar" | translate }}
+  </app-tooltip>
+  <button class="navigate" (click)="sidePanelService.toggle()">
+    <app-svg-icon name="clear" size="20"></app-svg-icon>
+  </button>
+</div>
+
+<div class="sidebar-settings">
+  <app-menu [placement]="'right'" [dark]="true">
+    <app-settings></app-settings>
+  </app-menu>
+  <button class="navigate">
+    <app-svg-icon name="settings" size="20"></app-svg-icon>
+  </button>
+</div>
+
+<h4>{{ "Filter" | translate }}</h4>
 
 <div class="filters">
   <form [formGroup]="form">
-    <app-fields-group [title]="'Filter' | translate">
-      <div class="field-group">
-        <div class="radio-btns">
-          <app-input-radio
-            [isResettable]="true"
-            [options]="radioOptions"
-            [formControl]="mode"
+    <div class="field-group">
+      <!-- <div class="radio-btns">
+        <app-input-radio
+          [isResettable]="true"
+          [options]="radioOptions"
+          [formControl]="mode"
+        >
+        </app-input-radio>
+      </div> -->
+
+      <ng-container *ngIf="!loading; else skeleton">
+        <app-form-field name="land_type" #land_type>
+          <app-input-select
+            [placeholder]="'All types of land' | translate"
+            formControlName="land_type"
+            [items]="landTypes"
+            [multi]="true"
+            [nameField]="'name_' + currentLang"
+            [required]="land_type.required"
+            [dropdownType]="floating ? 'default' : 'accordion'"
+            [searchable]="false"
+            [floatable]="false"
+          ></app-input-select>
+        </app-form-field>
+
+        <hr style="margin: 0" />
+
+        <app-form-field name="culture" #culture>
+          <app-input-select
+            [placeholder]="'Select a culture' | translate"
+            formControlName="culture"
+            [items]="cultures"
+            [multi]="true"
+            [nameField]="'name_' + currentLang"
+            [required]="culture.required"
+            [dropdownType]="floating ? 'default' : 'accordion'"
+          ></app-input-select>
+        </app-form-field>
+
+        <app-form-field name="year" #year>
+          <app-input
+            type="number"
+            [min]="2010"
+            [max]="2023"
+            [placeholder]="'Select a year' | translate"
+            formControlName="year"
+            [required]="year.required"
           >
-          </app-input-radio>
+          </app-input>
+        </app-form-field>
+
+        <hr style="margin: 0" />
+
+        <app-form-field name="region" #region>
+          <app-input-select
+            [placeholder]="'All regions' | translate"
+            formControlName="region"
+            [items]="regions"
+            [nameField]="'name_' + currentLang"
+            [required]="region.required"
+            [dropdownType]="floating ? 'default' : 'accordion'"
+          ></app-input-select>
+        </app-form-field>
+
+        <app-form-field name="district" #district>
+          <app-input-select
+            [placeholder]="'Select a district' | translate"
+            formControlName="district"
+            [items]="districts"
+            [nameField]="'name_' + currentLang"
+            [required]="district.required"
+            [dropdownType]="floating ? 'default' : 'accordion'"
+          ></app-input-select>
+        </app-form-field>
+
+        <app-form-field name="conton" #conton>
+          <app-input-select
+            *ngIf="mode?.value != 'contours_main_ai'"
+            [placeholder]="'Select a conton' | translate"
+            formControlName="conton"
+            [items]="contons"
+            [nameField]="'name_' + currentLang"
+            [required]="conton.required"
+            [dropdownType]="floating ? 'default' : 'accordion'"
+          ></app-input-select>
+        </app-form-field>
+
+        <div class="floating-bar-actions">
+          <button type="button" class="success" (click)="handleFormSubmit()">
+            <app-svg-icon name="search"></app-svg-icon>
+          </button>
+          <button type="button" (click)="handleFormReset()">
+            <app-svg-icon name="delete"></app-svg-icon>
+          </button>
         </div>
 
-        <ng-container *ngIf="!loading">
-          <app-form-field name="region" #region>
-            <app-input-select
-              [placeholder]="'Select a region' | translate"
-              formControlName="region"
-              [items]="regions"
-              [nameField]="'name_' + currentLang"
-              [required]="region.required"
-            ></app-input-select>
-          </app-form-field>
+        <div class="close-floating-bar" (click)="handleCloseFloatingBar()">
+          <app-svg-icon name="clear"></app-svg-icon>
+        </div>
+      </ng-container>
 
-          <app-form-field name="district" #district>
-            <app-input-select
-              [placeholder]="'Select a district' | translate"
-              formControlName="district"
-              [items]="districts"
-              [nameField]="'name_' + currentLang"
-              [required]="district.required"
-            ></app-input-select>
-          </app-form-field>
-
-          <app-form-field name="conton" #conton>
-            <app-input-select
-              *ngIf="mode?.value != 'agromap_store_ai'"
-              [placeholder]="'Select a conton' | translate"
-              formControlName="conton"
-              [items]="contons"
-              [nameField]="'name_' + currentLang"
-              [required]="conton.required"
-            ></app-input-select>
-          </app-form-field>
-
-          <app-form-field name="land_type" #land_type>
-            <app-input-select
-              [placeholder]="'Select a land type' | translate"
-              formControlName="land_type"
-              [items]="landTypes"
-              [multi]="true"
-              [nameField]="'name_' + currentLang"
-              [required]="land_type.required"
-            ></app-input-select>
-          </app-form-field>
-
-          <app-form-field name="culture" #culture>
-            <app-input-select
-              [placeholder]="'Select a culture' | translate"
-              formControlName="culture"
-              [items]="cultures"
-              [multi]="true"
-              [nameField]="'name_' + currentLang"
-              [required]="culture.required"
-            ></app-input-select>
-          </app-form-field>
-
-          <app-form-field name="year" #year>
-            <app-input
-              type="number"
-              [min]="2010"
-              [max]="2023"
-              [placeholder]="'Select a year' | translate"
-              formControlName="year"
-              [required]="year.required"
-            >
-            </app-input>
-          </app-form-field>
+      <ng-template #skeleton>
+        <ng-container *ngFor="let num of [].constructor(6)">
+          <app-skeleton
+            [width]="'100%'"
+            [height]="'50px'"
+            [className]="'custom-skeleton'"
+            [borderRadius]="'5px'"
+          ></app-skeleton>
         </ng-container>
+      </ng-template>
 
-        <app-loading [loading]="loading" class="dynamic-color"></app-loading>
-
+      <div class="actions">
         <button type="button" class="success" (click)="handleFormSubmit()">
           {{ "Apply" | translate }}
         </button>
@@ -89,7 +140,7 @@
           {{ "Clear" | translate }}
         </button>
       </div>
-    </app-fields-group>
+    </div>
   </form>
 </div>
 

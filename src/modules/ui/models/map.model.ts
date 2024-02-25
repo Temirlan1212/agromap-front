@@ -32,4 +32,6 @@ export interface ISelectedControlLayer {
   name: string;
   opacity: number;
   oldValue?: string;
+  updatedAt?: number;
+  layersName?: string;
 }

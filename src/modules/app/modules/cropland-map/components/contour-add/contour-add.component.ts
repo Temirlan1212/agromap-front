@@ -1,5 +1,4 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { MapService } from '../../../../../ui/services/map.service';
 import { Subscription } from 'rxjs';
 import { MapData } from '../../../../../ui/models/map.model';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -10,7 +9,8 @@ import { ApiService } from '../../../../../api/api.service';
 import { MessagesService } from '../../../../../ui/services/messages.service';
 import { TranslatePipe } from '@ngx-translate/core';
 import { StoreService } from 'src/modules/ui/services/store.service';
-import { FormControl, Validators } from '@angular/forms';
+import { SidePanelService } from 'src/modules/ui/services/side-panel.service';
+import { CroplandMainMapService } from '../../lib/services/map.service';
 
 @Component({
   selector: 'app-contour-add',
@@ -23,18 +23,21 @@ export class ContourAddComponent implements OnInit, OnDestroy {
   layer: Layer | null = null;
   polygon: GeoJSON.Polygon | null = null;
   mapGeo!: GeoJSON;
+  isLoading = false;
 
   constructor(
-    private mapService: MapService,
+    private mapService: CroplandMainMapService,
     private router: Router,
     private api: ApiService,
     private messages: MessagesService,
     private translate: TranslatePipe,
     private store: StoreService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private sidePanelService: SidePanelService
   ) {}
 
   async ngOnInit() {
+    this.sidePanelService.set(false);
     this.handleSetSidePanelState(true);
 
     this.mapSubscription = this.mapService.map.subscribe(
@@ -104,6 +107,14 @@ export class ContourAddComponent implements OnInit, OnDestroy {
           .toGeoJSON();
         this.polygon = geoJson['features'][0]['geometry'];
       }
+
+      this.layer?.on('pm:update', (e: any) => {
+        this.layer = e['layer'];
+        const geoJson: any = this.mapInstance.pm
+          .getGeomanLayers(true)
+          .toGeoJSON();
+        this.polygon = geoJson['features'][0]['geometry'];
+      });
     });
 
     this.mapInstance.on('pm:drawend', (e: LeafletEvent) => {
@@ -137,18 +148,15 @@ export class ContourAddComponent implements OnInit, OnDestroy {
   }
 
   async handleSaveClick(contourForm: ContourFormComponent) {
-    ['district', 'conton', 'code_soato', 'ink'].forEach((controlName) => {
-      const control = contourForm.form.get(controlName) as FormControl;
-      control.setValidators([Validators.required]);
-      control.updateValueAndValidity();
-    });
-
     const formState = contourForm.getState();
     const { region, district, ...rest } = formState.value;
     const contour: Partial<IContour> = {
-      ...rest,
+      ...(Object.fromEntries(
+        Object.entries(rest ?? {}).filter(([_, value]) => value != null)
+      ) as typeof formState.value),
       polygon: this.polygon,
     };
+
     if (!formState.touched) {
       this.messages.warning(this.translate.transform('No changes in form'));
       contourForm.form.markAsUntouched();
@@ -165,8 +173,10 @@ export class ContourAddComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.mapInstance.pm.disableGlobalEditMode();
     try {
+      this.mapInstance.pm.disableGlobalEditMode();
+      this.isLoading = true;
+      this.mapService.loading.next(this.isLoading);
       await this.api.contour.create(contour);
       this.messages.success(
         this.translate.transform('Polygon created successfully')
@@ -174,6 +184,7 @@ export class ContourAddComponent implements OnInit, OnDestroy {
       this.router.navigate(['../'], { relativeTo: this.route });
     } catch (e: any) {
       const formErrLength = Object.keys(e.error).length;
+      this.mapInstance.pm.enableGlobalEditMode();
       if (!e.error?.message && formErrLength > 0) {
         let flattenedObjOfErrors: any = {};
         for (let key in e.error) {
@@ -182,11 +193,19 @@ export class ContourAddComponent implements OnInit, OnDestroy {
           }
         }
 
-        this.api.form.setError(flattenedObjOfErrors, contourForm.form);
+        if (flattenedObjOfErrors.hasOwnProperty('polygon')) {
+          const message = flattenedObjOfErrors['polygon']?.error;
+          this.messages.error(message);
+        } else {
+          this.api.form.setError(flattenedObjOfErrors, contourForm.form);
+        }
         return;
       }
 
       this.messages.error(e.error?.message ?? e.message);
+    } finally {
+      this.isLoading = false;
+      this.mapService.loading.next(this.isLoading);
     }
   }
 

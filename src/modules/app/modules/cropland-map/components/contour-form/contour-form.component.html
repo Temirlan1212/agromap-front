@@ -1,56 +1,5 @@
 <form class="content" [formGroup]="form">
   <div class="field-group" *ngIf="!loading">
-    <app-form-field name="region" #region>
-      <app-input-select
-        [items]="regionList"
-        [placeholder]="'Region' | translate"
-        [nameField]="'name_' + currentLang"
-        formControlName="region"
-        [required]="region.required"
-      >
-      </app-input-select>
-
-      <span
-        class="field-error"
-        *ngIf="form.get('region')?.getError('error') != null"
-        [textContent]="form.get('region')?.getError('error') | translate"
-      ></span>
-    </app-form-field>
-
-    <app-form-field name="district" #district>
-      <app-input-select
-        [items]="districtList"
-        [placeholder]="'District' | translate"
-        formControlName="district"
-        [nameField]="'name_' + currentLang"
-        [required]="district.required"
-      >
-      </app-input-select>
-
-      <span
-        class="field-error"
-        *ngIf="form.get('district')?.getError('error') != null"
-        [textContent]="form.get('district')?.getError('error') | translate"
-      ></span>
-    </app-form-field>
-
-    <app-form-field name="conton" #conton>
-      <app-input-select
-        [placeholder]="'Conton' | translate"
-        [items]="contonList"
-        [nameField]="'name_' + currentLang"
-        formControlName="conton"
-        [required]="district.required"
-      >
-      </app-input-select>
-
-      <span
-        class="field-error"
-        *ngIf="form.get('conton')?.getError('error') != null"
-        [textContent]="form.get('conton')?.getError('error') | translate"
-      ></span>
-    </app-form-field>
-
     <app-form-field name="type" #type>
       <app-input-select
         [items]="landTypeList"
@@ -60,6 +9,24 @@
         [required]="type.required"
       >
       </app-input-select>
+    </app-form-field>
+
+    <app-form-field name="year" #year>
+      <app-input
+        type="number"
+        [min]="2010"
+        [max]="2023"
+        [placeholder]="'Select a year' | translate"
+        formControlName="year"
+        [required]="year.required"
+      >
+      </app-input>
+
+      <span
+        class="field-error"
+        *ngIf="form.get('year')?.getError('error') != null"
+        [textContent]="form.get('year')?.getError('error') | translate"
+      ></span>
     </app-form-field>
 
     <app-form-field name="culture" #culture>
@@ -83,28 +50,10 @@
       </app-input>
     </app-form-field>
 
-    <app-form-field name="year" #year>
-      <app-input
-        type="number"
-        [min]="2010"
-        [max]="2023"
-        [placeholder]="'Select a year' | translate"
-        formControlName="year"
-        [required]="year.required"
-      >
-      </app-input>
-
-      <span
-        class="field-error"
-        *ngIf="form.get('year')?.getError('error') != null"
-        [textContent]="form.get('year')?.getError('error') | translate"
-      ></span>
-    </app-form-field>
-
     <app-form-field
       name="code_soato"
       #code_soato
-      *ngIf="mode != 'agromap_store_ai'"
+      *ngIf="mode != 'contours_main_ai'"
     >
       <app-input
         type="text"
@@ -121,7 +70,7 @@
       ></span>
     </app-form-field>
 
-    <app-form-field name="ink" #ink *ngIf="mode != 'agromap_store_ai'">
+    <app-form-field name="ink" #ink *ngIf="mode != 'contours_main_ai'">
       <app-input
         type="text"
         [placeholder]="'INK' | translate"
@@ -134,6 +83,22 @@
         class="field-error"
         *ngIf="form.get('ink')?.getError('error') != null"
         [textContent]="form.get('ink')?.getError('error') | translate"
+      ></span>
+    </app-form-field>
+
+    <app-form-field name="eni" #eni *ngIf="mode != 'contours_main_ai'">
+      <app-input
+        type="text"
+        [placeholder]="'ENI-' + ('Code' | translate).toLowerCase()"
+        formControlName="eni"
+        [required]="eni.required"
+      >
+      </app-input>
+
+      <span
+        class="field-error"
+        *ngIf="form.get('eni')?.getError('error') != null"
+        [textContent]="form.get('eni')?.getError('error') | translate"
       ></span>
     </app-form-field>
 

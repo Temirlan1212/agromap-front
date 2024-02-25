@@ -6,6 +6,11 @@ import { NotificationComponent } from '../components/notification/notification.c
 })
 export class MessagesService {
   private viewContainerRef!: ViewContainerRef;
+  messages = {
+    abortedRequest: 'The user aborted a request.',
+    400: '',
+    500: '',
+  };
 
   constructor() {
     Object.defineProperty(window, 'agroMessages', { value: this });

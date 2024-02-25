@@ -62,7 +62,7 @@
           [baseLayers]="baseLayers"
           [wmsLayers]="wmsLayers"
           [wmsSelectedStatusLayers]="wmsSelectedStatusLayers"
-          [storageName]="'PasturesMapControlLayersSwitchComponent'"
+          [storageName]="storageName"
         ></app-map-control-layers-switch>
         <app-map-control-locate
           *ngIf="mapData && !layerFeature"
@@ -111,7 +111,7 @@
 
         <app-statistics
           [filterFormValues]="filterFormValues"
-          *ngIf="landTypes.length > 0"
+          *ngIf="landTypes.length > 0 && !layerFeature"
           [hidden]="activeContour"
           [landTypes]="[landTypes[0]]"
         ></app-statistics>
@@ -190,7 +190,7 @@
       actions
       type="button"
       class="transparent"
-      (click)="handleEditClick()"
+      (click)="[$event.stopPropagation(), handleEditClick()]"
     >
       <app-svg-icon name="edit" size="18"></app-svg-icon>
     </button>
@@ -200,7 +200,7 @@
       actions
       type="button"
       class="transparent"
-      (click)="deleteDialog.show()"
+      (click)="[$event.stopPropagation(), deleteDialog.show()]"
     >
       <app-svg-icon name="delete" size="18"></app-svg-icon>
     </button>

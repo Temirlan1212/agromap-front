@@ -10,8 +10,8 @@
   z-index: 10;
   gap: $sideNavMenuGap;
   width: $sideNavMenuWidth;
-  background-color: $sideNavMenuBgColor;
   transition: width $sideNavTransitionDelay;
+  padding: 5px 0 0 0;
 
   &.open {
     width: $sideNavMenuOpenWidth;
@@ -28,11 +28,23 @@
     nav a .title {
       display: inline-block;
     }
+    nav div .title {
+      font-weight: 600;
+      display: inline-block;
+    }
+
+    a,
+    .switcher {
+      justify-content: flex-start !important;
+    }
   }
 
   .toggler {
     width: 100%;
     border-radius: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
     app-svg-icon {
       display: inline-block;
@@ -41,16 +53,28 @@
   }
 
   nav {
-    a {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+
+    a,
+    .switcher {
       display: flex;
       align-items: center;
+      justify-content: center;
       padding: $sideNavMenuItemPadding;
       text-decoration: none;
+      user-select: none;
+      border-radius: 10px;
+      margin: 0 8px;
       cursor: pointer;
+      color: $iconColor;
+      font-size: 14px;
 
       &:hover,
       &.active {
         background-color: $sideNavMenuItemHoverBgColor;
+        color: $darkColor;
       }
 
       .image {
@@ -59,14 +83,21 @@
           $sideNavMenuItemIconMargin;
       }
 
-      .icon {
-        margin-left: $sideNavMenuItemIconMargin;
+      &.homepage {
+        &:hover {
+          background-color: transparent;
+          cursor: initial;
+        }
       }
 
       .title {
         display: none;
         margin-left: $sideNavMenuItemGap;
       }
+    }
+
+    .divider {
+      border-bottom: 1px dashed $grayColor;
     }
   }
 }
@@ -93,9 +124,10 @@
   width: calc(100% - $sideNavMenuWidth);
   transition: all $sideNavTransitionDelay;
   overflow: auto;
+  box-shadow: -2px 0 20px $sideNavMenuBgColor;
 }
 
-.language-switcher {
+.switcher {
   position: relative;
 
   .title {
@@ -105,26 +137,11 @@
 
 .languages {
   min-width: 200px;
-  position: absolute;
-  bottom: 0;
-  right: -200px;
   display: flex;
   flex-direction: column;
   list-style: none;
   background-color: $lightColor;
-  box-shadow: 0px 3px 6px -4px rgba(0, 0, 0, 0.12),
-    0px 6px 16px rgba(0, 0, 0, 0.08), 0px 9px 28px 8px rgba(0, 0, 0, 0.05);
-  visibility: hidden;
-  opacity: 0;
-  transform: translateX(100px);
-  transition: all 0.2s ease;
   border-radius: 4px;
-
-  &.languages-opened {
-    visibility: visible;
-    transform: translateX(0);
-    opacity: 1;
-  }
 
   span {
     padding: 15px;
@@ -148,6 +165,15 @@
   }
 }
 
+@media only screen and (max-width: 992px) {
+  .content {
+    &.isSidePanelOpened {
+      box-shadow: none;
+      border-radius: 0px;
+    }
+  }
+}
+
 @media only screen and (max-width: 576px) {
   .menu {
     display: none;
@@ -166,14 +192,14 @@
     height: $mobileBottomNavHeight;
     overflow-x: auto;
     overflow-y: hidden;
-    padding: 0 25px;
 
     nav {
       display: flex;
       width: fit-content;
       justify-content: space-between;
 
-      a {
+      a,
+      .switcher {
         text-decoration: none;
         font-size: 11px;
         display: flex;
@@ -195,14 +221,18 @@
       font-size: 50px;
       height: inherit;
       opacity: 1;
-      width: 50px;
       background-color: #ececec;
       display: flex;
       justify-content: center;
       align-items: center;
-      position: fixed;
       z-index: 500;
       border-radius: 0px;
+      position: sticky;
+
+      button {
+        padding: 10px;
+        background-color: rgba($lightColor, 0.5);
+      }
 
       &:hover {
         background-color: $sideNavMenuItemHoverBgColor;
@@ -219,18 +249,13 @@
 
     .btn-left {
       left: 0;
+      padding: 0 0 0 5px;
     }
 
     .btn-right {
       right: 0;
+      padding: 0 5px 0 0;
     }
-  }
-
-  .languages-mobile {
-    right: 10px;
-    position: fixed;
-    bottom: $mobileBottomNavHeight + $mobileNavMarginBottom;
-    z-index: 500;
   }
 
   .content {
@@ -241,8 +266,7 @@
 }
 
 @media only screen and (min-width: 576px) {
-  .mobile-menu,
-  .languages-mobile {
+  .mobile-menu {
     display: none !important;
   }
 }

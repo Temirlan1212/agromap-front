@@ -8,9 +8,10 @@
     [items]="list"
     [fields]="[
       { title: 'Name' | translate, field: 'text_' + currentLang },
-      { title: 'Date' | translate, field: 'date' }
+      { title: 'Date' | translate, field: 'date' },
+      { title: 'Status' | translate, field: 'status_' + currentLang }
     ]"
-    *ngIf="list?.length > 0; else noItems"
+    *ngIf="list.length > 0; else noItems"
     (actionClick)="handleTableActionClick($event)"
   ></app-table>
   <ng-template #noItems>

@@ -1,0 +1,66 @@
+@import "constants";
+.no-data {
+  color: $lightColor;
+  text-align: center;
+}
+
+.chart {
+  background-color: $lightColor;
+  margin: 0 10px 10px 10px;
+  border-radius: 10px;
+}
+
+.productuvity {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  .title {
+    color: $lightColor;
+    margin: 0 10px 10px 10px;
+  }
+  .view-type {
+    display: flex;
+    gap: 10px;
+    background-color: $lightColor;
+    width: fit-content;
+    padding: 5px;
+    margin: 5px 10px;
+    border-radius: 5px;
+
+    div {
+      color: $darkColor;
+      cursor: pointer;
+      margin: 0;
+      &:hover,
+      &.active {
+        color: $successColor;
+      }
+    }
+  }
+}
+
+.view-type {
+  display: flex;
+  gap: 10px;
+  padding: 0 10px;
+  position: sticky;
+  top: 5px;
+  z-index: 100;
+  box-shadow: 0px 5px 10px 2px rgba($darkColor, 0.2);
+
+  .icon {
+    color: $lightColor;
+    cursor: pointer;
+
+    &:hover {
+      color: $successColor;
+    }
+    &.active {
+      color: $successColor;
+    }
+  }
+}
+
+.light-color {
+  color: $lightColor;
+}

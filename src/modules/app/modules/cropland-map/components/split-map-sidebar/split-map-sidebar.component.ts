@@ -14,6 +14,13 @@ import { Subscription } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 import { MapService } from '../../../../../ui/services/map.service';
 import { MessagesService } from 'src/modules/ui/services/messages.service';
+import { SidePanelService } from 'src/modules/ui/services/side-panel.service';
+import { initLayerProperties, storageNames } from '../../lib/_constants';
+import { CroplandMainMapService } from '../../lib/services/map.service';
+import { CroplandMainLayerService } from '../../lib/services/layer.service';
+import { LayerProperties } from '../../lib/_models';
+import { ApiController } from '../../lib/controllers/api-controller';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-split-map-sidebar',
@@ -22,6 +29,9 @@ import { MessagesService } from 'src/modules/ui/services/messages.service';
   providers: [FormatDatePipe],
 })
 export class SplitMapSidebarComponent implements OnDestroy, OnInit {
+  properties: LayerProperties = initLayerProperties;
+  loading = false;
+
   satelliteDateData: IVegSatelliteDate[] = [];
 
   vegIndexesOptions: IVegIndexOption[] = [];
@@ -35,10 +45,8 @@ export class SplitMapSidebarComponent implements OnDestroy, OnInit {
   contourId!: number;
   bounds!: L.LatLngBounds;
 
-  layerFeature: Feature | null = null;
+  // layerFeature: Feature | null = null;
   maps: Record<string, L.Map | null> = {};
-
-  loadingSatelliteDates: boolean = false;
 
   imageOverlayIncstance: Record<string, L.ImageOverlay> = {};
   imageOverlay: Record<string, string> = {};
@@ -50,15 +58,26 @@ export class SplitMapSidebarComponent implements OnDestroy, OnInit {
 
   subscriptions: Subscription[] = [];
 
+  subs: Subscription[] = [];
+
   constructor(
-    private mapService: MapService,
+    private mapService: CroplandMainMapService,
     private store: StoreService,
     private api: ApiService,
     private formatDate: FormatDatePipe,
     private translate: TranslateService,
     private cd: ChangeDetectorRef,
-    private messages: MessagesService
-  ) {}
+    private messages: MessagesService,
+    private sidePanelService: SidePanelService,
+    private layerService: CroplandMainLayerService,
+    private apiConroller: ApiController,
+    private location: Location
+  ) {
+    const sub1 = this.layerService.selectProperties.subscribe(
+      (v) => (this.properties = v)
+    );
+    this.subs.push(...[sub1]);
+  }
 
   handleSplitMapClick(splitMapQuantity: number) {
     this.splitMapQuantity = splitMapQuantity;
@@ -115,7 +134,6 @@ export class SplitMapSidebarComponent implements OnDestroy, OnInit {
     contoruId: number,
     vegIndexId: number = 1
   ): Promise<void> {
-    this.loadingSatelliteDates = true;
     try {
       const query = {
         contourId: contoruId,
@@ -131,7 +149,6 @@ export class SplitMapSidebarComponent implements OnDestroy, OnInit {
     } catch (e: any) {
       this.messages.error(e.error?.message ?? e.message);
     }
-    this.loadingSatelliteDates = false;
   }
 
   private async getVegIndexList() {
@@ -155,29 +172,23 @@ export class SplitMapSidebarComponent implements OnDestroy, OnInit {
     });
   }
 
+  back() {
+    this.location.back();
+  }
+
   async ngOnInit(): Promise<void> {
-    this.layerFeature = this.store.getItem<Feature>('selectedLayerFeature');
-    if (this.layerFeature != null) {
-      this.contourId = this.layerFeature.properties?.['id'];
-      this.bounds = L.geoJSON(this.layerFeature).getBounds();
-
-      await this.getVegIndexList();
-      await this.getVegSatelliteDates(this.contourId, 1);
-      this.buildSatelliteDatesOptions(this.satelliteDateData, this.currLang);
-    }
-    const MapControlLayersSwitchComponent = this.store.getItem(
-      'MapControlLayersSwitchComponent'
-    );
-
-    const name = MapControlLayersSwitchComponent.filterControlLayerSwitch.name;
-
-    if (name) {
-      if (name === 'agromap_store_ai') {
-        this.isWmsAiActive = true;
-      } else {
-        this.isWmsAiActive = false;
-      }
-    }
+    this.loading = true;
+    this.sidePanelService.set(false);
+    this.contourId = this.properties.id;
+    if (!this.contourId) return this.back();
+    const data = await this.apiConroller.getContour({ id: this.contourId });
+    const polygon = data?.polygon;
+    this.bounds = L.geoJSON(polygon).getBounds();
+    await this.getVegIndexList();
+    await this.getVegSatelliteDates(this.contourId, 1);
+    this.loading = false;
+    this.buildSatelliteDatesOptions(this.satelliteDateData, this.currLang);
+    this.selectedVegIndex = this.vegIndexesOptions?.[0];
 
     this.subscriptions = [
       this.mapService.maps.subscribe((maps) => {
@@ -187,7 +198,7 @@ export class SplitMapSidebarComponent implements OnDestroy, OnInit {
 
         for (const [key, map] of Object.entries(this.maps)) {
           if (map) {
-            L.geoJSON(this.layerFeature as GeoJSON, {
+            L.geoJSON(polygon as GeoJSON, {
               style: { fillOpacity: 0 },
             }).addTo(map);
           }

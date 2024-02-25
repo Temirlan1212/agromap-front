@@ -21,7 +21,7 @@
   position: absolute;
   top: 10px;
   margin: 0 10px;
-  left: 5px;
+  left: 15px;
   right: 5px;
   pointer-events: none;
 
@@ -64,6 +64,26 @@
       z-index: 401;
       pointer-events: initial;
       display: inherit;
+    }
+  }
+}
+
+.topCenterPanel {
+  position: absolute;
+  top: 10px;
+  left: 0px;
+  right: 5px;
+  bottom: 10px;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+
+  ::ng-deep {
+    .map-control {
+      position: relative;
+      display: inline-block;
+      z-index: 404;
+      pointer-events: initial;
     }
   }
 }

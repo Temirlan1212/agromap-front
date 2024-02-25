@@ -55,7 +55,7 @@
         *ngFor="let quantity of [].constructor(splitMapQuantity); let i = index"
       >
         <p>
-          {{ i + 1 }}. Индекс вегетации
+          {{ i + 1 }}. {{ "Vegetation index" | translate }}
           {{ selectedVegIndex["name_" + currLang] }}
         </p>
 

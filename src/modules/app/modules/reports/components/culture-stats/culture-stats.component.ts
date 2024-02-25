@@ -35,14 +35,14 @@ export class CultureStatsComponent implements AfterViewInit, OnDestroy {
   mode: FormControl = new FormControl<string | null>(null);
 
   aiBaseRadioOptions: any = [
-    { name: 'RSE', value: 'agromap_store_ai' },
-    { name: 'Base', value: 'agromap_store' },
+    { name: 'RSE', value: 'contours_main_ai' },
+    { name: 'Base', value: 'contours_main' },
   ];
 
   columns = [
     {
       title: this.translate.transform('Name'),
-      field: 'culture_name_' + this.currLang,
+      field: 'predicted_culture_name_' + this.currLang,
     },
     { title: this.translate.transform('Area'), field: 'area_ha' },
     {
@@ -91,7 +91,7 @@ export class CultureStatsComponent implements AfterViewInit, OnDestroy {
       return;
     }
 
-    if (this.mode.value === 'agromap_store_ai') value.ai = true;
+    if (this.mode.value === 'contours_main_ai') value.ai = true;
 
     this.loading = true;
     try {
@@ -153,7 +153,7 @@ export class CultureStatsComponent implements AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
-    this.mode.setValue('agromap_store_ai');
+    this.mode.setValue('contours_main_ai');
     this.handleButtonClick();
     this.cd.detectChanges();
   }

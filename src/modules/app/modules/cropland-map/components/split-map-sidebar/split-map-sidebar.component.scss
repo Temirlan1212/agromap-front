@@ -23,13 +23,12 @@ $transitionDelay: 0.2s;
 .back {
   display: flex;
   align-items: center;
+  gap: $indent;
   padding: $indent;
 
-  button {
-    padding: 0 10px 0 0;
-  }
-
   app-svg-icon {
+    width: 20px !important;
+    height: 20px !important;
     transform: rotate(90deg);
   }
 }

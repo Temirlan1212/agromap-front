@@ -5,6 +5,12 @@
   overflow: auto;
   min-height: auto;
   margin: 10px 0;
+  border-radius: $fieldBorderRadius;
+  border: 1px solid $tableBodyRowBorderColor;
+
+  &:has(.dark) {
+    border: 1px solid $darkColor;
+  }
 
   &::-webkit-scrollbar {
     width: 3px;
@@ -59,9 +65,8 @@ table {
   }
 
   &.border {
-    th,
     td {
-      border: 1px solid $tableBodyRowBorderColor;
+      border-bottom: 1px solid $tableBodyRowBorderColor;
     }
   }
 
@@ -72,7 +77,7 @@ table {
     color: $tableHeaderTextColor;
 
     tr {
-      border-bottom: 3px solid $tableHeaderBorderColor;
+      border-bottom: 1px solid $tableHeaderBorderColor;
     }
   }
 
@@ -83,6 +88,12 @@ table {
     tr {
       &:hover {
         background-color: $tableBodyRowHoverBackgroundColor;
+      }
+
+      &:last-child {
+        td {
+          border-bottom: none;
+        }
       }
     }
   }
@@ -112,6 +123,17 @@ table {
 }
 
 @media (max-width: 992px) {
+  :host {
+    border: none;
+    border-radius: 0px;
+  }
+  table {
+    &.border {
+      td {
+        border: 1px solid $tableBodyRowBorderColor;
+      }
+    }
+  }
   table thead {
     display: none;
   }

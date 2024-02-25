@@ -12,6 +12,7 @@ import { Subscription } from 'rxjs';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { ILandType } from 'src/modules/api/models/land-type.model';
 import { ICulture } from 'src/modules/api/models/culture.model';
+import { MapService } from 'src/modules/ui/services/map.service';
 
 @Component({
   selector: 'app-report-form',
@@ -26,7 +27,12 @@ export class LandTypeFormComponent implements OnInit, OnDestroy {
     region: new FormControl<number | null>(null),
     district: new FormControl<string | null>({ value: null, disabled: true }),
     conton: new FormControl<string | null>({ value: null, disabled: true }),
-    year: new FormControl<string | null>('2022', { nonNullable: true }),
+    year: new FormControl<number | null>(
+      this.mapService.filterDefaultValues.year,
+      {
+        nonNullable: true,
+      }
+    ),
     land_type: new FormControl<number | null>(null),
     culture: new FormControl<number | null>(null),
   });
@@ -62,7 +68,8 @@ export class LandTypeFormComponent implements OnInit, OnDestroy {
     private api: ApiService,
     private messages: MessagesService,
     private translate: TranslatePipe,
-    private translateSvc: TranslateService
+    private translateSvc: TranslateService,
+    private mapService: MapService
   ) {}
 
   async getRegions(): Promise<void> {

@@ -1,61 +1,185 @@
 <app-map-control-statistics
-  [collapseOnChanges]="pastureStatsProdTableItems || cultureStatsProdTableItems"
   [title]="'Roll up' | translate"
+  (onToggle)="handleMapControlStatsToggle($event)"
+  [isCollapsed]="mapControlStatsToggleState"
 >
-  <app-content-tabs
-    (onSelected)="handleSelectedTab($event)"
-    *ngIf="landTypes.length > 0"
-  >
-    <ng-container *ngFor="let ltype of landTypes">
-      <app-tab
-        [title]="getLandTypeItem(ltype)"
-        *ngIf="ltype.id === 2"
-        [id]="ltype.id"
-      >
-        <app-table
-          *ngFor="let item of pastureStatsProdTableItems"
-          [items]="item"
-          [border]="false"
-          mode="dark"
-          [fields]="[
-            {
-              title: item[0]['areaType'].toString() | translate,
-              field: 'areaName_' + currentLang
-            },
-            {
-              title: 'Productive' | translate | truncate : 10,
-              field: 'productive'
-            },
-            {
-              title: 'Unproductive' | translate | truncate : 10,
-              field: 'unproductive'
-            }
-          ]"
-        ></app-table>
-      </app-tab>
+  <ng-container header>
+    <div class="view-type">
+      <app-svg-icon
+        name="table-list"
+        class="icon"
+        size="18"
+        [class.active]="viewType === 'table'"
+        (click)="onSelectViewType('table')"
+      ></app-svg-icon>
+      <app-svg-icon
+        name="pie-chart"
+        class="icon"
+        size="18"
+        [class.active]="viewType === 'chart'"
+        (click)="onSelectViewType('chart')"
+      ></app-svg-icon>
+    </div>
+  </ng-container>
 
-      <app-tab
-        [title]="getLandTypeItem(ltype)"
-        [id]="ltype.id"
-        *ngIf="ltype.id === 1"
-      >
-        <app-table
-          [items]="cultureStatsProdTableItems"
-          mode="dark"
-          [border]="false"
-          [fields]="[
-            {
-              title: 'Name' | translate,
-              field: 'culture_name_' + currentLang
-            },
-            { title: 'Area' | translate, field: 'area_ha' },
-            {
-              title: 'Territory' | translate,
-              field: 'territory_' + currentLang
-            }
-          ]"
-        ></app-table>
-      </app-tab>
-    </ng-container>
-  </app-content-tabs>
+  <ng-container *ngIf="viewType === 'chart'">
+    <app-content-tabs
+      (onSelected)="handleSelectedTab($event)"
+      *ngIf="landTypes.length > 0 && activeTabsId != null"
+      [updatesOn]="activeTabsId"
+    >
+      <ng-container *ngFor="let ltype of landTypes">
+        <app-tab
+          [title]="getLandTypeItem(ltype)"
+          *ngIf="activeTabsId.split(',').includes(ltype?.id?.toString() ?? '')"
+          [id]="ltype.id"
+        >
+          <div class="productuvity">
+            <div *ngIf="getItem(ltype.id)?.value?.length > 0 && !loading">
+              <div
+                class="view-type"
+                *ngIf="getItem(ltype.id).nested && ltype.id === 2"
+              >
+                <div
+                  class="title"
+                  [class.active]="pastureViewType === 'productive'"
+                  [textContent]="'Productive' | translate"
+                  (click)="pastureViewType = 'productive'"
+                ></div>
+                <div
+                  class="title"
+                  [class.active]="pastureViewType === 'unproductive'"
+                  [textContent]="'Unproductive' | translate"
+                  (click)="pastureViewType = 'unproductive'"
+                ></div>
+              </div>
+              <ng-container *ngIf="getItem(ltype.id).nested && ltype.id === 2">
+                <ng-container *ngIf="pastureViewType === 'productive'">
+                  <div class="chart">
+                    <app-simple-pie-chart
+                      [items]="getItem(ltype.id).value?.[1]"
+                      seriesFieldName="productive"
+                      [dataLabelUnitOfMeasure]="'ha' | translate"
+                      labelsFieldName="areaName"
+                    ></app-simple-pie-chart>
+                  </div>
+                </ng-container>
+                <ng-container *ngIf="pastureViewType === 'unproductive'">
+                  <div class="chart">
+                    <app-simple-pie-chart
+                      [items]="getItem(ltype.id).value?.[1]"
+                      seriesFieldName="unproductive"
+                      labelsFieldName="areaName"
+                      [dataLabelUnitOfMeasure]="'ha' | translate"
+                    ></app-simple-pie-chart>
+                  </div>
+                </ng-container>
+              </ng-container>
+
+              <ng-container *ngIf="!getItem(ltype.id).nested">
+                <div class="chart">
+                  <app-simple-pie-chart
+                    [items]="getItem(ltype.id).value"
+                    seriesFieldName="area_ha"
+                    labelsFieldName="predicted_culture_name"
+                    colorsFieldName="color"
+                    [dataLabelUnitOfMeasure]="'ha' | translate"
+                  ></app-simple-pie-chart>
+                </div>
+              </ng-container>
+            </div>
+          </div>
+
+          <div
+            class="no-data"
+            *ngIf="getItem(ltype.id)?.value?.length < 1 && !loading"
+            [textContent]="'No data' | translate"
+          ></div>
+
+          <div class="light-color">
+            <app-loading
+              [loading]="loading"
+              class="dynamic-color spinner"
+            ></app-loading>
+          </div>
+        </app-tab>
+      </ng-container>
+    </app-content-tabs>
+  </ng-container>
+
+  <ng-container *ngIf="viewType === 'table'">
+    <app-content-tabs
+      (onSelected)="handleSelectedTab($event)"
+      *ngIf="landTypes.length > 0 && activeTabsId != null"
+      [updatesOn]="activeTabsId"
+    >
+      <ng-container *ngFor="let ltype of landTypes">
+        <app-tab
+          [title]="getLandTypeItem(ltype)"
+          [id]="ltype.id"
+          *ngIf="activeTabsId.split(',').includes(ltype?.id?.toString() ?? '')"
+        >
+          <div *ngIf="getItem(ltype.id)?.value?.length > 0 && !loading">
+            <ng-container *ngIf="getItem(ltype.id).nested">
+              <app-table
+                *ngFor="let item of getItem(ltype.id).value"
+                [items]="item"
+                [border]="false"
+                mode="dark"
+                [fields]="[
+                  {
+                    title: item[0]['areaType'].toString() | translate,
+                    field: 'areaName_' + currentLang
+                  },
+                  {
+                    title: 'Productive' | translate | truncate : 10,
+                    field: 'productive_' + currentLang
+                  },
+                  {
+                    title: 'Unproductive' | translate | truncate : 10,
+                    field: 'unproductive_' + currentLang
+                  }
+                ]"
+              ></app-table>
+            </ng-container>
+
+            <ng-container *ngIf="!getItem(ltype.id).nested">
+              <app-table
+                [items]="getItem(ltype.id).value"
+                mode="dark"
+                [border]="false"
+                [fields]="[
+                  {
+                    title: 'Name' | translate,
+                    field: 'predicted_culture_name_' + currentLang
+                  },
+                  {
+                    title: 'Area' | translate,
+                    field: 'area_ha_' + currentLang
+                  },
+                  {
+                    title: 'Territory' | translate,
+                    field: 'territory_' + currentLang
+                  }
+                ]"
+              ></app-table>
+            </ng-container>
+          </div>
+
+          <div
+            class="no-data"
+            *ngIf="getItem(ltype.id)?.value?.length < 1 && !loading"
+            [textContent]="'No data' | translate"
+          ></div>
+
+          <div class="light-color">
+            <app-loading
+              [loading]="loading"
+              class="dynamic-color spinner"
+            ></app-loading>
+          </div>
+        </app-tab>
+      </ng-container>
+    </app-content-tabs>
+  </ng-container>
 </app-map-control-statistics>

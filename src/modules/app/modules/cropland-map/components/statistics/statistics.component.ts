@@ -19,6 +19,8 @@ import { TabComponent } from 'src/modules/ui/components/content-tabs/tab/tab.com
 import { ITableItem } from 'src/modules/ui/models/table.model';
 import { MessagesService } from 'src/modules/ui/services/messages.service';
 import { Subscription } from 'rxjs';
+import { StoreService } from 'src/modules/ui/services/store.service';
+import { CroplandMainMapService } from '../../lib/services/map.service';
 
 @Component({
   selector: 'app-statistics',
@@ -36,13 +38,27 @@ export class StatisticsComponent
   currentLang: string = this.translateSvc.currentLang;
   activeTab!: TabComponent;
   subscriptions: Subscription[] = [];
+  mapControlStatsToggleState: boolean = true;
+  activeTabsId: null | string = null;
+  loading = false;
+  viewType: 'chart' | 'table' = 'table';
+  pastureViewType: 'productive' | 'unproductive' = 'productive';
+  items: Record<
+    string,
+    {
+      value: ITableItem[] | ITableItem[][];
+      nested: boolean;
+    }
+  > = {};
 
   constructor(
     private api: ApiService,
     private messages: MessagesService,
     private translate: TranslatePipe,
     private translateSvc: TranslateService,
-    private cd: ChangeDetectorRef
+    private cd: ChangeDetectorRef,
+    private store: StoreService,
+    private mapService: CroplandMainMapService
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -64,11 +80,10 @@ export class StatisticsComponent
       }),
     ];
 
-    this.pastureStatsProdTableItems = [];
-    this.cultureStatsProdTableItems = [];
-    let params = { year: 2022, land_type: String(this.activeTab.id) };
-    this.getPastureStatisticsProductivity(params);
-    this.getCultureStatisticsProductivity(params);
+    const croplandMapStats = this.store.getItem('CroplandMapStats');
+    if (croplandMapStats != null) {
+      this.mapControlStatsToggleState = croplandMapStats?.isCollapsed;
+    }
 
     this.cd.detectChanges();
   }
@@ -77,11 +92,24 @@ export class StatisticsComponent
     this.subscriptions.map((s) => s.unsubscribe());
   }
 
+  handleMapControlStatsToggle(toggleState: boolean) {
+    this.mapControlStatsToggleState = toggleState;
+    this.store.setItem('CroplandMapStats', {
+      isCollapsed: this.mapControlStatsToggleState,
+    });
+  }
+
   handleSelectedTab(selectedTab: TabComponent) {
     this.activeTab = selectedTab;
+
     if (this.filterFormValues != null) {
       this.handleFilterFormSubmit(this.filterFormValues);
     }
+  }
+
+  public onSelectViewType(type: 'chart' | 'table') {
+    this.viewType = type;
+    this.cd.detectChanges();
   }
 
   public getLandTypeItem(item: any): string {
@@ -94,93 +122,153 @@ export class StatisticsComponent
     this.cultureStatsProdTableItems = [];
 
     if (this.activeTab?.id) {
-      this.filterFormValues = { year: 2022 };
+      this.filterFormValues = {
+        year: this.mapService.filterDefaultValues.year,
+      };
       this.filterFormValues['land_type'] = String(this.activeTab.id);
       this.getPastureStatisticsProductivity(this.filterFormValues);
       this.getCultureStatisticsProductivity(this.filterFormValues);
       this.filterFormValues = null;
+      this.activeTabsId = null;
     }
   }
 
-  private handleFilterFormSubmit(
+  public getItem(id: number): any {
+    return this.items?.[String(id)] || { value: [], nested: false };
+  }
+
+  private handleItemsUpdate(
+    id: number | string,
+    value: ITableItem[] | ITableItem[][]
+  ) {
+    const isNestedValue = Array.isArray(value?.[0]);
+
+    this.items[id] = {
+      ...(this.items?.[id] ?? {}),
+      value: value,
+      nested: isNestedValue,
+    };
+  }
+
+  private async handleFilterFormSubmit(
     formValue: IContourStatisticsProductivityQuery | ICulutreStatisticsQuery
   ) {
-    this.pastureStatsProdTableItems = [];
-    this.cultureStatsProdTableItems = [];
+    const fetchList = {
+      1: async (params: IContourStatisticsProductivityQuery) =>
+        await this.getCultureStatisticsProductivity(params),
+      2: async (params: IContourStatisticsProductivityQuery) =>
+        await this.getPastureStatisticsProductivity(params),
+    };
 
-    if (String(formValue?.['land_type']).includes('1')) {
-      this.getCultureStatisticsProductivity({ ...formValue, land_type: '1' });
+    for (const type of this.landTypes || []) {
+      const id = String(type.id);
+      const method = (fetchList as any)?.[id];
+
+      if (String(formValue?.['land_type']).includes(id)) {
+        if (!method) {
+          this.handleItemsUpdate(id, []);
+        } else {
+          const data = await method({
+            ...formValue,
+            land_type: id,
+          });
+          this.handleItemsUpdate(id, Array.isArray(data) ? data : []);
+        }
+      } else {
+        delete this.items?.[id];
+      }
     }
 
-    if (String(formValue?.['land_type']).includes('2')) {
-      this.getPastureStatisticsProductivity({ ...formValue, land_type: '2' });
-    }
+    this.activeTabsId = this.filterFormValues?.land_type;
+    this.cd.detectChanges();
   }
 
   private async getPastureStatisticsProductivity(
     query: IContourStatisticsProductivityQuery
-  ): Promise<void> {
+  ): Promise<any> {
     if (this.isWmsAiActive) query.ai = this.isWmsAiActive;
 
+    this.loading = true;
     try {
       let res: IContourStatisticsProductivity;
       res = await this.api.statistics.getContourStatisticsProductivity(query);
+      const pastureStatsProdTableItems: ITableItem[][] = [];
 
       if (!res.type) {
-        this.pastureStatsProdTableItems = [];
+        this.pastureStatsProdTableItems = pastureStatsProdTableItems;
         return;
       }
 
-      this.pastureStatsProdTableItems.push([
+      pastureStatsProdTableItems.push([
         {
           areaType: res?.type,
           areaName_en: res?.[`name_en`],
           areaName_ky: res?.[`name_ky`],
           areaName_ru: res?.[`name_ru`],
-          productive: `${res?.Productive?.ha} ${this.translate.transform(
-            'ha'
-          )}`,
-          unproductive: `${res?.Unproductive?.ha} ${this.translate.transform(
-            'ha'
-          )}`,
+          productive: res?.Productive?.ha,
+          productive_en: `${res?.Productive?.ha} ha`,
+          productive_ky: `${res?.Productive?.ha} га`,
+          productive_ru: `${res?.Productive?.ha} га`,
+          unproductive: res?.Unproductive?.ha,
+          unproductive_en: `${res?.Unproductive?.ha} ha`,
+          unproductive_ky: `${res?.Unproductive?.ha} га`,
+          unproductive_ru: `${res?.Unproductive?.ha} га`,
         },
       ]);
 
-      if (Array.isArray(res?.Children) && res?.Children?.length > 0) {
-        this.pastureStatsProdTableItems.push(
-          res?.Children.map((child) => ({
+      const children = res?.Children?.filter(
+        (child) => child?.type?.toLocaleLowerCase() !== 'conton'
+      );
+
+      if (Array.isArray(children) && children.length > 0) {
+        pastureStatsProdTableItems.push(
+          children.map((child) => ({
             areaType: child?.type,
             areaName_en: child?.[`name_en`],
             areaName_ky: child?.[`name_ky`],
             areaName_ru: child?.[`name_ru`],
-            productive: `${child?.Productive?.ha} ${this.translate.transform(
-              'ha'
-            )}`,
-            unproductive: `${
-              child?.Unproductive?.ha
-            } ${this.translate.transform('ha')}`,
+            productive: child?.Productive?.ha,
+            productive_en: `${child?.Productive?.ha} ha`,
+            productive_ky: `${child?.Productive?.ha} га`,
+            productive_ru: `${child?.Productive?.ha} га`,
+            unproductive: child?.Unproductive?.ha,
+            unproductive_en: `${child?.Unproductive?.ha} ha`,
+            unproductive_ky: `${child?.Unproductive?.ha} га`,
+            unproductive_ru: `${child?.Unproductive?.ha} га`,
           }))
         );
       }
+
+      this.pastureStatsProdTableItems = pastureStatsProdTableItems;
+      return this.pastureStatsProdTableItems;
     } catch (e: any) {
       this.messages.error(e.error?.message ?? e.message);
+    } finally {
+      this.loading = false;
     }
   }
 
   private async getCultureStatisticsProductivity(
     query: ICulutreStatisticsQuery
-  ): Promise<void> {
+  ): Promise<any> {
     if (this.isWmsAiActive) query.ai = this.isWmsAiActive;
-
+    this.loading = true;
     try {
       const res = await this.api.statistics.getCultureStatistics(query);
 
       this.cultureStatsProdTableItems = res.map((element) => ({
         ...element,
-        area_ha: `${element?.area_ha} ${this.translate.transform('ha')}`,
+        area_ha: element?.area_ha,
+        area_ha_en: `${element?.area_ha} ha`,
+        area_ha_ky: `${element?.area_ha} га`,
+        area_ha_ru: `${element?.area_ha} га`,
       })) as unknown as ITableItem[];
+
+      return this.cultureStatsProdTableItems;
     } catch (e: any) {
       this.messages.error(e.error?.message ?? e.message);
+    } finally {
+      this.loading = false;
     }
   }
 

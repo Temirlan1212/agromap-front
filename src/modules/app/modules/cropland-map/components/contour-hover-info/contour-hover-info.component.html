@@ -1,0 +1,12 @@
+<div class="dark-info-dialog" [class.hidden]="hidden">
+  <div class="contour-info-partial">
+    <h1>
+      {{ "Contour id" | translate }}
+      <p>{{ properties.id }}</p>
+    </h1>
+    <div *ngIf="!!properties.area">
+      {{ "Area" | translate }}
+      <span>{{ properties.area }} {{ "ha" | translate }}</span>
+    </div>
+  </div>
+</div>

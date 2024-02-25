@@ -1,0 +1,83 @@
+@import "./constants";
+
+.dark-info-dialog {
+  max-width: 400px;
+  padding: 0 20px;
+  z-index: 400;
+  font-size: 20px;
+  background-color: rgba($darkColor, 0.8);
+  transition: opacity 0.5s ease;
+  border-radius: 15px;
+  padding: 10px;
+  margin-top: 10px;
+  opacity: 1;
+  pointer-events: none;
+
+  &.hidden {
+    opacity: 0;
+    box-shadow: none;
+    background-color: transparent;
+  }
+
+  .contour-info-partial {
+    div {
+      display: flex;
+      width: 100%;
+      justify-content: space-between;
+      align-items: center;
+      gap: 30px;
+      color: #fff;
+      font-size: 15px;
+
+      span {
+        margin: 5px 0;
+      }
+    }
+  }
+
+  .contour-info-partial {
+    span {
+      font-size: 20px;
+      font-weight: 600;
+    }
+  }
+
+  h1 {
+    font-size: 15px;
+    color: $lightColor;
+    p {
+      font-size: 30px;
+      margin: 10px 0 0 0;
+    }
+  }
+}
+
+@media only screen and (max-width: 576px) {
+  .dark-info-dialog {
+    box-shadow: none;
+    backdrop-filter: blur(30px);
+    max-height: initial;
+    position: fixed;
+    max-width: inherit;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    bottom: calc($mobileBottomNavHeight * 2 - 5px);
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    background-color: rgba(0, 0, 0, 0.25);
+    z-index: 402;
+
+    &.hidden {
+      transform: translateX(0px);
+    }
+
+    h1 {
+      transform: translateX(0);
+
+      &.hidden {
+        transform: translateX(-85vw);
+      }
+    }
+  }
+}
