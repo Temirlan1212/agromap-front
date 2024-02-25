@@ -207,15 +207,7 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
     if (bounds) this.pbfConroller.fitBounds(bounds);
 
     this.pbfConroller.resetSplashScreenOnActiveFeature();
-    const popup = this.pbfConroller.addSplashScreenOnActiveFeature(polygon);
-    popup?.on({
-      remove: () => {
-        this.layerService.selectProperties.next(initLayerProperties);
-        this.pbfConroller.setUnselectZoom();
-        this.pbfConroller.setDefaultContour();
-        this.pbfConroller.resetSplashScreenOnActiveFeature();
-      },
-    });
+    this.pbfConroller.addSplashScreenOnActiveFeature(polygon);
   }
 
   activateVegSatelliteDates(id: number) {

@@ -365,12 +365,25 @@ export class PBFConroller {
     // Calculate the center of the bounds
     const center = bounds.getNorthEast();
 
+    var content = L.DomUtil.create('div', 'content');
+    content.innerText = 'x';
+
     // Create a popup with your content
     const popup = L.popup({
-      closeButton: true,
+      closeButton: false,
       className: 'close-active-layer-popup',
       autoClose: false,
-    }).setLatLng(center);
+    })
+      .setContent(content)
+      .setLatLng(center);
+
+    L.DomEvent.addListener(content, 'click', (event) => {
+      this.setDefaultContour();
+      this.setUnselectZoom();
+      this.resetSplashScreenOnActiveFeature();
+      this.clearCloseButtonPopup();
+      this.layerService.selectProperties.next(initLayerProperties);
+    });
 
     popup.addTo(map);
 
