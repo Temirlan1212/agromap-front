@@ -47,4 +47,7 @@
   &.mb-10 {
     margin: 0 0 10px 0;
   }
+  &.events-none {
+    pointer-events: none !important;
+  }
 }

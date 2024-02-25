@@ -11,11 +11,10 @@
   padding: 10px;
   margin-top: 10px;
   opacity: 1;
-  pointer-events: initial;
+  pointer-events: none;
 
   &.hidden {
     opacity: 0;
-    pointer-events: none;
     box-shadow: none;
     background-color: transparent;
   }
