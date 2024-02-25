@@ -172,7 +172,7 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
     await this.getLandTypes();
     await this.getCultures();
     this.loading = false;
-    this.handleFormSubmit();
+    this.handleFormSubmit(true);
   }
 
   async getRegions(): Promise<void> {
@@ -239,7 +239,7 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
     this.router.navigate(['contour-edit', id], { relativeTo: this.route });
   }
 
-  async handleFormSubmit(): Promise<void> {
+  async handleFormSubmit(onNgInit?: boolean): Promise<void> {
     let formState = { ...this.getState() };
     if (!formState.valid) {
       this.messages.error(this.translate.transform('Form is invalid'));
@@ -283,8 +283,12 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
         storageNames.contourFilterComponent,
         this.filtersQuery
       );
-
-      if (this.collapseOnApply) this.sidePanelService.set(true);
+      if (!onNgInit) {
+        this.collapseOnApply = this.settingsService.get(
+          'filter.collapseOnApply'
+        );
+        if (this.collapseOnApply) this.sidePanelService.set(true);
+      }
     } catch (e: any) {
       this.messages.error(e.error?.message ?? e.message);
     } finally {
@@ -404,7 +408,7 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
   }
 
   private initSettings() {
-    this.collapseOnApply = this.settingsService.get('filter.collapseOnApply');
+    // this.collapseOnApply = this.settingsService.get('filter.collapseOnApply');
     this.settingsService.watch(
       (value) => (this.collapseOnApply = value),
       'filter.collapseOnApply'

@@ -24,7 +24,11 @@ export class SidePanelService {
             .join('/');
 
         this.activeNavItemPath = url ?? null;
-        this.set(this.get());
+        if (!config?.data?.['toggle']) {
+          this.set(false);
+        } else {
+          this.set(this.get());
+        }
       }
     });
   }
