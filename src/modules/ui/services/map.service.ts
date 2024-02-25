@@ -61,8 +61,11 @@ export class MapService {
     bounds: L.LatLngBounds,
     options?: L.ImageOverlayOptions
   ): ImageOverlay {
+    map.createPane('image-overlay-pane').style.zIndex = '402';
+
     const imageOverlayIncstance = imageOverlay(imageUrl, bounds, {
       ...Object.assign({ opacity: 1, interactive: true }, options),
+      pane: 'image-overlay-pane',
     });
     map.addLayer(imageOverlayIncstance);
     return imageOverlayIncstance;
