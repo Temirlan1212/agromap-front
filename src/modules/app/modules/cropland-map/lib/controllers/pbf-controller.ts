@@ -170,25 +170,24 @@ export class PBFConroller {
     map.setZoom(this.zoom.layerUnselectedZoom);
   }
 
-  private popupOnHover(latlng: L.LatLng, props: LayerProperties) {
+  private tooltipOnHover(latlng: L.LatLng, props: LayerProperties) {
     const currLang = this.translateService.currentLang;
     const translations = this.translateService.translations;
     const ha = translations?.[currLang]?.['ha'];
     if (this.mapData?.map) {
-      this.layerService.layerInstances['active-contour-hover-popup'] = L.popup()
+      this.layerService.layerInstances['tooltip-on-hover'] = L.tooltip({})
         .setContent(String(props.area) + ' ' + ha)
         .setLatLng(latlng)
-        .openOn(this.mapData.map);
+        .addTo(this.mapData.map);
     }
   }
 
-  private closePopupOnHover() {
-    const instance =
-      this.layerService.layerInstances['active-contour-hover-popup'];
+  private closetooltipOnHover() {
+    const instance = this.layerService.layerInstances['tooltip-on-hover'];
     const map = this.mapData?.map;
     if (map && instance) {
-      map.closePopup(instance);
-      this.layerService.layerInstances['active-contour-hover-popup'] = null;
+      map.closeTooltip(instance);
+      this.layerService.layerInstances['tooltip-on-hover'] = null;
     }
   }
 
@@ -208,7 +207,7 @@ export class PBFConroller {
           this.ids.vector.prevHoverId = currId;
           onHover && onHover(properties);
           if (!!this.ids.vector.prevClickId)
-            this.popupOnHover(e.latlng, properties);
+            this.tooltipOnHover(e.latlng, properties);
         }
       },
       mouseout: (e: any) => {
@@ -220,7 +219,7 @@ export class PBFConroller {
           setDefault(this.ids.vector.prevHoverId);
           this.ids.vector.prevHoverId = 0;
           onHover && onHover(initLayerProperties);
-          if (!!this.ids.vector.prevClickId) this.closePopupOnHover();
+          if (!!this.ids.vector.prevClickId) this.closetooltipOnHover();
         }
       },
       click: (e: any) => {
