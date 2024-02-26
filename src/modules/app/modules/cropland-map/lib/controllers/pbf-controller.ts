@@ -296,6 +296,14 @@ export class PBFConroller {
 
   private configurations() {}
 
+  private getSelectedZoom(area: number) {
+    let zoom = 15;
+    if (area > 10) zoom = 14;
+    if (area > 100) zoom = 13;
+    if (area > 600) zoom = 12;
+    return zoom;
+  }
+
   setDefaultContour() {
     if (!this.vectorGrid) return;
     this.layerService.selectProperties.subscribe((v) => {
@@ -310,6 +318,7 @@ export class PBFConroller {
   private initVectorGridEvents() {
     this.vectorGridEvents(this.vectorGrid, {
       onSelect: (props) => {
+        this.zoom.layerSelectedMaxZoom = this.getSelectedZoom(props.area);
         this.layerService.selectProperties.next(props);
       },
       onReset: (props) => {

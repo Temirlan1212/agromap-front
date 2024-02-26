@@ -203,11 +203,14 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.mapComponent.featureOpen = true;
     const polygon = this.activeContour?.polygon;
-    const bounds = geoJson(polygon).getBounds();
-    if (bounds) this.pbfConroller.fitBounds(bounds);
-
     this.pbfConroller.resetSplashScreenOnActiveFeature();
     this.pbfConroller.addSplashScreenOnActiveFeature(polygon);
+    const bounds = geoJson(polygon).getBounds();
+
+    setTimeout(() => {
+      this.mapData?.map.panInsideBounds(bounds);
+      if (bounds) this.pbfConroller.fitBounds(bounds);
+    }, 100);
   }
 
   activateVegSatelliteDates(id: number) {
