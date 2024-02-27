@@ -208,6 +208,8 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
     const polygon = this.activeContour?.polygon;
     this.activeLayerController.removeSplashScreen();
     this.activeLayerController.removeLayerHiglight();
+    this.activeLayerController.closeControllerPopup();
+    this.activeLayerController.closeInfoPopup();
     this.activeLayerController.createLayerHiglight(polygon);
     this.activeLayerController.createSplashScreen();
     this.activeLayerController.initActiveLyaerControlls(this.activeContour);
@@ -240,7 +242,6 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
   handleFeatureClose(): void {
     this.layerService.selectProperties.next(initLayerProperties);
     this.pbfConroller.setUnselectZoom();
-    this.pbfConroller.clearCloseButtonPopup();
     this.activeVegIndexOption = this.vegIndexOptionsList[0];
     if (this.mapData?.map) this.mapService.invalidateSize(this.mapData.map);
     this.activeLayerController.removeSplashScreen();
@@ -260,7 +261,7 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
 
   handleMapClick(e: LeafletMouseEvent) {
     if (this.mapComponent && this.activeContour != null) {
-      this.mapComponent.handleFeatureClose();
+      // this.mapComponent.handleFeatureClose();
     }
     // this.handleWmsLayerPopup(e);
   }

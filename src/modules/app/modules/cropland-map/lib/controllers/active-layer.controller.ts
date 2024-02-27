@@ -36,7 +36,12 @@ export class ActiveLayerController {
   }
 
   createPopup(options: any, content: any, position: any) {
-    return popup(options).setContent(content).setLatLng(position);
+    this.layerService.layerInstances['active-layer-controller-popup'] = popup(
+      options
+    )
+      .setContent(content)
+      .setLatLng(position);
+    return this.layerService.layerInstances['active-layer-controller-popup'];
   }
 
   createInfoPopup(content: any, position: any) {
@@ -78,7 +83,7 @@ export class ActiveLayerController {
       layerService.selectProperties.next(initLayerProperties);
       this.pbfConroller.setDefaultContour();
       this.pbfConroller.setUnselectZoom();
-      this.pbfConroller.clearCloseButtonPopup();
+      this.closeControllerPopup();
       this.layerService.selectProperties.next(initLayerProperties);
       this.removeSplashScreen();
       this.removeLayerHiglight();
@@ -94,10 +99,6 @@ export class ActiveLayerController {
   addListeners(infoBtn: any, closeBtn: any, map: any, infoPopup: any) {
     this.bindInfoBtn(infoBtn, map, infoPopup);
     this.bindCloseBtn(closeBtn, this.layerService);
-  }
-
-  addLayerInstances(popup: any, map: any) {
-    this.layerService.layerInstances['close-active-layer-popup'] = popup;
   }
 
   createLayerHiglight(polygon: any) {
@@ -146,6 +147,16 @@ export class ActiveLayerController {
     this.layerService.layerInstances['info-active-layer-popup'] = null;
   }
 
+  closeControllerPopup() {
+    const map = this.mapData?.map;
+    if (!map) return;
+    const instance =
+      this.layerService.layerInstances['active-layer-controller-popup'];
+    if (!instance) return;
+    map.closePopup(instance);
+    this.layerService.layerInstances['active-layer-controller-popup'] = null;
+  }
+
   createSplashScreen() {
     const map = this.mapData?.map;
     if (!map) return;
@@ -187,8 +198,9 @@ export class ActiveLayerController {
     const popup = this.createPopup(
       {
         closeButton: false,
-        className: 'close-active-layer-popup',
+        className: 'active-layer-controller-popup',
         autoClose: false,
+        closeOnClick: false,
       },
       content,
       center
@@ -202,7 +214,6 @@ export class ActiveLayerController {
     this.toggleInfoBtn(infoPopup, infoBtn);
     this.addPopups(map, popup, infoPopup);
     this.addListeners(infoBtn, closeBtn, map, infoPopup);
-    this.addLayerInstances(popup, infoPopup);
 
     return popup;
   }
