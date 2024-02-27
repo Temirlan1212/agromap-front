@@ -159,7 +159,9 @@ export class ActiveLayerController {
     this._activeLayerAttributes
       .attributes(activeContour)
       .forEach(({ label, value }) => {
-        htmlContent += `<div style="font-size: 14px; display: flex; justify-content: space-between; gap: 10px"><strong>${label}:</strong> <span style="text-align: end">${value()}</span></div>`;
+        if (value() != null) {
+          htmlContent += `<div style="font-size: 14px; display: flex; justify-content: space-between; gap: 10px"><strong>${label}:</strong> <span style="text-align: end">${value()}</span></div>`;
+        }
       });
     htmlContent += '</div>';
     return htmlContent;
