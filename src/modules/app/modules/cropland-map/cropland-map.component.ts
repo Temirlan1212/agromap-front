@@ -53,6 +53,7 @@ import { ApiController } from './lib/controllers/api-controller';
 import { CroplandMainMapService } from './lib/services/map.service';
 import { PBFConroller } from './lib/controllers/pbf-controller';
 import { CroplandMainLayerService } from './lib/services/layer.service';
+import { ActiveLayerController } from './lib/controllers/active-layer.controller';
 
 @Component({
   selector: 'app-cropland-map',
@@ -130,6 +131,7 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
     private apiController: ApiController,
     private pbfConroller: PBFConroller,
     private layerService: CroplandMainLayerService,
+    private activeLayerController: ActiveLayerController,
     public sidePanelService: SidePanelService
   ) {
     this.wmsProductivityLayerColorLegend = wmsProductivityLayerColorLegend;
@@ -189,6 +191,7 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
       if (!v['id']) {
         this.pbfConroller.setDefaultContour();
         this.activeContour = null;
+        this.activeLayerController.closeInfoPopup();
         if (this.mapComponent) this.mapComponent.featureOpen = false;
       }
     }),
@@ -203,8 +206,11 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.mapComponent.featureOpen = true;
     const polygon = this.activeContour?.polygon;
-    this.pbfConroller.resetSplashScreenOnActiveFeature();
-    this.pbfConroller.addSplashScreenOnActiveFeature(polygon);
+    this.activeLayerController.removeSplashScreen();
+    this.activeLayerController.removeLayerHiglight();
+    this.activeLayerController.createLayerHiglight(polygon);
+    this.activeLayerController.createSplashScreen();
+    this.activeLayerController.initActiveLyaerControlls(this.activeContour);
     const bounds = geoJson(polygon).getBounds();
 
     setTimeout(() => {
@@ -237,7 +243,9 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
     this.pbfConroller.clearCloseButtonPopup();
     this.activeVegIndexOption = this.vegIndexOptionsList[0];
     if (this.mapData?.map) this.mapService.invalidateSize(this.mapData.map);
-    this.pbfConroller.resetSplashScreenOnActiveFeature();
+    this.activeLayerController.removeSplashScreen();
+    this.activeLayerController.removeLayerHiglight();
+    this.activeLayerController.closeInfoPopup();
   }
 
   hanldeVegIndexesDateSelect() {

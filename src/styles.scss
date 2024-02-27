@@ -243,20 +243,33 @@ hr {
 }
 .close-active-layer-popup {
   .leaflet-popup-content-wrapper {
-    border-radius: 100% !important;
-    cursor: pointer;
-    position: relative;
-    left: -40px;
+    // border-radius: 100% !important;
+    // cursor: pointer;
+    // position: relative;
+    // left: -40px;
+    background-color: transparent;
+    box-shadow: none;
   }
   .leaflet-popup-content {
     display: contents;
     .content {
-      margin: 0px;
-      width: 30px !important;
-      height: 30px !important;
       display: flex;
-      justify-content: center;
-      align-items: center;
+      gap: 10px;
+      transform: rotate(20deg);
+      .btn {
+        margin: 0px;
+        width: 30px !important;
+        height: 30px !important;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: $lightColor;
+        border-radius: 100%;
+        &.hidden {
+          pointer-events: none;
+          opacity: 0;
+        }
+      }
     }
   }
   .leaflet-popup-tip-container {

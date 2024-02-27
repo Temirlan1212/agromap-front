@@ -9,7 +9,6 @@ import { LayerProperties } from '../_models';
 import { initLayerProperties, storageNames } from '../_constants';
 import { CroplandMainLayerService } from '../services/layer.service';
 import { StoreService } from 'src/modules/ui/services/store.service';
-import { buildSplashScreen } from '../_helpers';
 import { TranslateService } from '@ngx-translate/core';
 
 type MapEvents = {
@@ -351,72 +350,109 @@ export class PBFConroller {
     }
   }
 
-  addSplashScreenOnActiveFeature(polygon: any) {
-    const map = this.mapData?.map;
-    if (!map) return;
-    map.createPane('customPane').style.zIndex = '401';
-    this.layerService.layerInstances['splash-screen-active-contour'] =
-      L.geoJSON(polygon, {
-        pane: 'customPane',
-        style: {
-          color: 'white',
-          fill: true,
-          fillOpacity: 1,
-          fillColor: 'green',
-        },
-      }).addTo(map);
+  // addSplashScreenOnActiveFeature(polygon: any) {
+  //   const map = this.mapData?.map;
+  //   if (!map) return;
+  //   map.createPane('customPane').style.zIndex = '401';
+  //   this.layerService.layerInstances['splash-screen-active-contour'] =
+  //     L.geoJSON(polygon, {
+  //       pane: 'customPane',
+  //       style: {
+  //         color: 'white',
+  //         fill: true,
+  //         fillOpacity: 1,
+  //         fillColor: 'green',
+  //       },
+  //     }).addTo(map);
 
-    const bounds =
-      this.layerService.layerInstances[
-        'splash-screen-active-contour'
-      ].getBounds();
+  //   const bounds =
+  //     this.layerService.layerInstances[
+  //       'splash-screen-active-contour'
+  //     ].getBounds();
 
-    // Calculate the center of the bounds
-    const center = bounds.getNorthEast();
+  //   // Calculate the center of the bounds
+  //   const center = bounds.getNorthEast();
 
-    var content = L.DomUtil.create('div', 'content');
-    content.innerText = 'x';
+  //   var content = L.DomUtil.create('div', 'content');
+  //   var closeBtn = L.DomUtil.create('button', 'close-btn btn');
+  //   var infoBtn = L.DomUtil.create('button', 'info-btn btn');
+  //   closeBtn.innerText = '✕';
+  //   infoBtn.innerText = 'i';
+  //   content.append(closeBtn);
+  //   content.append(infoBtn);
 
-    // Create a popup with your content
-    const popup = L.popup({
-      closeButton: false,
-      className: 'close-active-layer-popup',
-      autoClose: false,
-    })
-      .setContent(content)
-      .setLatLng(center);
+  //   // Create a popup with your content
+  //   const popup = L.popup({
+  //     closeButton: false,
+  //     className: 'close-active-layer-popup',
+  //     autoClose: false,
+  //   })
+  //     .setContent(content)
+  //     .setLatLng(center);
 
-    L.DomEvent.addListener(content, 'click', (event) => {
-      this.setDefaultContour();
-      this.setUnselectZoom();
-      this.resetSplashScreenOnActiveFeature();
-      this.clearCloseButtonPopup();
-      this.layerService.selectProperties.next(initLayerProperties);
-    });
+  //   const infoPopup = L.popup({
+  //     closeButton: true,
+  //     className: '',
+  //     autoClose: false,
+  //   })
+  //     .setContent(
+  //       'testtesttesttest, testtesttesttest, testtesttesttesttesttesttesttesttest, test, testtest, testtesttesttesttesttesttest'
+  //     )
+  //     .setLatLng(bounds.getCenter());
 
-    popup.addTo(map);
+  //   infoPopup.on({
+  //     remove: () => {
+  //       infoBtn.classList.remove('hidden');
+  //     },
+  //   });
 
-    this.layerService.layerInstances['close-active-layer-popup'] = popup;
+  //   infoPopup.addTo(map);
+  //   if (infoPopup.isOpen()) {
+  //     infoBtn.classList.add('hidden');
+  //   }
 
-    this.layerService.layerInstances['splash-screen'] =
-      buildSplashScreen().addTo(map);
+  //   L.DomEvent.addListener(infoBtn, 'click', (event: any) => {
+  //     infoBtn.classList.add('hidden');
+  //     map.openPopup(infoPopup);
+  //     // const { clientX, clientY } = event;
+  //     // // Convert pixel coordinates to geographical coordinates
+  //     // const latlng = map.containerPointToLatLng(L.point(clientX, clientY));
 
-    return popup;
-  }
+  //     // // Extract the latitude and longitude from the latlng object
+  //     // const { lat, lng } = latlng;
+  //   });
 
-  resetSplashScreenOnActiveFeature() {
-    const map = this.mapData?.map;
-    if (
-      !map ||
-      !this.layerService.layerInstances['splash-screen-active-contour'] ||
-      !this.layerService.layerInstances['splash-screen']
-    )
-      return;
-    map.removeLayer(
-      this.layerService.layerInstances['splash-screen-active-contour']
-    );
-    map.removeLayer(this.layerService.layerInstances['splash-screen']);
-  }
+  //   L.DomEvent.addListener(closeBtn, 'click', (event) => {
+  //     this.setDefaultContour();
+  //     this.setUnselectZoom();
+  //     this.resetSplashScreenOnActiveFeature();
+  //     this.clearCloseButtonPopup();
+  //     this.layerService.selectProperties.next(initLayerProperties);
+  //   });
+
+  //   popup.addTo(map);
+
+  //   this.layerService.layerInstances['close-active-layer-popup'] = popup;
+
+  //   this.layerService.layerInstances['splash-screen'] =
+  //     buildSplashScreen().addTo(map);
+
+  //   return popup;
+  // }
+
+  // resetSplashScreenOnActiveFeature() {
+  //   const map = this.mapData?.map;
+  //   if (
+  //     !map ||
+  //     !this.layerService.layerInstances['splash-screen-active-contour'] ||
+  //     !this.layerService.layerInstances['splash-screen']
+  //   )
+  //     return;
+  //   map.removeLayer(
+  //     this.layerService.layerInstances['splash-screen-active-contour']
+  //   );
+  //   map.removeLayer(this.layerService.layerInstances['splash-screen']);
+  // }
 
   initSchema() {
     const map = this.mapData?.map;

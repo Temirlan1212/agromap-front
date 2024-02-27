@@ -9,6 +9,7 @@ type LayerInstances = {
   'splash-screen-active-contour': GeoJSON<any, any> | null;
   'tooltip-on-hover': Tooltip | null;
   'close-active-layer-popup': Popup | null;
+  'info-active-layer-popup': Popup | null;
 };
 
 @Injectable({ providedIn: 'root' })
@@ -25,6 +26,7 @@ export class CroplandMainLayerService {
     'splash-screen-active-contour': null,
     'tooltip-on-hover': null,
     'close-active-layer-popup': null,
+    'info-active-layer-popup': null,
   };
 
   constructor() {}
