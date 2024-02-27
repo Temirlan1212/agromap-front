@@ -34,8 +34,7 @@
     }
   }
 
-  .contour-info,
-  .contour-info-partial {
+  .contour-info {
     div {
       display: flex;
       width: 100%;
@@ -85,13 +84,6 @@
     }
   }
 
-  .contour-info-partial {
-    span {
-      font-size: 20px;
-      font-weight: 600;
-    }
-  }
-
   h1 {
     font-size: 15px;
     color: $lightColor;
@@ -108,57 +100,6 @@
     .toggle-btn {
       &.hidden {
         left: 82vw !important;
-      }
-    }
-  }
-}
-
-@media only screen and (max-width: 576px) {
-  .dark-info-dialog {
-    box-shadow: none;
-    backdrop-filter: blur(30px);
-    max-height: initial;
-    position: fixed;
-    max-width: inherit;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    bottom: calc($mobileBottomNavHeight * 2 - 5px);
-    border-top-left-radius: 20px;
-    border-top-right-radius: 20px;
-    background-color: rgba(0, 0, 0, 0.25);
-    z-index: 402;
-
-    &.hidden {
-      transform: translateX(0px);
-    }
-    .contour-info {
-      padding-bottom: 20px;
-    }
-
-    .header {
-      .toggle-btn {
-        background-color: transparent;
-        padding: 0;
-
-        &.arrow {
-          transform: rotate(0deg);
-          left: 0;
-          transition: transform 0.5s ease;
-
-          &.hidden {
-            left: 0px;
-            transform: rotate(-180deg);
-          }
-        }
-      }
-    }
-
-    h1 {
-      transform: translateX(0);
-
-      &.hidden {
-        transform: translateX(-85vw);
       }
     }
   }

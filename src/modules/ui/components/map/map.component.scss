@@ -117,6 +117,10 @@ $transitionDelay: 0.2s;
     border-top-left-radius: 20px;
   }
 
+  .header {
+    flex-direction: column;
+  }
+
   .actions-block {
     overflow: hidden;
   }

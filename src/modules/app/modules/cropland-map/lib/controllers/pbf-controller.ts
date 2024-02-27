@@ -9,7 +9,6 @@ import { LayerProperties } from '../_models';
 import { initLayerProperties, storageNames } from '../_constants';
 import { CroplandMainLayerService } from '../services/layer.service';
 import { StoreService } from 'src/modules/ui/services/store.service';
-import { buildSplashScreen } from '../_helpers';
 import { TranslateService } from '@ngx-translate/core';
 
 type MapEvents = {
@@ -139,17 +138,17 @@ export class PBFConroller {
           status = 'default';
         }
       },
-      click: () => {
-        const selectId = this.layerService.selectProperties.getValue().id;
-        if (!!selectId) {
-          if (this.vectorGrid) {
-            const setDefault = this.LayerViewMethods(
-              this.vectorGrid
-            ).setDefault;
-            setDefault(selectId);
-          }
-        }
-      },
+      // click: () => {
+      //   const selectId = this.layerService.selectProperties.getValue().id;
+      //   if (!!selectId) {
+      //     if (this.vectorGrid) {
+      //       const setDefault = this.LayerViewMethods(
+      //         this.vectorGrid
+      //       ).setDefault;
+      //       setDefault(selectId);
+      //     }
+      //   }
+      // },
     });
   }
 
@@ -238,13 +237,13 @@ export class PBFConroller {
             setDefault(this.ids.vector.prevClickId);
           onSelect && onSelect(properties);
         }
-        if (currId === this.ids.vector.prevClickId) {
-          setDefault(currId);
-          this.ids.vector.prevClickId = 0;
-          onReset && onReset(initLayerProperties);
-          this.setUnselectZoom();
-          return;
-        }
+        // if (currId === this.ids.vector.prevClickId) {
+        //   setDefault(currId);
+        //   this.ids.vector.prevClickId = 0;
+        //   onReset && onReset(initLayerProperties);
+        //   this.setUnselectZoom();
+        //   return;
+        // }
 
         this.ids.vector.prevClickId = currId;
       },
@@ -284,17 +283,15 @@ export class PBFConroller {
     };
   }
 
-  clearCloseButtonPopup() {
-    const instance =
-      this.layerService.layerInstances['close-active-layer-popup'];
-    const map = this.mapData?.map;
-    if (map && instance) {
-      map.closePopup(instance);
-      this.layerService.layerInstances['close-active-layer-popup'] = null;
-    }
-  }
-
   private configurations() {}
+
+  private getSelectedZoom(area: number) {
+    let zoom = 15;
+    if (area > 10) zoom = 14;
+    if (area > 100) zoom = 13;
+    if (area > 600) zoom = 12;
+    return zoom;
+  }
 
   setDefaultContour() {
     if (!this.vectorGrid) return;
@@ -310,6 +307,7 @@ export class PBFConroller {
   private initVectorGridEvents() {
     this.vectorGridEvents(this.vectorGrid, {
       onSelect: (props) => {
+        this.zoom.layerSelectedMaxZoom = this.getSelectedZoom(props.area);
         this.layerService.selectProperties.next(props);
       },
       onReset: (props) => {
@@ -340,73 +338,6 @@ export class PBFConroller {
       );
       if (bounds) map.fitBounds(bounds);
     }
-  }
-
-  addSplashScreenOnActiveFeature(polygon: any) {
-    const map = this.mapData?.map;
-    if (!map) return;
-    map.createPane('customPane').style.zIndex = '401';
-    this.layerService.layerInstances['splash-screen-active-contour'] =
-      L.geoJSON(polygon, {
-        pane: 'customPane',
-        style: {
-          color: 'white',
-          fill: true,
-          fillOpacity: 1,
-          fillColor: 'green',
-        },
-      }).addTo(map);
-
-    const bounds =
-      this.layerService.layerInstances[
-        'splash-screen-active-contour'
-      ].getBounds();
-
-    // Calculate the center of the bounds
-    const center = bounds.getNorthEast();
-
-    var content = L.DomUtil.create('div', 'content');
-    content.innerText = 'x';
-
-    // Create a popup with your content
-    const popup = L.popup({
-      closeButton: false,
-      className: 'close-active-layer-popup',
-      autoClose: false,
-    })
-      .setContent(content)
-      .setLatLng(center);
-
-    L.DomEvent.addListener(content, 'click', (event) => {
-      this.setDefaultContour();
-      this.setUnselectZoom();
-      this.resetSplashScreenOnActiveFeature();
-      this.clearCloseButtonPopup();
-      this.layerService.selectProperties.next(initLayerProperties);
-    });
-
-    popup.addTo(map);
-
-    this.layerService.layerInstances['close-active-layer-popup'] = popup;
-
-    this.layerService.layerInstances['splash-screen'] =
-      buildSplashScreen().addTo(map);
-
-    return popup;
-  }
-
-  resetSplashScreenOnActiveFeature() {
-    const map = this.mapData?.map;
-    if (
-      !map ||
-      !this.layerService.layerInstances['splash-screen-active-contour'] ||
-      !this.layerService.layerInstances['splash-screen']
-    )
-      return;
-    map.removeLayer(
-      this.layerService.layerInstances['splash-screen-active-contour']
-    );
-    map.removeLayer(this.layerService.layerInstances['splash-screen']);
   }
 
   initSchema() {

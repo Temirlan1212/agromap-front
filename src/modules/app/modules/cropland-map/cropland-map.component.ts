@@ -53,6 +53,7 @@ import { ApiController } from './lib/controllers/api-controller';
 import { CroplandMainMapService } from './lib/services/map.service';
 import { PBFConroller } from './lib/controllers/pbf-controller';
 import { CroplandMainLayerService } from './lib/services/layer.service';
+import { ActiveLayerController } from './lib/controllers/active-layer.controller';
 
 @Component({
   selector: 'app-cropland-map',
@@ -130,6 +131,7 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
     private apiController: ApiController,
     private pbfConroller: PBFConroller,
     private layerService: CroplandMainLayerService,
+    private activeLayerController: ActiveLayerController,
     public sidePanelService: SidePanelService
   ) {
     this.wmsProductivityLayerColorLegend = wmsProductivityLayerColorLegend;
@@ -189,6 +191,7 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
       if (!v['id']) {
         this.pbfConroller.setDefaultContour();
         this.activeContour = null;
+        this.activeLayerController.closeInfoPopup();
         if (this.mapComponent) this.mapComponent.featureOpen = false;
       }
     }),
@@ -203,11 +206,19 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.mapComponent.featureOpen = true;
     const polygon = this.activeContour?.polygon;
+    this.activeLayerController.removeSplashScreen();
+    this.activeLayerController.removeLayerHiglight();
+    this.activeLayerController.closeControllerPopup();
+    this.activeLayerController.closeInfoPopup();
+    this.activeLayerController.createLayerHiglight(polygon);
+    this.activeLayerController.createSplashScreen();
+    this.activeLayerController.initActiveLyaerControlls(this.activeContour);
     const bounds = geoJson(polygon).getBounds();
-    if (bounds) this.pbfConroller.fitBounds(bounds);
 
-    this.pbfConroller.resetSplashScreenOnActiveFeature();
-    this.pbfConroller.addSplashScreenOnActiveFeature(polygon);
+    setTimeout(() => {
+      this.mapData?.map.panInsideBounds(bounds);
+      if (bounds) this.pbfConroller.fitBounds(bounds);
+    }, 100);
   }
 
   activateVegSatelliteDates(id: number) {
@@ -231,10 +242,11 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
   handleFeatureClose(): void {
     this.layerService.selectProperties.next(initLayerProperties);
     this.pbfConroller.setUnselectZoom();
-    this.pbfConroller.clearCloseButtonPopup();
     this.activeVegIndexOption = this.vegIndexOptionsList[0];
     if (this.mapData?.map) this.mapService.invalidateSize(this.mapData.map);
-    this.pbfConroller.resetSplashScreenOnActiveFeature();
+    this.activeLayerController.removeSplashScreen();
+    this.activeLayerController.removeLayerHiglight();
+    this.activeLayerController.closeInfoPopup();
   }
 
   hanldeVegIndexesDateSelect() {
@@ -249,7 +261,7 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
 
   handleMapClick(e: LeafletMouseEvent) {
     if (this.mapComponent && this.activeContour != null) {
-      this.mapComponent.handleFeatureClose();
+      // this.mapComponent.handleFeatureClose();
     }
     // this.handleWmsLayerPopup(e);
   }
@@ -475,6 +487,11 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnDestroy() {
+    this.activeLayerController.closeControllerPopup();
+    this.activeLayerController.closeInfoPopup();
+    this.layerService.selectProperties.next(initLayerProperties);
+    this.layerService.hoverProperites.next(initLayerProperties);
+    this.cd.detectChanges();
     this.subscriptions.forEach((s) => s.unsubscribe());
   }
 }

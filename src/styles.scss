@@ -241,22 +241,34 @@ hr {
 
 .leaflet-interactive:hover {
 }
-.close-active-layer-popup {
+.active-layer-controller-popup {
   .leaflet-popup-content-wrapper {
-    border-radius: 100% !important;
-    cursor: pointer;
-    position: relative;
-    left: -40px;
+    background-color: transparent;
+    box-shadow: none;
   }
   .leaflet-popup-content {
     display: contents;
     .content {
-      margin: 0px;
-      width: 30px !important;
-      height: 30px !important;
       display: flex;
-      justify-content: center;
-      align-items: center;
+      gap: 10px;
+      transform: rotate(20deg);
+      .btn {
+        margin: 0px;
+        width: 30px !important;
+        height: 30px !important;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: $lightColor;
+        border-radius: 100%;
+        &.hidden {
+          pointer-events: none;
+          opacity: 0;
+        }
+      }
+      .split-map-btn {
+        padding: 0px;
+      }
     }
   }
   .leaflet-popup-tip-container {
@@ -298,6 +310,25 @@ hr {
     filter: brightness(0) invert(1) grayscale(1);
   }
 }
+
+.leaflet-popup-scrolled {
+  margin: 5px;
+  padding: 5px;
+  border: none;
+  margin-top: 20px;
+  &::-webkit-scrollbar {
+    width: 3px;
+    height: 3px;
+    border-radius: 8px;
+    background-color: $lightColor;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: $darkColor;
+    border-radius: 5px;
+  }
+}
+
 .button-container .leaflet-pm-actions-container {
   top: 4.3px !important;
   left: 110% !important;
