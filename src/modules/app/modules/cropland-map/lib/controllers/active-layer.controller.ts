@@ -7,18 +7,25 @@ import { buildSplashScreen } from '../_helpers';
 import { DomEvent, DomUtil, geoJSON, popup } from 'leaflet';
 import { PBFConroller } from './pbf-controller';
 import { ActiveLayerAttributes } from '../attributes/active-layer-attributes';
+import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class ActiveLayerController {
   mapData: MapData | null = null;
+  subs: Subscription[] = [];
 
   constructor(
     private mapService: CroplandMainMapService,
     private layerService: CroplandMainLayerService,
     private pbfConroller: PBFConroller,
+    private router: Router,
     private _activeLayerAttributes: ActiveLayerAttributes
   ) {
-    this.mapService.map.subscribe(async (mapData) => (this.mapData = mapData));
+    const sub = this.mapService.map.subscribe(
+      async (mapData) => (this.mapData = mapData)
+    );
+    this.subs.push(sub);
   }
 
   createContent() {
@@ -28,11 +35,17 @@ export class ActiveLayerController {
       'button',
       'info-btn btn d-flex d-sm-none d-lg-none d-md-none d-xl-none'
     );
+    const splitManBtn = DomUtil.create('button', 'split-map-btn btn');
     closeBtn.innerText = '✕';
     infoBtn.innerText = 'i';
+    splitManBtn.innerHTML = `<svg id='icon' width="18px" height="18px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M6 4C4.34315 4 3 5.34315 3 7V17C3 18.6569 4.34315 20 6 20H18C19.6569 20 21 18.6569 21 17V7C21 5.34315 19.6569 4 18 4H6ZM5 7C5 6.44772 5.44772 6 6 6H11V18H6C5.44772 18 5 17.5523 5 17V7ZM13 18H18C18.5523 18 19 17.5523 19 17V7C19 6.44772 18.5523 6 18 6H13V18Z" fill="currentColor"/>
+    </svg>
+    `;
     content.append(closeBtn);
     content.append(infoBtn);
-    return { content, closeBtn, infoBtn };
+    content.append(splitManBtn);
+    return { content, closeBtn, infoBtn, splitManBtn };
   }
 
   createPopup(options: any, content: any, position: any) {
@@ -50,7 +63,7 @@ export class ActiveLayerController {
       autoClose: true,
       pane: 'info-mobile-popup',
       maxWidth: 260,
-      maxHeight: 260,
+      maxHeight: 230,
     })
       .setContent(content)
       .setLatLng(position);
@@ -71,10 +84,11 @@ export class ActiveLayerController {
     }
   }
 
-  bindInfoBtn(infoBtn: any, map: any, infoPopup: any) {
+  bindInfoBtn(infoBtn: any, infoPopup: any) {
+    const map = this.mapData?.map;
     DomEvent.addListener(infoBtn, 'click', (event: any) => {
       infoBtn.classList.add('hidden');
-      map.openPopup(infoPopup);
+      if (map) map.openPopup(infoPopup);
     });
   }
 
@@ -91,14 +105,32 @@ export class ActiveLayerController {
     });
   }
 
+  bindSplitMapBtn(splitMap: any) {
+    DomEvent.addListener(splitMap, 'click', (event: any) => {
+      this.router.navigateByUrl('/cropland-map/split-map');
+    });
+  }
+
   addPopups(map: any, popup: any, infoPopup: any) {
     popup.addTo(map);
     // infoPopup.addTo(map);
   }
 
-  addListeners(infoBtn: any, closeBtn: any, map: any, infoPopup: any) {
-    this.bindInfoBtn(infoBtn, map, infoPopup);
+  bindMapZoom() {
+    const sub = this.mapService.vectorGridStatus.subscribe((v) => {
+      if (v === 'default') {
+        this.closeControllerPopup();
+        this.closeInfoPopup();
+      }
+    });
+    this.subs.push(sub);
+  }
+
+  addListeners(infoBtn: any, closeBtn: any, infoPopup: any, splitManBtn: any) {
+    this.bindInfoBtn(infoBtn, infoPopup);
     this.bindCloseBtn(closeBtn, this.layerService);
+    this.bindSplitMapBtn(splitManBtn);
+    this.bindMapZoom();
   }
 
   createLayerHiglight(polygon: any) {
@@ -154,6 +186,7 @@ export class ActiveLayerController {
       this.layerService.layerInstances['active-layer-controller-popup'];
     if (!instance) return;
     map.closePopup(instance);
+    map.removeLayer(instance);
     this.layerService.layerInstances['active-layer-controller-popup'] = null;
   }
 
@@ -193,7 +226,7 @@ export class ActiveLayerController {
       ].getBounds();
     const center = bounds.getNorthEast();
 
-    const { content, closeBtn, infoBtn } = this.createContent();
+    const { content, closeBtn, infoBtn, splitManBtn } = this.createContent();
 
     const popup = this.createPopup(
       {
@@ -213,7 +246,7 @@ export class ActiveLayerController {
     this.bindInfoPopup(infoPopup, infoBtn);
     this.toggleInfoBtn(infoPopup, infoBtn);
     this.addPopups(map, popup, infoPopup);
-    this.addListeners(infoBtn, closeBtn, map, infoPopup);
+    this.addListeners(infoBtn, closeBtn, infoPopup, splitManBtn);
 
     return popup;
   }

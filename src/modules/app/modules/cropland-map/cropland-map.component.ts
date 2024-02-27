@@ -487,6 +487,11 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnDestroy() {
+    this.activeLayerController.closeControllerPopup();
+    this.activeLayerController.closeInfoPopup();
+    this.layerService.selectProperties.next(initLayerProperties);
+    this.layerService.hoverProperites.next(initLayerProperties);
+    this.cd.detectChanges();
     this.subscriptions.forEach((s) => s.unsubscribe());
   }
 }

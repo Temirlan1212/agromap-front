@@ -11,6 +11,7 @@ import {
   SimpleChanges,
   ViewChild,
   AfterViewInit,
+  OnDestroy,
 } from '@angular/core';
 import { SvgIconComponent } from '../svg-icon/svg-icon.component';
 import { Map } from 'leaflet';
@@ -38,7 +39,7 @@ import { MapControlComponent } from '../map-control/map-control.component';
   ],
 })
 export class MapControlLayersSwitchComponent
-  implements OnChanges, AfterViewInit
+  implements OnChanges, AfterViewInit, OnDestroy
 {
   @ViewChild('dialog')
   dialog!: ElementRef<HTMLInputElement>;
@@ -64,6 +65,13 @@ export class MapControlLayersSwitchComponent
     private store: StoreService,
     private cd: ChangeDetectorRef
   ) {}
+
+  ngOnDestroy(): void {
+    if (this.activeBaseLayer) {
+      this.map.removeLayer(this.activeBaseLayer.layer);
+      this.activeBaseLayer = null;
+    }
+  }
 
   ngAfterViewInit(): void {
     this.adjustPosition();

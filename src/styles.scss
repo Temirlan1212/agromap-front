@@ -243,10 +243,6 @@ hr {
 }
 .active-layer-controller-popup {
   .leaflet-popup-content-wrapper {
-    // border-radius: 100% !important;
-    // cursor: pointer;
-    // position: relative;
-    // left: -40px;
     background-color: transparent;
     box-shadow: none;
   }
@@ -269,6 +265,9 @@ hr {
           pointer-events: none;
           opacity: 0;
         }
+      }
+      .split-map-btn {
+        padding: 0px;
       }
     }
   }
