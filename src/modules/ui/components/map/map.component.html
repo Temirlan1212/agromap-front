@@ -9,7 +9,10 @@
     </h4>
 
     <div>
-      <button type="button" class="transparent arrow-down show-on-hover">
+      <button
+        type="button"
+        class="transparent arrow-down show-on-hover d-none d-sm-block d-lg-block d-md-block d-xl-block"
+      >
         <app-svg-icon name="double-arrow-down" size="16"></app-svg-icon>
       </button>
     </div>
@@ -25,13 +28,13 @@
         <app-svg-icon name="arrow-down" size="16"></app-svg-icon>
       </button>
 
-      <button
+      <!-- <button
         type="button"
         class="transparent"
         (click)="[$event.stopPropagation(), handleFeatureClose()]"
       >
         <app-svg-icon name="clear" size="18"></app-svg-icon>
-      </button>
+      </button> -->
     </div>
   </div>
   <div class="body">
