@@ -44,6 +44,8 @@ export class ActiveLayerController {
       closeButton: true,
       autoClose: true,
       pane: 'info-mobile-popup',
+      maxWidth: 260,
+      maxHeight: 260,
     })
       .setContent(content)
       .setLatLng(position);
@@ -153,11 +155,11 @@ export class ActiveLayerController {
 
   createInfoPopupContent(activeContour: any): string {
     let htmlContent =
-      '<div style="max-height: 30vh; overflow: auto; display: flex; flex-direction: column; gap: 10px">';
+      '<div style="display: flex; flex-direction: column; gap: 10px; max-width: 300px;">';
     this._activeLayerAttributes
       .attributes(activeContour)
       .forEach(({ label, value }) => {
-        htmlContent += `<div style="font-size: 14px;"><strong>${label}:</strong> ${value()}</div>`;
+        htmlContent += `<div style="font-size: 14px; display: flex; justify-content: space-between; gap: 10px"><strong>${label}:</strong> <span style="text-align: end">${value()}</span></div>`;
       });
     htmlContent += '</div>';
     return htmlContent;

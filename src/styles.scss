@@ -311,6 +311,25 @@ hr {
     filter: brightness(0) invert(1) grayscale(1);
   }
 }
+
+.leaflet-popup-scrolled {
+  margin: 5px;
+  padding: 5px;
+  border: none;
+  margin-top: 20px;
+  &::-webkit-scrollbar {
+    width: 3px;
+    height: 3px;
+    border-radius: 8px;
+    background-color: $lightColor;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: $darkColor;
+    border-radius: 5px;
+  }
+}
+
 .button-container .leaflet-pm-actions-container {
   top: 4.3px !important;
   left: 110% !important;
