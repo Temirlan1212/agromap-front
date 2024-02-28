@@ -227,6 +227,12 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
     this.resetMapBounds();
     this.filteredContours = [];
     this.onFormReset.emit();
+    let formState = { ...this.getState() };
+    if (!formState.valid) {
+      this.messages.error(this.translate.transform('Form is invalid'));
+      return;
+    }
+    this.onFormSubmit.emit(formState);
     this.store.setItem<ContourFiltersQuery | null>(
       storageNames.contourFilterComponent,
       null
