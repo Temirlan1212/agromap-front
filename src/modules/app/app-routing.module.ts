@@ -54,6 +54,7 @@ const routes: Routes = [
       panel: true,
       toggle: true,
       active: true,
+      path: '/cropland-map',
     },
     canActivate: [AuthGuard],
     loadChildren: () =>

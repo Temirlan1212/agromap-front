@@ -53,8 +53,9 @@
   <a
     [routerLinkActive]="!!data?.active ? 'active' : ''"
     [routerLink]="path"
-    (click)="sidePanelService.set(false, 'cropland-map')"
+    (click)="activeNavItemPath === path ? handleNavClick($event, data) : ''"
     [ngClass]="data.class"
+    [class.pointerEventsNone]="title === 'GiproZem'"
   >
     <div class="icon-wrapper">
       <app-svg-icon
@@ -63,6 +64,20 @@
         [name]="data.icon"
         *ngIf="data.icon != null"
       ></app-svg-icon>
+
+      <app-svg-icon
+        class="icon toggler"
+        [class.open]="!this.sidePanelService.get(data.path)"
+        size="20px"
+        [name]="'arrow-down'"
+        *ngIf="
+          data.icon != null &&
+          !!data.toggle &&
+          data.path &&
+          activeNavItemPath === path
+        "
+      ></app-svg-icon>
+
       <span
         class="notifications-indicator"
         *ngIf="data.class === 'notification' && indicator"
@@ -116,11 +131,12 @@
 
 <div class="menu" [class.open]="opened">
   <nav class="top">
-    <ng-container
-      *ngFor="let route of topRoutes"
-      [ngTemplateOutlet]="navItem"
-      [ngTemplateOutletContext]="route"
-    ></ng-container>
+    <ng-container *ngFor="let route of topRoutes">
+      <ng-container
+        [ngTemplateOutlet]="navItem"
+        [ngTemplateOutletContext]="route"
+      ></ng-container>
+    </ng-container>
   </nav>
   <nav class="bottom">
     <ng-container

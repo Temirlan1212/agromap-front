@@ -71,6 +71,17 @@ export class MapControlLayersSwitchComponent
       this.map.removeLayer(this.activeBaseLayer.layer);
       this.activeBaseLayer = null;
     }
+    if (this.selected) {
+      const names = Object.values(this.selected)
+        .map((item) => item.name)
+        .filter(Boolean);
+      this.wmsLayers.map((l) => {
+        const isCurrent = names.includes(l.name);
+        if (isCurrent) {
+          this.map.removeLayer(l.layer);
+        }
+      });
+    }
   }
 
   ngAfterViewInit(): void {

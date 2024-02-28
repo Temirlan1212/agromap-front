@@ -60,13 +60,21 @@ export class SidenavComponent implements OnChanges, OnDestroy {
   indicator: boolean = false;
   subs: Subscription[] = [];
   activeNavItem: Record<string, any> | null = null;
+  activeNavItemPath: string | undefined = undefined;
 
   constructor(
     private translate: TranslateService,
     private store: StoreService,
     private router: Router,
     public sidePanelService: SidePanelService
-  ) {}
+  ) {
+    this.router.events.subscribe((event: Event) => {
+      if (event instanceof RoutesRecognized) {
+        const config = event.state.root.firstChild?.routeConfig;
+        this.activeNavItemPath = config?.path;
+      }
+    });
+  }
 
   collapsed: boolean = false;
 
@@ -83,6 +91,7 @@ export class SidenavComponent implements OnChanges, OnDestroy {
         this.activeNavItem = event.state.root.firstChild?.data ?? null;
       }
     });
+
     this.subs.push(sub);
   }
 
@@ -130,6 +139,16 @@ export class SidenavComponent implements OnChanges, OnDestroy {
       left: menuContainer.scrollLeft + 100,
       behavior: 'smooth',
     });
+  }
+
+  handleNavClick(e: any, data: Record<string, any>) {
+    if (data?.['toggle'] && data?.['path']) {
+      e.stopPropagation();
+      this.sidePanelService.set(
+        !this.sidePanelService.get(data['path']),
+        data['path']
+      );
+    }
   }
 
   protected readonly top = top;

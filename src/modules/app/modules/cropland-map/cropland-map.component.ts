@@ -247,6 +247,7 @@ export class CroplandMapComponent implements OnInit, OnDestroy, AfterViewInit {
     this.activeLayerController.removeSplashScreen();
     this.activeLayerController.removeLayerHiglight();
     this.activeLayerController.closeInfoPopup();
+    this.activeLayerController.closeControllerPopup();
   }
 
   hanldeVegIndexesDateSelect() {
