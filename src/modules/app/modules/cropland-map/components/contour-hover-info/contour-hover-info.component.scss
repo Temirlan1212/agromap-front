@@ -12,7 +12,7 @@
   margin-top: 10px;
   opacity: 1;
   pointer-events: initial;
-  // backdrop-filter: blur(10px);
+  min-width: 250px;
 
   &.hidden {
     opacity: 0;
@@ -50,6 +50,8 @@
     margin: 10px 0 0 0;
     text-align: start;
     font-weight: 700;
+    -webkit-text-stroke-color: rgba($lightColor, 0.5);
+    -webkit-text-stroke-width: 1px;
   }
 
   .culture-id {
