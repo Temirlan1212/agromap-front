@@ -247,5 +247,15 @@
   "Uploading data": "Загрузка данных",
   "Show floating filtering": "Показывать плавающую фильтрацию",
   "All types of land": "Все виды угодий",
-  "All regions": "Все регионы"
+  "All regions": "Все регионы",
+  "Barley": "Ячмень",
+  "Alfalfa": "Люцерна",
+  "Soy": "Соя",
+  "Sainfoin": "Эспарцет",
+  "Potato": "Картофель",
+  "Sweet clover": "Спелая люцерна",
+  "Wheat": "Пшеница",
+  "Corn": "Кукуруза",
+  "Beet": "Свекла",
+  "Other culture": "Другие культуры"
 }

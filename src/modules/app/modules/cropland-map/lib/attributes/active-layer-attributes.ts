@@ -72,7 +72,7 @@ export class ActiveLayerAttributes {
         value: () => {
           const value = object['productivity'];
           if (!value) return null;
-          return `${value} ${translations['c. per ha']}`;
+          return `${value} ${translations['c. per ha.']}`;
         },
       },
       {
@@ -80,7 +80,7 @@ export class ActiveLayerAttributes {
         value: () => {
           const value = object['predicted_productivity'];
           if (!value) return null;
-          return `${value} ${translations['c. per ha']}`;
+          return `${value} ${translations['c. per ha.']}`;
         },
       },
       {

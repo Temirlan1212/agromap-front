@@ -192,3 +192,39 @@ export const initLayerProperties = {
   rgn: 0,
   year: '',
 };
+
+export const CULTURES = {
+  BARLEY: 'Barley',
+  ALFALFA: 'Alfalfa',
+  SOY: 'Soy',
+  SAINFOIN: 'Sainfoin',
+  POTATO: 'Potato',
+  SWEET_CLOVER: 'Sweet clover',
+  WHEAT: 'Wheat',
+  CORN: 'Corn',
+  BEET: 'Beet',
+  OTHER_CULTURE: 'Other culture',
+} as const;
+
+export const CULTURE_COLORS = {
+  [CULTURES.BARLEY]: '#047bab', // Синий
+  [CULTURES.ALFALFA]: '#6B8E23', // Зеленый
+  [CULTURES.SOY]: '#FFD700', // Желтый
+  [CULTURES.SAINFOIN]: '#FF6347', // Красный
+  [CULTURES.POTATO]: '#A52A2A', // Коричневый
+  [CULTURES.SWEET_CLOVER]: '#7FFFD4', // Голубой
+  [CULTURES.WHEAT]: '#f13a14', // Оранжевый
+  [CULTURES.CORN]: '#efc000', // Желтый
+  [CULTURES.BEET]: '#9b7938', // Коричневый
+  [CULTURES.OTHER_CULTURE]: '#545452', // Серый
+};
+
+export const PASTURE_COLORS = {
+  PRODUCTIVE: '#1BA87D',
+  UNPRODUCTIVE: '#b3ec84',
+};
+
+export const LTYPE_VALUES = {
+  CULTURE: 1,
+  PASTURE: 2,
+};

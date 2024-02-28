@@ -247,5 +247,15 @@
   "Uploading data": "Uploading data",
   "Show floating filtering": "Show floating filtering",
   "All types of land": "All types of land",
-  "All regions": "All regions"
+  "All regions": "All regions",
+  "Barley": "Barley",
+  "Alfalfa": "Alfalfa",
+  "Soy": "Soy",
+  "Sainfoin": "Sainfoin",
+  "Potato": "Potato",
+  "Sweet clover": "Sweet clover",
+  "Wheat": "Wheat",
+  "Corn": "Corn",
+  "Beet": "Beet",
+  "Other culture": "Other culture"
 }
