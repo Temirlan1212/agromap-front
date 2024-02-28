@@ -13,6 +13,10 @@
   transition: width $sideNavTransitionDelay;
   padding: 5px 0 0 0;
 
+  .pointerEventsNone {
+    pointer-events: none;
+  }
+
   &.open {
     width: $sideNavMenuOpenWidth;
 
@@ -104,6 +108,17 @@
 
 .icon-wrapper {
   position: relative;
+  display: flex;
+  align-items: center;
+  .toggler {
+    margin-left: -5px;
+    transition: transform 0.2s ease;
+    transform: rotate(-90deg);
+    &.open {
+      transition: transform 0.2s ease;
+      transform: rotate(90deg);
+    }
+  }
 }
 
 .notifications-indicator {
