@@ -1,6 +1,7 @@
 import * as L from 'leaflet';
 import { LeafletMouseEvent, Map, Popup, popup } from 'leaflet';
 import { MapApi } from 'src/modules/api/classes/map.api';
+import { CULTURE_COLORS, PASTURE_COLORS } from './_constants';
 
 export const buildWmsCQLFilter = (v: any) => {
   let wmsCQLFilter = '';
@@ -141,4 +142,19 @@ export const buildSplashScreen = () => {
     opacity: 0.6,
     interactive: false,
   });
+};
+
+export const getCutlureColor = (culture: keyof typeof CULTURE_COLORS) => {
+  if (culture in CULTURE_COLORS) {
+    return CULTURE_COLORS[culture];
+  } else {
+    return 'transparent';
+  }
+};
+
+export const getPastureColor = (productivity: number) => {
+  let color = PASTURE_COLORS['UNPRODUCTIVE'];
+  if (productivity > 1.6) color = PASTURE_COLORS['PRODUCTIVE'];
+  if (productivity <= 1.6) color = PASTURE_COLORS['UNPRODUCTIVE'];
+  return color;
 };

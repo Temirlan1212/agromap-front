@@ -1,9 +1,13 @@
 import { Injectable } from '@angular/core';
 import { MapData } from 'src/modules/ui/models/map.model';
 import { CroplandMainMapService } from '../services/map.service';
-import { initLayerProperties } from '../_constants';
+import { LTYPE_VALUES, initLayerProperties } from '../_constants';
 import { CroplandMainLayerService } from '../services/layer.service';
-import { buildSplashScreen } from '../_helpers';
+import {
+  buildSplashScreen,
+  getCutlureColor,
+  getPastureColor,
+} from '../_helpers';
 import { DomEvent, DomUtil, geoJSON, popup } from 'leaflet';
 import { PBFConroller } from './pbf-controller';
 import { ActiveLayerAttributes } from '../attributes/active-layer-attributes';
@@ -137,6 +141,19 @@ export class ActiveLayerController {
     const map = this.mapData?.map;
     if (!map) return;
     map.createPane('active-layer-higlight').style.zIndex = '401';
+
+    const culture = this.layerService.selectProperties.getValue().prd_clt_n;
+    const prdvty = this.layerService.selectProperties.getValue().prdvty;
+    const ltype = this.layerService.selectProperties.getValue().ltype;
+    let fillColor = 'transparent';
+    if (LTYPE_VALUES['CULTURE'] === ltype) {
+      fillColor = getCutlureColor(culture as any);
+    }
+    if (LTYPE_VALUES['PASTURE'] === ltype) {
+      const param = Number(prdvty);
+      if (!isNaN(param)) fillColor = getPastureColor(param);
+    }
+
     this.layerService.layerInstances['splash-screen-active-contour'] = geoJSON(
       polygon,
       {
@@ -145,7 +162,7 @@ export class ActiveLayerController {
           color: 'white',
           fill: true,
           fillOpacity: 1,
-          fillColor: 'green',
+          fillColor,
         },
       }
     ).addTo(map);

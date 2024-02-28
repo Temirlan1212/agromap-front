@@ -192,3 +192,26 @@ export const initLayerProperties = {
   rgn: 0,
   year: '',
 };
+
+export const CULTURE_COLORS = {
+  Barley: '#047bab', // Синий
+  Alfalfa: '#6B8E23', // Зеленый
+  Soy: '#FFD700', // Желтый
+  Sainfoin: '#FF6347', // Красный
+  Potato: '#A52A2A', // Коричневый
+  'Sweet clover': '#7FFFD4', // Голубой
+  Wheat: '#f13a14', // Оранжевый
+  Corn: '#efc000', // Желтый
+  Beet: '#9b7938', // Коричневый
+  'Other culture': '#545452', // Серый
+};
+
+export const PASTURE_COLORS = {
+  PRODUCTIVE: '#1BA87D',
+  UNPRODUCTIVE: '#b3ec84',
+};
+
+export const LTYPE_VALUES = {
+  CULTURE: 1,
+  PASTURE: 2,
+};
