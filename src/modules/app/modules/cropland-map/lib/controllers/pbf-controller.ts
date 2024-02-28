@@ -114,6 +114,7 @@ export class PBFConroller {
     if (!this.vectorGrid) return;
     map.removeLayer(this.vectorGrid);
     this.layerService.hoverProperites.next(initLayerProperties);
+    this.closeTooltipOnHover();
   }
 
   private mapEvents(map: MapData['map'], { onInit, onReset }: MapEvents) {
