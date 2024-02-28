@@ -21,6 +21,7 @@ import { MessagesService } from 'src/modules/ui/services/messages.service';
 import { Subscription } from 'rxjs';
 import { StoreService } from 'src/modules/ui/services/store.service';
 import { CroplandMainMapService } from '../../lib/services/map.service';
+import { getCutlureColor } from '../../lib/_helpers';
 
 @Component({
   selector: 'app-statistics',
@@ -255,13 +256,13 @@ export class StatisticsComponent
     this.loading = true;
     try {
       const res = await this.api.statistics.getCultureStatistics(query);
-
       this.cultureStatsProdTableItems = res.map((element) => ({
         ...element,
         area_ha: element?.area_ha,
         area_ha_en: `${element?.area_ha} ha`,
         area_ha_ky: `${element?.area_ha} га`,
         area_ha_ru: `${element?.area_ha} га`,
+        color: getCutlureColor(element.predicted_culture_name_en as any),
       })) as unknown as ITableItem[];
 
       return this.cultureStatsProdTableItems;
