@@ -1,7 +1,7 @@
 import * as L from 'leaflet';
 import { LeafletMouseEvent, Map, Popup, popup } from 'leaflet';
 import { MapApi } from 'src/modules/api/classes/map.api';
-import { CULTURE_COLORS, PASTURE_COLORS } from './_constants';
+import { CULTURES, CULTURE_COLORS, PASTURE_COLORS } from './_constants';
 
 export const buildWmsCQLFilter = (v: any) => {
   let wmsCQLFilter = '';
@@ -157,4 +157,13 @@ export const getPastureColor = (productivity: number) => {
   if (productivity > 1.6) color = PASTURE_COLORS['PRODUCTIVE'];
   if (productivity <= 1.6) color = PASTURE_COLORS['UNPRODUCTIVE'];
   return color;
+};
+
+export const getCultureName = (culture: keyof typeof CULTURES) => {
+  const upperCaseCulture = culture?.toUpperCase() as keyof typeof CULTURES;
+  if (upperCaseCulture in CULTURES) {
+    return CULTURES[upperCaseCulture];
+  } else {
+    return '';
+  }
 };

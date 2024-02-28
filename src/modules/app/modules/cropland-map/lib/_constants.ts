@@ -193,17 +193,30 @@ export const initLayerProperties = {
   year: '',
 };
 
+export const CULTURES = {
+  BARLEY: 'Barley',
+  ALFALFA: 'Alfalfa',
+  SOY: 'Soy',
+  SAINFOIN: 'Sainfoin',
+  POTATO: 'Potato',
+  SWEET_CLOVER: 'Sweet clover',
+  WHEAT: 'Wheat',
+  CORN: 'Corn',
+  BEET: 'Beet',
+  OTHER_CULTURE: 'Other culture',
+} as const;
+
 export const CULTURE_COLORS = {
-  Barley: '#047bab', // Синий
-  Alfalfa: '#6B8E23', // Зеленый
-  Soy: '#FFD700', // Желтый
-  Sainfoin: '#FF6347', // Красный
-  Potato: '#A52A2A', // Коричневый
-  'Sweet clover': '#7FFFD4', // Голубой
-  Wheat: '#f13a14', // Оранжевый
-  Corn: '#efc000', // Желтый
-  Beet: '#9b7938', // Коричневый
-  'Other culture': '#545452', // Серый
+  [CULTURES.BARLEY]: '#047bab', // Синий
+  [CULTURES.ALFALFA]: '#6B8E23', // Зеленый
+  [CULTURES.SOY]: '#FFD700', // Желтый
+  [CULTURES.SAINFOIN]: '#FF6347', // Красный
+  [CULTURES.POTATO]: '#A52A2A', // Коричневый
+  [CULTURES.SWEET_CLOVER]: '#7FFFD4', // Голубой
+  [CULTURES.WHEAT]: '#f13a14', // Оранжевый
+  [CULTURES.CORN]: '#efc000', // Желтый
+  [CULTURES.BEET]: '#9b7938', // Коричневый
+  [CULTURES.OTHER_CULTURE]: '#545452', // Серый
 };
 
 export const PASTURE_COLORS = {

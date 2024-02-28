@@ -11,7 +11,8 @@
   padding: 10px;
   margin-top: 10px;
   opacity: 1;
-  pointer-events: none;
+  pointer-events: initial;
+  // backdrop-filter: blur(10px);
 
   &.hidden {
     opacity: 0;
@@ -20,64 +21,42 @@
   }
 
   .contour-info-partial {
-    div {
-      display: flex;
-      width: 100%;
-      justify-content: space-between;
-      align-items: center;
-      gap: 30px;
-      color: #fff;
-      font-size: 15px;
-
-      span {
-        margin: 5px 0;
-      }
-    }
-  }
-
-  .contour-info-partial {
     span {
       font-size: 20px;
       font-weight: 600;
+      margin: 0;
     }
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
   }
 
-  h1 {
+  .property {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    gap: 30px;
+    color: #fff;
     font-size: 15px;
-    color: $lightColor;
-    p {
-      font-size: 30px;
-      margin: 10px 0 0 0;
+
+    span {
+      margin: 5px 0;
     }
   }
-}
 
-@media only screen and (max-width: 576px) {
-  .dark-info-dialog {
-    box-shadow: none;
-    backdrop-filter: blur(30px);
-    max-height: initial;
-    position: fixed;
-    max-width: inherit;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    bottom: calc($mobileBottomNavHeight * 2 - 5px);
-    border-top-left-radius: 20px;
-    border-top-right-radius: 20px;
-    background-color: rgba(0, 0, 0, 0.25);
-    z-index: 402;
+  .title {
+    font-size: 30px;
+    margin: 10px 0 0 0;
+    text-align: start;
+  }
 
-    &.hidden {
-      transform: translateX(0px);
-    }
+  .culture-id {
+    display: flex;
+    flex-direction: column;
 
-    h1 {
-      transform: translateX(0);
-
-      &.hidden {
-        transform: translateX(-85vw);
-      }
+    &:has(.title) {
+      gap: 30px;
     }
   }
 }

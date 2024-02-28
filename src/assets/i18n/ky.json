@@ -247,5 +247,15 @@
   "Uploading data": "Маалымат жүктөө",
   "Show floating filtering": "Картадагы фильтрацияны көрсөтүү",
   "All types of land": "Жердин бардык түрлөрү",
-  "All regions": "Бардык региондор"
+  "All regions": "Бардык региондор",
+  "Barley": "Арпа",
+  "Alfalfa": "Люцерна",
+  "Soy": "Соя",
+  "Sainfoin": "Эспарцет",
+  "Potato": "Картофель",
+  "Sweet clover": "Күлкүрек арпа",
+  "Wheat": "Нарын",
+  "Corn": "Жалпын",
+  "Beet": "Панда",
+  "Other culture": "Башка культуралар"
 }

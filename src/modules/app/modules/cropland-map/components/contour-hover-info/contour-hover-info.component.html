@@ -1,12 +1,24 @@
 <div class="dark-info-dialog" [class.hidden]="hidden">
   <div class="contour-info-partial">
-    <h1>
-      {{ "Contour id" | translate }}
-      <p>{{ properties.id }}</p>
-    </h1>
-    <div *ngIf="!!properties.area">
+    <div>
+      <p
+        [style.color]="color"
+        *ngIf="!!cultureName"
+        [class.title]="!!cultureName"
+      >
+        {{ cultureName | translate }}
+      </p>
+    </div>
+
+    <div class="culture-id">
+      <span>{{ "Contour id" | translate }}</span>
+      <p [class.title]="!cultureName">{{ properties.id }}</p>
+    </div>
+
+    <div *ngIf="!!properties.area" class="property">
       {{ "Area" | translate }}
       <span>{{ properties.area }} {{ "ha" | translate }}</span>
     </div>
   </div>
 </div>
+<!-- [style.backgroundColor]="color" -->

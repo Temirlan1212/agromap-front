@@ -137,14 +137,10 @@ export class ActiveLayerController {
     this.bindMapZoom();
   }
 
-  createLayerHiglight(polygon: any) {
-    const map = this.mapData?.map;
-    if (!map) return;
-    map.createPane('active-layer-higlight').style.zIndex = '401';
-
-    const culture = this.layerService.selectProperties.getValue().prd_clt_n;
-    const prdvty = this.layerService.selectProperties.getValue().prdvty;
-    const ltype = this.layerService.selectProperties.getValue().ltype;
+  getActiveColor(type: 'selectProperties' | 'hoverProperites') {
+    const culture = this.layerService[type].getValue().prd_clt_n;
+    const prdvty = this.layerService[type].getValue().prdvty;
+    const ltype = this.layerService[type].getValue().ltype;
     let fillColor = 'transparent';
     if (LTYPE_VALUES['CULTURE'] === ltype) {
       fillColor = getCutlureColor(culture as any);
@@ -153,6 +149,13 @@ export class ActiveLayerController {
       const param = Number(prdvty);
       if (!isNaN(param)) fillColor = getPastureColor(param);
     }
+    return fillColor;
+  }
+
+  createLayerHiglight(polygon: any) {
+    const map = this.mapData?.map;
+    if (!map) return;
+    map.createPane('active-layer-higlight').style.zIndex = '401';
 
     this.layerService.layerInstances['splash-screen-active-contour'] = geoJSON(
       polygon,
@@ -162,7 +165,7 @@ export class ActiveLayerController {
           color: 'white',
           fill: true,
           fillOpacity: 1,
-          fillColor,
+          fillColor: this.getActiveColor('selectProperties'),
         },
       }
     ).addTo(map);
