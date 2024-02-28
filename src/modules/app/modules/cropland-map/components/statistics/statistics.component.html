@@ -60,6 +60,7 @@
                       [items]="getItem(ltype.id).value?.[1]"
                       seriesFieldName="productive"
                       [dataLabelUnitOfMeasure]="'ha' | translate"
+                      colorsFieldName="color"
                       labelsFieldName="areaName"
                     ></app-simple-pie-chart>
                   </div>
@@ -70,6 +71,7 @@
                       [items]="getItem(ltype.id).value?.[1]"
                       seriesFieldName="unproductive"
                       labelsFieldName="areaName"
+                      colorsFieldName="color"
                       [dataLabelUnitOfMeasure]="'ha' | translate"
                     ></app-simple-pie-chart>
                   </div>

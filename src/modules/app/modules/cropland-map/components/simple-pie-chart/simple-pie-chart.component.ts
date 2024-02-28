@@ -104,7 +104,7 @@ export class SimplePieChartComponent implements OnChanges {
     legend: {
       position: 'bottom',
     },
-    colors: ['red'],
+    colors: '',
   };
 
   constructor(
@@ -113,10 +113,11 @@ export class SimplePieChartComponent implements OnChanges {
   ) {}
 
   updateColors() {
-    this.colors = [...(this.items ?? [])]?.map(
-      (item, index) =>
+    this.colors = [...(this.items ?? [])]?.map((item, index) => {
+      return (
         item?.[this.colorsFieldName ?? ''] ?? this.colors?.[index] ?? '#fff'
-    );
+      );
+    });
   }
 
   updateLabels() {
