@@ -53,9 +53,11 @@
   <a
     [routerLinkActive]="!!data?.active ? 'active' : ''"
     [routerLink]="path"
-    (click)="activeNavItemPath === path ? handleNavClick($event, data) : ''"
+    (click)="
+      activeNavItemPath === '/' + path ? handleNavClick($event, data) : ''
+    "
     [ngClass]="data.class"
-    [class.pointerEventsNone]="title === 'GiproZem'"
+    [class.pointerEventsNone]="title === 'GiproZem' || isChildRoute"
   >
     <div class="icon-wrapper">
       <app-svg-icon
@@ -74,7 +76,7 @@
           data.icon != null &&
           !!data.toggle &&
           data.path &&
-          activeNavItemPath === path
+          activeNavItemPath === '/' + path
         "
       ></app-svg-icon>
 

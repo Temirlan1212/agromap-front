@@ -119,6 +119,12 @@
       transform: rotate(90deg);
     }
   }
+
+  @media only screen and (max-width: 992px) {
+    .toggler {
+      display: none;
+    }
+  }
 }
 
 .notifications-indicator {
