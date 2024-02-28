@@ -195,32 +195,34 @@ export class PBFConroller {
     { onSelect, onReset, onHover }: Partial<VectorGridEvents>
   ) {
     vectorGrid.on({
-      mouseover: (e: any) => {
-        let properties: LayerProperties = initLayerProperties;
-        if (e?.layer?.properties) properties = e.layer.properties;
-        if (!properties?.['id']) return;
-        const currId = properties['id'];
-        const { setHover } = this.LayerViewMethods(vectorGrid);
-        if (this.ids.vector.prevClickId !== currId) {
-          setHover(currId);
-          this.ids.vector.prevHoverId = currId;
-          onHover && onHover(properties);
-          if (!!this.ids.vector.prevClickId)
-            this.tooltipOnHover(e.latlng, properties);
-        }
-      },
-      mouseout: (e: any) => {
-        const { setDefault } = this.LayerViewMethods(vectorGrid);
-        if (
-          !!this.ids.vector.prevHoverId &&
-          this.ids.vector.prevClickId !== this.ids.vector.prevHoverId
-        ) {
-          setDefault(this.ids.vector.prevHoverId);
-          this.ids.vector.prevHoverId = 0;
-          onHover && onHover(initLayerProperties);
-          if (!!this.ids.vector.prevClickId) this.closeTooltipOnHover();
-        }
-      },
+      ...(!L.Browser.mobile && {
+        mouseover: (e: any) => {
+          let properties: LayerProperties = initLayerProperties;
+          if (e?.layer?.properties) properties = e.layer.properties;
+          if (!properties?.['id']) return;
+          const currId = properties['id'];
+          const { setHover } = this.LayerViewMethods(vectorGrid);
+          if (this.ids.vector.prevClickId !== currId) {
+            setHover(currId);
+            this.ids.vector.prevHoverId = currId;
+            onHover && onHover(properties);
+            if (!!this.ids.vector.prevClickId)
+              this.tooltipOnHover(e.latlng, properties);
+          }
+        },
+        mouseout: (e: any) => {
+          const { setDefault } = this.LayerViewMethods(vectorGrid);
+          if (
+            !!this.ids.vector.prevHoverId &&
+            this.ids.vector.prevClickId !== this.ids.vector.prevHoverId
+          ) {
+            setDefault(this.ids.vector.prevHoverId);
+            this.ids.vector.prevHoverId = 0;
+            onHover && onHover(initLayerProperties);
+            if (!!this.ids.vector.prevClickId) this.closeTooltipOnHover();
+          }
+        },
+      }),
       click: (e: any) => {
         L.DomEvent.stopPropagation(e);
         let properties: LayerProperties = initLayerProperties;
