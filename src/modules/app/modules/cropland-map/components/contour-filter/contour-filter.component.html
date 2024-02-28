@@ -7,7 +7,7 @@
   </button>
 </div>
 
-<div class="sidebar-settings">
+<div class="sidebar-settings" *ngIf="!isChildRoute">
   <app-menu [placement]="'right'" [dark]="true">
     <app-settings></app-settings>
   </app-menu>

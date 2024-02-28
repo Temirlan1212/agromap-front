@@ -183,7 +183,7 @@ $indent: 0 20px;
 
 .sidebar-toggler {
   position: absolute;
-  right: 10px;
+  left: 10px;
   top: 12px;
   display: flex;
   justify-content: flex-end;
@@ -193,11 +193,15 @@ $indent: 0 20px;
     height: 20px !important;
     transform: rotate(90deg);
   }
+
+  @media only screen and (max-width: 992px) {
+    display: none;
+  }
 }
 
 .sidebar-settings {
   position: absolute;
-  left: 10px;
+  right: 10px;
   top: 10px;
   display: flex;
   justify-content: flex-end;
@@ -208,6 +212,11 @@ $indent: 0 20px;
   }
   app-menu {
     top: 10px !important;
+  }
+
+  @media only screen and (max-width: 992px) {
+    left: 10px;
+    right: initial;
   }
 }
 

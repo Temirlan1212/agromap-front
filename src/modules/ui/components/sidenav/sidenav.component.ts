@@ -61,6 +61,7 @@ export class SidenavComponent implements OnChanges, OnDestroy {
   subs: Subscription[] = [];
   activeNavItem: Record<string, any> | null = null;
   activeNavItemPath: string | undefined = undefined;
+  isChildRoute: boolean = false;
 
   constructor(
     private translate: TranslateService,
@@ -71,7 +72,14 @@ export class SidenavComponent implements OnChanges, OnDestroy {
     this.router.events.subscribe((event: Event) => {
       if (event instanceof RoutesRecognized) {
         const config = event.state.root.firstChild?.routeConfig;
-        this.activeNavItemPath = config?.path;
+        let url = event.url;
+        const splittedUrl = url.split('/').filter(Boolean);
+        this.isChildRoute = false;
+        if (splittedUrl?.[0] === config?.path && splittedUrl.length > 1) {
+          this.isChildRoute = true;
+        }
+
+        this.activeNavItemPath = url;
       }
     });
   }
