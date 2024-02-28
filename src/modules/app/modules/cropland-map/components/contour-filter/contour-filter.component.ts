@@ -19,7 +19,12 @@ import { ContourFiltersQuery } from '../../../../../api/models/contour.model';
 import { GeoJSON, geoJSON, geoJson, latLng, latLngBounds, Map } from 'leaflet';
 import { MapData, MapLayerFeature } from '../../../../../ui/models/map.model';
 import { Feature } from 'geojson';
-import { ActivatedRoute, Router } from '@angular/router';
+import {
+  ActivatedRoute,
+  Router,
+  Event,
+  RoutesRecognized,
+} from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { QuestionDialogComponent } from '../../../../../ui/components/question-dialog/question-dialog.component';
 import { StoreService } from 'src/modules/ui/services/store.service';
@@ -52,6 +57,7 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
     { name: 'RSE', value: 'contours_main_ai' },
     { name: 'Base', value: 'contours_main' },
   ];
+  isChildRoute: boolean = false;
   @Input() activeContour!: any;
   @Output() onCardClick = new EventEmitter<MapLayerFeature>();
   @Output() onEditClick = new EventEmitter<void>();
@@ -161,7 +167,18 @@ export class ContourFilterComponent implements OnInit, OnDestroy {
     private store: StoreService,
     private settingsService: SettingsService,
     public sidePanelService: SidePanelService
-  ) {}
+  ) {
+    this.router.events.subscribe((event: Event) => {
+      if (event instanceof RoutesRecognized) {
+        const config = event.state.root.firstChild?.routeConfig;
+        const splittedUrl = event.url.split('/').filter(Boolean);
+        this.isChildRoute = false;
+        if (splittedUrl?.[0] === config?.path && splittedUrl.length > 1) {
+          this.isChildRoute = true;
+        }
+      }
+    });
+  }
 
   async ngOnInit(): Promise<void> {
     this.initSettings();

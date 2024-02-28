@@ -193,6 +193,10 @@ $indent: 0 20px;
     height: 20px !important;
     transform: rotate(90deg);
   }
+
+  @media only screen and (max-width: 992px) {
+    display: none;
+  }
 }
 
 .sidebar-settings {
